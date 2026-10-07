@@ -1,0 +1,860 @@
+{
+  "date": "2026-10-07",
+  "timezone": "Asia/Shanghai",
+  "executor": "Codex",
+  "opencli": {
+    "version": "1.8.8",
+    "node": "24.14.1",
+    "installed_location": "/tmp/yoyo-opencli-verify",
+    "installation": "isolated npm prefix; ignore-scripts; no project dependencies changed",
+    "command": "opencli weibo hot --limit 5 -f json",
+    "run": {
+      "command": [
+        "/tmp/yoyo-opencli-verify/node_modules/.bin/opencli",
+        "weibo",
+        "hot",
+        "--limit",
+        "5",
+        "-f",
+        "json"
+      ],
+      "observed_at": "2026-10-07T00:39:35.332953+00:00",
+      "elapsed_seconds": 35.01,
+      "error": "TIMEOUT"
+    },
+    "doctor": {
+      "daemon": "running",
+      "extension": "not_connected",
+      "connectivity": "failed"
+    },
+    "browser_end_to_end": "NOT_VERIFIED",
+    "installed_adapter_matches_reviewed_main": true,
+    "cleanup": "daemon started for this probe was stopped"
+  },
+  "reviewed_revisions": [
+    {
+      "repo": "jackwener/opencli",
+      "sha": "24136945847afbfad266c6c46a8cd335377f9112"
+    },
+    {
+      "repo": "imsyy/DailyHotApi",
+      "sha": "36c77e3bd891c11642d314cfb229bf31646704de"
+    },
+    {
+      "repo": "ourongxing/newsnow",
+      "sha": "0f95b2c998dffbfd2ddbc51b47b5809887dc6b97"
+    }
+  ],
+  "first_observation": [
+    {
+      "name": "dailyhotapi-upstream",
+      "url": "https://weibo.com/ajax/side/hotSearch",
+      "captured_at": "2026-10-07T00:39:52.658019+00:00",
+      "auth": "anonymous-no-cookie",
+      "http_status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "final_url": "https://weibo.com/ajax/side/hotSearch",
+      "top_keys": [
+        "ok",
+        "data",
+        "logs",
+        "topLogs"
+      ],
+      "business_ok": 1,
+      "business_code": null,
+      "item_count": 50,
+      "item_keys": [
+        "word",
+        "num",
+        "note",
+        "word_scheme",
+        "realpos",
+        "label_name",
+        "topic_flag",
+        "flag",
+        "emoticon",
+        "rank"
+      ],
+      "sample": [
+        {
+          "word": "最危险的是年轻时错过复利",
+          "num": 1068256,
+          "word_scheme": "最危险的是年轻时错过复利",
+          "realpos": 1,
+          "label_name": ""
+        },
+        {
+          "word": "C罗自请重罚再归队",
+          "num": 987625,
+          "word_scheme": "#C罗自请重罚再归队#",
+          "realpos": 2,
+          "label_name": ""
+        },
+        {
+          "word": "交通部门增运力优服务应对返程高峰",
+          "num": 628227,
+          "word_scheme": "#交通部门增运力优服务应对返程高峰#",
+          "realpos": 3,
+          "label_name": ""
+        },
+        {
+          "num": 552847,
+          "word_scheme": "#现在才发现万人迷没戴任何首饰#",
+          "realpos": 4,
+          "word": "现在才发现万人迷没戴任何首饰",
+          "label_name": "热"
+        },
+        {
+          "word": "缅北电诈纪录片颠覆认知",
+          "num": 447099,
+          "word_scheme": "缅北电诈纪录片颠覆认知",
+          "realpos": 5,
+          "label_name": "新"
+        }
+      ],
+      "message": "",
+      "elapsed_seconds": 0.616,
+      "response_sha256": "041490eb6e460843d31414bdafb55239bcf3f915c2aff4130a24452502d7fa0b"
+    },
+    {
+      "name": "opencli-upstream-anonymous",
+      "url": "https://weibo.com/ajax/statuses/hot_band",
+      "captured_at": "2026-10-07T00:39:52.658281+00:00",
+      "auth": "anonymous-no-cookie",
+      "http_status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "final_url": "https://weibo.com/ajax/statuses/hot_band",
+      "top_keys": [
+        "ok",
+        "http_code",
+        "data"
+      ],
+      "business_ok": 1,
+      "business_code": null,
+      "item_count": 50,
+      "item_keys": [
+        "flag",
+        "subject_querys",
+        "extension",
+        "topic_flag",
+        "realpos",
+        "label_name",
+        "tail_icon",
+        "note",
+        "star_name",
+        "loc_page",
+        "subject_label",
+        "word_scheme",
+        "expand",
+        "num",
+        "transparency_tag",
+        "fun_word",
+        "channel_type",
+        "category",
+        "star_word",
+        "emoticon",
+        "onboard_time",
+        "word",
+        "rank"
+      ],
+      "sample": [
+        {
+          "realpos": 1,
+          "label_name": "",
+          "word_scheme": "最危险的是年轻时错过复利",
+          "num": 1068256,
+          "category": "情感",
+          "onboard_time": 1791302301,
+          "word": "最危险的是年轻时错过复利"
+        },
+        {
+          "realpos": 2,
+          "label_name": "",
+          "word_scheme": "#C罗自请重罚再归队#",
+          "num": 987625,
+          "category": "体育",
+          "onboard_time": 1791328036,
+          "word": "C罗自请重罚再归队"
+        },
+        {
+          "realpos": 3,
+          "label_name": "",
+          "word_scheme": "#交通部门增运力优服务应对返程高峰#",
+          "num": 628227,
+          "category": "民生新闻",
+          "onboard_time": 1791286521,
+          "word": "交通部门增运力优服务应对返程高峰"
+        },
+        {
+          "label_name": "热",
+          "word_scheme": "#现在才发现万人迷没戴任何首饰#",
+          "num": 552847,
+          "category": "剧集",
+          "realpos": 4,
+          "onboard_time": 1791300621,
+          "word": "现在才发现万人迷没戴任何首饰"
+        },
+        {
+          "label_name": "新",
+          "word_scheme": "缅北电诈纪录片颠覆认知",
+          "category": "舆论监督",
+          "num": 447099,
+          "realpos": 5,
+          "onboard_time": 1791328577,
+          "word": "缅北电诈纪录片颠覆认知"
+        }
+      ],
+      "message": "",
+      "elapsed_seconds": 0.615,
+      "response_sha256": "7a5bf631822d0cb9e091ab9321420a5367850dca6cea8bf16778e093b6759e8b"
+    },
+    {
+      "name": "dailyhotapi-public-demo",
+      "url": "https://api-hot.imsyy.top/weibo",
+      "captured_at": "2026-10-07T00:39:52.658354+00:00",
+      "auth": "anonymous-no-cookie",
+      "error": "URLError",
+      "detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1028)>",
+      "item_count": 0,
+      "elapsed_seconds": 1.471
+    }
+  ],
+  "second_observation": {
+    "probe_version": 1,
+    "scope": "Short anonymous availability probe; not API authorization or SLA evidence",
+    "records": [
+      {
+        "endpoint": "hot_band",
+        "url": "https://weibo.com/ajax/statuses/hot_band",
+        "captured_at": "2026-10-07T00:40:46.426908+00:00",
+        "auth": "anonymous-no-cookie",
+        "item_count": 50,
+        "http_status": 200,
+        "content_type": "application/json; charset=utf-8",
+        "server_date": "Wed, 07 Oct 2026 00:40:46 GMT",
+        "cache_age": null,
+        "final_url": "https://weibo.com/ajax/statuses/hot_band",
+        "response_sha256": "fb06aa6091a49190524d79d2540c52a8f0a3ed299f16b8b2995cd286ce13e1e2",
+        "business_ok": 1,
+        "item_keys": [
+          "category",
+          "channel_type",
+          "emoticon",
+          "expand",
+          "extension",
+          "flag",
+          "flag_desc",
+          "fun_word",
+          "icon_desc",
+          "icon_desc_color",
+          "is_hot",
+          "is_new",
+          "label_name",
+          "loc_page",
+          "note",
+          "num",
+          "onboard_time",
+          "rank",
+          "realpos",
+          "small_icon_desc",
+          "small_icon_desc_color",
+          "star_name",
+          "star_word",
+          "subject_label",
+          "subject_querys",
+          "tail_icon",
+          "topic_flag",
+          "transparency_tag",
+          "word",
+          "word_scheme"
+        ],
+        "sample": [
+          {
+            "title": "最危险的是年轻时错过复利",
+            "rank": 1,
+            "hot_value": 1067360,
+            "category": "情感",
+            "label": "",
+            "url": "https://s.weibo.com/weibo?q=%E6%9C%80%E5%8D%B1%E9%99%A9%E7%9A%84%E6%98%AF%E5%B9%B4%E8%BD%BB%E6%97%B6%E9%94%99%E8%BF%87%E5%A4%8D%E5%88%A9",
+            "onboard_time_raw": 1791302301,
+            "onboard_time": "2026-10-06T15:58:21+00:00",
+            "published_at": null
+          },
+          {
+            "title": "C罗自请重罚再归队",
+            "rank": 2,
+            "hot_value": 952939,
+            "category": "体育",
+            "label": "热",
+            "url": "https://s.weibo.com/weibo?q=%23C%E7%BD%97%E8%87%AA%E8%AF%B7%E9%87%8D%E7%BD%9A%E5%86%8D%E5%BD%92%E9%98%9F%23",
+            "onboard_time_raw": 1791328036,
+            "onboard_time": "2026-10-06T23:07:16+00:00",
+            "published_at": null
+          },
+          {
+            "title": "交通部门增运力优服务应对返程高峰",
+            "rank": 3,
+            "hot_value": 630237,
+            "category": "民生新闻",
+            "label": "",
+            "url": "https://s.weibo.com/weibo?q=%23%E4%BA%A4%E9%80%9A%E9%83%A8%E9%97%A8%E5%A2%9E%E8%BF%90%E5%8A%9B%E4%BC%98%E6%9C%8D%E5%8A%A1%E5%BA%94%E5%AF%B9%E8%BF%94%E7%A8%8B%E9%AB%98%E5%B3%B0%23",
+            "onboard_time_raw": 1791286521,
+            "onboard_time": "2026-10-06T11:35:21+00:00",
+            "published_at": null
+          },
+          {
+            "title": "现在才发现万人迷没戴任何首饰",
+            "rank": 4,
+            "hot_value": 624863,
+            "category": "剧集",
+            "label": "热",
+            "url": "https://s.weibo.com/weibo?q=%23%E7%8E%B0%E5%9C%A8%E6%89%8D%E5%8F%91%E7%8E%B0%E4%B8%87%E4%BA%BA%E8%BF%B7%E6%B2%A1%E6%88%B4%E4%BB%BB%E4%BD%95%E9%A6%96%E9%A5%B0%23",
+            "onboard_time_raw": 1791300621,
+            "onboard_time": "2026-10-06T15:30:21+00:00",
+            "published_at": null
+          },
+          {
+            "title": "缅北电诈纪录片颠覆认知",
+            "rank": 5,
+            "hot_value": 437835,
+            "category": "舆论监督",
+            "label": "新",
+            "url": "https://s.weibo.com/weibo?q=%E7%BC%85%E5%8C%97%E7%94%B5%E8%AF%88%E7%BA%AA%E5%BD%95%E7%89%87%E9%A2%A0%E8%A6%86%E8%AE%A4%E7%9F%A5",
+            "onboard_time_raw": 1791328577,
+            "onboard_time": "2026-10-06T23:16:17+00:00",
+            "published_at": null
+          }
+        ],
+        "outcome": "SUCCESS",
+        "elapsed_seconds": 0.301
+      },
+      {
+        "endpoint": "hotSearch",
+        "url": "https://weibo.com/ajax/side/hotSearch",
+        "captured_at": "2026-10-07T00:40:46.427174+00:00",
+        "auth": "anonymous-no-cookie",
+        "item_count": 50,
+        "http_status": 200,
+        "content_type": "application/json; charset=utf-8",
+        "server_date": "Wed, 07 Oct 2026 00:40:46 GMT",
+        "cache_age": null,
+        "final_url": "https://weibo.com/ajax/side/hotSearch",
+        "response_sha256": "9208a2adddb7eb02c60e22a089b9ed6ce1b12408cd6d383ddafa2d42b6a5fff6",
+        "business_ok": 1,
+        "item_keys": [
+          "emoticon",
+          "flag",
+          "flag_desc",
+          "icon",
+          "icon_desc",
+          "icon_desc_color",
+          "icon_height",
+          "icon_width",
+          "label_name",
+          "note",
+          "num",
+          "rank",
+          "realpos",
+          "small_icon_desc",
+          "small_icon_desc_color",
+          "topic_flag",
+          "word",
+          "word_scheme"
+        ],
+        "sample": [
+          {
+            "title": "最危险的是年轻时错过复利",
+            "rank": 1,
+            "hot_value": 1067360,
+            "category": null,
+            "label": "",
+            "url": "https://s.weibo.com/weibo?q=%E6%9C%80%E5%8D%B1%E9%99%A9%E7%9A%84%E6%98%AF%E5%B9%B4%E8%BD%BB%E6%97%B6%E9%94%99%E8%BF%87%E5%A4%8D%E5%88%A9",
+            "onboard_time_raw": null,
+            "onboard_time": null,
+            "published_at": null
+          },
+          {
+            "title": "C罗自请重罚再归队",
+            "rank": 2,
+            "hot_value": 952939,
+            "category": null,
+            "label": "热",
+            "url": "https://s.weibo.com/weibo?q=%23C%E7%BD%97%E8%87%AA%E8%AF%B7%E9%87%8D%E7%BD%9A%E5%86%8D%E5%BD%92%E9%98%9F%23",
+            "onboard_time_raw": null,
+            "onboard_time": null,
+            "published_at": null
+          },
+          {
+            "title": "交通部门增运力优服务应对返程高峰",
+            "rank": 3,
+            "hot_value": 630237,
+            "category": null,
+            "label": "",
+            "url": "https://s.weibo.com/weibo?q=%23%E4%BA%A4%E9%80%9A%E9%83%A8%E9%97%A8%E5%A2%9E%E8%BF%90%E5%8A%9B%E4%BC%98%E6%9C%8D%E5%8A%A1%E5%BA%94%E5%AF%B9%E8%BF%94%E7%A8%8B%E9%AB%98%E5%B3%B0%23",
+            "onboard_time_raw": null,
+            "onboard_time": null,
+            "published_at": null
+          },
+          {
+            "title": "现在才发现万人迷没戴任何首饰",
+            "rank": 4,
+            "hot_value": 624863,
+            "category": null,
+            "label": "热",
+            "url": "https://s.weibo.com/weibo?q=%23%E7%8E%B0%E5%9C%A8%E6%89%8D%E5%8F%91%E7%8E%B0%E4%B8%87%E4%BA%BA%E8%BF%B7%E6%B2%A1%E6%88%B4%E4%BB%BB%E4%BD%95%E9%A6%96%E9%A5%B0%23",
+            "onboard_time_raw": null,
+            "onboard_time": null,
+            "published_at": null
+          },
+          {
+            "title": "缅北电诈纪录片颠覆认知",
+            "rank": 5,
+            "hot_value": 437835,
+            "category": null,
+            "label": "新",
+            "url": "https://s.weibo.com/weibo?q=%E7%BC%85%E5%8C%97%E7%94%B5%E8%AF%88%E7%BA%AA%E5%BD%95%E7%89%87%E9%A2%A0%E8%A6%86%E8%AE%A4%E7%9F%A5",
+            "onboard_time_raw": null,
+            "onboard_time": null,
+            "published_at": null
+          }
+        ],
+        "outcome": "SUCCESS",
+        "elapsed_seconds": 0.228
+      }
+    ]
+  },
+  "scope": "Two brief anonymous observations of both upstream endpoints, not daily stability or formal API authorization; first demo failure is specific to this machine",
+  "probe_checks": [
+    {
+      "case": "valid-zero-heat",
+      "result": "PASS",
+      "type": "offline-controlled-response"
+    },
+    {
+      "case": "empty-list",
+      "result": "PASS",
+      "type": "offline-controlled-response"
+    },
+    {
+      "case": "business-failure",
+      "result": "PASS",
+      "type": "offline-controlled-response"
+    },
+    {
+      "case": "invalid-json",
+      "result": "PASS",
+      "type": "offline-controlled-response"
+    }
+  ],
+  "followup_observations": [
+    {
+      "probe_version": 1,
+      "scope": "Short anonymous availability probe; not API authorization or SLA evidence",
+      "records": [
+        {
+          "endpoint": "hot_band",
+          "url": "https://weibo.com/ajax/statuses/hot_band",
+          "captured_at": "2026-10-07T04:24:36.458150+00:00",
+          "auth": "anonymous-no-cookie",
+          "item_count": 50,
+          "http_status": 200,
+          "content_type": "application/json; charset=utf-8",
+          "server_date": "Wed, 07 Oct 2026 04:24:37 GMT",
+          "cache_age": null,
+          "final_url": "https://weibo.com/ajax/statuses/hot_band",
+          "response_sha256": "9eaea311cc9c60703bf7b5a51dc9a8200916bd51d7f1ce180932bf22e5e0012f",
+          "business_ok": 1,
+          "item_keys": [
+            "category",
+            "channel_type",
+            "emoticon",
+            "expand",
+            "extension",
+            "flag",
+            "flag_desc",
+            "fun_word",
+            "icon_desc",
+            "icon_desc_color",
+            "is_hot",
+            "is_new",
+            "label_name",
+            "loc_page",
+            "note",
+            "num",
+            "onboard_time",
+            "rank",
+            "realpos",
+            "small_icon_desc",
+            "small_icon_desc_color",
+            "star_name",
+            "star_word",
+            "subject_label",
+            "subject_querys",
+            "tail_icon",
+            "topic_flag",
+            "transparency_tag",
+            "word",
+            "word_scheme"
+          ],
+          "sample": [
+            {
+              "title": "韩版衣服中国造国内搜不到",
+              "rank": 1,
+              "hot_value": 1919566,
+              "category": "时尚",
+              "label": "新",
+              "url": "https://s.weibo.com/weibo?q=%E9%9F%A9%E7%89%88%E8%A1%A3%E6%9C%8D%E4%B8%AD%E5%9B%BD%E9%80%A0%E5%9B%BD%E5%86%85%E6%90%9C%E4%B8%8D%E5%88%B0",
+              "onboard_time_raw": 1791342740,
+              "onboard_time": "2026-10-07T03:12:20+00:00",
+              "published_at": null
+            },
+            {
+              "title": "2599元一桌的婚宴14道主菜上错7道",
+              "rank": 2,
+              "hot_value": 1246913,
+              "category": "民生新闻",
+              "label": "热",
+              "url": "https://s.weibo.com/weibo?q=%232599%E5%85%83%E4%B8%80%E6%A1%8C%E7%9A%84%E5%A9%9A%E5%AE%B414%E9%81%93%E4%B8%BB%E8%8F%9C%E4%B8%8A%E9%94%997%E9%81%93%23",
+              "onboard_time_raw": 1791335360,
+              "onboard_time": "2026-10-07T01:09:20+00:00",
+              "published_at": null
+            },
+            {
+              "title": "大国工程重器进度条刷新",
+              "rank": 3,
+              "hot_value": 1020950,
+              "category": "民生新闻",
+              "label": "",
+              "url": "https://s.weibo.com/weibo?q=%23%E5%A4%A7%E5%9B%BD%E5%B7%A5%E7%A8%8B%E9%87%8D%E5%99%A8%E8%BF%9B%E5%BA%A6%E6%9D%A1%E5%88%B7%E6%96%B0%23",
+              "onboard_time_raw": 1791338359,
+              "onboard_time": "2026-10-07T01:59:19+00:00",
+              "published_at": null
+            },
+            {
+              "title": "白俄女模特因高薪工作被骗缅甸园区",
+              "rank": 4,
+              "hot_value": 883532,
+              "category": "海外新闻",
+              "label": "",
+              "url": "https://s.weibo.com/weibo?q=%23%E7%99%BD%E4%BF%84%E5%A5%B3%E6%A8%A1%E7%89%B9%E5%9B%A0%E9%AB%98%E8%96%AA%E5%B7%A5%E4%BD%9C%E8%A2%AB%E9%AA%97%E7%BC%85%E7%94%B8%E5%9B%AD%E5%8C%BA%23",
+              "onboard_time_raw": 1791340100,
+              "onboard_time": "2026-10-07T02:28:20+00:00",
+              "published_at": null
+            },
+            {
+              "title": "iPhoneDuo 强制适配",
+              "rank": 5,
+              "hot_value": 628412,
+              "category": "数码",
+              "label": "新",
+              "url": "https://s.weibo.com/weibo?q=iPhoneDuo%20%E5%BC%BA%E5%88%B6%E9%80%82%E9%85%8D",
+              "onboard_time_raw": 1791343220,
+              "onboard_time": "2026-10-07T03:20:20+00:00",
+              "published_at": null
+            }
+          ],
+          "outcome": "SUCCESS",
+          "elapsed_seconds": 0.188
+        },
+        {
+          "endpoint": "hotSearch",
+          "url": "https://weibo.com/ajax/side/hotSearch",
+          "captured_at": "2026-10-07T04:24:36.458466+00:00",
+          "auth": "anonymous-no-cookie",
+          "item_count": 50,
+          "http_status": 200,
+          "content_type": "application/json; charset=utf-8",
+          "server_date": "Wed, 07 Oct 2026 04:24:37 GMT",
+          "cache_age": null,
+          "final_url": "https://weibo.com/ajax/side/hotSearch",
+          "response_sha256": "0161fa9b5befc8de8c5bf6915e29fb0b85019c5ba7fb1f0e1d7698f0bf4c9384",
+          "business_ok": 1,
+          "item_keys": [
+            "emoticon",
+            "flag",
+            "flag_desc",
+            "icon",
+            "icon_desc",
+            "icon_desc_color",
+            "icon_height",
+            "icon_width",
+            "label_name",
+            "note",
+            "num",
+            "rank",
+            "realpos",
+            "small_icon_desc",
+            "small_icon_desc_color",
+            "topic_flag",
+            "word",
+            "word_scheme"
+          ],
+          "sample": [
+            {
+              "title": "韩版衣服中国造国内搜不到",
+              "rank": 1,
+              "hot_value": 1919566,
+              "category": null,
+              "label": "新",
+              "url": "https://s.weibo.com/weibo?q=%E9%9F%A9%E7%89%88%E8%A1%A3%E6%9C%8D%E4%B8%AD%E5%9B%BD%E9%80%A0%E5%9B%BD%E5%86%85%E6%90%9C%E4%B8%8D%E5%88%B0",
+              "onboard_time_raw": null,
+              "onboard_time": null,
+              "published_at": null
+            },
+            {
+              "title": "2599元一桌的婚宴14道主菜上错7道",
+              "rank": 2,
+              "hot_value": 1246913,
+              "category": null,
+              "label": "热",
+              "url": "https://s.weibo.com/weibo?q=%232599%E5%85%83%E4%B8%80%E6%A1%8C%E7%9A%84%E5%A9%9A%E5%AE%B414%E9%81%93%E4%B8%BB%E8%8F%9C%E4%B8%8A%E9%94%997%E9%81%93%23",
+              "onboard_time_raw": null,
+              "onboard_time": null,
+              "published_at": null
+            },
+            {
+              "title": "大国工程重器进度条刷新",
+              "rank": 3,
+              "hot_value": 1020950,
+              "category": null,
+              "label": "",
+              "url": "https://s.weibo.com/weibo?q=%23%E5%A4%A7%E5%9B%BD%E5%B7%A5%E7%A8%8B%E9%87%8D%E5%99%A8%E8%BF%9B%E5%BA%A6%E6%9D%A1%E5%88%B7%E6%96%B0%23",
+              "onboard_time_raw": null,
+              "onboard_time": null,
+              "published_at": null
+            },
+            {
+              "title": "白俄女模特因高薪工作被骗缅甸园区",
+              "rank": 4,
+              "hot_value": 883532,
+              "category": null,
+              "label": "",
+              "url": "https://s.weibo.com/weibo?q=%23%E7%99%BD%E4%BF%84%E5%A5%B3%E6%A8%A1%E7%89%B9%E5%9B%A0%E9%AB%98%E8%96%AA%E5%B7%A5%E4%BD%9C%E8%A2%AB%E9%AA%97%E7%BC%85%E7%94%B8%E5%9B%AD%E5%8C%BA%23",
+              "onboard_time_raw": null,
+              "onboard_time": null,
+              "published_at": null
+            },
+            {
+              "title": "iPhoneDuo 强制适配",
+              "rank": 5,
+              "hot_value": 628412,
+              "category": null,
+              "label": "新",
+              "url": "https://s.weibo.com/weibo?q=iPhoneDuo%20%E5%BC%BA%E5%88%B6%E9%80%82%E9%85%8D",
+              "onboard_time_raw": null,
+              "onboard_time": null,
+              "published_at": null
+            }
+          ],
+          "outcome": "SUCCESS",
+          "elapsed_seconds": 0.185
+        }
+      ]
+    },
+    {
+      "probe_version": 2,
+      "scope": "Bounded anonymous availability probe; not API authorization or SLA evidence",
+      "records": [
+        {
+          "endpoint": "hot_band",
+          "url": "https://weibo.com/ajax/statuses/hot_band",
+          "captured_at": "2026-10-07T04:26:55.424212+00:00",
+          "auth": "anonymous-no-cookie",
+          "item_count": 50,
+          "http_status": 200,
+          "content_type": "application/json; charset=utf-8",
+          "server_date": "Wed, 07 Oct 2026 04:26:56 GMT",
+          "cache_age": null,
+          "final_url": "https://weibo.com/ajax/statuses/hot_band",
+          "response_sha256": "8976256b872e9255e45dd407ff029c622a0ec52a1711196ee90745712107474c",
+          "business_ok": 1,
+          "item_keys": [
+            "category",
+            "channel_type",
+            "emoticon",
+            "expand",
+            "extension",
+            "flag",
+            "flag_desc",
+            "fun_word",
+            "icon_desc",
+            "icon_desc_color",
+            "is_hot",
+            "is_new",
+            "label_name",
+            "loc_page",
+            "note",
+            "num",
+            "onboard_time",
+            "rank",
+            "realpos",
+            "small_icon_desc",
+            "small_icon_desc_color",
+            "star_name",
+            "star_word",
+            "subject_label",
+            "subject_querys",
+            "tail_icon",
+            "topic_flag",
+            "transparency_tag",
+            "word",
+            "word_scheme"
+          ],
+          "sample": [
+            {
+              "title": "韩版衣服中国造国内搜不到",
+              "rank": 1,
+              "hot_value": 2018979,
+              "category": "时尚",
+              "label": "新",
+              "url": "https://s.weibo.com/weibo?q=%E9%9F%A9%E7%89%88%E8%A1%A3%E6%9C%8D%E4%B8%AD%E5%9B%BD%E9%80%A0%E5%9B%BD%E5%86%85%E6%90%9C%E4%B8%8D%E5%88%B0",
+              "onboard_time_raw": 1791342740,
+              "onboard_time": "2026-10-07T03:12:20+00:00",
+              "published_at": null
+            },
+            {
+              "title": "2599元一桌的婚宴14道主菜上错7道",
+              "rank": 2,
+              "hot_value": 1221424,
+              "category": "民生新闻",
+              "label": "热",
+              "url": "https://s.weibo.com/weibo?q=%232599%E5%85%83%E4%B8%80%E6%A1%8C%E7%9A%84%E5%A9%9A%E5%AE%B414%E9%81%93%E4%B8%BB%E8%8F%9C%E4%B8%8A%E9%94%997%E9%81%93%23",
+              "onboard_time_raw": 1791335360,
+              "onboard_time": "2026-10-07T01:09:20+00:00",
+              "published_at": null
+            },
+            {
+              "title": "大国工程重器进度条刷新",
+              "rank": 3,
+              "hot_value": 885637,
+              "category": "民生新闻",
+              "label": "",
+              "url": "https://s.weibo.com/weibo?q=%23%E5%A4%A7%E5%9B%BD%E5%B7%A5%E7%A8%8B%E9%87%8D%E5%99%A8%E8%BF%9B%E5%BA%A6%E6%9D%A1%E5%88%B7%E6%96%B0%23",
+              "onboard_time_raw": 1791338359,
+              "onboard_time": "2026-10-07T01:59:19+00:00",
+              "published_at": null
+            },
+            {
+              "title": "白俄女模特因高薪工作被骗缅甸园区",
+              "rank": 4,
+              "hot_value": 883706,
+              "category": "海外新闻",
+              "label": "",
+              "url": "https://s.weibo.com/weibo?q=%23%E7%99%BD%E4%BF%84%E5%A5%B3%E6%A8%A1%E7%89%B9%E5%9B%A0%E9%AB%98%E8%96%AA%E5%B7%A5%E4%BD%9C%E8%A2%AB%E9%AA%97%E7%BC%85%E7%94%B8%E5%9B%AD%E5%8C%BA%23",
+              "onboard_time_raw": 1791340100,
+              "onboard_time": "2026-10-07T02:28:20+00:00",
+              "published_at": null
+            },
+            {
+              "title": "iPhoneDuo 强制适配",
+              "rank": 5,
+              "hot_value": 657663,
+              "category": "数码",
+              "label": "新",
+              "url": "https://s.weibo.com/weibo?q=iPhoneDuo%20%E5%BC%BA%E5%88%B6%E9%80%82%E9%85%8D",
+              "onboard_time_raw": 1791343220,
+              "onboard_time": "2026-10-07T03:20:20+00:00",
+              "published_at": null
+            }
+          ],
+          "outcome": "SUCCESS",
+          "elapsed_seconds": 0.181
+        },
+        {
+          "endpoint": "hotSearch",
+          "url": "https://weibo.com/ajax/side/hotSearch",
+          "captured_at": "2026-10-07T04:26:55.424511+00:00",
+          "auth": "anonymous-no-cookie",
+          "item_count": 50,
+          "http_status": 200,
+          "content_type": "application/json; charset=utf-8",
+          "server_date": "Wed, 07 Oct 2026 04:26:56 GMT",
+          "cache_age": null,
+          "final_url": "https://weibo.com/ajax/side/hotSearch",
+          "response_sha256": "25f02b2d167dbcae5e4b7963c2037795cd054a881b44ce7993c5459b1b097483",
+          "business_ok": 1,
+          "item_keys": [
+            "emoticon",
+            "flag",
+            "flag_desc",
+            "icon",
+            "icon_desc",
+            "icon_desc_color",
+            "icon_height",
+            "icon_width",
+            "label_name",
+            "note",
+            "num",
+            "rank",
+            "realpos",
+            "small_icon_desc",
+            "small_icon_desc_color",
+            "topic_flag",
+            "word",
+            "word_scheme"
+          ],
+          "sample": [
+            {
+              "title": "韩版衣服中国造国内搜不到",
+              "rank": 1,
+              "hot_value": 2018979,
+              "category": null,
+              "label": "新",
+              "url": "https://s.weibo.com/weibo?q=%E9%9F%A9%E7%89%88%E8%A1%A3%E6%9C%8D%E4%B8%AD%E5%9B%BD%E9%80%A0%E5%9B%BD%E5%86%85%E6%90%9C%E4%B8%8D%E5%88%B0",
+              "onboard_time_raw": null,
+              "onboard_time": null,
+              "published_at": null
+            },
+            {
+              "title": "2599元一桌的婚宴14道主菜上错7道",
+              "rank": 2,
+              "hot_value": 1221424,
+              "category": null,
+              "label": "热",
+              "url": "https://s.weibo.com/weibo?q=%232599%E5%85%83%E4%B8%80%E6%A1%8C%E7%9A%84%E5%A9%9A%E5%AE%B414%E9%81%93%E4%B8%BB%E8%8F%9C%E4%B8%8A%E9%94%997%E9%81%93%23",
+              "onboard_time_raw": null,
+              "onboard_time": null,
+              "published_at": null
+            },
+            {
+              "title": "大国工程重器进度条刷新",
+              "rank": 3,
+              "hot_value": 885637,
+              "category": null,
+              "label": "",
+              "url": "https://s.weibo.com/weibo?q=%23%E5%A4%A7%E5%9B%BD%E5%B7%A5%E7%A8%8B%E9%87%8D%E5%99%A8%E8%BF%9B%E5%BA%A6%E6%9D%A1%E5%88%B7%E6%96%B0%23",
+              "onboard_time_raw": null,
+              "onboard_time": null,
+              "published_at": null
+            },
+            {
+              "title": "白俄女模特因高薪工作被骗缅甸园区",
+              "rank": 4,
+              "hot_value": 883706,
+              "category": null,
+              "label": "",
+              "url": "https://s.weibo.com/weibo?q=%23%E7%99%BD%E4%BF%84%E5%A5%B3%E6%A8%A1%E7%89%B9%E5%9B%A0%E9%AB%98%E8%96%AA%E5%B7%A5%E4%BD%9C%E8%A2%AB%E9%AA%97%E7%BC%85%E7%94%B8%E5%9B%AD%E5%8C%BA%23",
+              "onboard_time_raw": null,
+              "onboard_time": null,
+              "published_at": null
+            },
+            {
+              "title": "iPhoneDuo 强制适配",
+              "rank": 5,
+              "hot_value": 657663,
+              "category": null,
+              "label": "新",
+              "url": "https://s.weibo.com/weibo?q=iPhoneDuo%20%E5%BC%BA%E5%88%B6%E9%80%82%E9%85%8D",
+              "onboard_time_raw": null,
+              "onboard_time": null,
+              "published_at": null
+            }
+          ],
+          "outcome": "SUCCESS",
+          "elapsed_seconds": 0.16
+        }
+      ]
+    }
+  ],
+  "followup_failure_validation": "weibo-probe-failure-validation.json"
+}

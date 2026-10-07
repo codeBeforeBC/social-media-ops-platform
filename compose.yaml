@@ -1,0 +1,109 @@
+name: yoyo-workbench
+services:
+  init:
+    image: node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+    user: '0:0'
+    environment:
+      STATE_DIR: /state
+    volumes:
+      - state:/state
+      - ./tools/init-state.mjs:/init-state.mjs:ro
+    command: ['node', '/init-state.mjs']
+    restart: 'no'
+  db:
+    image: postgres:17.6-bookworm@sha256:f3bd19c606e442c3d7bdfa8002e03fe260a1023351e0ea4598032022b68dd6e3
+    depends_on:
+      init:
+        condition: service_completed_successfully
+    environment:
+      POSTGRES_USER: yoyo
+      POSTGRES_DB: yoyo
+      POSTGRES_PASSWORD_FILE: /state/postgres-password
+    volumes:
+      - state:/state:ro
+      - database:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U yoyo -d yoyo']
+      interval: 3s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped
+  migrate:
+    build: .
+    image: yoyo-local:0.1.0
+    depends_on:
+      db:
+        condition: service_healthy
+    environment: &environment
+      DB_HOST: db
+      DB_PORT: '5432'
+      STATE_DIR: /state
+      API_HOST: 0.0.0.0
+      APP_ORIGIN: ${APP_ORIGIN:-http://localhost:3000}
+      NODE_ENV: ${NODE_ENV:-development}
+      SESSION_ABSOLUTE_SECONDS: ${SESSION_ABSOLUTE_SECONDS:-43200}
+      SESSION_IDLE_SECONDS: ${SESSION_IDLE_SECONDS:-7200}
+    volumes: &volumes
+      - state:/state
+    command: ['node', 'dist/packages/db/src/migrate.js']
+    restart: 'no'
+  api:
+    image: yoyo-local:0.1.0
+    build: .
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    environment: *environment
+    volumes: *volumes
+    ports:
+      - '127.0.0.1:${YOYO_PORT:-3000}:3000'
+    command: ['node', 'dist/apps/api/src/main.js']
+    healthcheck:
+      test: ['CMD', 'node', '-e', "fetch('http://127.0.0.1:3000/api/v1/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped
+    security_opt: ['no-new-privileges:true']
+  worker:
+    image: yoyo-local:0.1.0
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    environment: *environment
+    volumes: *volumes
+    command: ['node', 'dist/apps/worker/src/main.js']
+    restart: unless-stopped
+    security_opt: ['no-new-privileges:true']
+    mem_limit: 512m
+    cpus: 1
+  reminder:
+    image: yoyo-local:0.1.0
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    environment:
+      <<: *environment
+      WORKER_POOL: reminder
+    volumes: *volumes
+    command: ['node', 'dist/apps/worker/src/main.js']
+    restart: unless-stopped
+    security_opt: ['no-new-privileges:true']
+    mem_limit: 256m
+    cpus: 0.5
+  scheduler:
+    image: yoyo-local:0.1.0
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    environment: *environment
+    volumes: *volumes
+    command: ['node', 'dist/apps/scheduler/src/main.js']
+    restart: unless-stopped
+    security_opt: ['no-new-privileges:true']
+    mem_limit: 256m
+    cpus: 0.5
+# S3兼容存储与媒体受限执行器在S2按真实文件验收后纳入，S1不提供占位文件服务。
+volumes:
+  state:
+  database:

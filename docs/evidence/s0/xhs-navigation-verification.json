@@ -1,0 +1,978 @@
+{
+  "date": "2026-10-07",
+  "profile": "zrcmcu2d",
+  "chrome_version": "154.0.8037.99",
+  "cli_version": "1.8.8",
+  "bridge_version": "1.0.24",
+  "scope": "S0 navigation verification only; public search/detail, no writes or media downloads",
+  "native_rechecks": [
+    {
+      "label": "emotion-baseline",
+      "at": "2026-10-07T08:14:29.416982+00:00",
+      "exit_code": 0,
+      "elapsed_seconds": 2.541,
+      "row_count": 3
+    },
+    {
+      "label": "note-baseline",
+      "at": "2026-10-07T08:15:09.397526+00:00",
+      "exit_code": 0,
+      "elapsed_seconds": 4.942,
+      "row_count": 7
+    }
+  ],
+  "neutral_site_bridge_ab": {
+    "profile": "zrcmcu2d",
+    "target": "https://example.com",
+    "records": [
+      {
+        "name": "plain_first_navigation",
+        "ok": false,
+        "elapsed_ms": 347,
+        "error": "Navigation rejected."
+      },
+      {
+        "name": "first_page_state",
+        "ok": true,
+        "elapsed_ms": 3946,
+        "value": {
+          "origin": "https://example.com",
+          "path": "/",
+          "title": "Example Domain"
+        }
+      },
+      {
+        "name": "plain_second_navigation_after_debugger_attach",
+        "ok": true,
+        "elapsed_ms": 1087
+      },
+      {
+        "name": "second_page_state",
+        "ok": true,
+        "elapsed_ms": 14,
+        "value": {
+          "origin": "https://example.com",
+          "path": "/",
+          "title": "Example Domain"
+        }
+      },
+      {
+        "name": "keep_debugger_attached_with_no_match_capture",
+        "ok": true,
+        "elapsed_ms": 9,
+        "value": true
+      },
+      {
+        "name": "navigation_while_debugger_stays_attached",
+        "ok": true,
+        "elapsed_ms": 1056
+      },
+      {
+        "name": "third_page_state",
+        "ok": true,
+        "elapsed_ms": 11,
+        "value": {
+          "origin": "https://example.com",
+          "path": "/",
+          "title": "Example Domain"
+        }
+      },
+      {
+        "name": "verify_no_captured_http_entries",
+        "ok": true,
+        "elapsed_ms": 12,
+        "value": {
+          "entries": 0
+        }
+      },
+      {
+        "name": "close_probe_lease",
+        "ok": true,
+        "elapsed_ms": 25
+      }
+    ],
+    "capture_pattern": "opencli://yoyo-navigation-no-http-match/"
+  },
+  "neutral_site_navigation_traces": [
+    {
+      "at": "2026-10-07T08:16:21.074Z",
+      "action": "navigate",
+      "surface": "adapter",
+      "session": "yoyo-nav-adapter-ab",
+      "context_id": "zrcmcu2d",
+      "url": {
+        "origin": "https://example.com",
+        "path": "/",
+        "query_keys": [
+          "yoyo_navigation_probe"
+        ]
+      },
+      "elapsed_ms": 346,
+      "http_status": 200,
+      "ok": false,
+      "error": "Navigation rejected."
+    },
+    {
+      "at": "2026-10-07T08:16:26.595Z",
+      "action": "navigate",
+      "surface": "adapter",
+      "session": "yoyo-nav-adapter-ab",
+      "context_id": "zrcmcu2d",
+      "url": {
+        "origin": "https://example.com",
+        "path": "/",
+        "query_keys": [
+          "yoyo_navigation_probe"
+        ]
+      },
+      "elapsed_ms": 570,
+      "http_status": 200,
+      "ok": true,
+      "error": "",
+      "page": "EFFF61E2351773916B97519A325FEBDF",
+      "navigation_result": {
+        "url": {
+          "origin": "https://example.com",
+          "path": "/",
+          "query_keys": [
+            "yoyo_navigation_probe"
+          ]
+        },
+        "timed_out": false
+      }
+    },
+    {
+      "at": "2026-10-07T08:16:27.673Z",
+      "action": "navigate",
+      "surface": "adapter",
+      "session": "yoyo-nav-adapter-ab",
+      "context_id": "zrcmcu2d",
+      "url": {
+        "origin": "https://example.com",
+        "path": "/",
+        "query_keys": [
+          "yoyo_navigation_probe"
+        ]
+      },
+      "elapsed_ms": 538,
+      "http_status": 200,
+      "ok": true,
+      "error": "",
+      "page": "EFFF61E2351773916B97519A325FEBDF",
+      "navigation_result": {
+        "url": {
+          "origin": "https://example.com",
+          "path": "/",
+          "query_keys": [
+            "yoyo_navigation_probe"
+          ]
+        },
+        "timed_out": false
+      }
+    }
+  ],
+  "workaround_runs": [
+    {
+      "started_at": "2026-10-07T08:20:33.889Z",
+      "profile": "zrcmcu2d",
+      "cli": "1.8.8",
+      "search_adapter_sha256": "e64cab1dd64c5e3138c94b43c6efab35861fc66bd34d3cec113f5faa4af8f7e2",
+      "source_type": "keyword_search",
+      "navigation_strategy": "debugger remains attached; non-HTTP capture pattern; no navigation retries",
+      "searches": [
+        {
+          "keyword": "旅行",
+          "sort": "comprehensive",
+          "requested_note_type": "image",
+          "count": 3,
+          "items": [
+            {
+              "external_id": "6a16b92500000000350299a3",
+              "canonical_url": "https://www.xiaohongshu.com/explore/6a16b92500000000350299a3",
+              "title": "恶心的龙门石窟！！！",
+              "search_position": 1,
+              "published_at": null
+            },
+            {
+              "external_id": "69c7ee86000000001a0243d6",
+              "canonical_url": "https://www.xiaohongshu.com/explore/69c7ee86000000001a0243d6",
+              "title": "跟一个扫兴的老公出来旅游，真的没意思！",
+              "search_position": 2,
+              "published_at": null
+            },
+            {
+              "external_id": "69f2f3ef000000001f00342d",
+              "canonical_url": "https://www.xiaohongshu.com/explore/69f2f3ef000000001f00342d",
+              "title": "在上海很少见有人北上沿海旅游为什么",
+              "search_position": 3,
+              "published_at": null
+            }
+          ]
+        },
+        {
+          "keyword": "潮玩",
+          "sort": "comprehensive",
+          "requested_note_type": "video",
+          "count": 3,
+          "items": [
+            {
+              "external_id": "6ac36d660000000015007551",
+              "canonical_url": "https://www.xiaohongshu.com/explore/6ac36d660000000015007551",
+              "title": "小野的启航日，和一朵云私奔去看海 🌊",
+              "search_position": 1,
+              "published_at": null
+            },
+            {
+              "external_id": "6ac2297c000000001b031223",
+              "canonical_url": "https://www.xiaohongshu.com/explore/6ac2297c000000001b031223",
+              "title": "Angry Molly清空台面散盒！蓝火终于来啦？",
+              "search_position": 2,
+              "published_at": null
+            },
+            {
+              "external_id": "6ac1177e000000001b032d82",
+              "canonical_url": "https://www.xiaohongshu.com/explore/6ac1177e000000001b032d82",
+              "title": "Share🍡严丝合缝的角落生物米粒公仔✨",
+              "search_position": 3,
+              "published_at": null
+            }
+          ]
+        },
+        {
+          "keyword": "情绪价值",
+          "sort": "comprehensive",
+          "requested_note_type": "all",
+          "count": 3,
+          "items": [
+            {
+              "external_id": "689be405000000001d02b11e",
+              "canonical_url": "https://www.xiaohongshu.com/explore/689be405000000001d02b11e",
+              "title": "女生警惕“情绪价值”正在批量生产成年巨婴",
+              "search_position": 1,
+              "published_at": null
+            },
+            {
+              "external_id": "6a1a6df0000000000701319d",
+              "canonical_url": "https://www.xiaohongshu.com/explore/6a1a6df0000000000701319d",
+              "title": "我不喜欢“情绪价值”这个词",
+              "search_position": 2,
+              "published_at": null
+            },
+            {
+              "external_id": "6937fdbe000000001e001b80",
+              "canonical_url": "https://www.xiaohongshu.com/explore/6937fdbe000000001e001b80",
+              "title": "怎么才能给伴侣提供情绪价值？",
+              "search_position": 3,
+              "published_at": null
+            }
+          ]
+        },
+        {
+          "keyword": "旅行",
+          "sort": "latest",
+          "requested_note_type": "all",
+          "count": 3,
+          "items": [
+            {
+              "external_id": "6ac5a4260000000002028595",
+              "canonical_url": "https://www.xiaohongshu.com/explore/6ac5a4260000000002028595",
+              "title": "最终还是回到平淡的茶台之上",
+              "search_position": 1,
+              "published_at": null
+            },
+            {
+              "external_id": "6ac59c79000000000b007920",
+              "canonical_url": "https://www.xiaohongshu.com/explore/6ac59c79000000000b007920",
+              "title": "毛不易黄金行李牌",
+              "search_position": 2,
+              "published_at": null
+            },
+            {
+              "external_id": "6ac59a43000000001c00f724",
+              "canonical_url": "https://www.xiaohongshu.com/explore/6ac59a43000000001c00f724",
+              "title": "我为什么不愿意国内旅行",
+              "search_position": 3,
+              "published_at": null
+            }
+          ]
+        }
+      ],
+      "details": [
+        {
+          "keyword": "旅行",
+          "captured_at": "2026-10-07T08:20:44.366Z",
+          "external_id": "6a16b92500000000350299a3",
+          "canonical_url": "https://www.xiaohongshu.com/explore/6a16b92500000000350299a3",
+          "title": "恶心的龙门石窟！！！",
+          "body_chars": 92,
+          "body_sha256": "2875901eee895a25691db4b9c3235e8a8117033ae72a134e3f52d00df23f6bee",
+          "author_present": true,
+          "date_label_raw": "05-27",
+          "published_at": null,
+          "media_type": "image",
+          "visible_counts": {
+            "likes": {
+              "raw": "451",
+              "value": 451,
+              "approximate": false
+            },
+            "collects": {
+              "raw": "86",
+              "value": 86,
+              "approximate": false
+            },
+            "comments": {
+              "raw": "567",
+              "value": 567,
+              "approximate": false
+            }
+          }
+        },
+        {
+          "keyword": "潮玩",
+          "captured_at": "2026-10-07T08:20:56.985Z",
+          "external_id": "6ac36d660000000015007551",
+          "canonical_url": "https://www.xiaohongshu.com/explore/6ac36d660000000015007551",
+          "title": "小野的启航日，和一朵云私奔去看海 🌊",
+          "body_chars": 131,
+          "body_sha256": "a73f19c5a0354568f5acca5dbc00e4e9e958c4293e4c6881dad08b16d88cb451",
+          "author_present": true,
+          "date_label_raw": "1天前 江苏",
+          "published_at": null,
+          "media_type": "video",
+          "visible_counts": {
+            "likes": {
+              "raw": "697",
+              "value": 697,
+              "approximate": false
+            },
+            "collects": {
+              "raw": "326",
+              "value": 326,
+              "approximate": false
+            },
+            "comments": {
+              "raw": "119",
+              "value": 119,
+              "approximate": false
+            }
+          }
+        },
+        {
+          "keyword": "情绪价值",
+          "captured_at": "2026-10-07T08:21:07.578Z",
+          "external_id": "689be405000000001d02b11e",
+          "canonical_url": "https://www.xiaohongshu.com/explore/689be405000000001d02b11e",
+          "title": "女生警惕“情绪价值”正在批量生产成年巨婴",
+          "body_chars": 953,
+          "body_sha256": "6f2343200f7b6f5c2657822d166a572e39044424eec21409bdd66ea88b80bae8",
+          "author_present": true,
+          "date_label_raw": "编辑于 2025-08-21",
+          "published_at": null,
+          "media_type": "image",
+          "visible_counts": {
+            "likes": {
+              "raw": "3730",
+              "value": 3730,
+              "approximate": false
+            },
+            "collects": {
+              "raw": "1762",
+              "value": 1762,
+              "approximate": false
+            },
+            "comments": {
+              "raw": "591",
+              "value": 591,
+              "approximate": false
+            }
+          }
+        }
+      ],
+      "steps": [
+        {
+          "name": "prepare_debugger_preserving_navigation",
+          "ok": true,
+          "elapsed_ms": 38
+        },
+        {
+          "name": "search:旅行:comprehensive:image",
+          "ok": true,
+          "elapsed_ms": 4053
+        },
+        {
+          "name": "detail_navigation:旅行",
+          "ok": true,
+          "elapsed_ms": 2567
+        },
+        {
+          "name": "detail_read:旅行",
+          "ok": true,
+          "elapsed_ms": 816
+        },
+        {
+          "name": "search:潮玩:comprehensive:video",
+          "ok": true,
+          "elapsed_ms": 3708
+        },
+        {
+          "name": "detail_navigation:潮玩",
+          "ok": true,
+          "elapsed_ms": 2088
+        },
+        {
+          "name": "detail_read:潮玩",
+          "ok": true,
+          "elapsed_ms": 820
+        },
+        {
+          "name": "search:情绪价值:comprehensive:all",
+          "ok": true,
+          "elapsed_ms": 1852
+        },
+        {
+          "name": "detail_navigation:情绪价值",
+          "ok": true,
+          "elapsed_ms": 1915
+        },
+        {
+          "name": "detail_read:情绪价值",
+          "ok": true,
+          "elapsed_ms": 823
+        },
+        {
+          "name": "search:旅行:latest:all",
+          "ok": true,
+          "elapsed_ms": 3864
+        }
+      ],
+      "captured_http_entries": 0,
+      "ok": true,
+      "finished_at": "2026-10-07T08:21:17.477Z"
+    },
+    {
+      "started_at": "2026-10-07T08:22:06.418Z",
+      "profile": "zrcmcu2d",
+      "cli": "1.8.8",
+      "search_adapter_sha256": "e64cab1dd64c5e3138c94b43c6efab35861fc66bd34d3cec113f5faa4af8f7e2",
+      "source_type": "keyword_search",
+      "navigation_strategy": "debugger remains attached; non-HTTP capture pattern; no navigation retries",
+      "searches": [
+        {
+          "keyword": "旅行",
+          "sort": "comprehensive",
+          "requested_note_type": "image",
+          "count": 3,
+          "items": [
+            {
+              "external_id": "69ea27ca0000000019025c03",
+              "canonical_url": "https://www.xiaohongshu.com/explore/69ea27ca0000000019025c03",
+              "title": "《旅行》绝对是我的北影节最佳!",
+              "search_position": 1,
+              "published_at": null
+            },
+            {
+              "external_id": "6a47649f000000000803ceca",
+              "canonical_url": "https://www.xiaohongshu.com/explore/6a47649f000000000803ceca",
+              "title": "有没有热度很高却很烂的旅游城市？",
+              "search_position": 2,
+              "published_at": null
+            },
+            {
+              "external_id": "6a96799c0000000026016758",
+              "canonical_url": "https://www.xiaohongshu.com/explore/6a96799c0000000026016758",
+              "title": "如果雪山能看见",
+              "search_position": 3,
+              "published_at": null
+            }
+          ]
+        }
+      ],
+      "details": [],
+      "steps": [
+        {
+          "name": "prepare_debugger_preserving_navigation",
+          "ok": true,
+          "elapsed_ms": 36
+        },
+        {
+          "name": "search:旅行:comprehensive:image",
+          "ok": true,
+          "elapsed_ms": 3741
+        },
+        {
+          "name": "detail_navigation:旅行",
+          "ok": true,
+          "elapsed_ms": 2543
+        },
+        {
+          "name": "detail_read:旅行",
+          "ok": true,
+          "elapsed_ms": 821
+        }
+      ],
+      "ok": false,
+      "failure_code": "SOURCE_CHANGED",
+      "finished_at": "2026-10-07T08:22:16.589Z"
+    },
+    {
+      "started_at": "2026-10-07T08:24:40.944Z",
+      "profile": "zrcmcu2d",
+      "cli": "1.8.8",
+      "search_adapter_sha256": "e64cab1dd64c5e3138c94b43c6efab35861fc66bd34d3cec113f5faa4af8f7e2",
+      "source_type": "keyword_search",
+      "navigation_strategy": "debugger remains attached; non-HTTP capture pattern; no navigation retries",
+      "searches": [
+        {
+          "keyword": "旅行",
+          "sort": "comprehensive",
+          "requested_note_type": "image",
+          "count": 3,
+          "items": [
+            {
+              "external_id": "69ea27ca0000000019025c03",
+              "canonical_url": "https://www.xiaohongshu.com/explore/69ea27ca0000000019025c03",
+              "title": "《旅行》绝对是我的北影节最佳!",
+              "search_position": 1,
+              "published_at": null
+            },
+            {
+              "external_id": "6a22724400000000360183ed",
+              "canonical_url": "https://www.xiaohongshu.com/explore/6a22724400000000360183ed",
+              "title": "淄博全是大雷",
+              "search_position": 2,
+              "published_at": null
+            },
+            {
+              "external_id": "6a96799c0000000026016758",
+              "canonical_url": "https://www.xiaohongshu.com/explore/6a96799c0000000026016758",
+              "title": "如果雪山能看见",
+              "search_position": 3,
+              "published_at": null
+            }
+          ]
+        }
+      ],
+      "details": [],
+      "detail_diagnostics": [
+        {
+          "keyword": "旅行",
+          "expected_id": "69ea27ca0000000019025c03",
+          "path": "/explore/69ea27ca0000000019025c03",
+          "has_panel": true,
+          "author_present": true,
+          "loaded": true,
+          "login_wall": false,
+          "security_block": false,
+          "not_found": false,
+          "media_type": "video",
+          "requested_note_type": "image"
+        }
+      ],
+      "steps": [
+        {
+          "name": "prepare_debugger_preserving_navigation",
+          "ok": true,
+          "elapsed_ms": 47
+        },
+        {
+          "name": "search:旅行:comprehensive:image",
+          "ok": true,
+          "elapsed_ms": 3637
+        },
+        {
+          "name": "detail_navigation:旅行",
+          "ok": true,
+          "elapsed_ms": 2049
+        },
+        {
+          "name": "detail_read:旅行",
+          "ok": true,
+          "elapsed_ms": 820
+        },
+        {
+          "name": "detail_validate:旅行",
+          "ok": false,
+          "elapsed_ms": 1,
+          "code": "SOURCE_CHANGED",
+          "error": "Detail media type does not match the requested filter"
+        }
+      ],
+      "ok": false,
+      "failure_code": "SOURCE_CHANGED",
+      "failure_message": "Detail media type does not match the requested filter",
+      "finished_at": "2026-10-07T08:24:50.514Z"
+    }
+  ],
+  "workaround_navigation_traces": [
+    {
+      "at": "2026-10-07T08:20:34.799Z",
+      "action": "navigate",
+      "surface": "adapter",
+      "session": "yoyo-nav:5f52936e-9b88-4bfe-a8ab-4a66827aeb75",
+      "context_id": "zrcmcu2d",
+      "url": {
+        "origin": "https://www.xiaohongshu.com",
+        "path": "/search_result",
+        "query_keys": [
+          "keyword",
+          "source"
+        ]
+      },
+      "elapsed_ms": 872,
+      "http_status": 200,
+      "ok": true,
+      "error": "",
+      "page": "EFFF61E2351773916B97519A325FEBDF",
+      "navigation_result": {
+        "url": {
+          "origin": "https://www.xiaohongshu.com",
+          "path": "/search_result",
+          "query_keys": [
+            "keyword",
+            "source",
+            "type"
+          ]
+        },
+        "timed_out": false
+      }
+    },
+    {
+      "at": "2026-10-07T08:20:42.536Z",
+      "action": "navigate",
+      "surface": "adapter",
+      "session": "yoyo-nav:5f52936e-9b88-4bfe-a8ab-4a66827aeb75",
+      "context_id": "zrcmcu2d",
+      "url": {
+        "origin": "https://www.xiaohongshu.com",
+        "path": "/search_result/6a16b92500000000350299a3",
+        "query_keys": [
+          "xsec_token",
+          "xsec_source"
+        ]
+      },
+      "elapsed_ms": 1554,
+      "http_status": 200,
+      "ok": true,
+      "error": "",
+      "page": "EFFF61E2351773916B97519A325FEBDF",
+      "navigation_result": {
+        "url": {
+          "origin": "https://www.xiaohongshu.com",
+          "path": "/explore/6a16b92500000000350299a3",
+          "query_keys": [
+            "xsec_token",
+            "xsec_source"
+          ]
+        },
+        "timed_out": false
+      }
+    },
+    {
+      "at": "2026-10-07T08:20:47.909Z",
+      "action": "navigate",
+      "surface": "adapter",
+      "session": "yoyo-nav:5f52936e-9b88-4bfe-a8ab-4a66827aeb75",
+      "context_id": "zrcmcu2d",
+      "url": {
+        "origin": "https://www.xiaohongshu.com",
+        "path": "/search_result",
+        "query_keys": [
+          "keyword",
+          "source"
+        ]
+      },
+      "elapsed_ms": 541,
+      "http_status": 200,
+      "ok": true,
+      "error": "",
+      "page": "EFFF61E2351773916B97519A325FEBDF",
+      "navigation_result": {
+        "url": {
+          "origin": "https://www.xiaohongshu.com",
+          "path": "/search_result",
+          "query_keys": [
+            "keyword",
+            "source",
+            "type"
+          ]
+        },
+        "timed_out": false
+      }
+    },
+    {
+      "at": "2026-10-07T08:20:55.155Z",
+      "action": "navigate",
+      "surface": "adapter",
+      "session": "yoyo-nav:5f52936e-9b88-4bfe-a8ab-4a66827aeb75",
+      "context_id": "zrcmcu2d",
+      "url": {
+        "origin": "https://www.xiaohongshu.com",
+        "path": "/search_result/6ac36d660000000015007551",
+        "query_keys": [
+          "xsec_token",
+          "xsec_source"
+        ]
+      },
+      "elapsed_ms": 1078,
+      "http_status": 200,
+      "ok": true,
+      "error": "",
+      "page": "EFFF61E2351773916B97519A325FEBDF",
+      "navigation_result": {
+        "url": {
+          "origin": "https://www.xiaohongshu.com",
+          "path": "/explore/6ac36d660000000015007551",
+          "query_keys": [
+            "xsec_token",
+            "xsec_source"
+          ]
+        },
+        "timed_out": false
+      }
+    },
+    {
+      "at": "2026-10-07T08:21:00.627Z",
+      "action": "navigate",
+      "surface": "adapter",
+      "session": "yoyo-nav:5f52936e-9b88-4bfe-a8ab-4a66827aeb75",
+      "context_id": "zrcmcu2d",
+      "url": {
+        "origin": "https://www.xiaohongshu.com",
+        "path": "/search_result",
+        "query_keys": [
+          "keyword",
+          "source"
+        ]
+      },
+      "elapsed_ms": 640,
+      "http_status": 200,
+      "ok": true,
+      "error": "",
+      "page": "EFFF61E2351773916B97519A325FEBDF",
+      "navigation_result": {
+        "url": {
+          "origin": "https://www.xiaohongshu.com",
+          "path": "/search_result",
+          "query_keys": [
+            "keyword",
+            "source",
+            "type"
+          ]
+        },
+        "timed_out": false
+      }
+    },
+    {
+      "at": "2026-10-07T08:21:06.238Z",
+      "action": "navigate",
+      "surface": "adapter",
+      "session": "yoyo-nav:5f52936e-9b88-4bfe-a8ab-4a66827aeb75",
+      "context_id": "zrcmcu2d",
+      "url": {
+        "origin": "https://www.xiaohongshu.com",
+        "path": "/search_result/689be405000000001d02b11e",
+        "query_keys": [
+          "xsec_token",
+          "xsec_source"
+        ]
+      },
+      "elapsed_ms": 1398,
+      "http_status": 200,
+      "ok": true,
+      "error": "",
+      "page": "EFFF61E2351773916B97519A325FEBDF",
+      "navigation_result": {
+        "url": {
+          "origin": "https://www.xiaohongshu.com",
+          "path": "/explore/689be405000000001d02b11e",
+          "query_keys": [
+            "xsec_token",
+            "xsec_source"
+          ]
+        },
+        "timed_out": false
+      }
+    },
+    {
+      "at": "2026-10-07T08:21:11.126Z",
+      "action": "navigate",
+      "surface": "adapter",
+      "session": "yoyo-nav:5f52936e-9b88-4bfe-a8ab-4a66827aeb75",
+      "context_id": "zrcmcu2d",
+      "url": {
+        "origin": "https://www.xiaohongshu.com",
+        "path": "/search_result",
+        "query_keys": [
+          "keyword",
+          "source"
+        ]
+      },
+      "elapsed_ms": 545,
+      "http_status": 200,
+      "ok": true,
+      "error": "",
+      "page": "EFFF61E2351773916B97519A325FEBDF",
+      "navigation_result": {
+        "url": {
+          "origin": "https://www.xiaohongshu.com",
+          "path": "/search_result",
+          "query_keys": [
+            "keyword",
+            "source",
+            "type"
+          ]
+        },
+        "timed_out": false
+      }
+    },
+    {
+      "at": "2026-10-07T08:22:07.128Z",
+      "action": "navigate",
+      "surface": "adapter",
+      "session": "yoyo-nav:3d2d041c-1511-4dd1-89e9-7564d23c7d69",
+      "context_id": "zrcmcu2d",
+      "url": {
+        "origin": "https://www.xiaohongshu.com",
+        "path": "/search_result",
+        "query_keys": [
+          "keyword",
+          "source"
+        ]
+      },
+      "elapsed_ms": 672,
+      "http_status": 200,
+      "ok": true,
+      "error": "",
+      "page": "EFFF61E2351773916B97519A325FEBDF",
+      "navigation_result": {
+        "url": {
+          "origin": "https://www.xiaohongshu.com",
+          "path": "/search_result",
+          "query_keys": [
+            "keyword",
+            "source",
+            "type"
+          ]
+        },
+        "timed_out": false
+      }
+    },
+    {
+      "at": "2026-10-07T08:22:14.729Z",
+      "action": "navigate",
+      "surface": "adapter",
+      "session": "yoyo-nav:3d2d041c-1511-4dd1-89e9-7564d23c7d69",
+      "context_id": "zrcmcu2d",
+      "url": {
+        "origin": "https://www.xiaohongshu.com",
+        "path": "/search_result/69ea27ca0000000019025c03",
+        "query_keys": [
+          "xsec_token",
+          "xsec_source"
+        ]
+      },
+      "elapsed_ms": 1529,
+      "http_status": 200,
+      "ok": true,
+      "error": "",
+      "page": "EFFF61E2351773916B97519A325FEBDF",
+      "navigation_result": {
+        "url": {
+          "origin": "https://www.xiaohongshu.com",
+          "path": "/explore/69ea27ca0000000019025c03",
+          "query_keys": [
+            "xsec_token",
+            "xsec_source"
+          ]
+        },
+        "timed_out": false
+      }
+    },
+    {
+      "at": "2026-10-07T08:24:41.630Z",
+      "action": "navigate",
+      "surface": "adapter",
+      "session": "yoyo-nav:3c0fdf66-1afc-4365-bd81-5ec3f265f71c",
+      "context_id": "zrcmcu2d",
+      "url": {
+        "origin": "https://www.xiaohongshu.com",
+        "path": "/search_result",
+        "query_keys": [
+          "keyword",
+          "source"
+        ]
+      },
+      "elapsed_ms": 638,
+      "http_status": 200,
+      "ok": true,
+      "error": "",
+      "page": "EFFF61E2351773916B97519A325FEBDF",
+      "navigation_result": {
+        "url": {
+          "origin": "https://www.xiaohongshu.com",
+          "path": "/search_result",
+          "query_keys": [
+            "keyword",
+            "source",
+            "type"
+          ]
+        },
+        "timed_out": false
+      }
+    },
+    {
+      "at": "2026-10-07T08:24:49.069Z",
+      "action": "navigate",
+      "surface": "adapter",
+      "session": "yoyo-nav:3c0fdf66-1afc-4365-bd81-5ec3f265f71c",
+      "context_id": "zrcmcu2d",
+      "url": {
+        "origin": "https://www.xiaohongshu.com",
+        "path": "/search_result/69ea27ca0000000019025c03",
+        "query_keys": [
+          "xsec_token",
+          "xsec_source"
+        ]
+      },
+      "elapsed_ms": 1438,
+      "http_status": 200,
+      "ok": true,
+      "error": "",
+      "page": "EFFF61E2351773916B97519A325FEBDF",
+      "navigation_result": {
+        "url": {
+          "origin": "https://www.xiaohongshu.com",
+          "path": "/explore/69ea27ca0000000019025c03",
+          "query_keys": [
+            "xsec_token",
+            "xsec_source"
+          ]
+        },
+        "timed_out": false
+      }
+    }
+  ],
+  "workaround_navigation_count": 11,
+  "workaround_navigation_success_count": 11,
+  "controlled_guard_tests": {
+    "count": 8,
+    "result": "PASS",
+    "command": "node --test tools/s0/probe-xhs-navigation.test.mjs"
+  },
+  "upstream_references": [
+    "https://github.com/jackwener/OpenCLI/issues/2487",
+    "https://github.com/jackwener/OpenCLI/issues/2515",
+    "https://github.com/jackwener/OpenCLI/issues/2533"
+  ],
+  "conclusion": {
+    "failure_layer": "Browser Bridge navigation; same error on example.com, so not exclusive to Xiaohongshu",
+    "detach_timing": "Supported hypothesis based on source and upstream reports; exact Chrome internal timing not instrumented",
+    "native_commands": "Both baseline calls succeeded once; intermittent original failure not proven fixed",
+    "workaround": "11/11 navigation actions succeeded across 3 bounded runs; only first complete functional matrix passed",
+    "residual_issue": "Fresh install checks exposed image filter returning a detail classified as video; no authentication/security wall; exact filter/DOM cause remains to diagnose",
+    "cross_day_tested": false,
+    "site_login_expiry_tested": false
+  },
+  "secrets": "No cookie, signed query values, password, response bodies or full note text retained in this evidence"
+}

@@ -1,0 +1,12 @@
+name: yoyo-dev
+services:
+  init:
+    volumes:
+      - ./.local/state:/state
+      - ./tools/init-state.mjs:/init-state.mjs:ro
+  db:
+    ports:
+      - '127.0.0.1:54329:5432'
+    volumes:
+      - ./.local/state:/state:ro
+      - database:/var/lib/postgresql/data

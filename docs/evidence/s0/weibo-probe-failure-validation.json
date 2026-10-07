@@ -1,0 +1,82 @@
+{
+  "scope": "Controlled probe classification and explicit recheck; not production scheduler or source recovery acceptance",
+  "cases": [
+    {
+      "case": "/valid",
+      "expected": "SUCCESS",
+      "result": "PASS",
+      "transport": "localhost HTTP"
+    },
+    {
+      "case": "/401",
+      "expected": "AUTH_REQUIRED",
+      "result": "PASS",
+      "transport": "localhost HTTP"
+    },
+    {
+      "case": "/403",
+      "expected": "ACCESS_DENIED",
+      "result": "PASS",
+      "transport": "localhost HTTP"
+    },
+    {
+      "case": "/429",
+      "expected": "RATE_LIMITED",
+      "result": "PASS",
+      "transport": "localhost HTTP"
+    },
+    {
+      "case": "/503",
+      "expected": "SOURCE_UNAVAILABLE",
+      "result": "PASS",
+      "transport": "localhost HTTP"
+    },
+    {
+      "case": "/visitor",
+      "expected": "AUTH_REQUIRED",
+      "result": "PASS",
+      "transport": "localhost HTTP"
+    },
+    {
+      "case": "/invalid-json",
+      "expected": "PARSE_FAILED",
+      "result": "PASS",
+      "transport": "localhost HTTP"
+    },
+    {
+      "case": "/shape-change",
+      "expected": "SOURCE_CHANGED",
+      "result": "PASS",
+      "transport": "localhost HTTP"
+    },
+    {
+      "case": "/empty",
+      "expected": "EMPTY_RESULT",
+      "result": "PASS",
+      "transport": "localhost HTTP"
+    },
+    {
+      "case": "/bad-sixth-item",
+      "expected": "SOURCE_CHANGED",
+      "result": "PASS",
+      "transport": "localhost HTTP"
+    },
+    {
+      "case": "/bad-heat",
+      "expected": "SOURCE_CHANGED",
+      "result": "PASS",
+      "transport": "localhost HTTP"
+    },
+    {
+      "case": "explicit-recheck-after-failure",
+      "result": "PASS",
+      "scope": "new probe succeeds; not worker retry/backoff"
+    },
+    {
+      "case": "transport-timeout",
+      "result": "PASS",
+      "transport": "injected timeout; no upstream request"
+    }
+  ],
+  "result": "PASS"
+}

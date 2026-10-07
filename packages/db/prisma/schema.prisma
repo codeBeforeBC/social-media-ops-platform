@@ -1,0 +1,257 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["partialIndexes"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Workspace {
+  id            String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name          String          @db.VarChar(200)
+  timezone      String          @default("Asia/Shanghai")
+  settings      Json            @default("{}")
+  version       Int             @default(1)
+  created_at    DateTime        @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime        @default(now()) @db.Timestamptz(6)
+  accounts      accounts[]
+  audit_logs    audit_logs[]
+  invitations   invitations[]
+  jobs          jobs[]
+  memberships   memberships[]
+  notifications notifications[]
+  outbox        outbox[]
+  sessions      sessions[]
+
+  @@map("workspaces")
+}
+
+model account_memberships {
+  workspace_id  String      @db.Uuid
+  account_id    String      @db.Uuid
+  membership_id String      @db.Uuid
+  accounts      accounts    @relation(fields: [workspace_id, account_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  memberships   memberships @relation(fields: [workspace_id, membership_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([account_id, membership_id])
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model accounts {
+  id                  String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspace_id        String                @db.Uuid
+  platform            String
+  platform_user_id    String
+  display_handle      String                @default("")
+  name                String                @db.VarChar(200)
+  profile_url         String?
+  owner_id            String                @db.Uuid
+  timezone            String                @default("Asia/Shanghai")
+  version             Int                   @default(1)
+  created_at          DateTime              @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime              @default(now()) @db.Timestamptz(6)
+  account_memberships account_memberships[]
+  workspaces          Workspace             @relation(fields: [workspace_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  memberships         memberships           @relation(fields: [workspace_id, owner_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  jobs                jobs[]
+  outbox              outbox[]
+
+  @@unique([workspace_id, id])
+  @@unique([workspace_id, platform, platform_user_id])
+}
+
+model audit_logs {
+  id           String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspace_id String       @db.Uuid
+  actor_id     String?      @db.Uuid
+  actor_type   String
+  action       String
+  object_type  String
+  object_id    String?      @db.Uuid
+  details      Json         @default("{}")
+  request_id   String       @db.Uuid
+  occurred_at  DateTime     @default(now()) @db.Timestamptz(6)
+  memberships  memberships? @relation(fields: [workspace_id, actor_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  workspaces   Workspace    @relation(fields: [workspace_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([workspace_id, occurred_at(sort: Desc), id(sort: Desc)], map: "audit_pagination")
+}
+
+model idempotency_records {
+  workspace_id String      @db.Uuid
+  actor_id     String      @db.Uuid
+  method       String
+  route        String
+  key          String
+  request_hash String
+  status       Int
+  response     Json
+  created_at   DateTime    @default(now()) @db.Timestamptz(6)
+  memberships  memberships @relation(fields: [workspace_id, actor_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([workspace_id, actor_id, method, route, key])
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model instance_state {
+  id             Int       @id
+  initialized_at DateTime? @db.Timestamptz(6)
+}
+
+model invitations {
+  token_hash   String      @id
+  workspace_id String      @db.Uuid
+  user_id      String      @db.Uuid
+  expires_at   DateTime    @db.Timestamptz(6)
+  accepted_at  DateTime?   @db.Timestamptz(6)
+  created_at   DateTime    @default(now()) @db.Timestamptz(6)
+  users        users       @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  workspaces   Workspace   @relation(fields: [workspace_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  memberships  memberships @relation(fields: [workspace_id, user_id], references: [workspace_id, user_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model jobs {
+  id               String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspace_id     String          @db.Uuid
+  account_id       String?         @db.Uuid
+  created_by       String          @db.Uuid
+  outbox_id        String?         @unique @db.Uuid
+  type             String
+  pool             String
+  input            Json            @default("{}")
+  input_version    Int?
+  state            String          @default("queued")
+  attempts         Int             @default(0)
+  max_attempts     Int             @default(3)
+  available_at     DateTime        @default(now()) @db.Timestamptz(6)
+  lease_token      String?         @db.Uuid
+  lease_until      DateTime?       @db.Timestamptz(6)
+  heartbeat_at     DateTime?       @db.Timestamptz(6)
+  cancel_requested Boolean         @default(false)
+  timeout_seconds  Int             @default(120)
+  started_at       DateTime?       @db.Timestamptz(6)
+  finished_at      DateTime?       @db.Timestamptz(6)
+  result           Json?
+  error_code       String?
+  request_id       String          @db.Uuid
+  version          Int             @default(1)
+  created_at       DateTime        @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime        @default(now()) @db.Timestamptz(6)
+  accounts         accounts?       @relation(fields: [workspace_id, account_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  memberships      memberships     @relation(fields: [workspace_id, created_by], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  workspaces       Workspace       @relation(fields: [workspace_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  outbox           outbox?         @relation(fields: [workspace_id, outbox_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  notifications    notifications[]
+
+  @@unique([workspace_id, outbox_id], map: "jobs_workspace_outbox_unique")
+
+  @@unique([workspace_id, id])
+  @@index([pool, available_at], map: "jobs_claim", where: raw("(state = ANY (ARRAY['queued'::text, 'running'::text]))"))
+}
+
+model login_limits {
+  key      String   @id
+  attempts Int      @default(0)
+  reset_at DateTime @db.Timestamptz(6)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model memberships {
+  id                  String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspace_id        String                @db.Uuid
+  user_id             String                @db.Uuid
+  roles               String[]
+  active              Boolean               @default(true)
+  version             Int                   @default(1)
+  created_at          DateTime              @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime              @default(now()) @db.Timestamptz(6)
+  account_memberships account_memberships[]
+  accounts            accounts[]
+  audit_logs          audit_logs[]
+  idempotency_records idempotency_records[]
+  invitations         invitations[]
+  jobs                jobs[]
+  users               users                 @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  workspaces          Workspace             @relation(fields: [workspace_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  notifications       notifications[]
+
+  @@unique([workspace_id, id])
+  @@unique([workspace_id, user_id])
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model notifications {
+  id            String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspace_id  String      @db.Uuid
+  recipient_id  String      @db.Uuid
+  event_key     String
+  job_id        String?     @db.Uuid
+  channel       String      @default("in_app")
+  title         String      @db.VarChar(200)
+  task_ref      String?
+  read_at       DateTime?   @db.Timestamptz(6)
+  superseded_at DateTime?   @db.Timestamptz(6)
+  created_at    DateTime    @default(now()) @db.Timestamptz(6)
+  workspaces    Workspace   @relation(fields: [workspace_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  jobs          jobs?       @relation(fields: [workspace_id, job_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  memberships   memberships @relation(fields: [workspace_id, recipient_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([workspace_id, event_key, recipient_id, channel])
+}
+
+model outbox {
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspace_id  String    @db.Uuid
+  account_id    String?   @db.Uuid
+  event_key     String
+  event_type    String
+  payload       Json
+  available_at  DateTime  @default(now()) @db.Timestamptz(6)
+  dispatched_at DateTime? @db.Timestamptz(6)
+  created_at    DateTime  @default(now()) @db.Timestamptz(6)
+  jobs          jobs?
+  accounts      accounts? @relation(fields: [workspace_id, account_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  workspaces    Workspace @relation(fields: [workspace_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([workspace_id, event_key])
+  @@unique([workspace_id, id])
+}
+
+model process_health {
+  name         String   @id
+  pool         String
+  last_seen_at DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model schema_migrations {
+  name       String   @id
+  checksum   String
+  applied_at DateTime @default(now()) @db.Timestamptz(6)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model sessions {
+  token_hash   String     @id
+  csrf_hash    String
+  user_id      String?    @db.Uuid
+  workspace_id String?    @db.Uuid
+  expires_at   DateTime   @db.Timestamptz(6)
+  last_seen_at DateTime   @default(now()) @db.Timestamptz(6)
+  created_at   DateTime   @default(now()) @db.Timestamptz(6)
+  users        users?     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  workspaces   Workspace? @relation(fields: [workspace_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model users {
+  id            String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email         String        @unique
+  display_name  String        @db.VarChar(200)
+  password_hash String
+  created_at    DateTime      @default(now()) @db.Timestamptz(6)
+  invitations   invitations[]
+  memberships   memberships[]
+  sessions      sessions[]
+}

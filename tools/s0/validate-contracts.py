@@ -3,7 +3,7 @@ Run in the isolated environment described in contracts/README.md.
 """
 from pathlib import Path
 from datetime import datetime, timezone
-import copy, json, re
+import copy, json, re, os
 from jsonschema import Draft202012Validator, FormatChecker
 from openapi_spec_validator import validate_spec
 
@@ -68,5 +68,5 @@ for label,name,payload,accepted in cases:
     results.append({'case':label,'schema':name,'expected_accept':accepted,'passed':passed})
     assert passed, (label,[e.message for e in errors])
 result={'validation_kind':'contract_and_synthetic_schema_fixtures','checked_at':datetime.now(timezone.utc).isoformat(),'openapi':'PASS','json_schema':'PASS','paths':len(spec['paths']),'operations':len(operation_ids),'schemas':len(domain['$defs']),'fixture_count':len(results),'fixtures':results,'runtime_api_tests':'NOT_RUN','database_state_guards':'NOT_RUN','external_source_tests':'see_source_probes_not_this_report'}
-(root/'docs/evidence/s0/contract-validation.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
+(root/os.environ.get('CONTRACT_VALIDATION_REPORT','docs/evidence/s0/contract-validation.json')).write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
 print(f"PASS: OpenAPI 3.1 + JSON Schema 2020-12; {len(operation_ids)} operations; {len(results)} schema fixtures. Runtime not tested.")

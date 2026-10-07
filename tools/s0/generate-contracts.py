@@ -221,10 +221,12 @@ for path,methods in paths.items():
   for error in ['401','403','404','409','422','429','503']:op['responses'][error]={'description':'权限、版本、业务校验或外部服务错误','content':{'application/json':{'schema':ref('ErrorEnvelope')}}}
   op['x-implementation-status']='planned'
   op['x-business-guards']=['workspace_membership','account_consistency']+(['optimistic_concurrency','transactional_audit'] if method!='get' else [])
-spec={'openapi':'3.1.0','info':{'title':'YOYO 内部运营工作台','version':'1.0.0-s0','description':'设计基线的可校验内部契约。所有端点尚未实现，不是平台外部API。业务守卫见docs/decisions/ADR-002。'},'servers':[{'url':'http://localhost:3000/api/v1','description':'规划中的本地地址，尚未启动'}],'paths':paths,'components':{'securitySchemes':{'sessionCookie':{'type':'apiKey','in':'cookie','name':'yoyo_session'}},'schemas':S}}
+# S1运行契约扩展从独立模块维护，S0原始证据不覆盖。
+exec((root/'tools/s1/contract-extension.py').read_text())
+spec={'openapi':'3.1.0','info':{'title':'YOYO 内部运营工作台','version':'1.0.0-s1','description':'内部契约；S1实现的端点标记implemented，其余planned。不是平台外部API。业务守卫见ADR-002/003。'},'servers':[{'url':'http://localhost:3000/api/v1','description':'本地Compose默认入口'}],'paths':paths,'components':{'securitySchemes':{'sessionCookie':{'type':'apiKey','in':'cookie','name':'yoyo_session'}},'schemas':S}}
 (root/'contracts/openapi.json').write_text(json.dumps(spec,ensure_ascii=False,indent=2)+'\n')
 text=json.dumps({'$schema':'https://json-schema.org/draft/2020-12/schema','$id':'urn:yoyo:domain:v1','$defs':S},ensure_ascii=False,indent=2).replace('#/components/schemas/','#/$defs/')
 (root/'contracts/domain.schema.json').write_text(text+'\n')
-manifest={'paths':len(paths),'operations':sum(len(v) for v in paths.values()),'schemas':len(S),'source_document':'docs/yoyo-workbench-v1.0/06-接口契约.md','implementation_status':'not_implemented'}
-(root/'docs/evidence/s0/contract-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
+manifest={'paths':len(paths),'operations':sum(len(v) for v in paths.values()),'schemas':len(S),'source_document':'docs/yoyo-workbench-v1.0/06-接口契约.md','implementation_status':'s1_partial_implementation'}
+(root/'docs/evidence/s1/contract-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
 print(json.dumps(manifest))
