@@ -9,3 +9,8 @@ export async function api<T=any>(path:string,options:{method?:string;body?:unkno
   if(envelope.data?.csrf_token)csrf=envelope.data.csrf_token;
   if(path==='/auth/logout')csrf='';return envelope.data;
 }
+
+export async function uploadPart(url:string,body:Blob,signal?:AbortSignal){
+  if(!csrf)await api('/auth/csrf');const r=await fetch(url,{method:'PUT',credentials:'same-origin',headers:{'Content-Type':'application/octet-stream','X-CSRF-Token':csrf},body,signal});
+  const envelope=await r.json();if(!r.ok)throw new ApiError(envelope.error?.code??'UPLOAD_FAILED',envelope.error?.message??'分片上传失败',envelope.error?.request_id??'',r.status);return envelope.data;
+}

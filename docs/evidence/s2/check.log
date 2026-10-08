@@ -1,0 +1,364 @@
+
+> yoyo-workbench@0.1.0 check:s2 /Users/junlong/projects/social-mdeida-ops-platform
+> node tools/s2/check.mjs
+
+Instance credentials ready; no secrets printed.
+ Image yoyo-media-local:0.1.0 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 602B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.25kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 177B done
+#4 DONE 0.0s
+
+#5 [build 1/4] FROM docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#5 resolve docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 187B done
+#6 DONE 0.0s
+
+#7 [stage-1 2/6] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && (apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil poppler-utils fonts-dejavu-core ca-certificates || apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil poppler-utils fonts-dejavu-core ca-certificates) && rm -rf /var/lib/apt/lists/* && mkdir /scratch && chown node:node /scratch
+#7 CACHED
+
+#8 [stage-1 5/6] COPY tools/media/png-preview.py /usr/local/lib/yoyo/png-preview.py
+#8 CACHED
+
+#9 [build 4/4] RUN gcc -O2 -Wall /sandbox.c -o /media-sandbox
+#9 CACHED
+
+#10 [build 2/4] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && apt-get -o Acquire::Retries=3 install -y --no-install-recommends gcc libc6-dev linux-libc-dev
+#10 CACHED
+
+#11 [build 3/4] COPY tools/media/sandbox.c /sandbox.c
+#11 CACHED
+
+#12 [stage-1 3/6] COPY --from=build /media-sandbox /usr/local/bin/media-sandbox
+#12 CACHED
+
+#13 [stage-1 4/6] COPY tools/media/server.mjs /app/server.mjs
+#13 CACHED
+
+#14 [stage-1 6/6] WORKDIR /app
+#14 CACHED
+
+#15 exporting to image
+#15 exporting layers done
+#15 exporting manifest sha256:38a7151bd340c9a2015acfd233d8b2db19c5af3dfae9eb10d5bdb6b61cd9bc43 done
+#15 exporting config sha256:48b0255f4afc2edb2692ba231e1be0edd2fbc008fd407251a69b748462321eb1 done
+#15 exporting attestation manifest sha256:aa14f3a51ef7193e8a7a954aaa0f7be61b72bda86625edb6f1f1548dcfefb018 done
+#15 exporting manifest list sha256:ece13815f90d7b8eb54f650749e7e66f98986b93c904a36a968877dd7788f0bc done
+#15 naming to docker.io/library/yoyo-media-local:0.1.0 done
+#15 unpacking to docker.io/library/yoyo-media-local:0.1.0 done
+#15 DONE 0.0s
+
+#16 resolving provenance for metadata file
+#16 DONE 0.0s
+ Image yoyo-media-local:0.1.0 Built 
+ Container yoyo-s2-tests-storage-1 Running 
+ Container yoyo-s2-tests-media-executor-1 Recreate 
+ Container yoyo-s2-tests-media-executor-1 Recreated 
+ Container yoyo-s2-tests-media-executor-1 Starting 
+ Container yoyo-s2-tests-media-executor-1 Started 
+ Container yoyo-s2-tests-media-executor-1 Waiting 
+ Container yoyo-s2-tests-storage-1 Waiting 
+ Container yoyo-s2-tests-media-executor-1 Healthy 
+ Container yoyo-s2-tests-storage-1 Healthy 
+Private storage ready.
+
+> yoyo-workbench@0.1.0 check /Users/junlong/projects/social-mdeida-ops-platform
+> pnpm build && pnpm typecheck && pnpm test
+
+
+> yoyo-workbench@0.1.0 build /Users/junlong/projects/social-mdeida-ops-platform
+> pnpm db:generate && tsc -p tsconfig.json && pnpm --filter @yoyo/web build
+
+
+> yoyo-workbench@0.1.0 db:generate /Users/junlong/projects/social-mdeida-ops-platform
+> prisma generate
+
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from packages/db/prisma/schema.prisma.
+
+✔ Generated Prisma Client (v7.10.0) to ./node_modules/.pnpm/@prisma+client@7.10.0_prisma@7.10.0_@types+react-dom@19.2.2_@types+react@19.2.2__@types_a5f616641512722fa171c0ec0738743a/node_modules/@prisma/client in 175ms
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+
+
+> @yoyo/web@0.1.0 build /Users/junlong/projects/social-mdeida-ops-platform/apps/web
+> vite build
+
+vite v8.3.3 building client environment for production...
+transforming...
+✓ 19 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.36 kB │ gzip:  0.29 kB
+dist/assets/index-DqY-vAAh.css    9.47 kB │ gzip:  2.84 kB
+dist/assets/index-BSgvJj6A.js   269.47 kB │ gzip: 82.56 kB
+
+✓ built in 78ms
+
+> yoyo-workbench@0.1.0 typecheck /Users/junlong/projects/social-mdeida-ops-platform
+> tsc --noEmit -p tsconfig.json && pnpm --filter @yoyo/web typecheck
+
+
+> @yoyo/web@0.1.0 typecheck /Users/junlong/projects/social-mdeida-ops-platform/apps/web
+> tsc --noEmit
+
+
+> yoyo-workbench@0.1.0 test /Users/junlong/projects/social-mdeida-ops-platform
+> node tools/test-env.mjs
+
+{"event":"http.request","request_id":"e2df2a60-2560-4c5f-8bf6-cffd6c2d5a98","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":7}
+{"event":"http.request","request_id":"9303fdad-fbca-4465-8631-dad00efb52ca","method":"POST","path":"/api/v1/setup","status":403,"duration_ms":5}
+{"event":"http.request","request_id":"010208b5-5ed4-447f-ae8f-c103978e3dd8","method":"POST","path":"/api/v1/setup","status":403,"duration_ms":3}
+{"event":"http.request","request_id":"213a4997-a307-4515-b0ab-f7e877d11424","method":"POST","path":"/api/v1/setup","status":403,"duration_ms":4}
+{"event":"http.request","request_id":"251a5166-af7e-4b08-b21e-3ad919728b4c","method":"POST","path":"/api/v1/setup","status":201,"duration_ms":29}
+{"event":"http.request","request_id":"809c7526-d88b-44c3-85ec-9f672213ca5d","method":"POST","path":"/api/v1/setup","status":409,"duration_ms":32}
+{"event":"http.request","request_id":"b5198192-4b13-4035-88d1-6058fd005aa2","method":"GET","path":"/api/v1/setup/status","status":200,"duration_ms":1}
+✔ 首次设置必须验证Origin、CSRF、实例凭据；并发只创建一个管理员 (255.188042ms)
+{"event":"http.request","request_id":"e529b632-3214-4fde-816b-48839e36b85a","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"a8c64648-34c0-4b56-b37a-3cc533ebfdea","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":26}
+{"event":"http.request","request_id":"4a6c7fde-dafe-43f7-b269-dccbda926e15","method":"GET","path":"/api/v1/me","status":200,"duration_ms":85}
+{"event":"http.request","request_id":"7c90990d-7153-4c9b-a6e9-7d05fc835407","method":"GET","path":"/api/v1/me","status":401,"duration_ms":2}
+✔ 内部登录轮换会话、Argon2id保存，身份响应不泄漏凭据 (128.247042ms)
+{"event":"http.request","request_id":"f45a595c-c98f-4f1d-963c-a556a66cf7c4","method":"POST","path":"/api/v1/accounts","status":201,"duration_ms":21}
+{"event":"http.request","request_id":"2757489f-b364-44de-8ed3-9c3e290437a6","method":"POST","path":"/api/v1/accounts","status":201,"duration_ms":26}
+{"event":"http.request","request_id":"e4dfd295-ad12-46c4-91ef-ac93af986021","method":"POST","path":"/api/v1/accounts","status":201,"duration_ms":25}
+{"event":"http.request","request_id":"95f59028-dcda-472c-bc61-02e38ced3e22","method":"POST","path":"/api/v1/accounts","status":201,"duration_ms":29}
+{"event":"http.request","request_id":"73010187-681b-4bcf-8a63-dd4ec18c6a28","method":"POST","path":"/api/v1/accounts","status":201,"duration_ms":29}
+{"event":"http.request","request_id":"138b9e05-5878-4f81-b3a4-10a5bc3f5d24","method":"POST","path":"/api/v1/accounts","status":201,"duration_ms":26}
+{"event":"http.request","request_id":"7f2a63d4-3321-46a9-9390-dfbe1948f593","method":"POST","path":"/api/v1/accounts","status":409,"duration_ms":4}
+{"event":"http.request","request_id":"df7ca6db-f6a3-4723-8388-ec8ba23c3a48","method":"PATCH","path":"/api/v1/accounts/8d6a1273-a3af-4176-9bfc-06eb132c4155","status":422,"duration_ms":5}
+✔ 并发同键创建复用结果；异载荷409；字段白名单拒绝注入 (49.622792ms)
+{"event":"http.request","request_id":"7ece6908-a9ac-4749-9bfe-6fc463e17f5f","method":"PATCH","path":"/api/v1/accounts/8d6a1273-a3af-4176-9bfc-06eb132c4155","status":200,"duration_ms":7}
+{"event":"http.request","request_id":"0e4d47d0-cb66-4aeb-a173-baa784c39b4f","method":"PATCH","path":"/api/v1/accounts/8d6a1273-a3af-4176-9bfc-06eb132c4155","status":409,"duration_ms":10}
+{"event":"http.request","request_id":"45bbf708-fe21-4720-b505-a2fdc7381460","method":"GET","path":"/api/v1/audit-logs","status":422,"duration_ms":2}
+{"event":"http.request","request_id":"50ba5d56-cbe2-4d97-9e78-1d5c39cf2981","method":"GET","path":"/api/v1/audit-logs","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"71f702ce-c0b2-416f-8d0d-6de1b874ea5f","method":"GET","path":"/api/v1/audit-logs","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"b301345a-1e05-44b8-93d6-943ca8a7c505","method":"GET","path":"/api/v1/audit-logs","status":422,"duration_ms":1}
+✔ expected_version竞争只允许一个写入，错误和分页协议统一 (29.739292ms)
+{"event":"http.request","request_id":"18291d74-b17c-4f0f-b75b-ec460107ea82","method":"POST","path":"/api/v1/members","status":201,"duration_ms":26}
+{"event":"http.request","request_id":"6cb4dbbe-adc9-4613-8f90-2a4a7f0c97db","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"158fcf2f-c434-46f9-b5ee-65115f8e6ef9","method":"POST","path":"/api/v1/auth/accept-invite","status":200,"duration_ms":22}
+{"event":"http.request","request_id":"4d0c5433-467d-4113-929a-d515726f8824","method":"POST","path":"/api/v1/auth/accept-invite","status":422,"duration_ms":19}
+{"event":"http.request","request_id":"f2a7e778-f233-46b6-89b6-9454ef4e4fb7","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":0}
+{"event":"http.request","request_id":"7dd555c1-212a-4db0-b841-2bdc37970231","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":20}
+{"event":"http.request","request_id":"f81eca75-2be2-4fab-baba-d520a2a7f21b","method":"POST","path":"/api/v1/members","status":201,"duration_ms":22}
+{"event":"http.request","request_id":"6deec026-b617-43c5-8843-6da29f4be489","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":0}
+{"event":"http.request","request_id":"c50a5ca1-210a-444b-9591-59015ea04da5","method":"POST","path":"/api/v1/auth/accept-invite","status":200,"duration_ms":19}
+{"event":"http.request","request_id":"1927d913-3cb1-4009-bf7c-0a7f7e7ad503","method":"POST","path":"/api/v1/auth/accept-invite","status":422,"duration_ms":18}
+{"event":"http.request","request_id":"01244a76-a2f7-4436-af70-f053bd24dd6a","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"9bfbb780-356a-492e-b2a2-bcb41f81ccba","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":19}
+{"event":"http.request","request_id":"1fe2d43c-557f-4e08-a7f9-94fafce46326","method":"POST","path":"/api/v1/members","status":201,"duration_ms":21}
+{"event":"http.request","request_id":"501e70d6-1194-4331-a7f7-d980ca1394b9","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":0}
+{"event":"http.request","request_id":"5c44e815-b796-4c6b-976a-3abc34b5996f","method":"POST","path":"/api/v1/auth/accept-invite","status":200,"duration_ms":19}
+{"event":"http.request","request_id":"cb80800a-1c8d-4381-9723-f190cd870452","method":"POST","path":"/api/v1/auth/accept-invite","status":422,"duration_ms":18}
+{"event":"http.request","request_id":"304b9ab9-14e6-4296-a88a-ca8ce3ee4254","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":0}
+{"event":"http.request","request_id":"f060d0b1-e6e1-4314-81f7-d364c0910014","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":19}
+{"event":"http.request","request_id":"fb8b5c24-b6d7-4862-84b1-c9ae7996b0b9","method":"GET","path":"/api/v1/me","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"9ea374f7-ca9b-4e5d-a311-4e5a01450827","method":"GET","path":"/api/v1/accounts/8d6a1273-a3af-4176-9bfc-06eb132c4155","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"3c27f363-23dc-497d-92b9-a4aa96ffb9b7","method":"PATCH","path":"/api/v1/accounts/8d6a1273-a3af-4176-9bfc-06eb132c4155","status":403,"duration_ms":2}
+{"event":"http.request","request_id":"c5f320cf-11e4-474d-acb7-ad6874f0eb03","method":"GET","path":"/api/v1/members","status":403,"duration_ms":0}
+{"event":"http.request","request_id":"bcc1f475-9a48-43f2-b772-3242c453792a","method":"PATCH","path":"/api/v1/accounts/8d6a1273-a3af-4176-9bfc-06eb132c4155","status":403,"duration_ms":4}
+{"event":"http.request","request_id":"dd723b28-f406-4d8d-a847-3222b2ef0147","method":"GET","path":"/api/v1/files/3bf8707e-f155-4b9c-a48d-33964aa77397/download","status":403,"duration_ms":1}
+{"event":"http.request","request_id":"f177c205-946b-4560-a61d-57b4f8cb7d82","method":"GET","path":"/api/v1/files/151916c2-7b31-44d1-90e9-fa96083bafc2/preview","status":404,"duration_ms":2}
+{"event":"http.request","request_id":"9c3db043-6694-4d27-aafd-38a4b43c366f","method":"POST","path":"/api/v1/jobs/481dacfd-35ea-4cee-9d51-15c681066bd3/cancel","status":403,"duration_ms":2}
+✔ 邀请、组合角色及只读权限；重复使用邀请被拒绝 (289.690125ms)
+{"event":"http.request","request_id":"d94b5a48-3ca0-46b1-bd46-e07e49add2eb","method":"POST","path":"/api/v1/diagnostics","status":202,"duration_ms":6}
+{"event":"http.request","request_id":"697e7987-f978-4c07-b642-b55b8702419d","method":"GET","path":"/api/v1/jobs/0245274c-4b3e-48fb-bf79-337afbfde1f7","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"0bb4fad7-f99d-45e6-9f0e-35d646ef717e","method":"GET","path":"/api/v1/jobs/0245274c-4b3e-48fb-bf79-337afbfde1f7","status":404,"duration_ms":1}
+{"event":"http.request","request_id":"22be72f2-150d-4cfb-9979-8dd1b73dc328","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"7ac49716-1d58-4d2a-a2ac-5ec8f5733189","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"3a58b71b-cbf2-4fe7-a9bb-5c68d48b82bb","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":20}
+✔ 诊断202立即可查询Job；其他用户/账号不可见，生产Cookie为Secure (39.885334ms)
+{"event":"http.request","request_id":"cbef0dcf-64cd-4895-953b-1b67d5b39882","method":"GET","path":"/api/v1/accounts/a5189171-5bbe-4914-b8f3-d233b95690ef","status":404,"duration_ms":1}
+{"event":"http.request","request_id":"60432afd-13e9-486d-a917-6018233b0314","method":"GET","path":"/api/v1/me","status":404,"duration_ms":0}
+{"event":"http.request","request_id":"40a4e768-7252-4247-9192-5fbbbc56611c","method":"PATCH","path":"/api/v1/accounts/8d6a1273-a3af-4176-9bfc-06eb132c4155","status":422,"duration_ms":3}
+{"event":"http.request","request_id":"71a77df5-d10b-4806-a6f6-49f4194017f4","method":"GET","path":"/api/v1/accounts/8d6a1273-a3af-4176-9bfc-06eb132c4155","status":404,"duration_ms":1}
+✔ 工作区、账号与负责人归属不能跨界；数据库复合外键生效 (31.307ms)
+{"event":"http.request","request_id":"303a5663-e413-4025-aa30-162d61be8a4c","method":"PATCH","path":"/api/v1/members/8cc3206a-7759-4516-8d42-a20811e76d96","status":422,"duration_ms":4}
+{"event":"http.request","request_id":"f04438a7-579d-4af1-88e2-69cc9a3b7f82","method":"PATCH","path":"/api/v1/members/5ecd2911-5d63-482a-a8dd-d2db2a8ea5cc","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"76f8f5a7-0091-4290-a76f-a5a3d4f06834","method":"GET","path":"/api/v1/me","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"85722e6b-f431-4bc6-a469-6c95a438d355","method":"PATCH","path":"/api/v1/settings","status":403,"duration_ms":3}
+{"event":"http.request","request_id":"0e7a27ad-6a3e-48dc-9b0d-329eb44fc378","method":"PATCH","path":"/api/v1/members/5ecd2911-5d63-482a-a8dd-d2db2a8ea5cc","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"b0eb7c00-67f4-4a93-a07f-4633e27f8bb2","method":"GET","path":"/api/v1/me","status":401,"duration_ms":0}
+✔ 即时角色检查、最后管理员保护、成员停用与会话失效 (28.024041ms)
+{"event":"http.request","request_id":"f2c69df4-fe97-4672-9c1b-9df618ecc666","method":"GET","path":"/api/v1/me","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"de2ddcef-43f6-46cf-94d9-454044302e28","method":"POST","path":"/api/v1/notifications/197b4287-0004-4e62-a00f-b6ad8d2308c0/read","status":404,"duration_ms":3}
+{"event":"http.request","request_id":"55be7ae7-e6c0-48a3-a2a9-d9e672a88ddb","method":"POST","path":"/api/v1/notifications/197b4287-0004-4e62-a00f-b6ad8d2308c0/read","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"ccadcd62-0347-4dd7-a606-79ac2f998014","method":"GET","path":"/api/v1/notifications","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"f46a6af6-b884-4f0a-ba57-1e0c4c71185a","method":"GET","path":"/api/v1/audit-logs","status":200,"duration_ms":2}
+✔ 通知按人隔离；已读只修改通知；审计追加且不记录密码 (24.569333ms)
+{"event":"http.request","request_id":"bdf3ebb6-f2f7-4775-98c7-2ccef48ce075","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"23ac55fe-966b-419a-9082-581290dc64de","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":20}
+{"event":"http.request","request_id":"786eadc2-4000-4697-b860-59f923d9cad5","method":"GET","path":"/api/v1/me","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"30b346b9-c2ef-4b87-8fcb-0f8acbf22f27","method":"GET","path":"/api/v1/me","status":401,"duration_ms":0}
+{"event":"http.request","request_id":"fa3eaec3-9207-443d-88cb-691c53b2573b","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"8c0cea6e-97ea-424e-b5b2-0e16678476b3","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":20}
+{"event":"http.request","request_id":"37b52074-76b4-4ca3-a3ef-402a354f6784","method":"GET","path":"/api/v1/me","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"e8c36791-6799-47ac-a7a3-f2738a4904b0","method":"GET","path":"/api/v1/me","status":401,"duration_ms":0}
+{"event":"http.request","request_id":"8f6c6449-eaa0-4b8b-84e7-6dce99bb79b4","method":"POST","path":"/api/v1/auth/logout","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"88c8d504-9a10-4bd2-8cd8-d5d64ac94503","method":"GET","path":"/api/v1/me","status":401,"duration_ms":0}
+{"event":"http.request","request_id":"ee2ecf6e-a30a-4667-bdd1-3468ca4706fc","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"026dd9ed-d5c3-4c27-a6dc-d26007e2a209","method":"POST","path":"/api/v1/auth/login","status":401,"duration_ms":18}
+{"event":"http.request","request_id":"d122980b-7ba0-43be-acab-e08e2a94efd4","method":"POST","path":"/api/v1/auth/login","status":401,"duration_ms":18}
+{"event":"http.request","request_id":"6219ad82-9996-46e6-93a4-912d1100e1e1","method":"POST","path":"/api/v1/auth/login","status":401,"duration_ms":18}
+{"event":"http.request","request_id":"c5a1642c-3f20-4363-bce0-2e78dd7f5ba6","method":"POST","path":"/api/v1/auth/login","status":429,"duration_ms":2}
+{"event":"http.request","request_id":"4a981e34-8573-4347-b17e-bb4de8ad0f3f","method":"POST","path":"/api/v1/auth/login","status":429,"duration_ms":2}
+{"event":"http.request","request_id":"1f40fda9-8db4-4906-8471-14a93ec25d93","method":"POST","path":"/api/v1/auth/login","status":429,"duration_ms":1}
+{"event":"http.request","request_id":"58fb5c57-f988-4f00-ab71-73ce8232737a","method":"POST","path":"/api/v1/auth/login","status":429,"duration_ms":1}
+{"event":"http.request","request_id":"e1f80175-d2aa-41e4-884a-c1f1a97a51cf","method":"POST","path":"/api/v1/auth/login","status":429,"duration_ms":0}
+{"event":"http.request","request_id":"0b01c4b5-df69-4363-a6d7-87ab57cc4db3","method":"POST","path":"/api/v1/auth/login","status":429,"duration_ms":1}
+{"event":"http.request","request_id":"e5ac240a-fc7e-4ff1-9af7-da13da4fab9e","method":"POST","path":"/api/v1/auth/login","status":429,"duration_ms":1}
+{"event":"http.request","request_id":"02911bc7-b543-454a-8e45-9fe455a316cf","method":"POST","path":"/api/v1/auth/login","status":429,"duration_ms":1}
+✔ 绝对/闲置过期、注销和登录限流 (126.323458ms)
+{"event":"http.request","request_id":"49838c8f-b84a-40f6-82a2-e746753a4d20","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"b33e0520-faee-453d-ac39-20511f216a07","method":"POST","path":"/api/v1/setup","status":201,"duration_ms":36}
+{"event":"http.request","request_id":"26465df0-61bc-44c1-8299-41356b964ae9","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"ab467695-fced-486c-aa2e-c8cc6a0af6a1","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":24}
+{"event":"http.request","request_id":"5834dedd-8949-418e-8c22-7f1d88c40c76","method":"GET","path":"/api/v1/me","status":200,"duration_ms":85}
+{"event":"http.request","request_id":"f4f7e332-0c5f-4edf-b225-89431cf4e267","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":15}
+{"event":"http.request","request_id":"ed0170a4-db00-485a-82a1-d93503705906","method":"POST","path":"/api/v1/uploads/af64c383-4ee5-47d9-8023-d747d1c077e4/parts","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"013b4184-98ff-446f-ac2e-daf38fbeee0f","method":"PUT","path":"/api/v1/uploads/af64c383-4ee5-47d9-8023-d747d1c077e4/parts/1","status":200,"duration_ms":8}
+{"event":"http.request","request_id":"accabff7-553a-4479-a7dd-3a38ca7a6e74","method":"POST","path":"/api/v1/uploads/af64c383-4ee5-47d9-8023-d747d1c077e4/complete","status":200,"duration_ms":14}
+{"event":"http.request","request_id":"19764bbb-204b-436b-b922-25cf9d4b7ba6","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":5}
+{"event":"http.request","request_id":"ff53c538-6576-4db7-ba31-90dc5af9630f","method":"POST","path":"/api/v1/uploads/77e118fc-f505-4427-a321-f57f4c35f50d/parts","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"cc2e375d-60f7-4d36-bcbb-477f753be4aa","method":"PUT","path":"/api/v1/uploads/77e118fc-f505-4427-a321-f57f4c35f50d/parts/1","status":200,"duration_ms":8}
+{"event":"http.request","request_id":"dd02ff99-5254-4091-bdd5-43e7a9383b31","method":"POST","path":"/api/v1/uploads/77e118fc-f505-4427-a321-f57f4c35f50d/complete","status":200,"duration_ms":14}
+{"event":"http.request","request_id":"135df640-0837-46c4-9f04-9b862f499fd2","method":"GET","path":"/api/v1/files/92a1efbb-2bd1-4040-ae23-5203689ea538/download","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"6feb4456-6d24-42de-beb5-1535f1878a72","method":"POST","path":"/api/v1/folders","status":201,"duration_ms":4}
+{"event":"http.request","request_id":"8a797d79-2fe2-47db-ba37-ffca34ed5ab1","method":"POST","path":"/api/v1/folders","status":201,"duration_ms":4}
+{"event":"http.request","request_id":"fc995e50-2f9e-4dd1-b7a3-0bddd4b0e98a","method":"PATCH","path":"/api/v1/folders/71e6a243-8743-4f51-b946-dfdec2681f65","status":422,"duration_ms":4}
+{"event":"http.request","request_id":"43be5b44-4d7c-49c1-864d-b0bb320cc4d8","method":"POST","path":"/api/v1/assets","status":201,"duration_ms":6}
+{"event":"http.request","request_id":"e466b0dd-394c-415c-b81e-9b195ca69d70","method":"GET","path":"/api/v1/assets","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"b5ff7265-55c0-4729-ba48-54ddb12f7097","method":"PUT","path":"/api/v1/assets/b0d80406-83ce-4e99-abcf-2fca4929a6ba/favorite","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"c6b323d0-21fa-4c63-92c3-d3fb79193264","method":"GET","path":"/api/v1/assets","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"93c234ff-3ba4-48c1-82d9-365ba47bda43","method":"PATCH","path":"/api/v1/assets/b0d80406-83ce-4e99-abcf-2fca4929a6ba","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"9257a2b1-13da-4914-9675-354c4a695930","method":"PATCH","path":"/api/v1/assets/b0d80406-83ce-4e99-abcf-2fca4929a6ba","status":409,"duration_ms":12}
+{"event":"http.request","request_id":"220c14a8-f076-4f8f-bd50-e48da9cbb827","method":"GET","path":"/api/v1/assets/b0d80406-83ce-4e99-abcf-2fca4929a6ba","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"922f1053-d8c9-4990-9e22-6284070a9124","method":"POST","path":"/api/v1/assets/b0d80406-83ce-4e99-abcf-2fca4929a6ba/confirm","status":200,"duration_ms":6}
+{"event":"http.request","request_id":"9a720a51-a033-4eba-906b-e2e07e5f7d5f","method":"POST","path":"/api/v1/accounts","status":201,"duration_ms":5}
+{"event":"http.request","request_id":"68be8577-c1a0-4f6b-9ecf-2463fa6cc876","method":"POST","path":"/api/v1/asset-usages","status":201,"duration_ms":6}
+{"event":"http.request","request_id":"da56c18c-aae9-4389-b3f2-07151a782b9e","method":"GET","path":"/api/v1/assets/b0d80406-83ce-4e99-abcf-2fca4929a6ba/usages","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"578c6467-a00e-4812-8fc0-9ff1f66329b8","method":"GET","path":"/api/v1/content-revisions/1e40138b-7aae-4c74-997a-58b885bc42b0/assets","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"e45f2357-c336-41cf-a52f-24a461d95dec","method":"POST","path":"/api/v1/assets/b0d80406-83ce-4e99-abcf-2fca4929a6ba/versions","status":201,"duration_ms":9}
+{"event":"http.request","request_id":"9273e8e6-66e2-4b17-b441-efd9b58d8f98","method":"GET","path":"/api/v1/assets/b0d80406-83ce-4e99-abcf-2fca4929a6ba","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"b073625a-d835-47a9-b530-e5baa28da6f3","method":"GET","path":"/api/v1/assets/b0d80406-83ce-4e99-abcf-2fca4929a6ba/usages","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"f70aa8ab-637c-4e5a-b848-c25b55de827b","method":"POST","path":"/api/v1/asset-relations","status":201,"duration_ms":4}
+{"event":"http.request","request_id":"3c97058f-0366-430d-90cf-f82d0ae08f11","method":"GET","path":"/api/v1/assets/b0d80406-83ce-4e99-abcf-2fca4929a6ba","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"623182f8-859f-4327-bea6-0ee375d0add5","method":"POST","path":"/api/v1/assets/b0d80406-83ce-4e99-abcf-2fca4929a6ba/retire","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"b270e715-5138-40f2-9855-51db7b81a5e8","method":"POST","path":"/api/v1/asset-usages","status":422,"duration_ms":3}
+{"event":"http.request","request_id":"f4f7f159-d4fe-4f74-a18d-536df0c3cc70","method":"GET","path":"/api/v1/content-revisions/1e40138b-7aae-4c74-997a-58b885bc42b0/assets","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"7f6f8769-6b0f-4ecc-a806-90846951fbc2","method":"GET","path":"/api/v1/files/b44f65b9-bfdf-4cbc-be4a-7d8d824de144/preview","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"17104130-d0fb-4b84-a867-107ad347a802","method":"GET","path":"/api/v1/files/b44f65b9-bfdf-4cbc-be4a-7d8d824de144/download","status":403,"duration_ms":1}
+{"event":"http.request","request_id":"338c0359-4dc5-4cf0-8c53-8dd5c6f555d3","method":"POST","path":"/api/v1/assets/b0d80406-83ce-4e99-abcf-2fca4929a6ba/confirm","status":403,"duration_ms":2}
+✔ PNG真实解析、透明预览、资产检索/文件夹/收藏、并发版本、确认/停用与历史双向引用 (814.367167ms)
+{"event":"http.request","request_id":"a83b87cc-3c70-4b18-814f-9c24109d43b3","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":6}
+{"event":"http.request","request_id":"3173624d-a829-438f-b799-87d77bffd7f7","method":"POST","path":"/api/v1/setup","status":201,"duration_ms":37}
+{"event":"http.request","request_id":"12e92da0-39b7-4097-b28a-db0cbf296bcf","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"e269b58d-54ab-441f-9e25-61d4a64ec7af","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":25}
+{"event":"http.request","request_id":"d0a1444e-3a49-4ef4-85fd-acdec8e29d43","method":"GET","path":"/api/v1/me","status":200,"duration_ms":79}
+{"event":"http.request","request_id":"30ff46b9-c708-47c1-83e5-bd7f2262af1e","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":17}
+{"event":"http.request","request_id":"fedd3be9-efb4-4f41-924f-3abab0515a56","method":"POST","path":"/api/v1/uploads/a43ac159-57d3-431a-bb83-2d7373f861cf/parts","status":200,"duration_ms":8}
+{"event":"http.request","request_id":"d7304df7-e349-4de5-ab85-65d028daa03a","method":"PUT","path":"/api/v1/uploads/a43ac159-57d3-431a-bb83-2d7373f861cf/parts/1","status":200,"duration_ms":95}
+{"event":"http.request","request_id":"b31f5697-d48a-4182-8ea0-818a61c27c13","method":"PUT","path":"/api/v1/uploads/a43ac159-57d3-431a-bb83-2d7373f861cf/parts/1","status":200,"duration_ms":10}
+{"event":"http.request","request_id":"b47cef53-579a-415f-9029-9657cc5e5689","method":"GET","path":"/api/v1/uploads/a43ac159-57d3-431a-bb83-2d7373f861cf","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"2cd4c0af-c552-4f40-84fa-3fd6e4a93749","method":"POST","path":"/api/v1/uploads/a43ac159-57d3-431a-bb83-2d7373f861cf/parts","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"959e522e-f3a4-452d-99bf-091db5a7af38","method":"PUT","path":"/api/v1/uploads/a43ac159-57d3-431a-bb83-2d7373f861cf/parts/2","status":200,"duration_ms":8}
+{"event":"http.request","request_id":"8ea7aae1-8c0c-4ff8-a939-31cc42c5d516","method":"PUT","path":"/api/v1/uploads/a43ac159-57d3-431a-bb83-2d7373f861cf/parts/2","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"a0a54b5d-48ee-4834-9e0e-7febfa6b5c39","method":"GET","path":"/api/v1/uploads/a43ac159-57d3-431a-bb83-2d7373f861cf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"b819609c-6ea9-4d33-b6dd-e6b97c74677c","method":"POST","path":"/api/v1/uploads/a43ac159-57d3-431a-bb83-2d7373f861cf/parts","status":409,"duration_ms":3}
+{"event":"http.request","request_id":"889abf70-62b6-48cb-a759-5e6e998a75a2","method":"POST","path":"/api/v1/uploads/a43ac159-57d3-431a-bb83-2d7373f861cf/complete","status":422,"duration_ms":3}
+{"event":"http.request","request_id":"56bb40d6-a126-4705-9390-7d9573ae738c","method":"POST","path":"/api/v1/uploads/a43ac159-57d3-431a-bb83-2d7373f861cf/complete","status":200,"duration_ms":42}
+{"event":"http.request","request_id":"b5e08244-6a57-45c4-a7e0-80bdfa20ede2","method":"GET","path":"/api/v1/files/4c7a278f-a3f4-4915-86fd-0a493a20c434/download","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"376366be-ec69-4a3b-aafd-9abccb67a3b1","method":"GET","path":"/api/v1/files/4c7a278f-a3f4-4915-86fd-0a493a20c434/preview","status":409,"duration_ms":3}
+{"event":"http.request","request_id":"83557c79-adfe-4ba3-aa7e-9d50e5b967b2","method":"GET","path":"/api/v1/files/4c7a278f-a3f4-4915-86fd-0a493a20c434/download","status":403,"duration_ms":1}
+{"event":"http.request","request_id":"7d3a890c-8e2a-4356-9be9-d09af18d8813","method":"POST","path":"/api/v1/uploads","status":403,"duration_ms":2}
+{"event":"http.request","request_id":"5c8d2254-c5c8-4216-9104-2f1fc538f322","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":0}
+{"event":"http.request","request_id":"c1621b01-a094-41b3-a67c-410ba41500eb","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":20}
+{"event":"http.request","request_id":"06cc1c8b-bcda-4111-a9ba-47448c56436d","method":"GET","path":"/api/v1/uploads/a43ac159-57d3-431a-bb83-2d7373f861cf","status":404,"duration_ms":2}
+{"event":"http.request","request_id":"32951053-d4fb-4793-8a3a-29abda58b0f7","method":"GET","path":"/api/v1/files/4c7a278f-a3f4-4915-86fd-0a493a20c434/download","status":404,"duration_ms":1}
+✔ S2真实存储：分片重复/恢复、清单及哈希校验、私有下载、角色与跨空间隔离 (705.262667ms)
+✔ 业务事件回滚不产生任务，Outbox并发分发只创建一个Job (53.845833ms)
+✔ 租约保证单领取；心跳延长租约；已完成不会重复通知 (5.588125ms)
+✔ 真实领取进程被SIGKILL后，重启领取恢复；旧租约结果被拒绝 (2454.106125ms)
+✔ 取消与过期版本阻止结果及副作用提交 (25.654875ms)
+✔ 失败退避重试有上限，管理员可重试；提醒池不受一般池积压影响 (41.964959ms)
+✔ 超过最大尝试的失联任务进入失败；未来调度事件暂不分发 (5.02525ms)
+✔ 长任务心跳跨越初始租约，超时拒绝迟到结果和副作用 (4830.241208ms)
+✔ 03角色矩阵：组合角色取并集，只读不得下载原件或写业务 (0.412708ms)
+✔ 幂等请求哈希递归规范化对象键，保留数组顺序 (0.091833ms)
+{"event":"http.request","request_id":"50c01684-9904-42ed-9716-ccaaeac36f32","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"1a43d698-ae8e-4a53-a92f-4b2c95e71670","method":"POST","path":"/api/v1/setup","status":201,"duration_ms":35}
+{"event":"http.request","request_id":"42e092e6-edea-47ed-bc55-fa6f8ddcfcf3","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"4cfdf1aa-b11b-4e12-bc21-27b35cb3b7a5","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":25}
+{"event":"http.request","request_id":"27ac5b5f-4c32-4549-9074-de89151c6c2d","method":"GET","path":"/api/v1/me","status":200,"duration_ms":81}
+{"event":"http.request","request_id":"64275549-5aa5-4ac2-b73c-745123781e1e","method":"POST","path":"/api/v1/uploads","status":422,"duration_ms":7}
+{"event":"http.request","request_id":"604b6f17-996b-48ad-8ad6-8dc3749d415a","method":"POST","path":"/api/v1/uploads","status":422,"duration_ms":5}
+{"event":"http.request","request_id":"54d78a4e-0e41-4d5c-8c1b-97d3fd96d9a9","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":11}
+{"event":"http.request","request_id":"6de9b06e-86ba-4743-82f8-8f60c2fc5500","method":"POST","path":"/api/v1/uploads/8124b482-1f51-414b-9f02-d889b9d572a1/parts","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"12475123-1745-487a-ac69-436d4931e102","method":"PUT","path":"/api/v1/uploads/8124b482-1f51-414b-9f02-d889b9d572a1/parts/1","status":422,"duration_ms":4}
+{"event":"http.request","request_id":"c2021b17-0f9e-4008-87b2-e3bb33e8bc71","method":"PUT","path":"/api/v1/uploads/8124b482-1f51-414b-9f02-d889b9d572a1/parts/1","status":200,"duration_ms":6}
+{"event":"http.request","request_id":"d550d0d9-6061-49a5-86db-b1d47f4bf030","method":"POST","path":"/api/v1/uploads/8124b482-1f51-414b-9f02-d889b9d572a1/complete","status":422,"duration_ms":14}
+{"event":"http.request","request_id":"827075b0-1d3f-4e30-864a-23371038b5df","method":"POST","path":"/api/v1/uploads/8124b482-1f51-414b-9f02-d889b9d572a1/abort","status":200,"duration_ms":8}
+{"event":"http.request","request_id":"66f0cc62-edcc-4c60-b127-4d928a89cd0f","method":"GET","path":"/api/v1/uploads/8124b482-1f51-414b-9f02-d889b9d572a1","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"278dafd5-280f-4b9e-a17b-0f97eebf8148","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":6}
+{"event":"http.request","request_id":"dd10b311-50ff-40ff-97ee-8ca4acb2bd71","method":"GET","path":"/api/v1/uploads/e666fe6b-4adf-4652-9c8e-283caf8dea92","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"192352c2-1288-4dbf-82e1-a46043279cb3","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":6}
+{"event":"http.request","request_id":"fcb58d09-662f-4974-9a49-14b96bdaa1fb","method":"POST","path":"/api/v1/uploads/41fb7461-51f4-403c-989f-57b784cbaa19/parts","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"a21d0267-e266-4694-b298-c07c80ea0464","method":"PUT","path":"/api/v1/uploads/41fb7461-51f4-403c-989f-57b784cbaa19/parts/1","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"698375c7-51c6-4f16-b047-afaa79243b3b","method":"POST","path":"/api/v1/uploads/41fb7461-51f4-403c-989f-57b784cbaa19/complete","status":200,"duration_ms":10}
+{"event":"http.request","request_id":"799764b5-10cf-492d-b3a6-c54f622b57f8","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":6}
+{"event":"http.request","request_id":"5c9b09ec-5879-46ff-bbe6-8f29ba658474","method":"POST","path":"/api/v1/uploads/3cdd9db8-0874-4c7c-8e59-a65da201a87f/parts","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"81c0fb9e-8219-4b16-a1af-f28d4ab6c022","method":"PUT","path":"/api/v1/uploads/3cdd9db8-0874-4c7c-8e59-a65da201a87f/parts/1","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"148a16ad-96c5-43e6-8f53-07a36cf7a96c","method":"POST","path":"/api/v1/uploads/3cdd9db8-0874-4c7c-8e59-a65da201a87f/complete","status":200,"duration_ms":9}
+{"event":"http.request","request_id":"25149776-3175-4a17-ba22-77680ef72ca4","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":6}
+{"event":"http.request","request_id":"29d3e6b9-8ed3-4fd0-a380-8407529003d6","method":"POST","path":"/api/v1/uploads/46721383-2372-4328-bab3-e3f2a87287d7/parts","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"0b64e442-3a59-4cd3-93fc-1c7c04ab1471","method":"PUT","path":"/api/v1/uploads/46721383-2372-4328-bab3-e3f2a87287d7/parts/1","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"6efb7de7-3d32-4b52-9710-40088fb53535","method":"POST","path":"/api/v1/uploads/46721383-2372-4328-bab3-e3f2a87287d7/complete","status":200,"duration_ms":8}
+{"event":"http.request","request_id":"202fcda1-2efd-46db-b409-3faf47ba7caf","method":"POST","path":"/api/v1/assets","status":422,"duration_ms":3}
+✔ S2异常：格式/大小/分片哈希/原件哈希拒绝、取消/过期清理、同空间去重与恶意PNG隔离 (630.063875ms)
+✔ 解析沙箱：禁止网络与凭据读取，允许PNG处理目录，资源与容器权限受限 (85.275292ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 23
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 12824.2455
+[2m[WebServer] [22m(node:15045) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:15046) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:15052) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:15052) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 5 tests using 1 worker
+
+(node:15054) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15054) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/browser.spec.ts:4:5 › 首次设置、六导航、账号表单、设置保存、键盘抽屉和退出 (2.2s)
+  ✓  2 tests/browser.spec.ts:23:5 › 请求失败显示可重试错误，加载状态和登录过期可见 (1.6s)
+  ✓  3 tests/browser.spec.ts:30:5 › PNG资产上传、检索、透明预览、确认/停用及窄屏详情 (1.2s)
+  ✓  4 tests/browser.spec.ts:43:5 › 规范PDF上传、规则录入、页码追溯与人工激活 (6.2s)
+  ✓  5 tests/browser.spec.ts:51:5 › 素材选择器绑定具体版本，双向来源关联可见且停用版本禁选 (1.1s)
+
+  5 passed (13.8s)

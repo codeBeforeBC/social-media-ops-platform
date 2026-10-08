@@ -2,7 +2,7 @@ import {randomUUID} from 'node:crypto';
 import {Database,Tx} from '../../db/src/db';
 import {config} from './config';
 type Job=Record<string,any>;
-export type JobHandler=(job:Job,signal:AbortSignal)=>Promise<{result:unknown;effects?:(tx:Tx)=>Promise<void>}>;
+export type JobHandler=(job:Job,signal:AbortSignal)=>Promise<{result:unknown;effects?:(tx:Tx)=>Promise<void>;cleanup?:(applied:boolean)=>Promise<void>}>;
 export class Jobs {
   readonly handlers:Record<string,JobHandler>;
   constructor(readonly db:Database,handlers:Record<string,JobHandler>={}){
@@ -15,7 +15,7 @@ export class Jobs {
       const rows=await tx.query('SELECT * FROM outbox WHERE dispatched_at IS NULL AND available_at<=now() ORDER BY available_at,id FOR UPDATE SKIP LOCKED LIMIT 50');
       for(const event of rows.rows){
         const p=event.payload;
-        await tx.query(`INSERT INTO jobs(workspace_id,account_id,created_by,outbox_id,type,pool,input,input_version,request_id) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9) ON CONFLICT(outbox_id) DO NOTHING`,[event.workspace_id,event.account_id,p.created_by,event.id,event.event_type,p.pool??'general',JSON.stringify(p.input??{}),p.input_version??null,p.request_id]);
+        await tx.query(`INSERT INTO jobs(workspace_id,account_id,created_by,outbox_id,type,pool,input,input_version,request_id,timeout_seconds) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,CASE WHEN $6='media' THEN 1800 ELSE 120 END) ON CONFLICT(outbox_id) DO NOTHING`,[event.workspace_id,event.account_id,p.created_by,event.id,event.event_type,p.pool??'general',JSON.stringify(p.input??{}),p.input_version??null,p.request_id]);
         await tx.query('UPDATE outbox SET dispatched_at=now() WHERE id=$1',[event.id]);
       }return rows.rowCount;
     });
@@ -46,8 +46,8 @@ export class Jobs {
   }
   async fail(j:Job,code:string){
     return this.db.transaction(async tx=>{
-      const r=await tx.query(`UPDATE jobs SET state=CASE WHEN attempts<max_attempts THEN 'queued' ELSE 'failed' END,error_code=$1,
-        available_at=now()+LEAST(60,power(2,attempts))::int*interval '1 second',finished_at=CASE WHEN attempts>=max_attempts THEN now() ELSE NULL END,
+      const r=await tx.query(`UPDATE jobs SET state=CASE WHEN attempts<max_attempts AND $1<>'MEDIA_INVALID_FILE' THEN 'queued' ELSE 'failed' END,error_code=$1,
+        available_at=now()+LEAST(60,power(2,attempts))::int*interval '1 second',finished_at=CASE WHEN attempts>=max_attempts OR $1='MEDIA_INVALID_FILE' THEN now() ELSE NULL END,
         lease_token=NULL,lease_until=NULL,version=version+1,updated_at=now() WHERE id=$2 AND state='running' AND lease_token=$3 AND lease_until>now() RETURNING state`,[code,j.id,j.lease_token]);
       if(r.rowCount)await this.event(tx,j,r.rows[0].state==='failed'?'job.failed':'job.retry_scheduled',{error_code:code});return r.rowCount;
     });
@@ -59,13 +59,14 @@ export class Jobs {
     try{
       const work=async()=>{
         const handler=this.handlers[j.type];if(!handler)throw new Error('UNSUPPORTED_JOB');
-        const output=await handler(j,controller.signal);if(lost)throw new Error('LEASE_LOST');
+        const output=await handler(j,controller.signal);let applied=false;try{if(lost)throw new Error('LEASE_LOST');
         if(controller.signal.aborted)throw new Error('JOB_TIMEOUT');
-        return this.complete(j,output.result,output.effects,controller.signal);
+        applied=await this.complete(j,output.result,output.effects,controller.signal);return applied;
+        }finally{await output.cleanup?.(applied);}
       };
       const aborted=new Promise<never>((_,reject)=>controller.signal.addEventListener('abort',()=>reject(new Error('JOB_TIMEOUT')),{once:true}));
       await Promise.race([work(),aborted]);
-    }catch(e){const allowed=['UNSUPPORTED_JOB','LEASE_LOST','JOB_TIMEOUT'];const code=allowed.includes((e as Error).message)?(e as Error).message:'JOB_EXECUTION_FAILED';await this.fail(j,code);}
+    }catch(e){const allowed=['UNSUPPORTED_JOB','LEASE_LOST','JOB_TIMEOUT','MEDIA_INVALID_FILE'];const code=allowed.includes((e as Error).message)?(e as Error).message:'JOB_EXECUTION_FAILED';await this.fail(j,code);}
     finally{clearInterval(timer);clearTimeout(timeout);}
   }
   async health(name:string,pool:string){await this.db.query('INSERT INTO process_health(name,pool) VALUES($1,$2) ON CONFLICT(name) DO UPDATE SET last_seen_at=now(),pool=EXCLUDED.pool',[name,pool]);}

@@ -1,0 +1,141 @@
+{
+  "validation_kind": "contract_and_synthetic_schema_fixtures",
+  "checked_at": "2026-10-07T15:50:27.818213+00:00",
+  "openapi": "PASS",
+  "json_schema": "PASS",
+  "paths": 103,
+  "operations": 124,
+  "schemas": 165,
+  "fixture_count": 21,
+  "fixtures": [
+    {
+      "case": "real_pdf_size_input",
+      "schema": "UploadCreate",
+      "expected_accept": true,
+      "passed": true
+    },
+    {
+      "case": "oversized_upload",
+      "schema": "UploadCreate",
+      "expected_accept": false,
+      "passed": true
+    },
+    {
+      "case": "profile_snapshot_shape",
+      "schema": "MetricInput",
+      "expected_accept": true,
+      "passed": true
+    },
+    {
+      "case": "missing_value_with_reason",
+      "schema": "MetricInput",
+      "expected_accept": true,
+      "passed": true
+    },
+    {
+      "case": "missing_value_without_reason",
+      "schema": "MetricInput",
+      "expected_accept": false,
+      "passed": true
+    },
+    {
+      "case": "decimal_number_rejected",
+      "schema": "MetricInput",
+      "expected_accept": false,
+      "passed": true
+    },
+    {
+      "case": "snapshot_missing_timestamp",
+      "schema": "MetricInput",
+      "expected_accept": false,
+      "passed": true
+    },
+    {
+      "case": "invalid_date",
+      "schema": "MetricInput",
+      "expected_accept": false,
+      "passed": true
+    },
+    {
+      "case": "graphic_revision",
+      "schema": "ContentRevisionInput",
+      "expected_accept": true,
+      "passed": true
+    },
+    {
+      "case": "graphic_missing_pages",
+      "schema": "ContentRevisionInput",
+      "expected_accept": false,
+      "passed": true
+    },
+    {
+      "case": "conflicting_media_payload",
+      "schema": "ContentRevisionInput",
+      "expected_accept": false,
+      "passed": true
+    },
+    {
+      "case": "manual_batch",
+      "schema": "ImportCreate",
+      "expected_accept": true,
+      "passed": true
+    },
+    {
+      "case": "empty_manual_batch",
+      "schema": "ImportCreate",
+      "expected_accept": false,
+      "passed": true
+    },
+    {
+      "case": "file_batch_without_files",
+      "schema": "ImportCreate",
+      "expected_accept": false,
+      "passed": true
+    },
+    {
+      "case": "approve_review_shape",
+      "schema": "ReviewDecision",
+      "expected_accept": true,
+      "passed": true
+    },
+    {
+      "case": "reject_without_reason",
+      "schema": "ReviewDecision",
+      "expected_accept": false,
+      "passed": true
+    },
+    {
+      "case": "report_with_calculation_reference",
+      "schema": "ReportPayload",
+      "expected_accept": true,
+      "passed": true
+    },
+    {
+      "case": "report_without_calculation_reference",
+      "schema": "ReportPayload",
+      "expected_accept": false,
+      "passed": true
+    },
+    {
+      "case": "campaign_draw_without_record",
+      "schema": "DrawCampaign",
+      "expected_accept": false,
+      "passed": true
+    },
+    {
+      "case": "publication_edit_without_revision",
+      "schema": "PublicationChangeCreate",
+      "expected_accept": false,
+      "passed": true
+    },
+    {
+      "case": "reminder_external_channel_rejected",
+      "schema": "ReminderRuleInput",
+      "expected_accept": false,
+      "passed": true
+    }
+  ],
+  "runtime_api_tests": "NOT_RUN",
+  "database_state_guards": "NOT_RUN",
+  "external_source_tests": "see_source_probes_not_this_report"
+}

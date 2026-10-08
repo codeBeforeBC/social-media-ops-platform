@@ -1546,8 +1546,14 @@
               "$ref": "#/$defs/Id"
             },
             "activated_by": {
-              "type": "string",
-              "maxLength": 10000
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/Id"
+                },
+                {
+                  "type": "null"
+                }
+              ]
             },
             "at": {
               "type": "string",
@@ -1579,16 +1585,18 @@
               "maxLength": 10000
             },
             "source_page": {
-              "type": "string",
-              "maxLength": 10000
+              "type": "integer",
+              "minimum": 1
             },
             "severity": {
               "type": "string",
               "maxLength": 10000
             },
             "uncertainty_note": {
-              "type": "string",
-              "maxLength": 10000
+              "type": [
+                "string",
+                "null"
+              ]
             }
           },
           "required": [],
@@ -2251,8 +2259,7 @@
               ]
             },
             "permission_snapshot": {
-              "type": "string",
-              "maxLength": 10000
+              "type": "object"
             }
           },
           "required": [],
@@ -2491,12 +2498,14 @@
               "maxLength": 10000
             },
             "part_size": {
-              "type": "string",
-              "maxLength": 10000
+              "type": "integer",
+              "minimum": 1
             },
             "completed_parts": {
-              "type": "string",
-              "maxLength": 10000
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
             },
             "expires_at": {
               "type": "string",
@@ -2505,6 +2514,10 @@
             "status": {
               "type": "string",
               "maxLength": 10000
+            },
+            "size_bytes": {
+              "type": "integer",
+              "minimum": 1
             }
           },
           "required": [],
@@ -2632,7 +2645,10 @@
               ]
             },
             "dependencies": {
-              "type": "object"
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/Id"
+              }
             }
           },
           "required": [],
@@ -2677,7 +2693,14 @@
               "maxLength": 10000
             },
             "parent_id": {
-              "$ref": "#/$defs/Id"
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/Id"
+                },
+                {
+                  "type": "null"
+                }
+              ]
             },
             "user_id": {
               "$ref": "#/$defs/Id"

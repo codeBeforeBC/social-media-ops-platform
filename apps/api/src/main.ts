@@ -4,6 +4,9 @@ import {NestFactory} from '@nestjs/core';
 import {NestExpressApplication} from '@nestjs/platform-express';
 import {Request,Response,NextFunction} from 'express';
 import cookieParser from 'cookie-parser';
+import {raw} from 'express';
+import {Files} from './files';
+import {Assets} from './assets';
 import helmet from 'helmet';
 import {resolve} from 'node:path';
 import {Database} from '../../../packages/db/src/db';
@@ -14,8 +17,8 @@ import {Commands,safeJob,Result,audit} from './commands';
 const DB='DATABASE';
 @Controller('api/v1')
 class ApiController {
-  private readonly auth:Auth;private readonly commands:Commands;
-  constructor(@Inject(DB) readonly db:Database){this.auth=new Auth(db);this.commands=new Commands(db);}
+  private readonly auth:Auth;private readonly commands:Commands;private readonly files:Files;
+  constructor(@Inject(DB) readonly db:Database){this.auth=new Auth(db);this.commands=new Commands(db);this.files=new Files(db);}
   @All('{*path}')
   async route(@Req() req:Request,@Res() res:Response){
     const path=req.originalUrl.split('?')[0]!.replace(/^\/api\/v1/,'');const method=req.method;
@@ -30,6 +33,25 @@ class ApiController {
     if(method!=='GET'&&method!=='HEAD')await this.auth.checkCsrf(req);
     const c=this.commands;
     const command=async(permission:Permission,fn:Parameters<Commands['command']>[6])=>{const r=await c.command(a,req.headers['idempotency-key'],method,path,req.body??{},permission,fn);return send(r.data,r.status);};
+    const files=this.files;
+    if(path==='/uploads'&&method==='POST')return command('asset.edit',(tx,actor)=>files.create(tx,actor,req.body));
+    const upload=path.match(/^\/uploads\/([^/]+)(?:\/(parts|complete|abort)(?:\/(\d+))?)?$/);
+    if(upload){const uid=upload[1]!;if(method==='GET'&&!upload[2])return send(await files.get(a,uid));if(method==='POST'&&upload[2]==='parts')return command('asset.edit',(tx,actor)=>files.register(tx,actor,uid,req.body));if(method==='PUT'&&upload[2]==='parts'&&upload[3])return send(await files.put(a,uid,Number(upload[3]),req.body));if(method==='POST'&&upload[2]==='complete')return command('asset.edit',(tx,actor)=>files.finish(tx,actor,uid,req.body));if(method==='POST'&&upload[2]==='abort')return command('asset.edit',(tx,actor)=>files.abort(tx,actor,uid,req.body));}
+    const assets=new Assets(this.db,files);
+    if(path==='/assets'){if(method==='GET')return send(await assets.list(a,req.query));if(method==='POST')return command('asset.edit',(tx,actor)=>assets.create(tx,actor,req.body));}
+    const asset=path.match(/^\/assets\/([^/]+)(?:\/(versions|retire|confirm|usages|favorite))?$/);
+    if(asset){const aid=asset[1]!;if(method==='GET'&&!asset[2])return send(await assets.detail(a,aid));if(method==='PATCH'&&!asset[2])return command('asset.edit',(tx,actor)=>assets.patch(tx,actor,aid,req.body));if(method==='GET'&&asset[2]==='versions')return send({items:(await assets.detail(a,aid)).versions});if(method==='POST'&&asset[2]==='versions')return command('asset.edit',(tx,actor)=>assets.newVersion(tx,actor,aid,req.body));if(method==='POST'&&asset[2]==='retire')return command('asset.edit',(tx,actor)=>assets.retire(tx,actor,aid,req.body));if(method==='POST'&&asset[2]==='confirm')return command('review',(tx,actor)=>assets.confirm(tx,actor,aid,req.body));if(method==='GET'&&asset[2]==='usages')return send(await assets.usages(a,aid));if(['PUT','DELETE'].includes(method)&&asset[2]==='favorite')return command('read',(tx,actor)=>assets.favorite(tx,actor,aid,method==='DELETE'));}
+    const assetVersionConfirm=path.match(/^\/asset-versions\/([^/]+)\/confirm$/);if(assetVersionConfirm&&method==='POST')return command('review',(tx,actor)=>assets.confirmVersion(tx,actor,assetVersionConfirm[1]!,req.body));
+    if(path==='/asset-relations'&&method==='GET')return send(await assets.relations(a,req.query));
+    if(path==='/asset-relations'&&method==='POST')return command('asset.edit',(tx,actor)=>assets.relate(tx,actor,req.body));
+    if(path==='/asset-usages'&&method==='POST')return command('content.production',(tx,actor)=>assets.use(tx,actor,req.body));
+    const revisionAssets=path.match(/^\/content-revisions\/([^/]+)\/assets$/);if(revisionAssets&&method==='GET')return send(await assets.revisionAssets(a,revisionAssets[1]!));
+    if(path==='/folders'){if(method==='GET')return send(await assets.folders(a));if(method==='POST')return command('asset.edit',(tx,actor)=>assets.saveFolder(tx,actor,req.body));}
+    const folder=path.match(/^\/folders\/([^/]+)$/);if(folder){if(method==='GET')return send(await this.db.transaction(tx=>assets.folder(tx,a,folder[1]!)));if(method==='PATCH')return command('asset.edit',(tx,actor)=>assets.saveFolder(tx,actor,req.body,folder[1]!));}
+    const guideFile=path.match(/^\/guideline-files\/([^/]+)$/);if(guideFile&&method==='GET'){const f=await files.file(this.db,a,guideFile[1]!);if(f.detected_mime!=='application/pdf')throw new AppError(404,'NOT_FOUND','规范文件不可见');return send(f);}
+    if(path==='/guideline-files'&&method==='GET')return send({items:(await this.db.query("SELECT id,original_name,preview_status,metadata->'pages' pages FROM file_objects WHERE workspace_id=$1 AND detected_mime='application/pdf' AND file_status='ready' AND is_preview=false ORDER BY created_at DESC LIMIT 100",[a.workspaceId])).rows,next_cursor:null});
+    if(path==='/rule-sets'){if(method==='GET')return send(await assets.ruleSets(a));if(method==='POST')return command('asset.edit',(tx,actor)=>assets.createRules(tx,actor,req.body));}
+    const rule=path.match(/^\/rule-sets\/([^/]+)(?:\/(activate))?$/);if(rule){if(method==='GET'&&!rule[2])return send(await assets.ruleDetail(a,rule[1]!));if(method==='POST'&&rule[2])return command('review',(tx,actor)=>assets.activateRules(tx,actor,rule[1]!,req.body));}
     if(method==='GET'&&(path==='/me'||path==='/auth/session'))return send(await this.auth.me(a));
     if(method==='POST'&&path==='/auth/logout'){
       const r=await c.command(a,req.headers['idempotency-key'],method,path,req.body??{},'read',async(tx,actor)=>{await tx.query('DELETE FROM sessions WHERE token_hash=$1',[a.sessionHash]);await audit(tx,actor,'auth.logout','membership',a.memberId);return {status:200,data:{success:true}};});
@@ -55,9 +77,8 @@ class ApiController {
     if(method==='POST'&&path==='/diagnostics')return command('admin',(tx,actor)=>c.diagnostic(tx,actor,req.body));
     if(method==='GET'&&path==='/monitor')return send(await c.monitor(a));
     if(method==='GET'&&path==='/dashboard'){if(req.query.account_id)await c.accountScope(this.db,a,parse(uuid,req.query.account_id));return send({stage:'S1',metrics:null,priority_tasks:[],external_capabilities:{ai:'disabled',ocr:'disabled',sources:'unverified'}});}
-    // S1只提供文件权限守卫。S2接入真实文件/签名后扩展该路由，当前不返回伪下载地址。
     const file=path.match(/^\/files\/([^/]+)\/(download|preview)$/);
-    if(file&&method==='GET'){parse(uuid,file[1]);if(file[2]==='download')authorize(a,'download.original');throw new AppError(404,'NOT_FOUND','文件不存在或不可见');}
+    if(file&&method==='GET')return send(await files.link(a,file[1]!,file[2]==='preview',req.query.page===undefined?undefined:Number(req.query.page)));
     throw new AppError(404,'NOT_FOUND','接口不存在或尚未实现');
   }
 }
@@ -78,7 +99,8 @@ export async function createApp(db=new Database()){
   @Module({controllers:[ApiController],providers:[{provide:DB,useValue:db}]})class ApiModule{}
   const app=await NestFactory.create<NestExpressApplication>(ApiModule,{logger:false});
   app.use((req:Request,res:Response,next:NextFunction)=>{(req as any).requestId=id();res.setHeader('X-Request-Id',resRequestId(req));res.setHeader('Cache-Control','no-store');const start=Date.now();res.on('finish',()=>console.log(JSON.stringify({event:'http.request',request_id:resRequestId(req),method:req.method,path:req.originalUrl.split('?')[0],status:res.statusCode,duration_ms:Date.now()-start})));next();});
-  app.use(helmet({contentSecurityPolicy:{directives:{upgradeInsecureRequests:config.secure?[]:null}}}));
+  app.use(helmet({contentSecurityPolicy:{directives:{upgradeInsecureRequests:config.secure?[]:null,imgSrc:["'self'",'data:',new URL(process.env.S3_PUBLIC_ENDPOINT??process.env.S3_ENDPOINT??'http://localhost:59000').origin]}}}));
+  app.use('/api/v1/uploads',raw({type:'application/octet-stream',limit:8388608}));
   app.use(cookieParser());app.useGlobalFilters(new ApiErrors());
   app.useStaticAssets(resolve('apps/web/dist'),{index:'index.html'});
   await app.init();return app;

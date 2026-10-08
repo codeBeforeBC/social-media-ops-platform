@@ -1,0 +1,33 @@
+name: yoyo-s2-tests
+services:
+  storage:
+    image: chrislusf/seaweedfs:4.15@sha256:1593bd2a98964f5d4df83fa7db2b3d4ee7b20190813cc5bf8c3200e0e70d346e
+    command: ['server', '-dir=/data', '-s3', '-s3.port=9000', '-s3.config=/etc/yoyo-s3.json', '-ip.bind=0.0.0.0', '-volume.max=50', '-master.volumeSizeLimitMB=1024', '-volume.preStopSeconds=1']
+    volumes:
+      - ./.local/s2-test-state/storage-config.json:/etc/yoyo-s3.json:ro
+      - objects:/data
+    ports: ['127.0.0.1:59020:9000']
+    healthcheck:
+      test: ['CMD', 'wget', '-q', '-O', '/dev/null', 'http://localhost:9333/cluster/status']
+      interval: 2s
+      timeout: 2s
+      retries: 30
+  media-executor:
+    build:
+      context: .
+      dockerfile: tools/media/Dockerfile
+    image: yoyo-media-local:0.1.0
+    volumes:
+      - ./.local/s2-test-state/media/media-token:/run/media-token:ro
+      - scratch:/scratch
+    ports: ['127.0.0.1:59030:9010']
+    read_only: true
+    tmpfs: ['/tmp:size=32m,mode=1777']
+    security_opt: ['no-new-privileges:true']
+    cap_drop: [ALL]
+    pids_limit: 128
+    mem_limit: 2g
+    cpus: 2
+volumes:
+  objects:
+  scratch:

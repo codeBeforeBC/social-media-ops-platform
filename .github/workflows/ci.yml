@@ -1,4 +1,4 @@
-name: S1 checks
+name: Foundation and S2 checks
 on:
   push:
   pull_request:
@@ -28,9 +28,8 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: node tools/init-state.mjs
-      - run: pnpm check
       - run: pnpm exec playwright install --with-deps chromium
-      - run: node tools/test-env.mjs pnpm exec playwright test
+      - run: node tools/s2/check.mjs
       - run: docker compose config --quiet
       - run: docker compose build
       - uses: actions/upload-artifact@v4

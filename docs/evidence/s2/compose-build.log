@@ -1,0 +1,278 @@
+ Image yoyo-local:0.1.0 Building 
+ Image yoyo-local:0.1.0 Building 
+ Image yoyo-media-local:0.1.0 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.54kB done
+#1 DONE 0.0s
+
+#2 [media-executor internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.25kB done
+#2 DONE 0.0s
+
+#3 [api internal] load build definition from Dockerfile
+#3 transferring dockerfile: 1.59kB done
+#3 DONE 0.0s
+
+#4 [media-executor internal] load metadata for docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#4 DONE 0.0s
+
+#5 [api internal] load .dockerignore
+#5 transferring context: 177B done
+#5 DONE 0.0s
+
+#6 [api build 1/4] FROM docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#6 resolve docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c done
+#6 DONE 0.0s
+
+#7 [media-executor internal] load build context
+#7 transferring context: 187B done
+#7 DONE 0.0s
+
+#8 [media-executor stage-1 4/6] COPY tools/media/server.mjs /app/server.mjs
+#8 CACHED
+
+#9 [media-executor build 4/4] RUN gcc -O2 -Wall /sandbox.c -o /media-sandbox
+#9 CACHED
+
+#10 [media-executor stage-1 5/6] COPY tools/media/png-preview.py /usr/local/lib/yoyo/png-preview.py
+#10 CACHED
+
+#11 [media-executor build 2/4] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && apt-get -o Acquire::Retries=3 install -y --no-install-recommends gcc libc6-dev linux-libc-dev
+#11 CACHED
+
+#12 [media-executor stage-1 3/6] COPY --from=build /media-sandbox /usr/local/bin/media-sandbox
+#12 CACHED
+
+#13 [media-executor build 3/4] COPY tools/media/sandbox.c /sandbox.c
+#13 CACHED
+
+#14 [media-executor stage-1 2/6] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && (apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil poppler-utils fonts-dejavu-core ca-certificates || apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil poppler-utils fonts-dejavu-core ca-certificates) && rm -rf /var/lib/apt/lists/* && mkdir /scratch && chown node:node /scratch
+#14 CACHED
+
+#15 [api internal] load build context
+#15 transferring context: 1.55MB 0.0s done
+#15 DONE 0.0s
+
+#16 [media-executor stage-1 6/6] WORKDIR /app
+#16 CACHED
+
+#17 [api build  5/20] COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+#17 CACHED
+
+#18 [api build 12/20] COPY packages/contracts/package.json ./packages/contracts/package.json
+#18 CACHED
+
+#19 [api build  7/20] COPY apps/web/package.json ./apps/web/package.json
+#19 CACHED
+
+#20 [api build  6/20] COPY apps/api/package.json ./apps/api/package.json
+#20 CACHED
+
+#21 [api build 11/20] COPY packages/domain/package.json ./packages/domain/package.json
+#21 CACHED
+
+#22 [api build  4/20] WORKDIR /app
+#22 CACHED
+
+#23 [api build  3/20] RUN corepack enable && corepack prepare pnpm@10.33.0 --activate
+#23 CACHED
+
+#24 [api build  8/20] COPY apps/worker/package.json ./apps/worker/package.json
+#24 CACHED
+
+#25 [api build  2/20] RUN apt-get update && apt-get install -y --no-install-recommends openssl ca-certificates && rm -rf /var/lib/apt/lists/*
+#25 CACHED
+
+#26 [api build 10/20] COPY packages/db/package.json ./packages/db/package.json
+#26 CACHED
+
+#27 [api build  9/20] COPY apps/scheduler/package.json ./apps/scheduler/package.json
+#27 CACHED
+
+#28 [api build 13/20] RUN --mount=type=cache,id=yoyo-pnpm,target=/pnpm/store pnpm config set store-dir /pnpm/store && pnpm install --frozen-lockfile
+#28 CACHED
+
+#29 [api build 14/20] COPY apps ./apps
+#29 DONE 0.0s
+
+#30 [media-executor] exporting to image
+#30 exporting layers done
+#30 exporting manifest sha256:5fa6a6d096540d542d55d5d8d0192feaa238f8a4edf07461716d6e2f13d3d644 done
+#30 exporting config sha256:ec6388d0d53f8bbccfc0cae1c631f055c3dd71f251bc76971f9acbbfa8fdb57b done
+#30 exporting attestation manifest sha256:f68037d202e76120c155b86251f6ecf4c4efb10a42dd8edb4c63ba6f6a2f3a19 done
+#30 exporting manifest list sha256:1b2f587594b1644bb2ad27befcad52b27659825361db32a4021fa0db62c06fee done
+#30 naming to docker.io/library/yoyo-media-local:0.1.0 done
+#30 unpacking to docker.io/library/yoyo-media-local:0.1.0 done
+#30 DONE 0.0s
+
+#31 [migrate build 15/20] COPY packages ./packages
+#31 DONE 0.0s
+
+#32 [api build 16/20] COPY tools ./tools
+#32 DONE 0.0s
+
+#33 [api build 17/20] COPY tests ./tests
+#33 DONE 0.0s
+
+#34 [media-executor] resolving provenance for metadata file
+#34 DONE 0.0s
+
+#35 [migrate build 18/20] COPY contracts ./contracts
+#35 DONE 0.0s
+
+#36 [api build 19/20] COPY tsconfig.json prisma.config.ts ./
+#36 DONE 0.0s
+
+#37 [api build 20/20] RUN pnpm build
+#37 0.225 
+#37 0.225 > yoyo-workbench@0.1.0 build /app
+#37 0.225 > pnpm db:generate && tsc -p tsconfig.json && pnpm --filter @yoyo/web build
+#37 0.225 
+#37 0.357 
+#37 0.357 > yoyo-workbench@0.1.0 db:generate /app
+#37 0.357 > prisma generate
+#37 0.357 
+#37 0.827 Loaded Prisma config from prisma.config.ts.
+#37 0.827 
+#37 0.868 Prisma schema loaded from packages/db/prisma/schema.prisma.
+#37 1.277 
+#37 1.277 ✔ Generated Prisma Client (v7.10.0) to ./node_modules/.pnpm/@prisma+client@7.10.0_prisma@7.10.0_@types+react-dom@19.2.2_@types+react@19.2.2__@types_a5f616641512722fa171c0ec0738743a/node_modules/@prisma/client in 288ms
+#37 1.277 
+#37 1.277 Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+#37 1.277 
+#37 1.277 
+#37 3.293 
+#37 3.293 > @yoyo/web@0.1.0 build /app/apps/web
+#37 3.293 > vite build
+#37 3.293 
+#37 3.386 vite v8.3.3 building client environment for production...
+#37 3.390 transforming...
+#37 3.430 ✓ 19 modules transformed.
+#37 3.445 rendering chunks...
+#37 3.476 computing gzip size...
+#37 3.480 dist/index.html                   0.36 kB │ gzip:  0.29 kB
+#37 3.480 dist/assets/index-DqY-vAAh.css    9.47 kB │ gzip:  2.84 kB
+#37 3.480 dist/assets/index-BSgvJj6A.js   269.47 kB │ gzip: 82.56 kB
+#37 3.480 
+#37 3.481 ✓ built in 94ms
+#37 DONE 3.5s
+
+#38 [api stage-1 2/6] WORKDIR /app
+#38 CACHED
+
+#39 [api stage-1 3/6] COPY --from=build --chown=node:node /app/node_modules ./node_modules
+#39 CACHED
+
+#38 [migrate stage-1 2/6] WORKDIR /app
+#38 CACHED
+
+#40 [api stage-1 4/6] COPY --from=build --chown=node:node /app/dist ./dist
+#40 DONE 0.0s
+
+#41 [api stage-1 5/6] COPY --from=build --chown=node:node /app/apps/web/dist ./apps/web/dist
+#41 DONE 0.0s
+
+#42 [api stage-1 6/6] COPY --from=build --chown=node:node /app/packages/db/migrations ./packages/db/migrations
+#42 DONE 0.0s
+
+#43 [migrate] exporting to image
+#43 exporting layers 0.0s done
+#43 exporting manifest sha256:ad812e42c37fdcecd6850a60656abafdcff559299c316a2410439382ecd6bb93 done
+#43 exporting config sha256:4829b225283242642ca2436c003610084f386ad1aa49a5246ebba4ce96778ce2 done
+#43 exporting attestation manifest sha256:06095c7661eb38645f548e606c40f2568bc4db1f7fe096975c46c460fdd59b44 0.0s done
+#43 exporting manifest list sha256:7445db9ee997712e42962c2eca8c1abfa00cd76d3cf0d335f03b1741de9d632e
+#43 exporting manifest list sha256:7445db9ee997712e42962c2eca8c1abfa00cd76d3cf0d335f03b1741de9d632e done
+#43 naming to docker.io/library/yoyo-local:0.1.0 done
+#43 unpacking to docker.io/library/yoyo-local:0.1.0 0.0s done
+#43 DONE 0.1s
+
+#44 [api] exporting to image
+#44 exporting layers 0.0s done
+#44 exporting manifest sha256:ad4ef5fcc6ff875ab39cf8148aec69fbabdb9d03acf21106ad36dfdc3de63821 done
+#44 exporting config sha256:ad401276786f334c228066f66ff41bdcc1bf8b876883d23761c3e152820c6106 done
+#44 exporting attestation manifest sha256:b4471507573fa8e5566b933a8684e1624fc3377de4b0b87b43dd39140952c7cc 0.0s done
+#44 exporting manifest list sha256:06e932519fe94359092010050e6d8a8047247e0cbd8b188818075e89d8e5f094 done
+#44 naming to docker.io/library/yoyo-local:0.1.0 done
+#44 unpacking to docker.io/library/yoyo-local:0.1.0 0.0s done
+#44 DONE 0.1s
+
+#45 [migrate] resolving provenance for metadata file
+#45 DONE 0.0s
+
+#46 [api] resolving provenance for metadata file
+#46 DONE 0.0s
+ Image yoyo-local:0.1.0 Built 
+ Image yoyo-media-local:0.1.0 Built 
+ Image yoyo-local:0.1.0 Built 
+ Container yoyo-s2-smoke-storage-1 Running 
+ Container yoyo-s2-smoke-db-1 Running 
+ Container yoyo-s2-smoke-media-executor-1 Recreate 
+ Container yoyo-s2-smoke-migrate-1 Recreate 
+ Container yoyo-s2-smoke-migrate-1 Recreated 
+ Container yoyo-s2-smoke-media-1 Recreate 
+ Container yoyo-s2-smoke-scheduler-1 Recreate 
+ Container yoyo-s2-smoke-worker-1 Recreate 
+ Container yoyo-s2-smoke-reminder-1 Recreate 
+ Container yoyo-s2-smoke-api-1 Recreate 
+ Container yoyo-s2-smoke-api-1 Recreated 
+ Container yoyo-s2-smoke-reminder-1 Recreated 
+ Container yoyo-s2-smoke-worker-1 Recreated 
+ Container yoyo-s2-smoke-scheduler-1 Recreated 
+ Container yoyo-s2-smoke-media-1 Recreated 
+ Container yoyo-s2-smoke-media-executor-1 Recreated 
+ Container yoyo-s2-smoke-init-1 Starting 
+ Container yoyo-s2-smoke-init-1 Started 
+ Container yoyo-s2-smoke-init-1 Waiting 
+ Container yoyo-s2-smoke-init-1 Waiting 
+ Container yoyo-s2-smoke-init-1 Waiting 
+ Container yoyo-s2-smoke-init-1 Exited 
+ Container yoyo-s2-smoke-init-1 Exited 
+ Container yoyo-s2-smoke-storage-1 Waiting 
+ Container yoyo-s2-smoke-db-1 Waiting 
+ Container yoyo-s2-smoke-init-1 Exited 
+ Container yoyo-s2-smoke-media-executor-1 Starting 
+ Container yoyo-s2-smoke-media-executor-1 Started 
+ Container yoyo-s2-smoke-db-1 Healthy 
+ Container yoyo-s2-smoke-storage-1 Healthy 
+ Container yoyo-s2-smoke-migrate-1 Starting 
+ Container yoyo-s2-smoke-migrate-1 Started 
+ Container yoyo-s2-smoke-migrate-1 Waiting 
+ Container yoyo-s2-smoke-migrate-1 Waiting 
+ Container yoyo-s2-smoke-migrate-1 Waiting 
+ Container yoyo-s2-smoke-migrate-1 Waiting 
+ Container yoyo-s2-smoke-migrate-1 Waiting 
+ Container yoyo-s2-smoke-migrate-1 Exited 
+ Container yoyo-s2-smoke-reminder-1 Starting 
+ Container yoyo-s2-smoke-migrate-1 Exited 
+ Container yoyo-s2-smoke-scheduler-1 Starting 
+ Container yoyo-s2-smoke-migrate-1 Exited 
+ Container yoyo-s2-smoke-api-1 Starting 
+ Container yoyo-s2-smoke-migrate-1 Exited 
+ Container yoyo-s2-smoke-media-1 Starting 
+ Container yoyo-s2-smoke-migrate-1 Exited 
+ Container yoyo-s2-smoke-worker-1 Starting 
+ Container yoyo-s2-smoke-scheduler-1 Started 
+ Container yoyo-s2-smoke-reminder-1 Started 
+ Container yoyo-s2-smoke-api-1 Started 
+ Container yoyo-s2-smoke-worker-1 Started 
+ Container yoyo-s2-smoke-media-1 Started 
+ Container yoyo-s2-smoke-media-1 Waiting 
+ Container yoyo-s2-smoke-api-1 Waiting 
+ Container yoyo-s2-smoke-reminder-1 Waiting 
+ Container yoyo-s2-smoke-scheduler-1 Waiting 
+ Container yoyo-s2-smoke-worker-1 Waiting 
+ Container yoyo-s2-smoke-init-1 Waiting 
+ Container yoyo-s2-smoke-db-1 Waiting 
+ Container yoyo-s2-smoke-migrate-1 Waiting 
+ Container yoyo-s2-smoke-media-executor-1 Waiting 
+ Container yoyo-s2-smoke-storage-1 Waiting 
+ Container yoyo-s2-smoke-scheduler-1 Healthy 
+ Container yoyo-s2-smoke-migrate-1 Exited 
+ Container yoyo-s2-smoke-media-1 Healthy 
+ Container yoyo-s2-smoke-media-executor-1 Healthy 
+ Container yoyo-s2-smoke-db-1 Healthy 
+ Container yoyo-s2-smoke-storage-1 Healthy 
+ Container yoyo-s2-smoke-reminder-1 Healthy 
+ Container yoyo-s2-smoke-init-1 Exited 
+ Container yoyo-s2-smoke-worker-1 Healthy 
+ Container yoyo-s2-smoke-api-1 Healthy 

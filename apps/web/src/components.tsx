@@ -10,5 +10,5 @@ export function JobStatus({state}:{state:string}){return <span className={'badge
 export function Drawer({title,onClose,children}:{title:string;onClose:()=>void;children:React.ReactNode}){
   const ref=useRef<HTMLDialogElement>(null);
   useEffect(()=>{const prior=document.activeElement as HTMLElement|null;ref.current?.showModal();return ()=>{prior?.focus();};},[]);
-  return <dialog ref={ref} className="drawer" onCancel={e=>{e.preventDefault();onClose();}} onClick={e=>{if(e.target===ref.current)onClose();}}><div className="drawer-heading"><h2>{title}</h2><button aria-label="关闭详情" onClick={onClose}>关闭</button></div>{children}</dialog>;
+  return <dialog ref={ref} aria-label={title} className="drawer" onCancel={e=>{e.preventDefault();onClose();}} onClick={e=>{if(e.target===ref.current)onClose();}}><div className="drawer-heading"><h2>{title}</h2><button aria-label="关闭详情" onClick={onClose}>关闭</button></div>{children}</dialog>;
 }

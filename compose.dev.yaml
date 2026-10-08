@@ -10,3 +10,14 @@ services:
     volumes:
       - ./.local/state:/state:ro
       - database:/var/lib/postgresql/data
+  storage:
+    volumes:
+      - ./.local/state:/state:ro
+      - objects:/data
+  media-executor:
+    networks: [default, media]
+    volumes:
+      - ./.local/state/media:/run/media:ro
+      - media-scratch:/scratch
+    ports:
+      - '127.0.0.1:59010:9010'

@@ -1,0 +1,11 @@
+ALTER TABLE upload_sessions ADD FOREIGN KEY(workspace_id,created_by) REFERENCES memberships(workspace_id,id);
+ALTER TABLE file_objects ADD FOREIGN KEY(workspace_id,created_by) REFERENCES memberships(workspace_id,id);
+ALTER TABLE folders ADD FOREIGN KEY(workspace_id,created_by) REFERENCES memberships(workspace_id,id);
+ALTER TABLE assets ADD FOREIGN KEY(workspace_id,created_by) REFERENCES memberships(workspace_id,id);
+ALTER TABLE asset_versions ADD FOREIGN KEY(workspace_id,created_by) REFERENCES memberships(workspace_id,id);
+ALTER TABLE asset_usages ADD FOREIGN KEY(workspace_id,created_by) REFERENCES memberships(workspace_id,id);
+ALTER TABLE asset_relations ADD FOREIGN KEY(workspace_id,created_by) REFERENCES memberships(workspace_id,id);
+ALTER TABLE rule_sets ADD FOREIGN KEY(workspace_id,created_by) REFERENCES memberships(workspace_id,id);
+CREATE TRIGGER immutable_brand_rule BEFORE UPDATE OR DELETE ON brand_rules FOR EACH ROW EXECUTE FUNCTION s2_immutable();
+ALTER TABLE assets ADD COLUMN retired_reason text;
+ALTER TABLE assets ADD COLUMN retired_at timestamptz;

@@ -28,16 +28,37 @@ services:
       timeout: 3s
       retries: 30
     restart: unless-stopped
+  storage:
+    image: chrislusf/seaweedfs:4.15@sha256:1593bd2a98964f5d4df83fa7db2b3d4ee7b20190813cc5bf8c3200e0e70d346e
+    depends_on:
+      init:
+        condition: service_completed_successfully
+    volumes:
+      - state:/state:ro
+      - objects:/data
+    ports:
+      - '127.0.0.1:${S3_PORT:-59000}:9000'
+    command: ['server', '-dir=/data', '-s3', '-s3.port=9000', '-s3.config=/state/storage-config.json', '-ip.bind=0.0.0.0', '-volume.max=50', '-master.volumeSizeLimitMB=1024', '-volume.preStopSeconds=1']
+    healthcheck:
+      test: ['CMD', 'wget', '-q', '-O', '/dev/null', 'http://localhost:9333/cluster/status']
+      interval: 3s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped
   migrate:
     build: .
     image: yoyo-local:0.1.0
     depends_on:
       db:
         condition: service_healthy
+      storage:
+        condition: service_healthy
     environment: &environment
       DB_HOST: db
       DB_PORT: '5432'
       STATE_DIR: /state
+      S3_ENDPOINT: http://storage:9000
+      S3_PUBLIC_ENDPOINT: ${S3_PUBLIC_ENDPOINT:-http://localhost:59000}
       API_HOST: 0.0.0.0
       APP_ORIGIN: ${APP_ORIGIN:-http://localhost:3000}
       NODE_ENV: ${NODE_ENV:-development}
@@ -45,7 +66,7 @@ services:
       SESSION_IDLE_SECONDS: ${SESSION_IDLE_SECONDS:-7200}
     volumes: &volumes
       - state:/state
-    command: ['node', 'dist/packages/db/src/migrate.js']
+    command: ['sh', '-c', 'node dist/packages/db/src/migrate.js && node dist/tools/storage-init.js']
     restart: 'no'
   api:
     image: yoyo-local:0.1.0
@@ -91,6 +112,51 @@ services:
     security_opt: ['no-new-privileges:true']
     mem_limit: 256m
     cpus: 0.5
+  media:
+    image: yoyo-local:0.1.0
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    environment:
+      <<: *environment
+      WORKER_POOL: media
+      MEDIA_ENDPOINT: http://media-executor:9010
+    volumes: *volumes
+    networks: [default, media]
+    command: ['node', 'dist/apps/worker/src/main.js']
+    security_opt: ['no-new-privileges:true']
+    cap_drop: [ALL]
+    mem_limit: 512m
+    cpus: 1
+    restart: unless-stopped
+  media-executor:
+    build:
+      context: .
+      dockerfile: tools/media/Dockerfile
+    image: yoyo-media-local:0.1.0
+    depends_on:
+      init:
+        condition: service_completed_successfully
+    volumes:
+      - type: volume
+        source: state
+        target: /run/media
+        read_only: true
+        volume:
+          subpath: media
+      - media-scratch:/scratch
+    entrypoint: ['sh', '-c', 'exec node /app/server.mjs']
+    environment:
+      MEDIA_TOKEN_FILE: /run/media/media-token
+    networks: [media]
+    read_only: true
+    tmpfs: ['/tmp:size=32m,mode=1777']
+    security_opt: ['no-new-privileges:true']
+    cap_drop: [ALL]
+    pids_limit: 128
+    mem_limit: 2g
+    cpus: 2
+    restart: unless-stopped
   scheduler:
     image: yoyo-local:0.1.0
     depends_on:
@@ -103,7 +169,11 @@ services:
     security_opt: ['no-new-privileges:true']
     mem_limit: 256m
     cpus: 0.5
-# S3兼容存储与媒体受限执行器在S2按真实文件验收后纳入，S1不提供占位文件服务。
 volumes:
   state:
   database:
+  objects:
+  media-scratch:
+networks:
+  media:
+    internal: true

@@ -1,0 +1,94 @@
+Instance credentials ready; no secrets printed.
+ Image yoyo-media-local:0.1.0 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 602B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.25kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 177B done
+#4 DONE 0.0s
+
+#5 [build 1/4] FROM docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#5 resolve docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 187B done
+#6 DONE 0.0s
+
+#7 [stage-1 5/6] COPY tools/media/png-preview.py /usr/local/lib/yoyo/png-preview.py
+#7 CACHED
+
+#8 [build 3/4] COPY tools/media/sandbox.c /sandbox.c
+#8 CACHED
+
+#9 [build 2/4] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && apt-get -o Acquire::Retries=3 install -y --no-install-recommends gcc libc6-dev linux-libc-dev
+#9 CACHED
+
+#10 [stage-1 3/6] COPY --from=build /media-sandbox /usr/local/bin/media-sandbox
+#10 CACHED
+
+#11 [build 4/4] RUN gcc -O2 -Wall /sandbox.c -o /media-sandbox
+#11 CACHED
+
+#12 [stage-1 2/6] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && (apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil poppler-utils fonts-dejavu-core ca-certificates || apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil poppler-utils fonts-dejavu-core ca-certificates) && rm -rf /var/lib/apt/lists/* && mkdir /scratch && chown node:node /scratch
+#12 CACHED
+
+#13 [stage-1 4/6] COPY tools/media/server.mjs /app/server.mjs
+#13 CACHED
+
+#14 [stage-1 6/6] WORKDIR /app
+#14 CACHED
+
+#15 exporting to image
+#15 exporting layers done
+#15 exporting manifest sha256:38a7151bd340c9a2015acfd233d8b2db19c5af3dfae9eb10d5bdb6b61cd9bc43 done
+#15 exporting config sha256:48b0255f4afc2edb2692ba231e1be0edd2fbc008fd407251a69b748462321eb1 done
+#15 exporting attestation manifest sha256:b9b1188782eb13d57a695f649e19fc5e2eedcc378e013579a75dbed147948076 done
+#15 exporting manifest list sha256:b693706cc714094a8a30162668099fcb2959057ba44ed775be2abf6687032f28 done
+#15 naming to docker.io/library/yoyo-media-local:0.1.0 done
+#15 unpacking to docker.io/library/yoyo-media-local:0.1.0 done
+#15 DONE 0.0s
+
+#16 resolving provenance for metadata file
+#16 DONE 0.0s
+ Image yoyo-media-local:0.1.0 Built 
+ Container yoyo-s2-tests-storage-1 Running 
+ Container yoyo-s2-tests-media-executor-1 Recreate 
+ Container yoyo-s2-tests-media-executor-1 Recreated 
+ Container yoyo-s2-tests-media-executor-1 Starting 
+ Container yoyo-s2-tests-media-executor-1 Started 
+ Container yoyo-s2-tests-storage-1 Waiting 
+ Container yoyo-s2-tests-media-executor-1 Waiting 
+ Container yoyo-s2-tests-media-executor-1 Healthy 
+ Container yoyo-s2-tests-storage-1 Healthy 
+Private storage ready.
+[2m[WebServer] [22m(node:15881) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:15882) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:15888) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:15888) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 5 tests using 1 worker
+
+(node:15889) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15889) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/browser.spec.ts:4:5 › 首次设置、六导航、账号表单、设置保存、键盘抽屉和退出 (2.2s)
+  ✓  2 tests/browser.spec.ts:23:5 › 请求失败显示可重试错误，加载状态和登录过期可见 (1.6s)
+  ✓  3 tests/browser.spec.ts:30:5 › PNG资产上传、检索、透明预览、确认/停用及窄屏详情 (1.1s)
+  ✓  4 tests/browser.spec.ts:44:5 › 规范PDF上传、规则录入、页码追溯与人工激活 (6.2s)
+  ✓  5 tests/browser.spec.ts:52:5 › 素材选择器绑定具体版本，双向来源关联可见且停用版本禁选 (1.2s)
+
+  5 passed (13.7s)
