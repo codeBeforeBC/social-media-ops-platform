@@ -1,0 +1,266 @@
+ Image yoyo-local:0.1.0 Building
+ Image yoyo-local:0.1.0 Building
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.03kB done
+#1 DONE 0.0s
+
+#2 [api internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.71kB done
+#2 DONE 0.0s
+
+#3 [api internal] load metadata for docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#3 DONE 0.0s
+
+#4 [api internal] load .dockerignore
+#4 transferring context: 177B done
+#4 DONE 0.0s
+
+#5 [api build  1/20] FROM docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#5 resolve docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c done
+#5 DONE 0.0s
+
+#6 [migrate internal] load build context
+#6 transferring context: 1.81MB 0.0s done
+#6 DONE 0.0s
+
+#7 [api build  2/20] RUN apt-get update && apt-get install -y --no-install-recommends openssl ca-certificates && rm -rf /var/lib/apt/lists/*
+#7 CACHED
+
+#8 [api build  3/20] RUN corepack enable && corepack prepare pnpm@10.33.0 --activate
+#8 CACHED
+
+#9 [migrate build  4/20] WORKDIR /app
+#9 CACHED
+
+#10 [migrate build  5/20] COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+#10 DONE 0.0s
+
+#11 [api build  6/20] COPY apps/api/package.json ./apps/api/package.json
+#11 DONE 0.0s
+
+#12 [migrate build  7/20] COPY apps/web/package.json ./apps/web/package.json
+#12 DONE 0.0s
+
+#13 [migrate build  8/20] COPY apps/worker/package.json ./apps/worker/package.json
+#13 DONE 0.0s
+
+#14 [api build  9/20] COPY apps/scheduler/package.json ./apps/scheduler/package.json
+#14 DONE 0.0s
+
+#15 [migrate build 10/20] COPY packages/db/package.json ./packages/db/package.json
+#15 DONE 0.0s
+
+#16 [migrate build 11/20] COPY packages/domain/package.json ./packages/domain/package.json
+#16 DONE 0.0s
+
+#17 [api build 12/20] COPY packages/contracts/package.json ./packages/contracts/package.json
+#17 DONE 0.0s
+
+#18 [migrate build 13/20] RUN --mount=type=cache,id=yoyo-pnpm,target=/pnpm/store pnpm config set store-dir /pnpm/store && pnpm install --frozen-lockfile
+#18 0.412 Scope: all 8 workspace projects
+#18 0.437 Lockfile is up to date, resolution step is skipped
+#18 0.450 Progress: resolved 1, reused 0, downloaded 0, added 0
+#18 0.480 Packages: +323
+#18 0.480 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#18 1.451 Progress: resolved 323, reused 323, downloaded 0, added 259
+#18 1.756 Progress: resolved 323, reused 323, downloaded 0, added 323, done
+#18 2.243
+#18 2.243 dependencies:
+#18 2.243 + @aws-sdk/client-s3 3.1147.0
+#18 2.243 + @aws-sdk/s3-request-presigner 3.1147.0
+#18 2.243 + @nestjs/common 12.1.2
+#18 2.243 + @nestjs/core 12.1.2
+#18 2.243 + @nestjs/platform-express 12.1.2
+#18 2.243 + @prisma/adapter-pg 7.10.0
+#18 2.243 + @prisma/client 7.10.0
+#18 2.243 + argon2 0.44.0
+#18 2.243 + cookie-parser 1.4.7
+#18 2.243 + express 5.2.1
+#18 2.243 + helmet 8.1.0
+#18 2.243 + pg 8.16.3
+#18 2.243 + reflect-metadata 0.2.2
+#18 2.243 + rxjs 7.8.2
+#18 2.243 + zod 4.1.12
+#18 2.243
+#18 2.243 devDependencies:
+#18 2.243 + @playwright/test 1.56.1
+#18 2.243 + @types/cookie-parser 1.4.9
+#18 2.243 + @types/express 5.0.3
+#18 2.243 + @types/node 24.7.2
+#18 2.243 + @types/pg 8.15.5
+#18 2.243 + ajv 8.20.0
+#18 2.243 + ajv-formats 3.0.1
+#18 2.243 + prisma 7.10.0
+#18 2.243 + tsx 4.20.6
+#18 2.243 + typescript 5.9.3
+#18 2.243
+#18 2.260 Done in 1.9s using pnpm v10.33.0
+#18 3.510
+#18 3.510    ╭───────────────────────────────────────────────╮
+#18 3.510    │                                               │
+#18 3.510    │     Update available! 10.33.0 → 12.10.1.      │
+#18 3.510    │     Changelog: https://pnpm.io/v/12.10.1      │
+#18 3.510    │   To update, run: corepack use pnpm@12.10.1   │
+#18 3.510    │                                               │
+#18 3.510    ╰───────────────────────────────────────────────╯
+#18 3.510
+#18 DONE 3.7s
+
+#19 [migrate build 14/20] COPY apps ./apps
+#19 DONE 0.1s
+
+#20 [migrate build 15/20] COPY packages ./packages
+#20 DONE 0.0s
+
+#21 [migrate build 16/20] COPY tools ./tools
+#21 DONE 0.0s
+
+#22 [migrate build 17/20] COPY tests ./tests
+#22 DONE 0.0s
+
+#23 [api build 18/20] COPY contracts ./contracts
+#23 DONE 0.0s
+
+#24 [migrate build 19/20] COPY tsconfig.json prisma.config.ts ./
+#24 DONE 0.0s
+
+#25 [api build 20/20] RUN pnpm build
+#25 0.197
+#25 0.197 > yoyo-workbench@0.1.0 build /app
+#25 0.197 > pnpm db:generate && tsc -p tsconfig.json && pnpm --filter @yoyo/web build
+#25 0.197
+#25 0.323
+#25 0.323 > yoyo-workbench@0.1.0 db:generate /app
+#25 0.323 > prisma generate
+#25 0.323
+#25 0.632 Loaded Prisma config from prisma.config.ts.
+#25 0.632
+#25 0.653 Prisma schema loaded from packages/db/prisma/schema.prisma.
+#25 1.060
+#25 1.060 ✔ Generated Prisma Client (v7.10.0) to ./node_modules/.pnpm/@prisma+client@7.10.0_prisma@7.10.0_@types+react-dom@19.2.2_@types+react@19.2.2__@types_a5f616641512722fa171c0ec0738743a/node_modules/@prisma/client in 306ms
+#25 1.060
+#25 1.060 Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+#25 1.060
+#25 1.060
+#25 3.366
+#25 3.366 > @yoyo/web@0.1.0 build /app/apps/web
+#25 3.366 > vite build
+#25 3.366
+#25 3.454 vite v8.3.3 building client environment for production...
+#25 3.458 transforming...
+#25 3.486 ✓ 22 modules transformed.
+#25 3.503 rendering chunks...
+#25 3.521 computing gzip size...
+#25 3.524 dist/index.html                   0.36 kB │ gzip:  0.29 kB
+#25 3.524 dist/assets/index-uOSoOvu5.css   10.41 kB │ gzip:  3.01 kB
+#25 3.524 dist/assets/index-CYdLNP3k.js   296.71 kB │ gzip: 89.01 kB
+#25 3.524
+#25 3.524 ✓ built in 70ms
+#25 DONE 3.6s
+
+#26 [api stage-1 2/8] WORKDIR /app
+#26 CACHED
+
+#27 [migrate stage-1 3/8] COPY --from=build --chown=node:node /app/node_modules ./node_modules
+#27 DONE 1.3s
+
+#28 [api stage-1 4/8] COPY --from=build --chown=node:node /app/dist ./dist
+#28 DONE 0.1s
+
+#29 [api stage-1 5/8] COPY --from=build --chown=node:node /app/apps/web/dist ./apps/web/dist
+#29 DONE 0.0s
+
+#30 [api stage-1 6/8] COPY --from=build --chown=node:node /app/packages/db/migrations ./packages/db/migrations
+#30 DONE 0.0s
+
+#31 [migrate stage-1 7/8] COPY --from=build --chown=node:node /app/tools/s3 ./tools/s3
+#31 DONE 0.0s
+
+#32 [api stage-1 8/8] COPY --from=build --chown=node:node /app/tools/s0 ./tools/s0
+#32 DONE 0.0s
+
+#33 [migrate] exporting to image
+#33 exporting layers
+#33 exporting layers 7.6s done
+#33 exporting manifest sha256:ccefccc34a02b5e91fd1af68e7b3de378b62ae94f675bb9aecc050c34ee1a0cd 0.0s done
+#33 exporting config sha256:ffae802f16b615cd92717aca06f76e0cc24ab6709992a49e78822ff424a6df2a 0.0s done
+#33 exporting attestation manifest sha256:fb3391b3bb9b4bfc276dbb74c6b9028a8683a0e00e84ccdc8ae00f4cfa518f49 0.0s done
+#33 exporting manifest list sha256:a4c71631f7c5e82c4127ef3f3c527f126b92150e91cf3fb3d38bd8cc31bd5af6 done
+#33 naming to docker.io/library/yoyo-local:0.1.0 done
+#33 unpacking to docker.io/library/yoyo-local:0.1.0
+#33 unpacking to docker.io/library/yoyo-local:0.1.0 2.2s done
+#33 DONE 9.9s
+
+#34 [api] exporting to image
+#34 exporting layers 7.6s done
+#34 exporting manifest sha256:f9645c61ca129545051f9a5613bea90c47fc3891cb80c2b6b4a3e1b40432e29a 0.0s done
+#34 exporting config sha256:9d4085ff03b736843486e9f808893bd0d46630ab82a18931d15a679408da2df9 0.0s done
+#34 exporting attestation manifest sha256:ab14677e328d60705a425181457f5e8b6c1de47c9d38c7ef24b3ae6954c58dcd 0.0s done
+#34 exporting manifest list sha256:a7069b893ba9a09cbb374cef235b8919903dc2007fe490737182aefcba0f919b done
+#34 naming to docker.io/library/yoyo-local:0.1.0 done
+#34 unpacking to docker.io/library/yoyo-local:0.1.0 2.2s done
+#34 DONE 9.9s
+
+#35 [migrate] resolving provenance for metadata file
+#35 DONE 0.0s
+
+#36 [api] resolving provenance for metadata file
+#36 DONE 0.0s
+ Image yoyo-local:0.1.0 Built
+ Image yoyo-local:0.1.0 Built
+ Network yoyo-s3-ai-smoke_default Creating
+ Network yoyo-s3-ai-smoke_default Created
+ Volume yoyo-s3-ai-smoke_state Creating
+ Volume yoyo-s3-ai-smoke_state Created
+ Volume yoyo-s3-ai-smoke_database Creating
+ Volume yoyo-s3-ai-smoke_database Created
+ Volume yoyo-s3-ai-smoke_objects Creating
+ Volume yoyo-s3-ai-smoke_objects Created
+ Container yoyo-s3-ai-smoke-init-1 Creating
+ Container yoyo-s3-ai-smoke-init-1 Created
+ Container yoyo-s3-ai-smoke-db-1 Creating
+ Container yoyo-s3-ai-smoke-storage-1 Creating
+ Container yoyo-s3-ai-smoke-storage-1 Created
+ Container yoyo-s3-ai-smoke-db-1 Created
+ Container yoyo-s3-ai-smoke-migrate-1 Creating
+ Container yoyo-s3-ai-smoke-migrate-1 Created
+ Container yoyo-s3-ai-smoke-api-1 Creating
+ Container yoyo-s3-ai-smoke-worker-1 Creating
+ Container yoyo-s3-ai-smoke-worker-1 Created
+ Container yoyo-s3-ai-smoke-api-1 Created
+ Container yoyo-s3-ai-smoke-init-1 Starting
+ Container yoyo-s3-ai-smoke-init-1 Started
+ Container yoyo-s3-ai-smoke-init-1 Waiting
+ Container yoyo-s3-ai-smoke-init-1 Waiting
+ Container yoyo-s3-ai-smoke-init-1 Exited
+ Container yoyo-s3-ai-smoke-db-1 Starting
+ Container yoyo-s3-ai-smoke-init-1 Exited
+ Container yoyo-s3-ai-smoke-storage-1 Starting
+ Container yoyo-s3-ai-smoke-storage-1 Started
+ Container yoyo-s3-ai-smoke-db-1 Started
+ Container yoyo-s3-ai-smoke-db-1 Waiting
+ Container yoyo-s3-ai-smoke-storage-1 Waiting
+ Container yoyo-s3-ai-smoke-db-1 Healthy
+ Container yoyo-s3-ai-smoke-storage-1 Healthy
+ Container yoyo-s3-ai-smoke-migrate-1 Starting
+ Container yoyo-s3-ai-smoke-migrate-1 Started
+ Container yoyo-s3-ai-smoke-migrate-1 Waiting
+ Container yoyo-s3-ai-smoke-migrate-1 Waiting
+ Container yoyo-s3-ai-smoke-migrate-1 Exited
+ Container yoyo-s3-ai-smoke-migrate-1 Exited
+ Container yoyo-s3-ai-smoke-worker-1 Starting
+ Container yoyo-s3-ai-smoke-api-1 Starting
+ Container yoyo-s3-ai-smoke-api-1 Started
+ Container yoyo-s3-ai-smoke-worker-1 Started
+ Container yoyo-s3-ai-smoke-migrate-1 Waiting
+ Container yoyo-s3-ai-smoke-api-1 Waiting
+ Container yoyo-s3-ai-smoke-init-1 Waiting
+ Container yoyo-s3-ai-smoke-db-1 Waiting
+ Container yoyo-s3-ai-smoke-storage-1 Waiting
+ Container yoyo-s3-ai-smoke-worker-1 Waiting
+ Container yoyo-s3-ai-smoke-init-1 Exited
+ Container yoyo-s3-ai-smoke-db-1 Healthy
+ Container yoyo-s3-ai-smoke-worker-1 Healthy
+ Container yoyo-s3-ai-smoke-storage-1 Healthy
+ Container yoyo-s3-ai-smoke-migrate-1 Exited
+ Container yoyo-s3-ai-smoke-api-1 Healthy

@@ -1,0 +1,168 @@
+{
+  "started_at": "2026-10-09T03:10:21.587Z",
+  "scope": "S0 actual-provider structured calculation citation probe; explicitly synthetic, not S7 product or real backend verification",
+  "model": "deepseek-flash",
+  "input": {
+    "synthetic": true,
+    "observations": [
+      {
+        "id": "b2000000-0000-4000-8000-000000000001",
+        "note_id": "synthetic-note-0",
+        "read_count": 100,
+        "followers": null,
+        "traffic": "mixed_paid_natural"
+      },
+      {
+        "id": "b2000000-0000-4000-8000-000000000002",
+        "note_id": "synthetic-note-1",
+        "read_count": 50,
+        "followers": null,
+        "traffic": "mixed_paid_natural"
+      }
+    ],
+    "calculations": [
+      {
+        "id": "b1000000-0000-4000-8000-000000000001",
+        "claim": "两个合成笔记的阅读数合计为150",
+        "method": "sum of two distinct synthetic notes",
+        "value": 150,
+        "observation_ids": [
+          "b2000000-0000-4000-8000-000000000001",
+          "b2000000-0000-4000-8000-000000000002"
+        ]
+      }
+    ],
+    "missing": [
+      "真实后台样本",
+      "粉丝与归因数据"
+    ],
+    "owner_role": "本地使用者"
+  },
+  "output": {
+    "schema_version": "ai-v1",
+    "input_version": "c3963cab5437f77c82614beca4f5a35dcf29d404d3d64b971e02998f120e3b09",
+    "summary": "本次输入为明确标注 synthetic=true 的提供方验证数据，不是运营复盘：包含两条合成笔记（各1个样本）的阅读数观测，以及一条合计计算记录（100+50=150）。已确认信息仅为该合计计算记录本身；两条观测的 followers 均为 null，traffic 均为 mixed_paid_natural（自然与付费流量混合），因此不能称为自然涨粉，也不能对传播时机或活动日期作结论。样本量仅为两个合成笔记，不足以支撑因果推断。真实后台样本与粉丝/归因数据缺失，已记入 missing_inputs 与 task_payload.missing_data。以下 hypotheses 与 actions 均为待验证提案，未执行，也不承诺任何业务效果，且不建议投放。",
+    "evidence_refs": [],
+    "assumptions": [
+      "本次输入中的 observation 与 calculation 均为合成数据（synthetic=true），不代表真实平台后台数据。",
+      "两条观测仅代表两个合成笔记样本，属于极少样本，不等于“没有样本”，但不足以做因果或趋势结论。",
+      "observation_ids 与 calculation_id 仅可使用 allowlist 中给出的 ID；除此之外不引入任何外部来源。",
+      "allowlist.evidence_refs 为空，故本次不引用任何外部证据材料。",
+      "owner_role 按输入给出的“本地使用者”填写。"
+    ],
+    "missing_inputs": [
+      "真实后台样本（非合成的平台导出，含每条笔记的完整指标）",
+      "粉丝与归因数据（followers 相关指标及来源归因）",
+      "自然流量与付费流量的拆分口径与各自数值（当前仅有 traffic=mixed_paid_natural）",
+      "指标定义与统计口径（如阅读数/曝光/互动的定义与去重规则）",
+      "观测对应的活动日期、发布时间与传播时间窗（捕获时间不证明活动日期或传播时机）",
+      "样本量与选取规则（为何仅这两个合成笔记）",
+      "历史基线或对照组数据"
+    ],
+    "warnings": [
+      "本输入为合成数据验证，不是运营复盘；不得据此推断真实账号表现。",
+      "两条笔记的 traffic 均为 mixed_paid_natural，合计阅读数不能表述为自然涨粉或自然流量增长。",
+      "仅两个样本，不得从样本间差异作出因果结论（含内容、形式、时间等归因）。",
+      "followers 全为 null，粉丝相关结论与涨粉类指标一律缺失，不得补数。",
+      "捕获/记录时间不能证明活动发生日期或传播时机。",
+      "hypotheses 与 actions 仅为待验证提案，未执行、未批准，不声称任何已发生的操作或效果。",
+      "不建议任何投放操作，也不承诺任何业务效果。"
+    ],
+    "task_payload": {
+      "facts": [
+        {
+          "claim": "两个合成笔记的阅读数合计为150",
+          "calculation_id": "b1000000-0000-4000-8000-000000000001",
+          "observation_ids": [
+            "b2000000-0000-4000-8000-000000000001",
+            "b2000000-0000-4000-8000-000000000002"
+          ]
+        }
+      ],
+      "hypotheses": [
+        {
+          "reason": "两条合成笔记的阅读数不同（100 与 50），但这是一个基于两个混合流量样本的观察，任何关于内容或形式差异导致差异的推测都尚未验证。",
+          "supporting_refs": [
+            "b1000000-0000-4000-8000-000000000001",
+            "b2000000-0000-4000-8000-000000000001",
+            "b2000000-0000-4000-8000-000000000002"
+          ],
+          "alternative_explanations": [
+            "两条笔记的付费流量占比不同，差异可能来自流量结构而非内容本身",
+            "发布时间或展示时长的差异",
+            "平台分发波动与随机性",
+            "样本过少导致的偶然差异"
+          ]
+        },
+        {
+          "reason": "由于 followers 字段为 null，无法判断阅读数变化与粉丝变化之间的关系，需要真实后台数据才能形成可检验假设。",
+          "supporting_refs": [
+            "b2000000-0000-4000-8000-000000000001",
+            "b2000000-0000-4000-8000-000000000002"
+          ],
+          "alternative_explanations": [
+            "粉丝数据在导出时缺失而非确实为零",
+            "粉丝变化由其他未观测的笔记或活动驱动",
+            "统计口径不同导致粉丝指标不可比"
+          ]
+        }
+      ],
+      "actions": [
+        {
+          "change": "整理并补充非合成的后台导出样本，至少包含每条笔记的分流量来源数值与 followers 字段，替换当前合成输入后再做任何分析",
+          "owner_role": "本地使用者",
+          "effort": "低",
+          "success_metric": "取得包含流量来源拆分与粉丝字段的真实后台导出文件，字段无缺失",
+          "observation_window": "下一次数据导出完成后（本次不执行）"
+        },
+        {
+          "change": "在数据补齐前，所有涉及合计阅读数的表述统一限定为“两个合成样本的合计，混合流量，不含粉丝数据”",
+          "owner_role": "本地使用者",
+          "effort": "低",
+          "success_metric": "输出物中不再出现自然涨粉、传播时机或因果类表述",
+          "observation_window": "下一次涉及该数据的输出评审时（本次不执行）"
+        },
+        {
+          "change": "预先书面确认指标口径（阅读数/流量来源/粉丝的定义与去重规则），以便后续样本可比",
+          "owner_role": "本地使用者",
+          "effort": "低",
+          "success_metric": "形成一份书面的指标口径说明并被后续样本沿用以保证可比",
+          "observation_window": "口径说明确认后、下一批样本分析前（本次不执行）"
+        }
+      ],
+      "missing_data": [
+        "真实后台样本",
+        "粉丝与归因数据",
+        "followers 具体数值（当前两条观测均为 null）",
+        "自然流量与付费流量的拆分数值",
+        "指标口径与统计规则",
+        "观测对应的时间信息（活动日期/发布时间）",
+        "样本选取规则与历史基线"
+      ],
+      "confidence_notes": [
+        "已确认事实仅限给出的计算记录：两个合成笔记阅读数合计 150（100+50，sum of two distinct synthetic notes）。",
+        "claim 逐字保留，未改写、未外推。",
+        "followers 缺失，任何粉丝或涨粉类结论均不可得，未做补数。",
+        "traffic 为 mixed_paid_natural，故未使用自然涨粉或自然流量表述。",
+        "仅两个样本，未作因果结论；hypotheses 中的解释均为并列的替代可能。",
+        "actions 均为待验证提案，未执行；本次不发布、不审核、不开奖、不发送。",
+        "本次为合成数据的提供方验证，不是运营复盘。"
+      ]
+    }
+  },
+  "usage": [
+    {
+      "attempt": 1,
+      "state": "succeeded",
+      "usage": {
+        "input_tokens": 1525,
+        "total_tokens": 4368,
+        "output_tokens": 2843
+      },
+      "cost_basis": "unknown",
+      "estimated_cost": null
+    }
+  ],
+  "state": "succeeded",
+  "finished_at": "2026-10-09T03:10:35.560Z"
+}

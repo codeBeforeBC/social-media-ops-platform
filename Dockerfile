@@ -25,6 +25,8 @@ COPY --from=build --chown=node:node /app/node_modules ./node_modules
 COPY --from=build --chown=node:node /app/dist ./dist
 COPY --from=build --chown=node:node /app/apps/web/dist ./apps/web/dist
 COPY --from=build --chown=node:node /app/packages/db/migrations ./packages/db/migrations
+COPY --from=build --chown=node:node /app/tools/s3 ./tools/s3
+COPY --from=build --chown=node:node /app/tools/s0 ./tools/s0
 USER node
 ENV PORT=3000
 EXPOSE 3000

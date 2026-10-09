@@ -1,0 +1,311 @@
+{
+  "started_at": "2026-10-08T13:50:24.673Z",
+  "environment": "isolated *_test database; API/Outbox/worker/DeepSeek",
+  "input_kind": "synthetic_account_and_no_sources",
+  "actual_model": true,
+  "model": "deepseek-flash",
+  "accepted_status": 202,
+  "request": {
+    "id": "2a42de50-b357-4f9c-a1ee-7afc0e6ffea5",
+    "state": "succeeded",
+    "error_code": null,
+    "input_version": "129f7afb3dcada764f7c4c182868381b400484e358c658c741051bc493fa3105",
+    "job_id": "b6ec268a-b62d-4cd5-918d-586e4e47d450",
+    "ai_run_id": "345e470f-4db9-4765-9302-b832f43e2a94"
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "state": "succeeded",
+      "usage": {
+        "input_tokens": 1709,
+        "total_tokens": 5391,
+        "output_tokens": 3682
+      },
+      "estimated_cost": null,
+      "cost_basis": "unknown",
+      "duration_ms": 17087
+    }
+  ],
+  "candidate_count": 4,
+  "output": {
+    "summary": "本次输入中 sources、rules、assets、columns 相关证据与 allowlist 均为空，仅知账号为「明确合成验收账号」、语言 zh-CN、唯一栏目「日常观察」、可用产能 4 小时。因此不产生任何热点或既有事实判断，仅基于栏目与产能提出 4 条明确标注为原创常青假设的候选方向，全部为待确认建议，合计预估 4 小时，不超出产能。六项评分仅为选题自查用的相对打分，不代表爆款概率；因缺少规范、素材与历史数据，所有候选的资产缺口与验证步骤均保留在 missing_inputs 中。",
+    "warnings": [
+      "缺少已生效规范，候选只能作为待确认原创建议",
+      "allowlist 中 source_item_id、evidence_refs、required_asset_ids 均为空，故全部候选不引用任何外部来源，所有判断标注为 original_hypothesis 或 inference。",
+      "六项评分为自查用相对分值，由服务端另行计算加权分数，不得解读为爆款概率或流量预测。"
+    ],
+    "assumptions": [
+      "假设账号「明确合成验收账号」日常内容以中文图文为主，短视频为辅，此为无证据下的默认取向，需人工确认。",
+      "假设唯一栏目「日常观察」定位为生活/工作场景中的细微观察与感受记录，属于原创常青选题，未与任何既有热点关联。",
+      "假设 4 小时产能为单次排期的可用总时长，用于覆盖选题内全部候选的预估工时。",
+      "假设所有候选均需人工复核后才能进入制作，本次输出不包含任何已执行的制作、发布或审核动作。"
+    ],
+    "task_payload": {
+      "candidates": [
+        {
+          "need": "希望从重复的工作日里获得低门槛的观察视角，被提醒自己身边存在可留意的细节。",
+          "scene": "上午与下午的工作间隙，读者在手机或电脑端快速浏览一屏图文。",
+          "title": "工位十分钟：一天里被忽略的四个小动作",
+          "column": "日常观察",
+          "emotion": "平静、被触动",
+          "audience": "长时间在固定工位工作、对日常细节有兴趣的中文读者。",
+          "expires_at": null,
+          "media_type": "graphic",
+          "assumptions": [
+            "假设读者对工位细节类观察内容无抵触，此为无数据支撑的默认判断。",
+            "假设配图可由账号自有素材或简易原创图形解决。"
+          ],
+          "evidence_refs": [
+            {
+              "claim": "本候选为无证据下的原创常青假设，不基于任何已发生事件或既有素材。",
+              "evidence_kind": "original_hypothesis",
+              "source_item_id": null
+            },
+            {
+              "claim": "该方向适配唯一栏目「日常观察」，此为基于栏目名称的合理推断，非事实结论。",
+              "evidence_kind": "inference",
+              "source_item_id": null
+            }
+          ],
+          "follow_reason": "以固定数量（四个小动作）形成可预期的结构，读者可期待后续同类「工位观察」条目持续出现。",
+          "original_angle": "不做情绪升华，仅按动作顺序客观罗列四个可复现的工位细节，最后留一个开放式提问，让读者自行补充。",
+          "estimated_hours": 1,
+          "score_breakdown": [
+            {
+              "score": 3.5,
+              "reason": "日常细节类内容属常见需求，但缺少受众画像支撑，只能给中等偏上分值。",
+              "criterion": "audience_need"
+            },
+            {
+              "score": 3.5,
+              "reason": "结构清晰、易用克制语气表达，但无既有表达规范可对照，无法确认风格契合度。",
+              "criterion": "yoyo_expression"
+            },
+            {
+              "score": 3,
+              "reason": "固定数量结构具备一定系列感，但连续关注动力依赖后续是否稳定更新。",
+              "criterion": "follow_reason"
+            },
+            {
+              "score": 4,
+              "reason": "标题直接说明数量与场景，读者可一眼预期内容长度与形式。",
+              "criterion": "clarity"
+            },
+            {
+              "score": 4.5,
+              "reason": "仅需文字与简单配图，1 小时可完成初稿，不依赖外部素材。",
+              "criterion": "feasibility"
+            },
+            {
+              "score": 2.5,
+              "reason": "常青内容无明显时间窗口，缺少排期信息，时机优势不突出。",
+              "criterion": "timing"
+            }
+          ],
+          "required_asset_ids": []
+        },
+        {
+          "need": "希望在碎片时间里获得一段不需要前置知识、看完即结束的轻量内容。",
+          "scene": "早晚通勤途中，用户处于站立或短时等待状态，用手机竖屏观看。",
+          "title": "通勤路上：三个容易被跳过的瞬间",
+          "column": "日常观察",
+          "emotion": "轻微共鸣、放松",
+          "audience": "每日有通勤时段、习惯在路上浏览短视频的中文用户。",
+          "expires_at": null,
+          "media_type": "video",
+          "assumptions": [
+            "假设可由账号自行完成拍摄，无需外部素材授权。",
+            "假设无旁白形式能被目标读者接受，此为无验证的默认设定。"
+          ],
+          "evidence_refs": [
+            {
+              "claim": "本候选为原创常青格式假设，未关联任何真实事件或已有素材。",
+              "evidence_kind": "original_hypothesis",
+              "source_item_id": null
+            },
+            {
+              "claim": "竖屏短视频适配通勤碎片观看，属一般性推断而非平台数据结论。",
+              "evidence_kind": "inference",
+              "source_item_id": null
+            }
+          ],
+          "follow_reason": "以固定「三个瞬间」的节奏形成可识别格式，便于后续同结构内容被识别与追看。",
+          "original_angle": "不配旁白解说，仅用现场环境音加极短字幕标注时间点，让画面本身承担观察视角。",
+          "estimated_hours": 1,
+          "score_breakdown": [
+            {
+              "score": 3,
+              "reason": "碎片内容需求普遍存在，但同类供给多，未验证差异化空间。",
+              "criterion": "audience_need"
+            },
+            {
+              "score": 3,
+              "reason": "表达高度依赖拍摄与剪辑质感，缺少既有风格规范参照。",
+              "criterion": "yoyo_expression"
+            },
+            {
+              "score": 3,
+              "reason": "固定格式有助于形成记忆点，但单条内容自身较难支撑长期关注。",
+              "criterion": "follow_reason"
+            },
+            {
+              "score": 4,
+              "reason": "标题限定了数量与场景，读者预期明确。",
+              "criterion": "clarity"
+            },
+            {
+              "score": 3,
+              "reason": "视频拍摄与剪辑在 1 小时内有压力，且无任何可用素材资产。",
+              "criterion": "feasibility"
+            },
+            {
+              "score": 3,
+              "reason": "早晚通勤时段属常规高注意力窗口，但缺少排期与分发规则确认。",
+              "criterion": "timing"
+            }
+          ],
+          "required_asset_ids": []
+        },
+        {
+          "need": "希望获得一个能立刻套用到当天生活中的简单决策思路，而非抽象道理。",
+          "scene": "早晨出门前或午休时段，读者用较短时间读完并尝试套用一次。",
+          "title": "今天天气里，藏着一个可复用的决定方法",
+          "column": "日常观察",
+          "emotion": "清晰、轻快",
+          "audience": "对自我管理方法感兴趣、偏好短小实用建议的中文读者。",
+          "expires_at": null,
+          "media_type": "graphic",
+          "assumptions": [
+            "假设读者接受以天气作为比喻切入方法类内容。",
+            "假设文中不涉及任何需要外部数据佐证的具体事实陈述。"
+          ],
+          "evidence_refs": [
+            {
+              "claim": "本候选为原创常青方法类假设，未引用任何真实天气数据或事件。",
+              "evidence_kind": "original_hypothesis",
+              "source_item_id": null
+            },
+            {
+              "claim": "以天气作为观察切口归入「日常观察」栏目，属栏目归属的初步推断。",
+              "evidence_kind": "inference",
+              "source_item_id": null
+            }
+          ],
+          "follow_reason": "以「每次给一个可复用方法」为承诺，形成读者对下一条方法的期待。",
+          "original_angle": "把天气变化当作不确定条件的比喻，提炼出一句可直接使用的判断句式，并给出一个反例说明何时不适用。",
+          "estimated_hours": 1,
+          "score_breakdown": [
+            {
+              "score": 3.5,
+              "reason": "实用小方法需求稳定，但若缺少具体例子容易流于空泛。",
+              "criterion": "audience_need"
+            },
+            {
+              "score": 3.5,
+              "reason": "方法类表达对语言精确度要求高，无规范可校验，保留不确定性。",
+              "criterion": "yoyo_expression"
+            },
+            {
+              "score": 3.5,
+              "reason": "「每次一个方法」的承诺结构具备连续性，前提是确实持续更新。",
+              "criterion": "follow_reason"
+            },
+            {
+              "score": 3.5,
+              "reason": "标题同时含场景与价值，略长但指向明确。",
+              "criterion": "clarity"
+            },
+            {
+              "score": 4.5,
+              "reason": "纯文字加一张示意图即可成稿，1 小时内可完成，不依赖外部素材。",
+              "criterion": "feasibility"
+            },
+            {
+              "score": 2.5,
+              "reason": "内容常青，与具体日期无关，时机上无明显加成。",
+              "criterion": "timing"
+            }
+          ],
+          "required_asset_ids": []
+        },
+        {
+          "need": "希望在同一主题下按自身习惯选择阅读或观看方式，降低接收门槛。",
+          "scene": "晚间空闲时段，读者先在信息流看到图文，随后可能转到短视频版本。",
+          "title": "一天里被跳过的六个瞬间（图文与短视频双版本）",
+          "column": "日常观察",
+          "emotion": "熟悉、安心",
+          "audience": "同时消费图文与短视频、偏好同题材多形式呈现的中文读者。",
+          "expires_at": null,
+          "media_type": "video",
+          "assumptions": [
+            "假设双形式均可在现有产能内压缩完成，此假设风险较高，需人工确认。",
+            "假设账号允许同一选题跨形式复用，无需额外授权。"
+          ],
+          "evidence_refs": [
+            {
+              "claim": "本候选为原创常青双形式假设，未基于任何已验证的跨形式效果数据。",
+              "evidence_kind": "original_hypothesis",
+              "source_item_id": null
+            },
+            {
+              "claim": "双形式可能提升触达，属推测而非已证实结论。",
+              "evidence_kind": "inference",
+              "source_item_id": null
+            }
+          ],
+          "follow_reason": "同一选题双形式呈现，可让读者形成「同一主题两种入口」的预期，增加再次遇见的机会。",
+          "original_angle": "图文列出六条观察到的事实性描述，短视频只呈现其中两个并保留同一叙述顺序，使两种版本可互相独立成立。",
+          "estimated_hours": 1,
+          "score_breakdown": [
+            {
+              "score": 3,
+              "reason": "双形式对读者友好，但也可能造成同一内容重复触达的疲劳。",
+              "criterion": "audience_need"
+            },
+            {
+              "score": 3,
+              "reason": "两种载体的表达一致性需要额外把握，缺少规范对照。",
+              "criterion": "yoyo_expression"
+            },
+            {
+              "score": 3.5,
+              "reason": "双入口提升了被再次遇见的可能，连续性理由中等偏上。",
+              "criterion": "follow_reason"
+            },
+            {
+              "score": 3.5,
+              "reason": "标题信息较完整，但括号补充使标题偏长。",
+              "criterion": "clarity"
+            },
+            {
+              "score": 2.5,
+              "reason": "同一选题需产出两种形式，1 小时内难以完成，存在明显产能风险。",
+              "criterion": "feasibility"
+            },
+            {
+              "score": 2.5,
+              "reason": "常青内容，无明确时间窗口，且缺少排期依据。",
+              "criterion": "timing"
+            }
+          ],
+          "required_asset_ids": []
+        }
+      ]
+    },
+    "evidence_refs": [],
+    "input_version": "129f7afb3dcada764f7c4c182868381b400484e358c658c741051bc493fa3105",
+    "missing_inputs": [
+      "缺少已生效规范（rule_set 为空、rules 为空），无法校验栏目口径、表达禁区与合规要求。",
+      "缺少素材与资产库（assets 为空、asset_version_ids 为空），所有候选均存在美术/图片/视频素材缺口。",
+      "缺少受众画像与账号定位说明，受众需求评分只能基于常识推断。",
+      "缺少历史内容与数据表现（sources 为空），无法判断连续关注理由的真实强弱。",
+      "缺少发布排期、发布时段与平台分发规则，时机评分仅为相对估计。",
+      "缺少栏目「日常观察」的具体选题边界与既往示例，栏目归属为初步判断。"
+    ],
+    "schema_version": "ai-v1"
+  },
+  "created_content_count": 0,
+  "quality_review": "not_performed",
+  "finished_at": "2026-10-08T13:50:42.035Z"
+}

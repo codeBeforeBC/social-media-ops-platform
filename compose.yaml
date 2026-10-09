@@ -5,6 +5,7 @@ services:
     user: '0:0'
     environment:
       STATE_DIR: /state
+      AI_CONFIG_FILE: /state/ai.json
     volumes:
       - state:/state
       - ./tools/init-state.mjs:/init-state.mjs:ro
@@ -57,8 +58,11 @@ services:
       DB_HOST: db
       DB_PORT: '5432'
       STATE_DIR: /state
+      AI_CONFIG_FILE: /state/ai.json
       S3_ENDPOINT: http://storage:9000
       S3_PUBLIC_ENDPOINT: ${S3_PUBLIC_ENDPOINT:-http://localhost:59000}
+      SOURCE_BRIDGE_URL: ${SOURCE_BRIDGE_URL:-}
+      SOURCE_BRIDGE_TOKEN: ${SOURCE_BRIDGE_TOKEN:-}
       API_HOST: 0.0.0.0
       APP_ORIGIN: ${APP_ORIGIN:-http://localhost:3000}
       NODE_ENV: ${NODE_ENV:-development}

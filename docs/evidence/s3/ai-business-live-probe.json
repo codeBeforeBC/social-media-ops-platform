@@ -1,0 +1,422 @@
+{
+  "started_at": "2026-10-08T13:38:04.316Z",
+  "environment": "isolated *_test database",
+  "provider": "deepseek",
+  "input_kind": "explicit_synthetic_business_cases",
+  "actual_model_calls": true,
+  "probes": [
+    {
+      "workflow": "topics.recommend",
+      "state": "succeeded",
+      "run_id": "05f7d886-b9c1-4f57-ab2f-f65f7e7f9467",
+      "schema_version": "ai-v1",
+      "prompt_version": "yoyo-v1.0.1",
+      "attempts": [
+        {
+          "attempt": 1,
+          "state": "succeeded",
+          "usage": {
+            "input_tokens": 1613,
+            "total_tokens": 4380,
+            "output_tokens": 2767
+          },
+          "estimated_cost": null,
+          "cost_basis": "unknown",
+          "duration_ms": 14594
+        },
+        {
+          "attempt": 2,
+          "state": "succeeded",
+          "usage": {
+            "input_tokens": 1738,
+            "total_tokens": 5474,
+            "output_tokens": 3736
+          },
+          "estimated_cost": null,
+          "cost_basis": "unknown",
+          "duration_ms": 17962
+        }
+      ],
+      "cache_reused": true,
+      "elapsed_ms": 32626,
+      "output": {
+        "schema_version": "ai-v1",
+        "input_version": "synthetic-business-v1",
+        "summary": "本次输入未提供任何来源条目、素材资产与历史表现数据，allowlist 中来源与资产列表均为空，因此不产出任何'事实型'引用，全部候选均为明确标注的原创常青假设，不称为热点、不引用来源。可确认的仅有配置项：标题方向为'YOYO雨天散步的小观察'、受众为'喜欢轻松日常的年轻人'、可用栏目仅'日常观察'、单条产能上限4小时、目标时长15秒、目标为记录雨天发现并提出下次观察主题、规则要求不声称任何数据或涨粉效果。据此提出3个候选：1条15秒短视频与1条图文，外加1条以'下次观察主题'收尾的短视频变体，均为低素材依赖、可在4小时内完成的常青日常观察内容。所有评分仅为内部六维自评，不代表爆款概率，也不构成任何效果承诺。",
+        "evidence_refs": [],
+        "assumptions": [
+          "输入未提供任何来源条目，因此本轮不存在可引用的事实来源，所有内容方向均为原创常青假设。",
+          "输入未提供任何素材资产ID，因此不指定必需素材，缺口记为 missing_inputs。",
+          "候选均以'日常观察'为唯一可用栏目，不虚构其他栏目。",
+          "产能上限4小时被用作可行性的硬约束，所有候选的预估工时不超过该上限。",
+          "15秒目标时长仅作为形式约束用于判断结构，不代表任何传播效果。",
+          "本轮结论不包含任何数据、涨粉、完播或流量层面的推断。"
+        ],
+        "missing_inputs": [
+          "缺少可引用的来源条目（sources 为空），无法产出任何带来源的事实型选题。",
+          "缺少可用素材资产ID（assets 为空），无法判断画面、声音素材是否齐备。",
+          "缺少历史内容表现、互动或评论类数据，无法评估受众真实关注点。",
+          "缺少拍摄/场地/出镜人员的可用性信息与排期信息。",
+          "缺少过往'雨天'相关内容的沉淀记录，无法判断该方向是否已被重复使用。",
+          "缺少内容审核与合规侧的具体口径说明（除'不声称数据或涨粉效果'外的其他限制）。"
+        ],
+        "warnings": [
+          "本输出不含任何事实型引用，因为 allowlist 中 source_item_id 与 evidence_refs 均为空；所有方向均标注为原创假设。",
+          "评分仅为内部六维自评，用于排序参考，不可解释为爆款概率或效果预测。",
+          "未执行也未安排任何发布、审核批准、开奖或发送动作。",
+          "候选数量为3，未为凑满6个而编造无依据的方向。"
+        ],
+        "task_payload": {
+          "candidates": [
+            {
+              "title": "雨天散步里的三个小发现",
+              "audience": "喜欢轻松日常的年轻人",
+              "need": "在碎片时间里获得低压力、有代入感的日常观察内容，不需要背景知识就能看完。",
+              "scene": "15秒短视频：雨天街头或窗边的行走画面，YOYO轻声旁白，按'第一个发现/第二个发现/第三个发现'三小段推进，最后一句带出下次想观察的方向。",
+              "column": "日常观察",
+              "emotion": "平静、好奇、微微治愈",
+              "media_type": "video",
+              "follow_reason": "用固定的'每次散步留几个小发现'结构形成可预期的连续性，观众会好奇下一次散步会留下什么发现。",
+              "evidence_refs": [],
+              "original_angle": "不做雨天氛围渲染，而是把雨天散步中'只注意到的三件小事'按可复用的观察顺序排列，结尾自然引出下次观察主题，让观察方法本身成为系列识别点。",
+              "score_breakdown": [
+                {
+                  "criterion": "audience_need",
+                  "score": 4,
+                  "reason": "轻量日常观察符合目标受众的碎片化观看习惯，无需前置知识。"
+                },
+                {
+                  "criterion": "yoyo_expression",
+                  "score": 4,
+                  "reason": "前三个小发现的固定结构便于形成YOYO式轻旁白表达，语言空间充足。"
+                },
+                {
+                  "criterion": "follow_reason",
+                  "score": 4,
+                  "reason": "结尾主动抛出下次观察主题，构成明确的追看钩子。"
+                },
+                {
+                  "criterion": "clarity",
+                  "score": 5,
+                  "reason": "三段式结构加一句收尾，15秒内信息层级清晰。"
+                },
+                {
+                  "criterion": "feasibility",
+                  "score": 5,
+                  "reason": "无需外部素材或复杂场景，预估工时约3小时，在4小时产能内。"
+                },
+                {
+                  "criterion": "timing",
+                  "score": 3,
+                  "reason": "雨天题材具备自然出现的时机属性，但输入未提供任何时间窗口数据，故不给高分。"
+                }
+              ],
+              "required_asset_ids": [],
+              "estimated_hours": 3,
+              "expires_at": null,
+              "assumptions": [
+                "雨天画面假定可在拍摄当天自行取得，未验证。",
+                "假定受众对低强度日常观察内容有接受度，属原创假设，无来源支撑。",
+                "假定15秒足以容纳三个小发现，实际节奏需在剪辑阶段验证。"
+              ]
+            },
+            {
+              "title": "一张清单：雨天散步可以留意的三件小事",
+              "audience": "喜欢轻松日常的年轻人",
+              "need": "想获得可直接照做的轻量观察提示，看完就能在自己的日常里试一次。",
+              "scene": "图文：三张以上实拍或简笔画卡片，每张一句观察提示加一句YOYO的短批注，末卡写下次观察主题。",
+              "column": "日常观察",
+              "emotion": "清爽、随性、被轻轻提醒",
+              "media_type": "graphic",
+              "follow_reason": "清单式内容便于收藏与复用，观众会持续期待下一张清单的更新。",
+              "evidence_refs": [],
+              "original_angle": "把观察行为拆成三条可独立执行的小提示，弱化结果强调过程，让图文成为系列里的'工具箱'而非一次性内容。",
+              "score_breakdown": [
+                {
+                  "criterion": "audience_need",
+                  "score": 4,
+                  "reason": "可直接照做的提示降低了参与门槛，贴合轻量日常需求。"
+                },
+                {
+                  "criterion": "yoyo_expression",
+                  "score": 3,
+                  "reason": "图文承载旁白感较弱，需依赖文案批注维持YOYO的表达特征。"
+                },
+                {
+                  "criterion": "follow_reason",
+                  "score": 3,
+                  "reason": "清单具备复用价值，但连续性弱于视频系列，追看动力中等。"
+                },
+                {
+                  "criterion": "clarity",
+                  "score": 5,
+                  "reason": "三条清单加一条收尾，结构极其直白，无理解成本。"
+                },
+                {
+                  "criterion": "feasibility",
+                  "score": 5,
+                  "reason": "不依赖视频拍摄与配音，预估工时约2小时，产能压力最小。"
+                },
+                {
+                  "criterion": "timing",
+                  "score": 3,
+                  "reason": "清单型内容时机依赖自然雨天场景出现，输入未提供时间依据。"
+                }
+              ],
+              "required_asset_ids": [],
+              "estimated_hours": 2,
+              "expires_at": null,
+              "assumptions": [
+                "假定图文卡片可由内部自行完成排版，无需外部设计资源，未验证。",
+                "假定三条提示不涉及任何需要引用的专业结论，属原创假设。"
+              ]
+            },
+            {
+              "title": "下次散步观察什么：三个候选方向",
+              "audience": "喜欢轻松日常的年轻人",
+              "need": "愿意在轻松语境下参与内容走向的轻度互动，感受到自己的选择被记录。",
+              "scene": "15秒短视频：承接上一条雨天散步记录，只呈现三个下次观察方向的关键画面或字卡，结尾说明会在后续内容中记录其中之一。",
+              "column": "日常观察",
+              "emotion": "期待、被邀请参与",
+              "media_type": "video",
+              "follow_reason": "把系列走向部分交给观众，形成'想知道最后走了哪条'的持续关注理由，并由本期明确承接下一期。",
+              "evidence_refs": [],
+              "original_angle": "不设奖励、不做投票抽奖，只把'下次观察什么'作为内容结构的一部分公开讨论，让选题过程本身成为可见的日常观察。",
+              "score_breakdown": [
+                {
+                  "criterion": "audience_need",
+                  "score": 3,
+                  "reason": "互动意愿因人而异，需求强度弱于前两个候选，但方向明确。"
+                },
+                {
+                  "criterion": "yoyo_expression",
+                  "score": 4,
+                  "reason": "由YOYO口述三个候选方向，人格化表达空间较大。"
+                },
+                {
+                  "criterion": "follow_reason",
+                  "score": 4,
+                  "reason": "明确预告下次观察方向，连续性钩子强，且与目标'提出下次观察主题'直接一致。"
+                },
+                {
+                  "criterion": "clarity",
+                  "score": 4,
+                  "reason": "三个候选方向并列呈现，结构清楚，但收尾话术需控制长度。"
+                },
+                {
+                  "criterion": "feasibility",
+                  "score": 4,
+                  "reason": "可复用前一条素材或字卡，预估工时约3小时，在4小时产能内。"
+                },
+                {
+                  "criterion": "timing",
+                  "score": 4,
+                  "reason": "作为承接型内容，需排在已有雨天记录之后，时序依赖清晰且可控。"
+                }
+              ],
+              "required_asset_ids": [],
+              "estimated_hours": 3,
+              "expires_at": null,
+              "assumptions": [
+                "假定存在可作为承接前提的雨天散步记录内容，输入未提供该记录。",
+                "假定观众参与以评论或留言形式体现，不设计任何奖励或抽奖机制，未验证实际参与度。",
+                "假定本条不涉及任何数据或效果承诺，符合给定规则。"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "workflow": "brief.graphic",
+      "state": "succeeded",
+      "run_id": "3f976ff2-a093-4131-85ec-22ddf688bae6",
+      "schema_version": "ai-v1",
+      "prompt_version": "yoyo-v1.0.1",
+      "attempts": [
+        {
+          "attempt": 1,
+          "state": "succeeded",
+          "usage": {
+            "input_tokens": 1011,
+            "total_tokens": 3608,
+            "output_tokens": 2597
+          },
+          "estimated_cost": null,
+          "cost_basis": "unknown",
+          "duration_ms": 14441
+        }
+      ],
+      "cache_reused": true,
+      "elapsed_ms": 14473,
+      "output": {
+        "schema_version": "ai-v1",
+        "input_version": "synthetic-business-v1",
+        "summary": "已根据输入生成《YOYO雨天散步的小观察》人可执行图文制作单草稿，继承目标与人群，按3页连续编号；未引用任何素材版本，所有事实与数据表述待核对，未制作成品，也未执行发布、审核、开奖或发送。",
+        "evidence_refs": [],
+        "assumptions": [
+          "输入仅提供选题目标、人群、时长和栏目，未提供可用素材与来源，因此页面素材引用为空。",
+          "目标时长15000ms视为15秒短视频/图文的节奏参考，具体平台规格与页数可再调整。",
+          "页面观察内容为待补充占位，不表示真实事件或已核实发现。",
+          "标题与互动问题仅为候选文案，需合规与事实核对后使用。"
+        ],
+        "missing_inputs": [
+          "未提供可用素材文件或素材版本ID，asset_version_ids为空。",
+          "未提供source_item_id或证据引用，无法绑定选题来源与核验材料。",
+          "未提供发布平台、画布尺寸、封面规范、字幕规范、配乐要求。",
+          "未提供发布账号、发布时间、审核流程与审核人信息。",
+          "未提供雨天散步的具体观察事实、时间地点或人物细节。",
+          "未确认目标时长15000ms是否为最终交付规格。",
+          "未提供标题、文案、互动问题的合规审核结论。"
+        ],
+        "warnings": [
+          "本输出为制作单草稿，不是成品内容；未执行发布、审核批准、开奖或发送。",
+          "禁止声称任何数据表现、涨粉效果或已验证事实。",
+          "因allowlist中asset_version_ids为空，所有页面只能引用空素材数组，禁止使用未授权素材填充。",
+          "所有事实性表述、身份设定、观察点与数据均需人工核对后才能进入制作或发布。"
+        ],
+        "task_payload": {
+          "goal": "记录雨天发现并提出下次观察主题",
+          "audience": "喜欢轻松日常的年轻人",
+          "pages": [
+            {
+              "position": 1,
+              "visual_instruction": "封面页：使用竖版画布（平台尺寸待确认），以雨天氛围为视觉方向。若无授权素材，使用纯色/渐变底加文字排版占位，不伪造照片。标题居中或偏上，角落标注“待核对”。",
+              "page_copy": "雨天散步，我注意到一些小事",
+              "asset_version_ids": []
+            },
+            {
+              "position": 2,
+              "visual_instruction": "观察页：用1个近景画面或文字卡呈现一个雨天观察点，配一行说明。不得出现未经核实的数字、品牌、地点或人物身份。具体观察内容待补充。",
+              "page_copy": "待补充：第1个雨天观察点",
+              "asset_version_ids": []
+            },
+            {
+              "position": 3,
+              "visual_instruction": "互动结尾页：文字卡加箭头或评论区提示图形，提出下次观察主题问题。不承诺更新频率，不声称数据效果。",
+              "page_copy": "下次散步，你想让我观察什么？",
+              "asset_version_ids": []
+            }
+          ],
+          "title_options": [
+            "雨天散步，我注意到一些小事",
+            "YOYO的雨天日常观察",
+            "下次散步，我们看什么？"
+          ],
+          "body": "制作单草稿：\n1. 目标：记录雨天发现并提出下次观察主题。\n2. 人群：喜欢轻松日常的年轻人。\n3. 结构：目标时长15秒，建议3页；第1页封面，第2页观察点，第3页互动提问。\n4. 素材：当前无可用素材版本，页面asset_version_ids均为空；需补充授权素材后再绑定。\n5. 事实：标题、观察内容、身份设定、数据表述均待核对；不得声称涨粉或效果。\n6. 交付形态：图文/短视频页面文案与视觉指令，未制作成品。",
+          "interaction_question": "你在雨天散步时最容易注意到什么？下次想看YOYO观察什么？",
+          "delivery_spec": "目标时长15000ms；建议3页连续编号；输出为页面文案、视觉指令和待核对清单。平台、尺寸、封面、字幕、BGM、发布账号与审核要求未提供，需补充后再定稿。",
+          "fact_check_items": [
+            "核对“YOYO”身份与账号归属。",
+            "核对雨天散步情节是否为真实事件；若为设定，需明确标注。",
+            "核对第2页观察点是否真实、准确、无夸大。",
+            "核对标题与页面文案是否存在绝对化或误导性表述。",
+            "核对目标时长15000ms是否为最终发布规格。",
+            "核对所有素材授权与版权状态。",
+            "禁止声称任何数据、涨粉效果或已验证反馈。"
+          ]
+        }
+      }
+    },
+    {
+      "workflow": "brief.video",
+      "state": "succeeded",
+      "run_id": "847570ca-cd26-4ea6-82dc-b1b17c126a66",
+      "schema_version": "ai-v1",
+      "prompt_version": "yoyo-v1.0.1",
+      "attempts": [
+        {
+          "attempt": 1,
+          "state": "succeeded",
+          "usage": {
+            "input_tokens": 1130,
+            "total_tokens": 3438,
+            "output_tokens": 2308
+          },
+          "estimated_cost": null,
+          "cost_basis": "unknown",
+          "duration_ms": 12218
+        }
+      ],
+      "cache_reused": true,
+      "elapsed_ms": 12248,
+      "output": {
+        "schema_version": "ai-v1",
+        "input_version": "synthetic-business-v1",
+        "summary": "事实：allowlist中无asset_version_ids、evidence_refs、source_item_id，且assets为空，因此无法绑定任何真实资产或来源。推测：按15000ms目标时长与“日常观察”栏目，采用9:16竖屏、3个连续主分镜、每镜5000ms的结构；无配音。",
+        "evidence_refs": [],
+        "assumptions": [
+          "假设内容形态为9:16竖屏短视频，适合年轻观众在移动端观看。",
+          "假设可采用雨天户外实拍或雨天细节空镜来承载日常观察，但当前未提供可引用资产ID。",
+          "假设无配音，用字幕承担信息传达；如需配音须补充授权音频资产。",
+          "假设收尾需提出下次观察主题，但具体主题选项需由业务方确认。"
+        ],
+        "missing_inputs": [
+          "未提供asset_version_ids与assets，无法将分镜绑定到真实画面资产。",
+          "未提供source_item_id或evidence_refs，无法引用来源。",
+          "未提供配音音频资产、配音文案授权或声音资产。",
+          "未提供封面图片资产与封面制作授权。",
+          "未提供已确认的下次观察主题选项。",
+          "未提供具体雨天发现内容的事实素材或拍摄脚本授权。"
+        ],
+        "warnings": [
+          "当前无可用资产，本输出仅为分镜文本结构，不生成视频、不生成音频，也不声称已生成视频或拥有音频。",
+          "未执行发布、审核批准、开奖或发送。",
+          "不声称任何数据、涨粉效果或实际播放表现。",
+          "所有asset_version_ids均为空，后续绑定前需补齐allowlist内真实资产。"
+        ],
+        "task_payload": {
+          "target_duration_ms": 15000,
+          "aspect_ratio": "9:16",
+          "shots": [
+            {
+              "position": 1,
+              "start_ms": 0,
+              "end_ms": 5000,
+              "action": "开场：雨天户外散步视角，镜头从伞沿、湿地面或雨滴细节缓慢抬起，建立YOYO在雨中行走的日常观察状态。需绑定真实雨天实拍资产。",
+              "subtitle": "下雨天，出门走一走。",
+              "voiceover_optional": null,
+              "sound_note": "无配音，不适用语音。雨声等环境音资产未提供；如需使用须补充授权音源。",
+              "asset_version_ids": []
+            },
+            {
+              "position": 2,
+              "start_ms": 5000,
+              "end_ms": 10000,
+              "action": "中段：停步观察雨滴、水洼倒影或树叶滴水等细节，用手部或伞沿入画作为视线引导，呈现“慢一点看到小细节”的观察过程。需绑定真实雨天细节资产。",
+              "subtitle": "慢一点，会看到平时忽略的小细节。",
+              "voiceover_optional": null,
+              "sound_note": "无配音，不适用语音。雨声等环境音资产未提供；如需使用须补充授权音源。",
+              "asset_version_ids": []
+            },
+            {
+              "position": 3,
+              "start_ms": 10000,
+              "end_ms": 15000,
+              "action": "收尾：镜头继续向前，落在前方道路、天空或雨停迹象上，字幕提出下次观察主题。需绑定真实收尾空镜资产。",
+              "subtitle": "下次想观察：雨停后的第一个变化。",
+              "voiceover_optional": null,
+              "sound_note": "无配音，不适用语音。雨声等环境音资产未提供；如需使用须补充授权音源。",
+              "asset_version_ids": []
+            }
+          ],
+          "cover_options": [
+            "雨天散步视角：伞沿与湿地面细节",
+            "水洼倒影与雨滴细节封面",
+            "YOYO雨天观察三段式结构封面"
+          ],
+          "title_options": [
+            "YOYO雨天散步的小观察",
+            "雨里走一走：我发现的日常小细节",
+            "下雨天散步，顺便定个下次观察主题"
+          ],
+          "body": "按15000ms拆为3个连续主分镜，每镜5000ms。事实：当前无资产、无来源、无配音资产，因此分镜只能作为文本结构。推测：可采用“出发—观察细节—提出下次主题”的日常观察节奏；具体画面、字幕与声音需在补齐allowlist资产后绑定。",
+          "delivery_spec": "9:16竖屏；总时长15000ms；3镜连续，start_ms与end_ms无间隙无重叠，末镜end_ms=15000；无配音，voiceover_optional均为null；字幕需后期添加；所有画面与声音绑定须使用allowlist内真实资产版本ID，当前为空。"
+        }
+      }
+    }
+  ],
+  "quality_review": "not_performed",
+  "model": "deepseek-flash",
+  "finished_at": "2026-10-08T13:39:03.847Z"
+}

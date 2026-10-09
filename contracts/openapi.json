@@ -2182,273 +2182,8 @@
             "sessionCookie": []
           }
         ],
-        "parameters": [
-          {
-            "name": "workspace_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "account_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "cursor",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "maxLength": 10000
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 100,
-              "default": 20
-            }
-          },
-          {
-            "name": "start",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "end",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "status",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "owner_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "media_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/MediaType"
-            }
-          },
-          {
-            "name": "traffic_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/TrafficType"
-            }
-          },
-          {
-            "name": "kind",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "revision_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "purpose",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "unread",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "problem_only",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "keys",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 200
-              }
-            }
-          },
-          {
-            "name": "publication_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "source_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/SourceType"
-            }
-          },
-          {
-            "name": "freshness",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "keyword",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "date",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date"
-            }
-          },
-          {
-            "name": "timezone",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Timezone"
-            }
-          },
-          {
-            "name": "captured_after",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
-          "200": {
-            "description": "成功；仅表示契约，运行实现待S1以后",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "items": {
-                          "type": "array",
-                          "items": {
-                            "$ref": "#/components/schemas/SourceConnection"
-                          }
-                        },
-                        "next_cursor": {
-                          "anyOf": [
-                            {
-                              "type": "string",
-                              "maxLength": 10000
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
-                        }
-                      },
-                      "required": [
-                        "items",
-                        "next_cursor"
-                      ],
-                      "additionalProperties": false
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "meta"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          },
           "401": {
             "description": "权限、版本、业务校验或外部服务错误",
             "content": {
@@ -2518,9 +2253,51 @@
                 }
               }
             }
+          },
+          "200": {
+            "description": "Implemented collection runtime",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/CollectionConnection"
+                          }
+                        },
+                        "next_cursor": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "items",
+                        "next_cursor"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
           }
         },
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-business-guards": [
           "workspace_membership",
           "account_consistency"
@@ -2558,29 +2335,6 @@
           }
         ],
         "responses": {
-          "201": {
-            "description": "成功；仅表示契约，运行实现待S1以后",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/SourceConnection"
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "meta"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          },
           "401": {
             "description": "权限、版本、业务校验或外部服务错误",
             "content": {
@@ -2650,6 +2404,29 @@
                 }
               }
             }
+          },
+          "201": {
+            "description": "Implemented collection runtime",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/CollectionConnection"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -2657,12 +2434,12 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SourceCreate"
+                "$ref": "#/components/schemas/CollectionConnectionCreate"
               }
             }
           }
         },
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-business-guards": [
           "workspace_membership",
           "account_consistency",
@@ -2712,29 +2489,6 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "成功；仅表示契约，运行实现待S1以后",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/SourceConnection"
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "meta"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          },
           "401": {
             "description": "权限、版本、业务校验或外部服务错误",
             "content": {
@@ -2804,6 +2558,29 @@
                 }
               }
             }
+          },
+          "200": {
+            "description": "Implemented collection runtime",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/CollectionConnection"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -2811,12 +2588,12 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SourcePatch"
+                "$ref": "#/components/schemas/CollectionConnectionPatch"
               }
             }
           }
         },
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-business-guards": [
           "workspace_membership",
           "account_consistency",
@@ -2841,249 +2618,9 @@
             "schema": {
               "$ref": "#/components/schemas/Id"
             }
-          },
-          {
-            "name": "workspace_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "account_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "cursor",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "maxLength": 10000
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 100,
-              "default": 20
-            }
-          },
-          {
-            "name": "start",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "end",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "status",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "owner_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "media_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/MediaType"
-            }
-          },
-          {
-            "name": "traffic_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/TrafficType"
-            }
-          },
-          {
-            "name": "kind",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "revision_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "purpose",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "unread",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "problem_only",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "keys",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 200
-              }
-            }
-          },
-          {
-            "name": "publication_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "source_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/SourceType"
-            }
-          },
-          {
-            "name": "freshness",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "keyword",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "date",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date"
-            }
-          },
-          {
-            "name": "timezone",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Timezone"
-            }
-          },
-          {
-            "name": "captured_after",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
           }
         ],
         "responses": {
-          "200": {
-            "description": "成功；仅表示契约，运行实现待S1以后",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/SourceConnection"
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "meta"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          },
           "401": {
             "description": "权限、版本、业务校验或外部服务错误",
             "content": {
@@ -3153,9 +2690,32 @@
                 }
               }
             }
+          },
+          "200": {
+            "description": "Implemented collection runtime",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/CollectionConnection"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
           }
         },
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-business-guards": [
           "workspace_membership",
           "account_consistency"
@@ -3203,29 +2763,6 @@
           }
         ],
         "responses": {
-          "202": {
-            "description": "成功；仅表示契约，运行实现待S1以后",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/AcceptedJob"
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "meta"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          },
           "401": {
             "description": "权限、版本、业务校验或外部服务错误",
             "content": {
@@ -3295,9 +2832,32 @@
                 }
               }
             }
+          },
+          "202": {
+            "description": "Implemented collection runtime",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/CollectionAccepted"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
           }
         },
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-business-guards": [
           "workspace_membership",
           "account_consistency",
@@ -3347,29 +2907,6 @@
           }
         ],
         "responses": {
-          "202": {
-            "description": "成功；仅表示契约，运行实现待S1以后",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/AcceptedJob"
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "meta"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          },
           "401": {
             "description": "权限、版本、业务校验或外部服务错误",
             "content": {
@@ -3439,19 +2976,32 @@
                 }
               }
             }
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RefreshSource"
+          },
+          "202": {
+            "description": "Implemented collection runtime",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/CollectionAccepted"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
               }
             }
           }
         },
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-business-guards": [
           "workspace_membership",
           "account_consistency",
@@ -3472,22 +3022,6 @@
         ],
         "parameters": [
           {
-            "name": "workspace_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "account_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
             "name": "cursor",
             "in": "query",
             "required": false,
@@ -3505,141 +3039,6 @@
               "minimum": 1,
               "maximum": 100,
               "default": 20
-            }
-          },
-          {
-            "name": "start",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "end",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "status",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "owner_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "media_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/MediaType"
-            }
-          },
-          {
-            "name": "traffic_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/TrafficType"
-            }
-          },
-          {
-            "name": "kind",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "revision_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "purpose",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "unread",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "problem_only",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "keys",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 200
-              }
-            }
-          },
-          {
-            "name": "publication_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "source_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/SourceType"
             }
           },
           {
@@ -3663,35 +3062,17 @@
             }
           },
           {
-            "name": "date",
+            "name": "connection_id",
             "in": "query",
             "required": false,
             "schema": {
-              "type": "string",
-              "format": "date"
-            }
-          },
-          {
-            "name": "timezone",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Timezone"
-            }
-          },
-          {
-            "name": "captured_after",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
+              "$ref": "#/components/schemas/Id"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "成功；仅表示契约，运行实现待S1以后",
+            "description": "Implemented collection runtime",
             "content": {
               "application/json": {
                 "schema": {
@@ -3703,18 +3084,13 @@
                         "items": {
                           "type": "array",
                           "items": {
-                            "$ref": "#/components/schemas/SourceItem"
+                            "$ref": "#/components/schemas/CollectedEvidence"
                           }
                         },
                         "next_cursor": {
-                          "anyOf": [
-                            {
-                              "type": "string",
-                              "maxLength": 10000
-                            },
-                            {
-                              "type": "null"
-                            }
+                          "type": [
+                            "string",
+                            "null"
                           ]
                         }
                       },
@@ -3808,7 +3184,7 @@
             }
           }
         },
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-business-guards": [
           "workspace_membership",
           "account_consistency"
@@ -3835,22 +3211,6 @@
             }
           },
           {
-            "name": "workspace_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "account_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
             "name": "cursor",
             "in": "query",
             "required": false,
@@ -3868,141 +3228,6 @@
               "minimum": 1,
               "maximum": 100,
               "default": 20
-            }
-          },
-          {
-            "name": "start",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "end",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "status",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "owner_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "media_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/MediaType"
-            }
-          },
-          {
-            "name": "traffic_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/TrafficType"
-            }
-          },
-          {
-            "name": "kind",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "revision_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "purpose",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "unread",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "problem_only",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "keys",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 200
-              }
-            }
-          },
-          {
-            "name": "publication_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "source_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/SourceType"
             }
           },
           {
@@ -4024,44 +3249,18 @@
               "minLength": 1,
               "maxLength": 200
             }
-          },
-          {
-            "name": "date",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date"
-            }
-          },
-          {
-            "name": "timezone",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Timezone"
-            }
-          },
-          {
-            "name": "captured_after",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
           }
         ],
         "responses": {
           "200": {
-            "description": "成功；仅表示契约，运行实现待S1以后",
+            "description": "Implemented collection runtime",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
                     "data": {
-                      "$ref": "#/components/schemas/SourceItem"
+                      "$ref": "#/components/schemas/CollectedEvidence"
                     },
                     "meta": {
                       "$ref": "#/components/schemas/Meta"
@@ -4147,7 +3346,7 @@
             }
           }
         },
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-business-guards": [
           "workspace_membership",
           "account_consistency"
@@ -4188,14 +3387,14 @@
         ],
         "responses": {
           "202": {
-            "description": "成功；仅表示契约，运行实现待S1以后",
+            "description": "AI persisted request",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
                     "data": {
-                      "$ref": "#/components/schemas/AcceptedJob"
+                      "$ref": "#/components/schemas/AIAcceptedRequest"
                     },
                     "meta": {
                       "$ref": "#/components/schemas/Meta"
@@ -4291,7 +3490,7 @@
             }
           }
         },
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-business-guards": [
           "workspace_membership",
           "account_consistency",
@@ -4302,7 +3501,7 @@
     },
     "/topics": {
       "get": {
-        "operationId": "get_topics",
+        "operationId": "get__topics",
         "summary": "候选及结构化理由，评分不叫爆款概率",
         "description": "候选及结构化理由，评分不叫爆款概率",
         "security": [
@@ -4312,271 +3511,61 @@
         ],
         "parameters": [
           {
-            "name": "workspace_id",
             "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
             "name": "account_id",
-            "in": "query",
             "required": false,
             "schema": {
               "$ref": "#/components/schemas/Id"
             }
           },
           {
-            "name": "cursor",
             "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "maxLength": 10000
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 100,
-              "default": 20
-            }
-          },
-          {
-            "name": "start",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "end",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
             "name": "status",
-            "in": "query",
             "required": false,
             "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
+              "$ref": "#/components/schemas/TopicStatus"
             }
           },
           {
-            "name": "owner_id",
             "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
             "name": "media_type",
-            "in": "query",
             "required": false,
             "schema": {
               "$ref": "#/components/schemas/MediaType"
             }
           },
           {
-            "name": "traffic_type",
             "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/TrafficType"
-            }
-          },
-          {
-            "name": "kind",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "revision_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "purpose",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "unread",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "problem_only",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "keys",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 200
-              }
-            }
-          },
-          {
-            "name": "publication_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "source_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/SourceType"
-            }
-          },
-          {
             "name": "freshness",
-            "in": "query",
             "required": false,
             "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
+              "enum": [
+                "all",
+                "fresh",
+                "expired"
+              ]
             }
           },
           {
-            "name": "keyword",
             "in": "query",
+            "name": "limit",
             "required": false,
             "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
             }
           },
           {
-            "name": "date",
             "in": "query",
+            "name": "cursor",
             "required": false,
             "schema": {
-              "type": "string",
-              "format": "date"
-            }
-          },
-          {
-            "name": "timezone",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Timezone"
-            }
-          },
-          {
-            "name": "captured_after",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
+              "type": "string"
             }
           }
         ],
         "responses": {
-          "200": {
-            "description": "成功；仅表示契约，运行实现待S1以后",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "items": {
-                          "type": "array",
-                          "items": {
-                            "$ref": "#/components/schemas/Topic"
-                          }
-                        },
-                        "next_cursor": {
-                          "anyOf": [
-                            {
-                              "type": "string",
-                              "maxLength": 10000
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
-                        }
-                      },
-                      "required": [
-                        "items",
-                        "next_cursor"
-                      ],
-                      "additionalProperties": false
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "meta"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          },
           "401": {
             "description": "权限、版本、业务校验或外部服务错误",
             "content": {
@@ -4646,9 +3635,51 @@
                 }
               }
             }
+          },
+          "200": {
+            "description": "Persisted topic lifecycle",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/PersistedTopic"
+                          }
+                        },
+                        "next_cursor": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "items",
+                        "next_cursor"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
           }
         },
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-business-guards": [
           "workspace_membership",
           "account_consistency"
@@ -4657,7 +3688,7 @@
     },
     "/topics/{id}/accept": {
       "post": {
-        "operationId": "post_topics_id_accept",
+        "operationId": "post__topics_id_accept",
         "summary": "201 content_id＋revision_id＋brief_job_id",
         "description": "201 content_id＋revision_id＋brief_job_id；默认一次采纳",
         "security": [
@@ -4696,29 +3727,6 @@
           }
         ],
         "responses": {
-          "201": {
-            "description": "成功；仅表示契约，运行实现待S1以后",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/TopicAccepted"
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "meta"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          },
           "401": {
             "description": "权限、版本、业务校验或外部服务错误",
             "content": {
@@ -4788,6 +3796,29 @@
                 }
               }
             }
+          },
+          "201": {
+            "description": "Persisted topic lifecycle",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/TopicAccepted"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -4795,12 +3826,12 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AcceptTopic"
+                "$ref": "#/components/schemas/AcceptPersistedTopic"
               }
             }
           }
         },
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-business-guards": [
           "workspace_membership",
           "account_consistency",
@@ -4811,7 +3842,7 @@
     },
     "/topics/{id}/reject": {
       "post": {
-        "operationId": "post_topics_id_reject",
+        "operationId": "post__topics_id_reject",
         "summary": "保留原因用于复盘，不删除来源",
         "description": "保留原因用于复盘，不删除来源",
         "security": [
@@ -4850,29 +3881,6 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "成功；仅表示契约，运行实现待S1以后",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/Topic"
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "meta"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          },
           "401": {
             "description": "权限、版本、业务校验或外部服务错误",
             "content": {
@@ -4942,6 +3950,29 @@
                 }
               }
             }
+          },
+          "200": {
+            "description": "Persisted topic lifecycle",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/PersistedTopic"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -4954,7 +3985,7 @@
             }
           }
         },
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-business-guards": [
           "workspace_membership",
           "account_consistency",
@@ -4965,7 +3996,7 @@
     },
     "/topics/{id}/variants": {
       "post": {
-        "operationId": "post_topics_id_variants",
+        "operationId": "post__topics_id_variants",
         "summary": "明确创建变体，保留 parent_topic_id",
         "description": "明确创建变体，保留 parent_topic_id",
         "security": [
@@ -5004,29 +4035,6 @@
           }
         ],
         "responses": {
-          "201": {
-            "description": "成功；仅表示契约，运行实现待S1以后",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/Topic"
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "meta"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          },
           "401": {
             "description": "权限、版本、业务校验或外部服务错误",
             "content": {
@@ -5096,6 +4104,29 @@
                 }
               }
             }
+          },
+          "201": {
+            "description": "Persisted topic lifecycle",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/PersistedTopic"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -5108,7 +4139,7 @@
             }
           }
         },
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-business-guards": [
           "workspace_membership",
           "account_consistency",
@@ -5129,226 +4160,105 @@
         ],
         "parameters": [
           {
-            "name": "workspace_id",
             "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
             "name": "account_id",
-            "in": "query",
             "required": false,
             "schema": {
               "$ref": "#/components/schemas/Id"
             }
           },
           {
-            "name": "cursor",
             "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "maxLength": 10000
-            }
-          },
-          {
             "name": "limit",
-            "in": "query",
             "required": false,
             "schema": {
               "type": "integer",
               "minimum": 1,
-              "maximum": 100,
-              "default": 20
+              "maximum": 100
             }
           },
           {
-            "name": "start",
             "in": "query",
+            "name": "cursor",
             "required": false,
             "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "end",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "status",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "owner_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "media_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/MediaType"
-            }
-          },
-          {
-            "name": "traffic_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/TrafficType"
-            }
-          },
-          {
-            "name": "kind",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "revision_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "purpose",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "unread",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "problem_only",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "keys",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 200
-              }
-            }
-          },
-          {
-            "name": "publication_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "source_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/SourceType"
-            }
-          },
-          {
-            "name": "freshness",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "keyword",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "date",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date"
-            }
-          },
-          {
-            "name": "timezone",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Timezone"
-            }
-          },
-          {
-            "name": "captured_after",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
+              "type": "string"
             }
           }
         ],
         "responses": {
+          "401": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
           "200": {
-            "description": "成功；仅表示契约，运行实现待S1以后",
+            "description": "Content draft and generated candidate",
             "content": {
               "application/json": {
                 "schema": {
@@ -5360,18 +4270,13 @@
                         "items": {
                           "type": "array",
                           "items": {
-                            "$ref": "#/components/schemas/Content"
+                            "$ref": "#/components/schemas/S3Content"
                           }
                         },
                         "next_cursor": {
-                          "anyOf": [
-                            {
-                              "type": "string",
-                              "maxLength": 10000
-                            },
-                            {
-                              "type": "null"
-                            }
+                          "type": [
+                            "string",
+                            "null"
                           ]
                         }
                       },
@@ -5393,79 +4298,9 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "权限、版本、业务校验或外部服务错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "权限、版本、业务校验或外部服务错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "权限、版本、业务校验或外部服务错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "权限、版本、业务校验或外部服务错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "权限、版本、业务校验或外部服务错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "权限、版本、业务校验或外部服务错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "权限、版本、业务校验或外部服务错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
           }
         },
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-business-guards": [
           "workspace_membership",
           "account_consistency"
@@ -5634,249 +4469,9 @@
             "schema": {
               "$ref": "#/components/schemas/Id"
             }
-          },
-          {
-            "name": "workspace_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "account_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "cursor",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "maxLength": 10000
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 100,
-              "default": 20
-            }
-          },
-          {
-            "name": "start",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "end",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "status",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "owner_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "media_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/MediaType"
-            }
-          },
-          {
-            "name": "traffic_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/TrafficType"
-            }
-          },
-          {
-            "name": "kind",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "revision_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "purpose",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "unread",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "problem_only",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "keys",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 200
-              }
-            }
-          },
-          {
-            "name": "publication_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "source_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/SourceType"
-            }
-          },
-          {
-            "name": "freshness",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "keyword",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "date",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date"
-            }
-          },
-          {
-            "name": "timezone",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Timezone"
-            }
-          },
-          {
-            "name": "captured_after",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
           }
         ],
         "responses": {
-          "200": {
-            "description": "成功；仅表示契约，运行实现待S1以后",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/Content"
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "meta"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          },
           "401": {
             "description": "权限、版本、业务校验或外部服务错误",
             "content": {
@@ -5946,9 +4541,32 @@
                 }
               }
             }
+          },
+          "200": {
+            "description": "Content draft and generated candidate",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/S3Content"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
           }
         },
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-business-guards": [
           "workspace_membership",
           "account_consistency"
@@ -6150,29 +4768,6 @@
           }
         ],
         "responses": {
-          "202": {
-            "description": "成功；仅表示契约，运行实现待S1以后",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/AcceptedJob"
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "meta"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          },
           "401": {
             "description": "权限、版本、业务校验或外部服务错误",
             "content": {
@@ -6242,6 +4837,29 @@
                 }
               }
             }
+          },
+          "202": {
+            "description": "Content draft and generated candidate",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/AIAcceptedRequest"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -6249,12 +4867,12 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/GenerateBrief"
+                "$ref": "#/components/schemas/GenerateS3Brief"
               }
             }
           }
         },
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-business-guards": [
           "workspace_membership",
           "account_consistency",
@@ -6304,29 +4922,6 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "成功；仅表示契约，运行实现待S1以后",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/Content"
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "meta"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          },
           "401": {
             "description": "权限、版本、业务校验或外部服务错误",
             "content": {
@@ -6396,6 +4991,29 @@
                 }
               }
             }
+          },
+          "200": {
+            "description": "Content draft and generated candidate",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/AppliedS3Brief"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -6408,7 +5026,7 @@
             }
           }
         },
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-business-guards": [
           "workspace_membership",
           "account_consistency",
@@ -22029,7 +20647,7 @@
     },
     "/topics/{id}": {
       "get": {
-        "operationId": "get_topics_id",
+        "operationId": "get__topics_id",
         "summary": "返回实体详情及版本",
         "description": "返回实体详情及版本",
         "security": [
@@ -22045,249 +20663,9 @@
             "schema": {
               "$ref": "#/components/schemas/Id"
             }
-          },
-          {
-            "name": "workspace_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "account_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "cursor",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "maxLength": 10000
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 100,
-              "default": 20
-            }
-          },
-          {
-            "name": "start",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "end",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "status",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "owner_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "media_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/MediaType"
-            }
-          },
-          {
-            "name": "traffic_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/TrafficType"
-            }
-          },
-          {
-            "name": "kind",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "revision_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "purpose",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "unread",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "problem_only",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "keys",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 200
-              }
-            }
-          },
-          {
-            "name": "publication_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "source_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/SourceType"
-            }
-          },
-          {
-            "name": "freshness",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "keyword",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "date",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date"
-            }
-          },
-          {
-            "name": "timezone",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Timezone"
-            }
-          },
-          {
-            "name": "captured_after",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
           }
         ],
         "responses": {
-          "200": {
-            "description": "成功；仅表示契约，运行实现待S1以后",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/Topic"
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "meta"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          },
           "401": {
             "description": "权限、版本、业务校验或外部服务错误",
             "content": {
@@ -22357,9 +20735,32 @@
                 }
               }
             }
+          },
+          "200": {
+            "description": "Persisted topic lifecycle",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/PersistedTopic"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
           }
         },
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-business-guards": [
           "workspace_membership",
           "account_consistency"
@@ -25007,6 +23408,456 @@
                   "properties": {
                     "data": {
                       "$ref": "#/components/schemas/FileObject"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "x-implementation-status": "implemented",
+        "x-business-guards": [
+          "workspace_membership",
+          "account_consistency"
+        ]
+      }
+    },
+    "/source-connections/{id}/runs": {
+      "get": {
+        "operationId": "get__source-connections_id_runs",
+        "summary": "返回实体详情及版本",
+        "description": "返回实体详情及版本",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Id"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Implemented collection runtime",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/CollectionRuntimeRun"
+                          }
+                        }
+                      },
+                      "required": [
+                        "items"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        },
+        "x-implementation-status": "implemented",
+        "x-business-guards": [
+          "workspace_membership",
+          "account_consistency"
+        ]
+      }
+    },
+    "/source-connections/{id}/pause": {
+      "post": {
+        "operationId": "post__source-connections_id_pause",
+        "summary": "修改字段或适配器触发重新验证",
+        "description": "修改字段或适配器触发重新验证",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Id"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Implemented collection runtime",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/CollectionConnection"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CollectionPause"
+              }
+            }
+          }
+        },
+        "x-implementation-status": "implemented",
+        "x-business-guards": [
+          "workspace_membership",
+          "account_consistency",
+          "optimistic_concurrency",
+          "transactional_audit"
+        ]
+      }
+    },
+    "/ai-requests/{id}": {
+      "get": {
+        "operationId": "get_ai_requests_id",
+        "summary": "Get persisted AI request",
+        "description": "摘要、证据、历史观察与采集批次",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Id"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 10000
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          },
+          {
+            "name": "freshness",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          },
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "AI persisted request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/AIRequestResult"
                     },
                     "meta": {
                       "$ref": "#/components/schemas/Meta"
@@ -31657,6 +30508,781 @@
           "etag",
           "upload_url",
           "method"
+        ],
+        "additionalProperties": false
+      },
+      "CollectionSettings": {
+        "type": "object",
+        "properties": {
+          "keywords": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 10,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            }
+          },
+          "profile": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "max_items": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50
+          },
+          "reference_accounts": {
+            "type": "array",
+            "maxItems": 2,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-fA-F0-9]{24}$"
+            }
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "CollectionConnectionCreate": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "schedule": {
+            "type": "array",
+            "maxItems": 4,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$"
+            }
+          },
+          "timezone": {
+            "$ref": "#/components/schemas/Timezone"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "min_interval_seconds": {
+            "type": "integer",
+            "minimum": 60,
+            "maximum": 86400
+          },
+          "config": {
+            "$ref": "#/components/schemas/CollectionSettings"
+          },
+          "platform": {
+            "enum": [
+              "weibo",
+              "xiaohongshu"
+            ]
+          },
+          "source_type": {
+            "enum": [
+              "weibo_hot",
+              "xhs_topic_signal",
+              "xhs_quality_note"
+            ]
+          },
+          "provider": {
+            "enum": [
+              "weibo_web",
+              "opencli"
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "platform",
+          "source_type",
+          "provider"
+        ],
+        "additionalProperties": false
+      },
+      "CollectionConnectionPatch": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "schedule": {
+            "type": "array",
+            "maxItems": 4,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$"
+            }
+          },
+          "timezone": {
+            "$ref": "#/components/schemas/Timezone"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "min_interval_seconds": {
+            "type": "integer",
+            "minimum": 60,
+            "maximum": 86400
+          },
+          "config": {
+            "$ref": "#/components/schemas/CollectionSettings"
+          },
+          "expected_version": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "expected_version"
+        ],
+        "additionalProperties": false
+      },
+      "CollectionConnection": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseEntity"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "schedule": {
+                "type": "array",
+                "maxItems": 4,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$"
+                }
+              },
+              "timezone": {
+                "$ref": "#/components/schemas/Timezone"
+              },
+              "enabled": {
+                "type": "boolean"
+              },
+              "min_interval_seconds": {
+                "type": "integer",
+                "minimum": 60,
+                "maximum": 86400
+              },
+              "config": {
+                "$ref": "#/components/schemas/CollectionSettings"
+              },
+              "platform": {
+                "enum": [
+                  "weibo",
+                  "xiaohongshu"
+                ]
+              },
+              "source_type": {
+                "enum": [
+                  "weibo_hot",
+                  "xhs_topic_signal",
+                  "xhs_quality_note"
+                ]
+              },
+              "provider": {
+                "enum": [
+                  "weibo_web",
+                  "opencli"
+                ]
+              },
+              "owner_id": {
+                "$ref": "#/components/schemas/Id"
+              },
+              "health": {
+                "$ref": "#/components/schemas/SourceHealth"
+              },
+              "paused": {
+                "type": "boolean"
+              },
+              "consecutive_failures": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "capabilities": {
+                "$ref": "#/components/schemas/Capabilities"
+              },
+              "last_attempt_at": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "last_success_at": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "error_code": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "name",
+              "platform",
+              "source_type",
+              "provider",
+              "enabled",
+              "paused",
+              "health",
+              "owner_id"
+            ],
+            "additionalProperties": true
+          }
+        ]
+      },
+      "CollectionRuntimeRun": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "workspace_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "connection_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "state": {
+            "$ref": "#/components/schemas/JobStatus"
+          },
+          "item_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "trigger": {
+            "enum": [
+              "manual",
+              "scheduled",
+              "verify"
+            ]
+          },
+          "error_code": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "coverage": {
+            "type": "object"
+          },
+          "job_id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Id"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "connection_version": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "id",
+          "workspace_id",
+          "connection_id",
+          "state",
+          "item_count",
+          "trigger",
+          "warnings",
+          "connection_version"
+        ],
+        "additionalProperties": true
+      },
+      "CollectionAccepted": {
+        "type": "object",
+        "properties": {
+          "run": {
+            "$ref": "#/components/schemas/CollectionRuntimeRun"
+          },
+          "reused": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "run",
+          "reused"
+        ],
+        "additionalProperties": false
+      },
+      "CollectionPause": {
+        "type": "object",
+        "properties": {
+          "expected_version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1000
+          }
+        },
+        "required": [
+          "expected_version",
+          "reason"
+        ],
+        "additionalProperties": false
+      },
+      "CollectedEvidence": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseEntity"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "connection_id": {
+                "$ref": "#/components/schemas/Id"
+              },
+              "external_id": {
+                "type": "string"
+              },
+              "canonical_url": {
+                "$ref": "#/components/schemas/Url"
+              },
+              "actual_source_type": {
+                "$ref": "#/components/schemas/SourceType"
+              },
+              "title": {
+                "type": "string"
+              },
+              "summary": {
+                "type": "string"
+              },
+              "published_at": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "captured_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "date_label_raw": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "reference_only": {
+                "const": true
+              },
+              "visible_counts": {
+                "type": "object"
+              },
+              "cluster_key": {
+                "type": "string"
+              },
+              "availability": {
+                "enum": [
+                  "observed",
+                  "unavailable",
+                  "unknown"
+                ]
+              },
+              "expired": {
+                "type": "boolean"
+              },
+              "observations": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              }
+            },
+            "required": [
+              "connection_id",
+              "external_id",
+              "canonical_url",
+              "actual_source_type",
+              "title",
+              "summary",
+              "published_at",
+              "captured_at",
+              "reference_only",
+              "visible_counts"
+            ],
+            "additionalProperties": true
+          }
+        ]
+      },
+      "AIAcceptedRequest": {
+        "type": "object",
+        "properties": {
+          "request_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "state": {
+            "const": "queued"
+          },
+          "status_url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "request_id",
+          "state",
+          "status_url"
+        ],
+        "additionalProperties": false
+      },
+      "AIRequestResult": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "account_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "kind": {
+            "enum": [
+              "topics",
+              "graphic",
+              "video"
+            ]
+          },
+          "state": {
+            "enum": [
+              "queued",
+              "running",
+              "succeeded",
+              "failed",
+              "cancelled"
+            ]
+          },
+          "input_version": {
+            "type": "string"
+          },
+          "job_id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Id"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "ai_run_id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Id"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "result": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "error_code": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "finished_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "result_revision_id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Id"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "account_id",
+          "kind",
+          "state",
+          "input_version",
+          "job_id",
+          "ai_run_id",
+          "result",
+          "error_code",
+          "created_at",
+          "finished_at",
+          "result_revision_id"
+        ],
+        "additionalProperties": false
+      },
+      "PersistedTopic": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "account_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "candidate": {
+            "$ref": "#/components/schemas/TopicCandidate"
+          },
+          "score": {
+            "type": [
+              "string",
+              "number"
+            ]
+          },
+          "status": {
+            "$ref": "#/components/schemas/TopicStatus"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "missing_inputs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "parent_topic_id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Id"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "account_id",
+          "candidate",
+          "score",
+          "status",
+          "version",
+          "missing_inputs",
+          "warnings",
+          "parent_topic_id"
+        ],
+        "additionalProperties": true
+      },
+      "AcceptPersistedTopic": {
+        "type": "object",
+        "properties": {
+          "media_type": {
+            "$ref": "#/components/schemas/MediaType"
+          },
+          "owner_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "expected_version": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "media_type",
+          "expected_version"
+        ],
+        "additionalProperties": false
+      },
+      "S3Content": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "account_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "title": {
+            "type": "string"
+          },
+          "media_type": {
+            "$ref": "#/components/schemas/MediaType"
+          },
+          "business_status": {
+            "$ref": "#/components/schemas/ContentStatus"
+          },
+          "owner_id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Id"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "current_revision_id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Id"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "current_revision": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "revisions": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "generation_requests": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "account_id",
+          "title",
+          "media_type",
+          "business_status",
+          "version"
+        ],
+        "additionalProperties": true
+      },
+      "GenerateS3Brief": {
+        "type": "object",
+        "properties": {
+          "base_revision_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "instruction": {
+            "type": "string",
+            "maxLength": 10000
+          },
+          "preserve_fields": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          },
+          "target_duration_ms": {
+            "type": "integer",
+            "minimum": 1000,
+            "maximum": 600000
+          },
+          "aspect_ratio": {
+            "enum": [
+              "9:16",
+              "16:9",
+              "1:1",
+              "3:4"
+            ]
+          }
+        },
+        "required": [
+          "base_revision_id",
+          "preserve_fields"
+        ],
+        "additionalProperties": false
+      },
+      "AppliedS3Brief": {
+        "type": "object",
+        "properties": {
+          "content_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "revision_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "reused": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "content_id",
+          "revision_id",
+          "version",
+          "reused"
         ],
         "additionalProperties": false
       }

@@ -19,7 +19,11 @@
     "setup-token": "tsx tools/setup-token.ts",
     "test": "node tools/test-env.mjs",
     "check": "pnpm build && pnpm typecheck && pnpm test",
-    "check:s2": "node tools/s2/check.mjs"
+    "check:s2": "node tools/s2/check.mjs",
+    "sources:setup": "node tools/s3/setup-source-bridge.mjs",
+    "sources:bridge": "node tools/s3/source-bridge.mjs",
+    "ai:config": "tsx tools/ai-config.ts",
+    "ai:evaluate": "node tools/test-env.mjs pnpm exec tsx tools/s3-ai-evaluation.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.1147.0",

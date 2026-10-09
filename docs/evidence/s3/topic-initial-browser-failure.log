@@ -1,0 +1,56 @@
+[WebServer] (node:49635) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:49636) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:49642) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:49642) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:49728) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:49728) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/browser.spec.ts:5:5 › 首次设置、六导航、账号表单、设置保存、键盘抽屉和退出 (2.3s)
+  ✓  2 tests/browser.spec.ts:62:5 › 来源连接保存、独立待验证状态、启用和同源运行记录 (1.1s)
+  ✓  3 tests/browser.spec.ts:71:5 › 来源证据详情保留原始观察、采集时间和缺失发布时间 (1.4s)
+  ✘  4 tests/browser.spec.ts:77:5 › 候选理由/评分/证据、默认本人采纳、拒绝留因与显式变体 (30.1s)
+
+
+  1) tests/browser.spec.ts:77:5 › 候选理由/评分/证据、默认本人采纳、拒绝留因与显式变体 ──────────────────────────────────────
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.selectOption: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByLabel('选题状态', { exact: true })
+
+
+      80 |  const adopt=page.locator('.topic-card').filter({hasText:'合成候选：采纳操作'});await expect(adopt).toContainText('80.00/100');await adopt.getByRole('button',{name:'查看理由与采纳'}).click();const dialog=page.getByRole('dialog',{name:'选题理由与证据'});await expect(dialog).toContainText('受众需求：4/5');await expect(dialog).toContainText('明确合成的测试线索');await expect(dialog).toContainText('缺实际素材');await dialog.getByRole('button',{name:'采纳为草稿',exact:true}).click();await expect(dialog).toContainText('负责人默认当前使用者');await dialog.getByRole('button',{name:'确认采纳',exact:true}).click();await expect(dialog).toContainText('已采纳');await expect(dialog.getByRole('button',{name:'采纳为草稿',exact:true})).toHaveCount(0);await page.keyboard.press('Escape');
+      81 |  const reject=page.locator('.topic-card').filter({hasText:'合成候选：拒绝操作'});await reject.getByRole('button',{name:'查看理由与采纳'}).click();await dialog.getByRole('button',{name:'拒绝并留因'}).click();await dialog.getByLabel('拒绝原因',{exact:true}).fill('本周产能不足');await dialog.getByRole('button',{name:'保存拒绝原因'}).click();await expect(dialog).toContainText('本周产能不足');await expect(dialog).toContainText('已拒绝');await dialog.getByRole('button',{name:'明确创建变体'}).click();await dialog.getByLabel('变体目标',{exact:true}).fill('减少页数的新角度');await dialog.getByRole('button',{name:'创建变体',exact:true}).click();await expect(dialog).toContainText('减少页数的新角度');await page.keyboard.press('Escape');
+    > 82 |  await page.getByLabel('选题状态',{exact:true}).selectOption('accepted');await expect(page.locator('.topic-card')).toHaveCount(1);await expect(page.locator('.topic-card')).toContainText('合成候选：采纳操作');await page.getByLabel('选题状态',{exact:true}).selectOption('');
+         |                                             ^
+      83 |  await page.setViewportSize({width:390,height:1000});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);mkdirSync('docs/evidence/s3/screenshots',{recursive:true});await page.screenshot({path:'docs/evidence/s3/screenshots/topic-candidates-mobile.png',fullPage:true});expect(errors).toEqual([]);
+      84 | });
+      85 |
+        at /Users/junlong/projects/social-mdeida-ops-platform/tests/browser.spec.ts:82:45
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser-候选理由-评分-证据、默认本人采纳、拒绝留因与显式变体/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/browser-候选理由-评分-证据、默认本人采纳、拒绝留因与显式变体/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/browser-候选理由-评分-证据、默认本人采纳、拒绝留因与显式变体/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/browser-候选理由-评分-证据、默认本人采纳、拒绝留因与显式变体/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/browser.spec.ts:77:5 › 候选理由/评分/证据、默认本人采纳、拒绝留因与显式变体 ───────────────────────────────────────
+  3 passed (37.3s)

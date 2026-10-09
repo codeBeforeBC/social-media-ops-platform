@@ -1,0 +1,390 @@
+✔ 固定20例输入可重现，覆盖缺指标/混合流量/极少样本/矛盾来源/同名IP与三类业务 (3.203875ms)
+✔ 20例合成合法响应可校验；锁定合并后标题正文必须保留，画幅/时长变化拒绝 (15.357833ms)
+✔ 非结构硬错不能被合法JSON掩盖：恶意指令、私人信息、不存在音频、无配音约定 (1.149542ms)
+✔ 白名单ID不能为任务字段背书：事实只能逐字引用对应来源，改写或换源均拒绝 (33.157792ms)
+{"event":"http.request","request_id":"495922e5-addc-4d9f-9c04-3eaa633168d2","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":6}
+{"event":"http.request","request_id":"ffe20bc0-b6bf-411f-9beb-ec1230360701","method":"POST","path":"/api/v1/setup","status":201,"duration_ms":37}
+{"event":"http.request","request_id":"9b489e93-7e24-4763-8def-e0b1aeeb227c","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"22b71731-4cd5-4127-9c2c-6ac8bded6bba","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":32}
+{"event":"http.request","request_id":"f7c53864-47a3-4680-9ba4-5d8d3163990f","method":"GET","path":"/api/v1/me","status":200,"duration_ms":85}
+✔ 合法结构缓存复用；输入/模型/提示词/允许ID变化均失效，记录真实用量而未知费用不填零 (566.110041ms)
+✔ 单次修复结构错误；禁止伪造ID，最终失败无结果 (10.18675ms)
+✔ 业务校验必须通过；输入/Schema版本输出必须一致 (9.871542ms)
+✔ 同输入并发只发一次模型调用；运行锁保留，显式失败后能重试 (15.175416ms)
+✔ 取消/超时拒绝结果，包括忽视signal的provider；取消不会进入缓存 (1015.217125ms)
+✔ 预算在调用前拒绝并发超支；单价估算与供应商账单明确区分 (25.133417ms)
+✔ 缺配置禁用/权限或未知ID字段明确失败；模型错误不包含原始provider敏感文本 (11.696458ms)
+✔ 独立预算空间的并发预留真正拒绝超支，一次修复累计计入单任务预算 (31.630708ms)
+✔ 嵌套证据对象只校验真正的source_item_id，未知来源不能借对象绕过白名单 (0.4155ms)
+✔ Job取消把信号传给AI调用；基础版本变化拒绝候选应用 (303.8225ms)
+✔ 跨空间身份/非运行Job拒绝调用；已死进程运行可恢复但不会覆盖原记录 (25.029958ms)
+✔ 缓存每次复查Schema、允许引用、业务规则与版本，损坏缓存拒绝使用 (12.333ms)
+✔ 数据库Date在提示词与缓存版本中保留ISO时间，不变成空对象 (14.572416ms)
+✔ 截断响应明确失败仍记真实tokens和费用，不把已收费调用当零消费 (16.53375ms)
+{"event":"http.request","request_id":"bb3b409a-7a8e-45b3-b43c-280301f04c1e","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":6}
+{"event":"http.request","request_id":"e5541417-3531-4e48-8fc1-008acfbc2156","method":"POST","path":"/api/v1/setup","status":409,"duration_ms":29}
+✖ API幂等受理冻结输入，Outbox/worker产生建议而不建立内容，契约响应可读 (462.889583ms)
+✖ 配置未启用和无效时段拒绝；未知请求不泄漏 (1.022666ms)
+✖ 账号版本变化或模型失败不能落成成功结果，任务失败有明确代码 (0.038208ms)
+✖ 排队任务取消同步状态并不调用模型 (0.029458ms)
+✖ 处理器返回后到最终提交前发生竞争，guard原子拒绝旧结果 (0.031833ms)
+{"event":"http.request","request_id":"8187db90-4f04-4c18-9c89-90f477e155cb","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"4dd07c79-49d8-4b0a-95c1-89d7fb3015e1","method":"POST","path":"/api/v1/setup","status":409,"duration_ms":33}
+✖ 生成候选不覆盖当前草稿，已确认目标/人群保留；并发应用同一建议仅一版本 (446.140709ms)
+✖ 人工锁定标题/正文优先，生成回填不得修改；危险/缺失路径拒绝 (1.077792ms)
+✖ 人工修改后拒绝迟到生成；已产生候选在应用前过期也拒绝 (0.035209ms)
+✖ 连续视频分镜、无配音说明与时长保留；跨内容候选不能应用 (0.032959ms)
+✖ 真实上传PNG版本引用随应用事务落库，停用素材后不得采用已生成候选 (0.027208ms)
+✖ 业务事件回滚不产生任务，Outbox并发分发只创建一个Job (131.832625ms)
+✖ 租约保证单领取；心跳延长租约；已完成不会重复通知 (1.195917ms)
+✖ 真实领取进程被SIGKILL后，重启领取恢复；旧租约结果被拒绝 (0.05125ms)
+✖ 取消与过期版本阻止结果及副作用提交 (0.030834ms)
+✖ 失败退避重试有上限，管理员可重试；提醒池不受一般池积压影响 (0.041375ms)
+✖ 超过最大尝试的失联任务进入失败；未来调度事件暂不分发 (0.028625ms)
+✖ 长任务心跳跨越初始租约，超时拒绝迟到结果和副作用 (0.022667ms)
+{"event":"http.request","request_id":"7e14a411-7a7c-41fc-9ec9-10d851b31e49","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"08f58fd4-274a-4491-a9c4-f540a6efd6ad","method":"POST","path":"/api/v1/setup","status":409,"duration_ms":35}
+✖ 六项权重由服务端计分，保留缺项与生成批次，重复保存不新增 (437.928625ms)
+✖ 不同请求键并发采纳只创建一个草稿/首版本/真实brief Job，旧版本重复采纳返回同一结果 (1.351041ms)
+✖ 拒绝原因不可丢失；与采纳竞争只有一条最终决策，过期不得采纳 (0.181958ms)
+✖ 显式变体保留父题/理由/证据并独立采纳；越权负责人和空间拒绝 (0.09575ms)
+✖ 事实缺观察/伪造来源使整个候选事务回滚，不用高分掩盖错误 (0.053667ms)
+✖ 编辑只能采纳本人的任务；缺拒绝理由与陈旧版本不能改变选题 (0.039625ms)
+✖ 证据显示采纳建议生成时的不可变观察，不随着来源更新改写标题；观察必须匹配来源 (0.034875ms)
+✖ 常青原创不能把来源窗口结束填成到期；明确来源的时效由服务端保留 (0.04275ms)
+ℹ tests 43
+ℹ suites 0
+ℹ pass 18
+ℹ fail 25
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2831.527917
+
+✖ failing tests:
+
+test at tests/ai-tasks.test.ts:2:3601
+✖ API幂等受理冻结输入，Outbox/worker产生建议而不建立内容，契约响应可读 (462.889583ms)
+  Error: Setup failed: ALREADY_INITIALIZED
+      at initialize (/Users/junlong/projects/social-mdeida-ops-platform/tests/helpers.ts:38:162)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/ai-tasks.test.ts:11:252)
+      at async TestHook.run (node:internal/test_runner/test:1125:7)
+
+test at tests/ai-tasks.test.ts:2:4615
+✖ 配置未启用和无效时段拒绝；未知请求不泄漏 (1.022666ms)
+  Error: Setup failed: ALREADY_INITIALIZED
+      at initialize (/Users/junlong/projects/social-mdeida-ops-platform/tests/helpers.ts:38:162)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/ai-tasks.test.ts:11:252)
+      at async TestHook.run (node:internal/test_runner/test:1125:7)
+
+test at tests/ai-tasks.test.ts:2:5359
+✖ 账号版本变化或模型失败不能落成成功结果，任务失败有明确代码 (0.038208ms)
+  Error: Setup failed: ALREADY_INITIALIZED
+      at initialize (/Users/junlong/projects/social-mdeida-ops-platform/tests/helpers.ts:38:162)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/ai-tasks.test.ts:11:252)
+      at async TestHook.run (node:internal/test_runner/test:1125:7)
+
+test at tests/ai-tasks.test.ts:2:6200
+✖ 排队任务取消同步状态并不调用模型 (0.029458ms)
+  Error: Setup failed: ALREADY_INITIALIZED
+      at initialize (/Users/junlong/projects/social-mdeida-ops-platform/tests/helpers.ts:38:162)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/ai-tasks.test.ts:11:252)
+      at async TestHook.run (node:internal/test_runner/test:1125:7)
+
+test at tests/ai-tasks.test.ts:2:6762
+✖ 处理器返回后到最终提交前发生竞争，guard原子拒绝旧结果 (0.031833ms)
+  Error: Setup failed: ALREADY_INITIALIZED
+      at initialize (/Users/junlong/projects/social-mdeida-ops-platform/tests/helpers.ts:38:162)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/ai-tasks.test.ts:11:252)
+      at async TestHook.run (node:internal/test_runner/test:1125:7)
+
+test at tests/briefs.test.ts:2:6082
+✖ 生成候选不覆盖当前草稿，已确认目标/人群保留；并发应用同一建议仅一版本 (446.140709ms)
+  Error: Setup failed: ALREADY_INITIALIZED
+      at initialize (/Users/junlong/projects/social-mdeida-ops-platform/tests/helpers.ts:38:162)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/briefs.test.ts:12:67)
+      at async TestHook.run (node:internal/test_runner/test:1125:7)
+
+test at tests/briefs.test.ts:2:7659
+✖ 人工锁定标题/正文优先，生成回填不得修改；危险/缺失路径拒绝 (1.077792ms)
+  Error: Setup failed: ALREADY_INITIALIZED
+      at initialize (/Users/junlong/projects/social-mdeida-ops-platform/tests/helpers.ts:38:162)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/briefs.test.ts:12:67)
+      at async TestHook.run (node:internal/test_runner/test:1125:7)
+
+test at tests/briefs.test.ts:2:8841
+✖ 人工修改后拒绝迟到生成；已产生候选在应用前过期也拒绝 (0.035209ms)
+  Error: Setup failed: ALREADY_INITIALIZED
+      at initialize (/Users/junlong/projects/social-mdeida-ops-platform/tests/helpers.ts:38:162)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/briefs.test.ts:12:67)
+      at async TestHook.run (node:internal/test_runner/test:1125:7)
+
+test at tests/briefs.test.ts:2:9851
+✖ 连续视频分镜、无配音说明与时长保留；跨内容候选不能应用 (0.032959ms)
+  Error: Setup failed: ALREADY_INITIALIZED
+      at initialize (/Users/junlong/projects/social-mdeida-ops-platform/tests/helpers.ts:38:162)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/briefs.test.ts:12:67)
+      at async TestHook.run (node:internal/test_runner/test:1125:7)
+
+test at tests/briefs.test.ts:2:10634
+✖ 真实上传PNG版本引用随应用事务落库，停用素材后不得采用已生成候选 (0.027208ms)
+  Error: Setup failed: ALREADY_INITIALIZED
+      at initialize (/Users/junlong/projects/social-mdeida-ops-platform/tests/helpers.ts:38:162)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/briefs.test.ts:12:67)
+      at async TestHook.run (node:internal/test_runner/test:1125:7)
+
+test at tests/jobs.test.ts:2:2344
+✖ 业务事件回滚不产生任务，Outbox并发分发只创建一个Job (131.832625ms)
+  error: insert or update on table "memberships" violates foreign key constraint "memberships_workspace_id_fkey"
+      at /Users/junlong/projects/social-mdeida-ops-platform/node_modules/.pnpm/pg-pool@3.14.0_pg@8.16.3/node_modules/pg-pool/index.js:45:11
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/jobs.test.ts:10:305)
+      at async TestHook.run (node:internal/test_runner/test:1125:7) {
+    length: 321,
+    severity: 'ERROR',
+    code: '23503',
+    detail: 'Key (workspace_id)=(47c8c2cd-12ad-4a7e-8226-8e10a3345482) is not present in table "workspaces".',
+    hint: undefined,
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: 'public',
+    table: 'memberships',
+    column: undefined,
+    dataType: undefined,
+    constraint: 'memberships_workspace_id_fkey',
+    file: 'ri_triggers.c',
+    line: '2599',
+    routine: 'ri_ReportViolation'
+  }
+
+test at tests/jobs.test.ts:2:3509
+✖ 租约保证单领取；心跳延长租约；已完成不会重复通知 (1.195917ms)
+  error: insert or update on table "memberships" violates foreign key constraint "memberships_workspace_id_fkey"
+      at /Users/junlong/projects/social-mdeida-ops-platform/node_modules/.pnpm/pg-pool@3.14.0_pg@8.16.3/node_modules/pg-pool/index.js:45:11
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/jobs.test.ts:10:305)
+      at async TestHook.run (node:internal/test_runner/test:1125:7) {
+    length: 321,
+    severity: 'ERROR',
+    code: '23503',
+    detail: 'Key (workspace_id)=(47c8c2cd-12ad-4a7e-8226-8e10a3345482) is not present in table "workspaces".',
+    hint: undefined,
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: 'public',
+    table: 'memberships',
+    column: undefined,
+    dataType: undefined,
+    constraint: 'memberships_workspace_id_fkey',
+    file: 'ri_triggers.c',
+    line: '2599',
+    routine: 'ri_ReportViolation'
+  }
+
+test at tests/jobs.test.ts:2:4130
+✖ 真实领取进程被SIGKILL后，重启领取恢复；旧租约结果被拒绝 (0.05125ms)
+  error: insert or update on table "memberships" violates foreign key constraint "memberships_workspace_id_fkey"
+      at /Users/junlong/projects/social-mdeida-ops-platform/node_modules/.pnpm/pg-pool@3.14.0_pg@8.16.3/node_modules/pg-pool/index.js:45:11
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/jobs.test.ts:10:305)
+      at async TestHook.run (node:internal/test_runner/test:1125:7) {
+    length: 321,
+    severity: 'ERROR',
+    code: '23503',
+    detail: 'Key (workspace_id)=(47c8c2cd-12ad-4a7e-8226-8e10a3345482) is not present in table "workspaces".',
+    hint: undefined,
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: 'public',
+    table: 'memberships',
+    column: undefined,
+    dataType: undefined,
+    constraint: 'memberships_workspace_id_fkey',
+    file: 'ri_triggers.c',
+    line: '2599',
+    routine: 'ri_ReportViolation'
+  }
+
+test at tests/jobs.test.ts:2:5293
+✖ 取消与过期版本阻止结果及副作用提交 (0.030834ms)
+  error: insert or update on table "memberships" violates foreign key constraint "memberships_workspace_id_fkey"
+      at /Users/junlong/projects/social-mdeida-ops-platform/node_modules/.pnpm/pg-pool@3.14.0_pg@8.16.3/node_modules/pg-pool/index.js:45:11
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/jobs.test.ts:10:305)
+      at async TestHook.run (node:internal/test_runner/test:1125:7) {
+    length: 321,
+    severity: 'ERROR',
+    code: '23503',
+    detail: 'Key (workspace_id)=(47c8c2cd-12ad-4a7e-8226-8e10a3345482) is not present in table "workspaces".',
+    hint: undefined,
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: 'public',
+    table: 'memberships',
+    column: undefined,
+    dataType: undefined,
+    constraint: 'memberships_workspace_id_fkey',
+    file: 'ri_triggers.c',
+    line: '2599',
+    routine: 'ri_ReportViolation'
+  }
+
+test at tests/jobs.test.ts:2:6183
+✖ 失败退避重试有上限，管理员可重试；提醒池不受一般池积压影响 (0.041375ms)
+  error: insert or update on table "memberships" violates foreign key constraint "memberships_workspace_id_fkey"
+      at /Users/junlong/projects/social-mdeida-ops-platform/node_modules/.pnpm/pg-pool@3.14.0_pg@8.16.3/node_modules/pg-pool/index.js:45:11
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/jobs.test.ts:10:305)
+      at async TestHook.run (node:internal/test_runner/test:1125:7) {
+    length: 321,
+    severity: 'ERROR',
+    code: '23503',
+    detail: 'Key (workspace_id)=(47c8c2cd-12ad-4a7e-8226-8e10a3345482) is not present in table "workspaces".',
+    hint: undefined,
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: 'public',
+    table: 'memberships',
+    column: undefined,
+    dataType: undefined,
+    constraint: 'memberships_workspace_id_fkey',
+    file: 'ri_triggers.c',
+    line: '2599',
+    routine: 'ri_ReportViolation'
+  }
+
+test at tests/jobs.test.ts:2:7793
+✖ 超过最大尝试的失联任务进入失败；未来调度事件暂不分发 (0.028625ms)
+  error: insert or update on table "memberships" violates foreign key constraint "memberships_workspace_id_fkey"
+      at /Users/junlong/projects/social-mdeida-ops-platform/node_modules/.pnpm/pg-pool@3.14.0_pg@8.16.3/node_modules/pg-pool/index.js:45:11
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/jobs.test.ts:10:305)
+      at async TestHook.run (node:internal/test_runner/test:1125:7) {
+    length: 321,
+    severity: 'ERROR',
+    code: '23503',
+    detail: 'Key (workspace_id)=(47c8c2cd-12ad-4a7e-8226-8e10a3345482) is not present in table "workspaces".',
+    hint: undefined,
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: 'public',
+    table: 'memberships',
+    column: undefined,
+    dataType: undefined,
+    constraint: 'memberships_workspace_id_fkey',
+    file: 'ri_triggers.c',
+    line: '2599',
+    routine: 'ri_ReportViolation'
+  }
+
+test at tests/jobs.test.ts:2:8648
+✖ 长任务心跳跨越初始租约，超时拒绝迟到结果和副作用 (0.022667ms)
+  error: insert or update on table "memberships" violates foreign key constraint "memberships_workspace_id_fkey"
+      at /Users/junlong/projects/social-mdeida-ops-platform/node_modules/.pnpm/pg-pool@3.14.0_pg@8.16.3/node_modules/pg-pool/index.js:45:11
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/jobs.test.ts:10:305)
+      at async TestHook.run (node:internal/test_runner/test:1125:7) {
+    length: 321,
+    severity: 'ERROR',
+    code: '23503',
+    detail: 'Key (workspace_id)=(47c8c2cd-12ad-4a7e-8226-8e10a3345482) is not present in table "workspaces".',
+    hint: undefined,
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: 'public',
+    table: 'memberships',
+    column: undefined,
+    dataType: undefined,
+    constraint: 'memberships_workspace_id_fkey',
+    file: 'ri_triggers.c',
+    line: '2599',
+    routine: 'ri_ReportViolation'
+  }
+
+test at tests/topics.test.ts:2:3503
+✖ 六项权重由服务端计分，保留缺项与生成批次，重复保存不新增 (437.928625ms)
+  Error: Setup failed: ALREADY_INITIALIZED
+      at initialize (/Users/junlong/projects/social-mdeida-ops-platform/tests/helpers.ts:38:162)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/topics.test.ts:10:67)
+      at async TestHook.run (node:internal/test_runner/test:1125:7)
+
+test at tests/topics.test.ts:2:4580
+✖ 不同请求键并发采纳只创建一个草稿/首版本/真实brief Job，旧版本重复采纳返回同一结果 (1.351041ms)
+  Error: Setup failed: ALREADY_INITIALIZED
+      at initialize (/Users/junlong/projects/social-mdeida-ops-platform/tests/helpers.ts:38:162)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/topics.test.ts:10:67)
+      at async TestHook.run (node:internal/test_runner/test:1125:7)
+
+test at tests/topics.test.ts:2:5899
+✖ 拒绝原因不可丢失；与采纳竞争只有一条最终决策，过期不得采纳 (0.181958ms)
+  Error: Setup failed: ALREADY_INITIALIZED
+      at initialize (/Users/junlong/projects/social-mdeida-ops-platform/tests/helpers.ts:38:162)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/topics.test.ts:10:67)
+      at async TestHook.run (node:internal/test_runner/test:1125:7)
+
+test at tests/topics.test.ts:2:6975
+✖ 显式变体保留父题/理由/证据并独立采纳；越权负责人和空间拒绝 (0.09575ms)
+  Error: Setup failed: ALREADY_INITIALIZED
+      at initialize (/Users/junlong/projects/social-mdeida-ops-platform/tests/helpers.ts:38:162)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/topics.test.ts:10:67)
+      at async TestHook.run (node:internal/test_runner/test:1125:7)
+
+test at tests/topics.test.ts:2:8052
+✖ 事实缺观察/伪造来源使整个候选事务回滚，不用高分掩盖错误 (0.053667ms)
+  Error: Setup failed: ALREADY_INITIALIZED
+      at initialize (/Users/junlong/projects/social-mdeida-ops-platform/tests/helpers.ts:38:162)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/topics.test.ts:10:67)
+      at async TestHook.run (node:internal/test_runner/test:1125:7)
+
+test at tests/topics.test.ts:2:9247
+✖ 编辑只能采纳本人的任务；缺拒绝理由与陈旧版本不能改变选题 (0.039625ms)
+  Error: Setup failed: ALREADY_INITIALIZED
+      at initialize (/Users/junlong/projects/social-mdeida-ops-platform/tests/helpers.ts:38:162)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/topics.test.ts:10:67)
+      at async TestHook.run (node:internal/test_runner/test:1125:7)
+
+test at tests/topics.test.ts:2:10049
+✖ 证据显示采纳建议生成时的不可变观察，不随着来源更新改写标题；观察必须匹配来源 (0.034875ms)
+  Error: Setup failed: ALREADY_INITIALIZED
+      at initialize (/Users/junlong/projects/social-mdeida-ops-platform/tests/helpers.ts:38:162)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/topics.test.ts:10:67)
+      at async TestHook.run (node:internal/test_runner/test:1125:7)
+
+test at tests/topics.test.ts:2:14050
+✖ 常青原创不能把来源窗口结束填成到期；明确来源的时效由服务端保留 (0.04275ms)
+  Error: Setup failed: ALREADY_INITIALIZED
+      at initialize (/Users/junlong/projects/social-mdeida-ops-platform/tests/helpers.ts:38:162)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/topics.test.ts:10:67)
+      at async TestHook.run (node:internal/test_runner/test:1125:7)

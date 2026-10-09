@@ -2,7 +2,7 @@ import {randomUUID} from 'node:crypto';
 import {Database,Tx} from '../../db/src/db';
 import {config} from './config';
 type Job=Record<string,any>;
-export type JobHandler=(job:Job,signal:AbortSignal)=>Promise<{result:unknown;effects?:(tx:Tx)=>Promise<void>;cleanup?:(applied:boolean)=>Promise<void>}>;
+export type JobHandler=(job:Job,signal:AbortSignal)=>Promise<{result:unknown;completionState?:'succeeded'|'partial'|'failed';effects?:(tx:Tx)=>Promise<void>;guard?:(tx:Tx)=>Promise<string|null>;cleanup?:(applied:boolean)=>Promise<void>}>;
 export class Jobs {
   readonly handlers:Record<string,JobHandler>;
   constructor(readonly db:Database,handlers:Record<string,JobHandler>={}){
@@ -30,7 +30,7 @@ export class Jobs {
     });
   }
   async heartbeat(j:Job){const r=await this.db.query(`UPDATE jobs SET heartbeat_at=now(),lease_until=now()+$1::int*interval '1 second' WHERE id=$2 AND state='running' AND lease_token=$3 AND lease_until>now() AND cancel_requested=false`,[config.leaseSeconds,j.id,j.lease_token]);return !!r.rowCount;}
-  async complete(j:Job,result:unknown,effects?:(tx:Tx)=>Promise<void>,signal?:AbortSignal){
+  async complete(j:Job,result:unknown,effects?:(tx:Tx)=>Promise<void>,signal?:AbortSignal,state:'succeeded'|'partial'|'failed'='succeeded',guard?:(tx:Tx)=>Promise<string|null>){
     return this.db.transaction(async tx=>{
       // 锁定输入对象后锁任务，所有结果应用与取消复查在同一事务内。
       const workspace=await tx.query('SELECT version FROM workspaces WHERE id=$1 FOR SHARE',[j.workspace_id]);
@@ -38,10 +38,12 @@ export class Jobs {
       if(!row.rowCount)return false;
       if(j.input_version!==null&&workspace.rows[0].version!==j.input_version){await tx.query("UPDATE jobs SET state='failed',error_code='STALE_INPUT',finished_at=now(),lease_token=NULL,lease_until=NULL,version=version+1 WHERE id=$1",[j.id]);await this.event(tx,j,'job.failed',{error_code:'STALE_INPUT'});return false;}
       if(signal?.aborted)throw new Error('JOB_TIMEOUT');
+      const guardError=await guard?.(tx);
+      if(guardError){await tx.query("UPDATE jobs SET state='failed',error_code=$2,finished_at=now(),lease_token=NULL,lease_until=NULL,version=version+1 WHERE id=$1",[j.id,guardError]);await this.event(tx,j,'job.failed',{error_code:guardError});return false;}
       if(effects)await effects(tx);
       if(signal?.aborted)throw new Error('JOB_TIMEOUT');
-      await tx.query("UPDATE jobs SET state='succeeded',result=$1,error_code=NULL,finished_at=now(),lease_token=NULL,lease_until=NULL,version=version+1,updated_at=now() WHERE id=$2",[JSON.stringify(result),j.id]);
-      await this.event(tx,j,'job.succeeded');return true;
+      await tx.query("UPDATE jobs SET state=$3,result=$1,error_code=CASE WHEN $3='failed' THEN $1::jsonb->>'error_code' ELSE NULL END,finished_at=now(),lease_token=NULL,lease_until=NULL,version=version+1,updated_at=now() WHERE id=$2",[JSON.stringify(result),j.id,state]);
+      await this.event(tx,j,'job.'+state);return true;
     });
   }
   async fail(j:Job,code:string){
@@ -54,14 +56,15 @@ export class Jobs {
   }
   async event(tx:Tx,j:Job,action:string,details:unknown={}){await tx.query(`INSERT INTO audit_logs(workspace_id,actor_type,action,object_type,object_id,details,request_id) VALUES($1,'service',$2,'job',$3,$4,$5)`,[j.workspace_id,action,j.id,JSON.stringify(details),j.request_id]);}
   async process(j:Job){
-    let lost=false;const timer=setInterval(()=>{void this.heartbeat(j).then(ok=>{if(!ok)lost=true;}).catch(()=>{lost=true;});},config.heartbeatMs);
-    const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),j.timeout_seconds*1000);
+    let lost=false;const controller=new AbortController();
+    const timer=setInterval(()=>{void this.heartbeat(j).then(ok=>{if(!ok){lost=true;controller.abort();}}).catch(()=>{lost=true;controller.abort();});},config.heartbeatMs);
+    const timeout=setTimeout(()=>controller.abort(),j.timeout_seconds*1000);
     try{
       const work=async()=>{
         const handler=this.handlers[j.type];if(!handler)throw new Error('UNSUPPORTED_JOB');
         const output=await handler(j,controller.signal);let applied=false;try{if(lost)throw new Error('LEASE_LOST');
         if(controller.signal.aborted)throw new Error('JOB_TIMEOUT');
-        applied=await this.complete(j,output.result,output.effects,controller.signal);return applied;
+        applied=await this.complete(j,output.result,output.effects,controller.signal,output.completionState,output.guard);return applied;
         }finally{await output.cleanup?.(applied);}
       };
       const aborted=new Promise<never>((_,reject)=>controller.signal.addEventListener('abort',()=>reject(new Error('JOB_TIMEOUT')),{once:true}));

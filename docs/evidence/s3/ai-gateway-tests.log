@@ -1,0 +1,79 @@
+{"event":"http.request","request_id":"f8e884b1-c632-4e24-bf63-b51cb0f3c31a","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":7}
+{"event":"http.request","request_id":"087d12e5-881a-4e3e-9ed2-b4bb3690c357","method":"POST","path":"/api/v1/setup","status":201,"duration_ms":34}
+{"event":"http.request","request_id":"56469f42-b6cd-42cf-8747-1093751e54aa","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"fdd75cf7-6c65-4223-b6b2-22c87e1637be","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":25}
+{"event":"http.request","request_id":"5e7fb976-311e-413c-864f-0ae76d2641c6","method":"GET","path":"/api/v1/me","status":200,"duration_ms":81}
+✔ 合法结构缓存复用；输入/模型/提示词/允许ID变化均失效，记录真实用量而未知费用不填零 (368.286917ms)
+✔ 单次修复结构错误；禁止伪造ID，最终失败无结果 (11.571542ms)
+✔ 业务校验必须通过；输入/Schema版本输出必须一致 (10.992458ms)
+✔ 同输入并发只发一次模型调用；运行锁保留，显式失败后能重试 (14.284959ms)
+✔ 取消/超时拒绝结果，包括忽视signal的provider；取消不会进入缓存 (1014.075ms)
+✔ 预算在调用前拒绝并发超支；单价估算与供应商账单明确区分 (20.180542ms)
+✔ 缺配置禁用/权限或未知ID字段明确失败；模型错误不包含原始provider敏感文本 (12.108375ms)
+✔ 独立预算空间的并发预留真正拒绝超支，一次修复累计计入单任务预算 (27.523292ms)
+✔ 嵌套证据对象只校验真正的source_item_id，未知来源不能借对象绕过白名单 (0.635125ms)
+✔ Job取消把信号传给AI调用；基础版本变化拒绝候选应用 (295.186875ms)
+✔ 跨空间身份/非运行Job拒绝调用；已死进程运行可恢复但不会覆盖原记录 (12.447291ms)
+✔ 缓存每次复查Schema、允许引用、业务规则与版本，损坏缓存拒绝使用 (6.62675ms)
+{"event":"http.request","request_id":"f7374506-04b9-4d5a-a50f-81759ae52235","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":6}
+{"event":"http.request","request_id":"bd373239-1272-4248-b074-9c8cf5907acc","method":"POST","path":"/api/v1/setup","status":201,"duration_ms":36}
+{"event":"http.request","request_id":"286fc1b2-c745-4f41-b070-fc6793fce43d","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"7538b3a4-3e3d-406f-b643-e51e2f8ce3a2","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":25}
+{"event":"http.request","request_id":"778d58d9-b6b2-4bd4-af47-09381a1b7d84","method":"GET","path":"/api/v1/me","status":200,"duration_ms":79}
+{"event":"http.request","request_id":"388d7695-d04b-40c1-9cc9-cee84c58311e","method":"POST","path":"/api/v1/source-connections","status":201,"duration_ms":10}
+{"event":"http.request","request_id":"55bd1372-8b63-4950-b25e-7ecb4b01cc91","method":"POST","path":"/api/v1/source-connections/454eb4fc-060a-45f9-8349-872ae4d8fe4b/refresh","status":202,"duration_ms":9}
+{"event":"http.request","request_id":"38b73c12-2dd3-4315-9b38-ed6bbf5a2e76","method":"POST","path":"/api/v1/source-connections/454eb4fc-060a-45f9-8349-872ae4d8fe4b/refresh","status":202,"duration_ms":18}
+{"event":"http.request","request_id":"ebbb4c4d-19fe-4c94-afad-05d922d98375","method":"GET","path":"/api/v1/source-connections/454eb4fc-060a-45f9-8349-872ae4d8fe4b","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"fa04eff2-b734-431d-91c0-f79e7d2aec2d","method":"POST","path":"/api/v1/source-connections/454eb4fc-060a-45f9-8349-872ae4d8fe4b/refresh","status":429,"duration_ms":4}
+✔ 同源并发刷新复用一个运行，事务Outbox持久化，能力来自实际执行 (401.159625ms)
+{"event":"http.request","request_id":"c8b48251-9374-435d-8b0f-d21b29871c4a","method":"POST","path":"/api/v1/source-connections","status":201,"duration_ms":4}
+{"event":"http.request","request_id":"df5c9aa5-39e6-472f-adbe-d523b3cda034","method":"POST","path":"/api/v1/source-connections/0914c379-aae2-4eda-be93-241585bd7f4d/refresh","status":409,"duration_ms":2}
+{"event":"http.request","request_id":"206c8b22-8f47-4388-a346-7069271d18e7","method":"PATCH","path":"/api/v1/source-connections/0914c379-aae2-4eda-be93-241585bd7f4d","status":409,"duration_ms":3}
+{"event":"http.request","request_id":"c0a5f74e-ab29-4ed7-95df-0ab0274e6050","method":"POST","path":"/api/v1/source-connections/0914c379-aae2-4eda-be93-241585bd7f4d/verify","status":202,"duration_ms":4}
+{"event":"http.request","request_id":"961b014e-e2ce-4a7d-940a-2daecc08f37d","method":"GET","path":"/api/v1/source-connections/0914c379-aae2-4eda-be93-241585bd7f4d","status":200,"duration_ms":1}
+✔ 配置版本冲突拒绝覆盖；禁用时手动刷新受守卫，验证入口可用 (31.804833ms)
+{"event":"http.request","request_id":"f49fb98a-4b47-41b1-aed2-95782a12aba8","method":"POST","path":"/api/v1/source-connections","status":201,"duration_ms":3}
+{"event":"http.request","request_id":"640a33ae-87af-4ca6-850a-59e775406316","method":"POST","path":"/api/v1/source-connections","status":201,"duration_ms":3}
+{"event":"http.request","request_id":"af49577d-2392-49b2-8f3b-4bca51da3cca","method":"POST","path":"/api/v1/source-connections/b2a20f51-5ddc-439a-b3d9-22c65248cc8e/refresh","status":202,"duration_ms":4}
+{"event":"http.request","request_id":"6e77a8fb-62c0-4ed5-a2c5-29e6643d65c4","method":"GET","path":"/api/v1/source-connections/b2a20f51-5ddc-439a-b3d9-22c65248cc8e","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"d29d04b3-6b7a-4abf-8898-0c0be0e47d64","method":"POST","path":"/api/v1/source-connections/b2a20f51-5ddc-439a-b3d9-22c65248cc8e/refresh","status":409,"duration_ms":3}
+{"event":"http.request","request_id":"ab9efd1d-ad56-429d-93f8-cba86dbb3a3f","method":"POST","path":"/api/v1/source-connections/79eb29a0-7df8-4993-9760-ec9817962842/refresh","status":202,"duration_ms":4}
+{"event":"http.request","request_id":"ed985336-22e3-40f4-abe3-e5b90d0f50e3","method":"GET","path":"/api/v1/source-connections/79eb29a0-7df8-4993-9760-ec9817962842","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"10bfa657-cbfb-43b7-909f-600297212850","method":"POST","path":"/api/v1/source-connections/b2a20f51-5ddc-439a-b3d9-22c65248cc8e/verify","status":202,"duration_ms":4}
+{"event":"http.request","request_id":"c144b5bb-9cca-44db-8444-433b6f229c82","method":"GET","path":"/api/v1/source-connections/b2a20f51-5ddc-439a-b3d9-22c65248cc8e","status":200,"duration_ms":1}
+✔ 登录失效立即暂停且通知负责人；成功验证恢复，其他来源不受影响 (45.387084ms)
+{"event":"http.request","request_id":"282f1f3a-5925-4428-8cb3-20b711317db9","method":"POST","path":"/api/v1/source-connections","status":201,"duration_ms":3}
+{"event":"http.request","request_id":"ec2ab974-0571-4c1f-8bee-4b03caa8ce17","method":"POST","path":"/api/v1/source-connections/e4bdf14e-9de2-4da7-8863-5c7f64c06c5a/refresh","status":202,"duration_ms":4}
+{"event":"http.request","request_id":"9ac6a96b-6395-40da-b5a4-191278cd4440","method":"POST","path":"/api/v1/source-connections/e4bdf14e-9de2-4da7-8863-5c7f64c06c5a/refresh","status":202,"duration_ms":4}
+{"event":"http.request","request_id":"93460870-c151-4bcf-8d9a-6ccbef5610ca","method":"POST","path":"/api/v1/source-connections/e4bdf14e-9de2-4da7-8863-5c7f64c06c5a/refresh","status":202,"duration_ms":4}
+{"event":"http.request","request_id":"3ab15a36-b24a-49ca-9030-cd558e6c3197","method":"GET","path":"/api/v1/source-connections/e4bdf14e-9de2-4da7-8863-5c7f64c06c5a","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"d01fbb58-f1be-4733-9b22-e75909468d27","method":"POST","path":"/api/v1/source-connections","status":201,"duration_ms":3}
+{"event":"http.request","request_id":"16ebb21d-ff40-4f5e-baf7-ccb0885fec81","method":"POST","path":"/api/v1/source-connections/9074b6e2-da41-4c8a-8ad1-289aaf9d60ca/refresh","status":202,"duration_ms":4}
+{"event":"http.request","request_id":"418ad8ac-edc5-4d05-a857-f341f3587988","method":"GET","path":"/api/v1/source-connections/9074b6e2-da41-4c8a-8ad1-289aaf9d60ca/runs","status":200,"duration_ms":1}
+✔ 连续三次普通失败暂停；有界部分成功保留partial而非伪装成功 (52.100375ms)
+{"event":"http.request","request_id":"270338f0-9f35-47f0-83c6-22cc02c4e253","method":"POST","path":"/api/v1/source-connections","status":201,"duration_ms":4}
+{"event":"http.request","request_id":"27944823-2d39-4972-8f65-78d8d7b0e02c","method":"PATCH","path":"/api/v1/source-connections/7294cbb6-70dc-4711-987f-9670e5b2bae1","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"96baa70e-bf6c-42e8-a346-dfc69350770d","method":"GET","path":"/api/v1/source-connections/7294cbb6-70dc-4711-987f-9670e5b2bae1/runs","status":200,"duration_ms":1}
+✔ 定时并发扫描同窗口只创建一次，窗口外不补写成功；改配置拒绝旧结果 (31.105791ms)
+{"event":"http.request","request_id":"5863baf1-9d0e-4e8d-91e1-6de57ce68cbf","method":"POST","path":"/api/v1/source-connections","status":201,"duration_ms":4}
+{"event":"http.request","request_id":"230222ee-c42e-4c7a-961f-13fac42ae328","method":"POST","path":"/api/v1/source-connections/10456b8b-1276-4369-a9c0-9d7f7812833b/refresh","status":202,"duration_ms":4}
+{"event":"http.request","request_id":"7fef5237-2b32-4973-9f5d-32205ff8bb48","method":"POST","path":"/api/v1/jobs/fb30e82d-13e6-4e31-8e14-6f41682d4bb4/cancel","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"ec771b33-0517-44b3-8741-0ea8efc4bca7","method":"GET","path":"/api/v1/source-connections/10456b8b-1276-4369-a9c0-9d7f7812833b/runs","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"ed818e3e-6841-4d1a-b844-7187b0a216f4","method":"PATCH","path":"/api/v1/source-connections/10456b8b-1276-4369-a9c0-9d7f7812833b","status":422,"duration_ms":3}
+{"event":"http.request","request_id":"386f677c-016b-4dae-9d1e-fed90108fa12","method":"POST","path":"/api/v1/source-connections","status":422,"duration_ms":2}
+✔ 取消同步释放同源占用；来源连接按空间隔离；无效配置拒绝 (28.685333ms)
+✔ 业务事件回滚不产生任务，Outbox并发分发只创建一个Job (61.7605ms)
+✔ 租约保证单领取；心跳延长租约；已完成不会重复通知 (6.012666ms)
+✔ 真实领取进程被SIGKILL后，重启领取恢复；旧租约结果被拒绝 (2447.859959ms)
+✔ 取消与过期版本阻止结果及副作用提交 (26.578041ms)
+✔ 失败退避重试有上限，管理员可重试；提醒池不受一般池积压影响 (50.259834ms)
+✔ 超过最大尝试的失联任务进入失败；未来调度事件暂不分发 (5.837208ms)
+✔ 长任务心跳跨越初始租约，超时拒绝迟到结果和副作用 (4831.051333ms)
+ℹ tests 25
+ℹ suites 0
+ℹ pass 25
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 10963.51975

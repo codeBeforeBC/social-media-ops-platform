@@ -1,0 +1,13 @@
+import {mkdir,readFile,writeFile,chmod,copyFile} from 'node:fs/promises';
+import {spawn} from 'node:child_process';
+import {randomBytes} from 'node:crypto';
+import {resolve,join} from 'node:path';
+import {prepareSearch} from '../s0/prepare-opencli-xhs.mjs';
+const dir=resolve('.local/providers/opencli');await mkdir(dir,{recursive:true});
+await writeFile(join(dir,'package.json'),JSON.stringify({private:true,dependencies:{'@jackwener/opencli':'1.8.8'}},null,2)+'\n');
+await copyFile('tools/s3/provider-lock.json',join(dir,'package-lock.json'));
+await new Promise((accept,reject)=>{const child=spawn('npm',['ci','--prefix',dir,'--ignore-scripts','--no-audit','--no-fund'],{stdio:'inherit'});child.on('error',reject);child.on('exit',code=>code===0?accept():reject(new Error('PROVIDER_INSTALL_FAILED')));});
+const searchFile=join(dir,'node_modules/@jackwener/opencli/clis/xiaohongshu/search.js');const fixed=prepareSearch(await readFile(searchFile,'utf8'));if(fixed.changed)await writeFile(searchFile,fixed.source);
+const stateDir=resolve(process.env.STATE_DIR??'.local/state');await mkdir(stateDir,{recursive:true});const token=join(stateDir,'source-bridge-token');
+try{await writeFile(token,randomBytes(32).toString('hex'),{flag:'wx',mode:0o600});}catch(error){if(error.code!=='EEXIST')throw error;}await chmod(token,0o600);
+console.log(JSON.stringify({provider:'opencli',version:'1.8.8',adapter_sha256:fixed.sha256,token_file:token,credentials_printed:false}));

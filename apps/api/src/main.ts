@@ -7,6 +7,11 @@ import cookieParser from 'cookie-parser';
 import {raw} from 'express';
 import {Files} from './files';
 import {Assets} from './assets';
+import {AIRequests} from './ai';
+import {Topics} from './topics';
+import {Contents} from './contents';
+import {Collection} from '../../../packages/domain/src/collection';
+import {SourceEvidence} from '../../../packages/domain/src/source-evidence';
 import helmet from 'helmet';
 import {resolve} from 'node:path';
 import {Database} from '../../../packages/db/src/db';
@@ -33,6 +38,23 @@ class ApiController {
     if(method!=='GET'&&method!=='HEAD')await this.auth.checkCsrf(req);
     const c=this.commands;
     const command=async(permission:Permission,fn:Parameters<Commands['command']>[6])=>{const r=await c.command(a,req.headers['idempotency-key'],method,path,req.body??{},permission,fn);return send(r.data,r.status);};
+    const contents=new Contents(this.db);
+    if(path==='/contents'&&method==='GET')return send(await contents.list(a,req.query));
+    const content=path.match(/^\/contents\/([^/]+)(?:\/(generate-brief|apply-generated))?$/);if(content){if(method==='GET'&&!content[2])return send(await contents.detail(a,content[1]!));if(method==='POST'&&content[2]==='generate-brief')return command('content.production',(tx,actor)=>contents.generate(tx,actor,content[1]!,req.body));if(method==='POST'&&content[2]==='apply-generated')return command('content.production',(tx,actor)=>contents.apply(tx,actor,content[1]!,req.body));}
+    const topics=new Topics(this.db);
+    if(path==='/topics'&&method==='GET')return send(await topics.list(a,req.query));
+    const topic=path.match(/^\/topics\/([^/]+)(?:\/(accept|reject|variants))?$/);
+    if(topic){if(method==='GET'&&!topic[2])return send(await topics.detail(a,topic[1]!));if(method==='POST'&&topic[2]==='accept')return command('content.copy',(tx,actor)=>topics.accept(tx,actor,topic[1]!,req.body));if(method==='POST'&&topic[2]==='reject')return command('content.copy',(tx,actor)=>topics.reject(tx,actor,topic[1]!,req.body));if(method==='POST'&&topic[2]==='variants')return command('content.copy',(tx,actor)=>topics.variant(tx,actor,topic[1]!,req.body));}
+    const ai=new AIRequests(this.db);
+    if(path==='/topic-generations'&&method==='POST')return command('content.copy',(tx,actor)=>ai.generateTopics(tx,actor,req.body));
+    const aiRequest=path.match(/^\/ai-requests\/([^/]+)$/);if(aiRequest&&method==='GET')return send(await ai.get(a,aiRequest[1]!));
+    const sourceEvidence=new SourceEvidence(this.db);
+    if(path==='/source-items'&&method==='GET')return send(await sourceEvidence.list(a,req.query));
+    const sourceItem=path.match(/^\/source-items\/([^/]+)$/);if(sourceItem&&method==='GET')return send(await sourceEvidence.detail(a,sourceItem[1]!));
+    const collection=new Collection(this.db);
+    if(path==='/source-connections'){if(method==='GET')return send(await collection.list(a));if(method==='POST')return command('admin',(tx,actor)=>collection.create(tx,actor,req.body));}
+    const source=path.match(/^\/source-connections\/([^/]+)(?:\/(refresh|verify|runs|pause))?$/);
+    if(source){const sid=source[1]!;if(method==='GET'&&!source[2])return send(await collection.scope(this.db,a,sid));if(method==='PATCH'&&!source[2])return command('admin',(tx,actor)=>collection.patch(tx,actor,sid,req.body));if(method==='GET'&&source[2]==='runs')return send(await collection.runs(a,sid));if(method==='POST'&&['refresh','verify'].includes(source[2]!))return command('operate',(tx,actor)=>collection.refresh(tx,actor,sid,source[2]==='verify'));if(method==='POST'&&source[2]==='pause')return command('operate',(tx,actor)=>collection.pause(tx,actor,sid,req.body));}
     const files=this.files;
     if(path==='/uploads'&&method==='POST')return command('asset.edit',(tx,actor)=>files.create(tx,actor,req.body));
     const upload=path.match(/^\/uploads\/([^/]+)(?:\/(parts|complete|abort)(?:\/(\d+))?)?$/);

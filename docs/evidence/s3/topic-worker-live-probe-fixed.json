@@ -1,0 +1,286 @@
+{
+  "started_at": "2026-10-08T14:11:17.797Z",
+  "environment": "isolated *_test database; API/Outbox/worker/DeepSeek",
+  "input_kind": "synthetic_account_and_no_sources",
+  "actual_model": true,
+  "model": "deepseek-flash",
+  "accepted_status": 202,
+  "request": {
+    "id": "c4bacfec-530a-4324-83f2-e74b1427e773",
+    "state": "succeeded",
+    "error_code": null,
+    "input_version": "b2725b5119f33294bc0f74e6f2c2bbb54cca72edc50d8717a04883d1396e1d17",
+    "job_id": "b2614aae-7f74-45d4-a432-edcfa0f9fe24",
+    "ai_run_id": "87f3f410-caf6-429a-bc71-dbc66b357912"
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "state": "succeeded",
+      "usage": {
+        "input_tokens": 1737,
+        "total_tokens": 6134,
+        "output_tokens": 4397
+      },
+      "estimated_cost": null,
+      "cost_basis": "unknown",
+      "duration_ms": 20900
+    }
+  ],
+  "candidate_count": 3,
+  "persisted_topics": [
+    {
+      "id": "31d36a5c-398d-4a0b-b322-2ea367dd5e9d",
+      "score": "77.00",
+      "status": "proposed",
+      "missing_inputs": [
+        "缺少已生效规范（rule_set/rules为空），无法校验栏目边界、表达禁忌与审核要求。",
+        "缺少来源条目（sources为空），无法生成有事实依据的热点候选。",
+        "缺少素材或资产（assets与allowlist为空），required_asset_ids只能为空。",
+        "缺少历史表现数据（阅读、互动、粉丝画像），评分仅能作为待验证假设。",
+        "缺少账号人设与语气规范，YOYO表达评分无法校准。",
+        "缺少发布日历与排期约束，时机评分仅能保守估计。",
+        "缺少产能拆分依据，estimated_hours为原创假设，需排期确认。",
+        "缺已生效品牌规范",
+        "缺实际可用素材"
+      ]
+    },
+    {
+      "id": "b8877601-051c-473d-94bf-7c9d6fd38cfb",
+      "score": "72.00",
+      "status": "proposed",
+      "missing_inputs": [
+        "缺少已生效规范（rule_set/rules为空），无法校验栏目边界、表达禁忌与审核要求。",
+        "缺少来源条目（sources为空），无法生成有事实依据的热点候选。",
+        "缺少素材或资产（assets与allowlist为空），required_asset_ids只能为空。",
+        "缺少历史表现数据（阅读、互动、粉丝画像），评分仅能作为待验证假设。",
+        "缺少账号人设与语气规范，YOYO表达评分无法校准。",
+        "缺少发布日历与排期约束，时机评分仅能保守估计。",
+        "缺少产能拆分依据，estimated_hours为原创假设，需排期确认。",
+        "缺已生效品牌规范",
+        "缺实际可用素材"
+      ]
+    },
+    {
+      "id": "9fc88d20-e771-469a-8277-b7d67eda14ba",
+      "score": "77.00",
+      "status": "proposed",
+      "missing_inputs": [
+        "缺少已生效规范（rule_set/rules为空），无法校验栏目边界、表达禁忌与审核要求。",
+        "缺少来源条目（sources为空），无法生成有事实依据的热点候选。",
+        "缺少素材或资产（assets与allowlist为空），required_asset_ids只能为空。",
+        "缺少历史表现数据（阅读、互动、粉丝画像），评分仅能作为待验证假设。",
+        "缺少账号人设与语气规范，YOYO表达评分无法校准。",
+        "缺少发布日历与排期约束，时机评分仅能保守估计。",
+        "缺少产能拆分依据，estimated_hours为原创假设，需排期确认。",
+        "缺已生效品牌规范",
+        "缺实际可用素材"
+      ]
+    }
+  ],
+  "output": {
+    "summary": "在无来源、无生效规范、无资产、仅有“日常观察”栏目和4小时产能的情况下，产出3个明确标注为原创常青假设的候选；全部顶层evidence_refs为空，候选内证据均为original_hypothesis，不称为热点或已有事实。评分仅为假设性评估，不代表爆款概率，缺数据已列入missing_inputs。",
+    "warnings": [
+      "缺少已生效规范，候选只能作为待确认原创建议。",
+      "无来源条目与证据引用，所有候选均为原创常青假设，不是已有事实或热点。",
+      "评分不代表爆款概率，服务端将重新计算加权分数。",
+      "未执行发布、审核批准、开奖或发送操作。"
+    ],
+    "assumptions": [
+      "假设“日常观察”栏目可容纳图文和短视频。",
+      "假设账号当前可用产能为4小时，候选总预估工时按4小时分配。",
+      "假设无资产条件下可先做原创图文或口播草稿。",
+      "假设受众对低门槛记录方法有潜在需求，该假设需数据验证。"
+    ],
+    "task_payload": {
+      "candidates": [
+        {
+          "need": "用极低门槛捕捉日常片段，获得可复述、可回看的情绪锚点",
+          "scene": "睡前五到十分钟，翻看手机相册或坐在床边回想当天",
+          "title": "日常观察：今天值得留下的一个微小画面",
+          "column": "日常观察",
+          "emotion": "平静、被轻轻提醒",
+          "audience": "想记录生活但觉得没有素材的普通上班族、学生与自由职业者",
+          "expires_at": null,
+          "media_type": "graphic",
+          "assumptions": [
+            "假设账号有基础图文排版能力。",
+            "假设“日常观察”栏目接受提问式图文。"
+          ],
+          "evidence_refs": [
+            {
+              "claim": "这是无来源引用的原创常青假设：用“一个画面”降低记录门槛，并形成栏目化追问。",
+              "evidence_kind": "original_hypothesis",
+              "source_item_id": null
+            }
+          ],
+          "follow_reason": "把问题变成固定轻量栏目：每天或每周回答同一个问题，观众可连续对照自己的答案变化",
+          "original_angle": "不追求完整日记或精美vlog，只选一个画面，并说明为什么它会被留下",
+          "estimated_hours": 1,
+          "score_breakdown": [
+            {
+              "score": 4,
+              "reason": "记录门槛与碎片时间匹配，但需验证受众是否愿意公开回答。",
+              "criterion": "audience_need"
+            },
+            {
+              "score": 3,
+              "reason": "适合YOYO温和、陪伴式表达，但缺少账号人设细节无法校准。",
+              "criterion": "yoyo_expression"
+            },
+            {
+              "score": 4,
+              "reason": "同一追问可重复出现，形成连续观察感。",
+              "criterion": "follow_reason"
+            },
+            {
+              "score": 5,
+              "reason": "题目单一，执行与理解都清晰。",
+              "criterion": "clarity"
+            },
+            {
+              "score": 4,
+              "reason": "图文制作轻，无需现有资产；约1小时可完成初稿。",
+              "criterion": "feasibility"
+            },
+            {
+              "score": 3,
+              "reason": "常青选题，无时效依赖；但缺乏发布窗口与热点依据。",
+              "criterion": "timing"
+            }
+          ],
+          "required_asset_ids": []
+        },
+        {
+          "need": "通过具体物品观察自己的工作状态，找到低成本调整节奏的切口",
+          "scene": "早晨开工前或午休时，看向桌面并记录三件高频使用物品",
+          "title": "工位或书桌上的三件小物，如何影响我的一天",
+          "column": "日常观察",
+          "emotion": "专注、轻微治愈",
+          "audience": "远程办公者、学生、对工作节奏与注意力管理感兴趣的人",
+          "expires_at": null,
+          "media_type": "video",
+          "assumptions": [
+            "假设可用手机拍摄简易桌面镜头。",
+            "假设不需要外部品牌或产品素材。"
+          ],
+          "evidence_refs": [
+            {
+              "claim": "这是无来源引用的原创常青假设：从已有物品切入观察工作节奏，而非推荐效率工具。",
+              "evidence_kind": "original_hypothesis",
+              "source_item_id": null
+            }
+          ],
+          "follow_reason": "物品会随阶段变化，可发展为“桌面微观察”系列，观众可跟拍自己的版本",
+          "original_angle": "不推荐效率工具，只观察已有物品与自身节奏的关系",
+          "estimated_hours": 1.5,
+          "score_breakdown": [
+            {
+              "score": 4,
+              "reason": "办公与学习场景普遍，但需求强度未被数据验证。",
+              "criterion": "audience_need"
+            },
+            {
+              "score": 3,
+              "reason": "视频形式可承载旁白观察，但缺少语气与出镜规范。",
+              "criterion": "yoyo_expression"
+            },
+            {
+              "score": 4,
+              "reason": "桌面变化天然适合系列化回访。",
+              "criterion": "follow_reason"
+            },
+            {
+              "score": 4,
+              "reason": "三件物品的限定让内容结构清楚。",
+              "criterion": "clarity"
+            },
+            {
+              "score": 3,
+              "reason": "需要拍摄与剪辑，缺少资产与产能细节。",
+              "criterion": "feasibility"
+            },
+            {
+              "score": 3,
+              "reason": "常青选题，无窗口依赖；时机优势不明确。",
+              "criterion": "timing"
+            }
+          ],
+          "required_asset_ids": []
+        },
+        {
+          "need": "用单点记录代替面面俱到，降低复盘压力并留下成长线索",
+          "scene": "周日晚间，用十分钟写下本周一个“原来如此”的时刻",
+          "title": "“原来如此”周记：一周只记一个想通的瞬间",
+          "column": "日常观察",
+          "emotion": "释然、被理解",
+          "audience": "想写周记但难以坚持、容易陷入效率焦虑的人",
+          "expires_at": null,
+          "media_type": "graphic",
+          "assumptions": [
+            "假设受众愿意在评论区或私域进行轻量自我披露。",
+            "假设周记类内容可纳入“日常观察”栏目。"
+          ],
+          "evidence_refs": [
+            {
+              "claim": "这是无来源引用的原创常青假设：用单点认知变化替代完整周记模板。",
+              "evidence_kind": "original_hypothesis",
+              "source_item_id": null
+            }
+          ],
+          "follow_reason": "固定每周一问，连续多期后形成可回看的个人节奏样本",
+          "original_angle": "不教复盘模板，只展示一个瞬间的前后认知变化",
+          "estimated_hours": 1.5,
+          "score_breakdown": [
+            {
+              "score": 4,
+              "reason": "低负担复盘对拖延或自责人群有潜在吸引力。",
+              "criterion": "audience_need"
+            },
+            {
+              "score": 3,
+              "reason": "适合温和表达，但缺少账号专属语气参考。",
+              "criterion": "yoyo_expression"
+            },
+            {
+              "score": 4,
+              "reason": "每周固定提问可培养连续阅读期待。",
+              "criterion": "follow_reason"
+            },
+            {
+              "score": 5,
+              "reason": "单点记录规则简单，理解成本低。",
+              "criterion": "clarity"
+            },
+            {
+              "score": 4,
+              "reason": "图文或短文案即可完成，无需专用资产。",
+              "criterion": "feasibility"
+            },
+            {
+              "score": 3,
+              "reason": "常青框架，不依赖具体时间；缺少排期依据。",
+              "criterion": "timing"
+            }
+          ],
+          "required_asset_ids": []
+        }
+      ]
+    },
+    "evidence_refs": [],
+    "input_version": "b2725b5119f33294bc0f74e6f2c2bbb54cca72edc50d8717a04883d1396e1d17",
+    "missing_inputs": [
+      "缺少已生效规范（rule_set/rules为空），无法校验栏目边界、表达禁忌与审核要求。",
+      "缺少来源条目（sources为空），无法生成有事实依据的热点候选。",
+      "缺少素材或资产（assets与allowlist为空），required_asset_ids只能为空。",
+      "缺少历史表现数据（阅读、互动、粉丝画像），评分仅能作为待验证假设。",
+      "缺少账号人设与语气规范，YOYO表达评分无法校准。",
+      "缺少发布日历与排期约束，时机评分仅能保守估计。",
+      "缺少产能拆分依据，estimated_hours为原创假设，需排期确认。"
+    ],
+    "schema_version": "ai-v1"
+  },
+  "created_content_count": 0,
+  "quality_review": "not_performed",
+  "finished_at": "2026-10-08T14:11:38.964Z"
+}

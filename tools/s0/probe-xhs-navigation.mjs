@@ -13,10 +13,10 @@ function fail(code, message) { throw Object.assign(new Error(message), { code })
 export function noteIdentity(raw) {
   let url;
   try { url = new URL(raw); } catch { fail('INVALID_INPUT', 'Expected a full signed Xiaohongshu URL'); }
-  if (url.protocol !== 'https:' || url.hostname !== 'www.xiaohongshu.com') {
+  if (url.protocol !== 'https:' || url.hostname !== 'www.xiaohongshu.com' || url.port || url.username || url.password) {
     fail('INVALID_INPUT', 'Unexpected note host or protocol');
   }
-  const id = url.pathname.match(/^\/(?:explore|search_result)\/([a-f0-9]{24})\/?$/i)?.[1];
+  const id = url.pathname.match(/^\/(?:explore|search_result)\/([a-f0-9]{24})\/?$/i)?.[1] ?? url.pathname.match(/^\/user\/profile\/[a-f0-9]{24}\/([a-f0-9]{24})\/?$/i)?.[1];
   if (!id) fail('INVALID_INPUT', 'Unexpected note path');
   return { id: id.toLowerCase(), canonical_url: `https://www.xiaohongshu.com/explore/${id.toLowerCase()}` };
 }

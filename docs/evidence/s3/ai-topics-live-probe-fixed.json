@@ -1,0 +1,258 @@
+{
+  "started_at": "2026-10-08T13:40:14.674Z",
+  "environment": "isolated *_test database",
+  "provider": "deepseek",
+  "input_kind": "explicit_synthetic_business_cases",
+  "actual_model_calls": true,
+  "probes": [
+    {
+      "workflow": "topics.recommend",
+      "state": "succeeded",
+      "run_id": "28599e54-bb5b-426b-9f61-76fafc84b193",
+      "schema_version": "ai-v1",
+      "prompt_version": "yoyo-v1.0.1",
+      "attempts": [
+        {
+          "attempt": 1,
+          "state": "succeeded",
+          "usage": {
+            "input_tokens": 1613,
+            "total_tokens": 4343,
+            "output_tokens": 2730
+          },
+          "estimated_cost": null,
+          "cost_basis": "unknown",
+          "duration_ms": 13144
+        }
+      ],
+      "cache_reused": true,
+      "elapsed_ms": 13180,
+      "output": {
+        "schema_version": "ai-v1",
+        "input_version": "synthetic-business-v1",
+        "summary": "基于给定栏目「日常观察」、受众「喜欢轻松日常的年轻人」、目标「记录雨天发现并提出下次观察主题」与4小时产能，在无任何来源证据、无资产库、无历史表现数据条件下，提出3个明确标注为原创常青假设的候选。所有事实性来源引用为空，不声称任何数据、涨粉或已执行操作。",
+        "evidence_refs": [],
+        "assumptions": [
+          "候选内容均为原创常青假设，不是已发生的热点或既有事实。",
+          "受众对雨天日常的轻松观察可能感兴趣，此判断为假设，无数据支撑。",
+          "15秒视频与图文形式在无资产库条件下可借助手机拍摄或简单图文完成，具体可行性未验证。",
+          "4小时产能为总约束，候选工时分配为假设性安排。"
+        ],
+        "missing_inputs": [
+          "缺少可用来源条目（sources为空），无法引用任何事实或热点。",
+          "缺少证据引用白名单（evidence_refs为空）。",
+          "缺少资产库与素材ID（assets为空，required_asset_ids为空）。",
+          "缺少历史内容表现、受众反馈与平台数据。",
+          "缺少拍摄设备、出镜人员、剪辑能力与视觉模板信息。",
+          "缺少栏目「日常观察」的往期风格样例与发布节奏规则。"
+        ],
+        "warnings": [
+          "无任何来源证据，所有候选均为原创假设，不得表述为热点、事实或已验证结论。",
+          "不得声称涨粉、播放量、互动率等效果。",
+          "资产与产能缺口保留，未编造素材ID或已执行操作。",
+          "总产能4小时，候选工时合计为假设分配，需人工确认后才能执行。",
+          "发布时间、开奖、审核批准、发布等操作不在本输出范围内。"
+        ],
+        "task_payload": {
+          "candidates": [
+            {
+              "title": "雨天路面的小倒影：15秒散步观察",
+              "audience": "喜欢轻松日常的年轻人",
+              "need": "在快节奏生活中获得低成本、可共鸣的松弛感与微小发现。",
+              "scene": "雨天散步时低头看路面积水中的倒影，镜头跟随脚步与伞沿。",
+              "column": "日常观察",
+              "emotion": "轻松、好奇",
+              "media_type": "video",
+              "follow_reason": "用连续观察同一类日常细节形成轻量系列，让观众期待下一次雨天或下一次低头发现。",
+              "evidence_refs": [
+                {
+                  "source_item_id": null,
+                  "claim": "假设年轻人对雨天日常中的微小视觉细节有共鸣，此判断无来源证据。",
+                  "evidence_kind": "original_hypothesis"
+                },
+                {
+                  "source_item_id": null,
+                  "claim": "假设15秒竖屏视频适合呈现脚步与倒影的轻观察，此判断无来源证据。",
+                  "evidence_kind": "original_hypothesis"
+                }
+              ],
+              "original_angle": "不拍雨景大场面，只拍路面积水倒影随脚步变化的15秒连续镜头，结尾留一个下次观察问题。",
+              "score_breakdown": [
+                {
+                  "criterion": "audience_need",
+                  "score": 4,
+                  "reason": "轻松日常观察贴合目标受众的放松需求，但无数据验证。"
+                },
+                {
+                  "criterion": "yoyo_expression",
+                  "score": 3,
+                  "reason": "可用第一人称脚步与旁白表达，但YOYO具体人设与视觉风格未提供。"
+                },
+                {
+                  "criterion": "follow_reason",
+                  "score": 3,
+                  "reason": "可形成雨天观察系列，但连续关注理由依赖后续主题承诺。"
+                },
+                {
+                  "criterion": "clarity",
+                  "score": 4,
+                  "reason": "15秒单一视觉线索清晰，易理解。"
+                },
+                {
+                  "criterion": "feasibility",
+                  "score": 4,
+                  "reason": "手机拍摄雨天倒影可行，但无资产库，需实际拍摄与剪辑。"
+                },
+                {
+                  "criterion": "timing",
+                  "score": 2,
+                  "reason": "雨天主题依赖天气时机，无法保证拍摄时恰逢雨天。"
+                }
+              ],
+              "required_asset_ids": [],
+              "estimated_hours": 1.5,
+              "expires_at": null,
+              "assumptions": [
+                "假设目标受众喜欢轻松日常观察。",
+                "假设15秒竖屏视频足以承载倒影变化。",
+                "假设手机拍摄即可完成，无需专业设备。"
+              ]
+            },
+            {
+              "title": "雨天声音地图：图文版日常观察",
+              "audience": "喜欢轻松日常的年轻人",
+              "need": "用听觉想象参与雨天场景，获得低门槛的沉浸感与互动感。",
+              "scene": "以图文罗列雨天散步中听到的声音：伞面雨点、鞋踩水、车流、屋檐滴水。",
+              "column": "日常观察",
+              "emotion": "安静、治愈",
+              "media_type": "graphic",
+              "follow_reason": "声音地图可复用为不同天气或不同街道的系列模板，形成可期待的下一期。",
+              "evidence_refs": [
+                {
+                  "source_item_id": null,
+                  "claim": "假设图文形式的声音清单能引发受众想象与评论补充，此判断无来源证据。",
+                  "evidence_kind": "original_hypothesis"
+                },
+                {
+                  "source_item_id": null,
+                  "claim": "假设雨天声音分类适合做成日常观察栏目内容，此判断无来源证据。",
+                  "evidence_kind": "original_hypothesis"
+                }
+              ],
+              "original_angle": "不做实录音频，只用文字和简单插画式排版标注声音方位与远近，结尾邀请观众补充自己听到的雨天声音。",
+              "score_breakdown": [
+                {
+                  "criterion": "audience_need",
+                  "score": 3,
+                  "reason": "声音主题有治愈感，但图文无法直接播放声音，共鸣强度依赖文字表现。"
+                },
+                {
+                  "criterion": "yoyo_expression",
+                  "score": 3,
+                  "reason": "可通过第一人称文字与手写标注体现YOYO视角，但无视觉规范参考。"
+                },
+                {
+                  "criterion": "follow_reason",
+                  "score": 3,
+                  "reason": "声音地图模板可系列化，但需要持续产出不同场景才能形成关注理由。"
+                },
+                {
+                  "criterion": "clarity",
+                  "score": 4,
+                  "reason": "分类清晰，读者可快速扫描。"
+                },
+                {
+                  "criterion": "feasibility",
+                  "score": 4,
+                  "reason": "图文制作不依赖拍摄天气，4小时内可完成。"
+                },
+                {
+                  "criterion": "timing",
+                  "score": 3,
+                  "reason": "不严格依赖雨天实时拍摄，但主题仍与雨天季节相关。"
+                }
+              ],
+              "required_asset_ids": [],
+              "estimated_hours": 1.5,
+              "expires_at": null,
+              "assumptions": [
+                "假设受众愿意通过文字想象声音。",
+                "假设不需要真实音频素材即可成立。",
+                "假设简单排版可在无资产库条件下完成。"
+              ]
+            },
+            {
+              "title": "下次观察主题：雨停后的第一个变化",
+              "audience": "喜欢轻松日常的年轻人",
+              "need": "在参与选择下次观察主题的过程中获得参与感与期待感。",
+              "scene": "雨天散步结尾面对镜头提出两到三个下次观察主题选项，邀请观众留言选择。",
+              "column": "日常观察",
+              "emotion": "期待、互动",
+              "media_type": "video",
+              "follow_reason": "以悬念和观众选择决定下一期内容，形成连续关注的轻量互动机制。",
+              "evidence_refs": [
+                {
+                  "source_item_id": null,
+                  "claim": "假设结尾征集下次主题能提升连续关注意愿，此判断无来源证据。",
+                  "evidence_kind": "original_hypothesis"
+                },
+                {
+                  "source_item_id": null,
+                  "claim": "假设受众愿意参与选择雨停后的观察主题，此判断无来源证据。",
+                  "evidence_kind": "original_hypothesis"
+                }
+              ],
+              "original_angle": "把雨天散步的结尾变成一次公开选题：给出三个具体可拍的观察方向，由观众留言决定下一期。",
+              "score_breakdown": [
+                {
+                  "criterion": "audience_need",
+                  "score": 3,
+                  "reason": "参与选题提供互动感，但无数据证明受众一定愿意参与。"
+                },
+                {
+                  "criterion": "yoyo_expression",
+                  "score": 3,
+                  "reason": "可用YOYO第一人称邀请口吻表达，但未提供人设细节。"
+                },
+                {
+                  "criterion": "follow_reason",
+                  "score": 4,
+                  "reason": "悬念与选择机制直接指向下一期，连续关注理由较强。"
+                },
+                {
+                  "criterion": "clarity",
+                  "score": 3,
+                  "reason": "主题选项需要简洁明确，否则15秒内可能信息过载。"
+                },
+                {
+                  "criterion": "feasibility",
+                  "score": 3,
+                  "reason": "拍摄简单，但后续执行依赖观众反馈，存在不确定性。"
+                },
+                {
+                  "criterion": "timing",
+                  "score": 3,
+                  "reason": "适合作为雨天内容的结尾，但需要与上一期观察搭配发布。"
+                }
+              ],
+              "required_asset_ids": [],
+              "estimated_hours": 1,
+              "expires_at": null,
+              "assumptions": [
+                "假设观众愿意在评论区参与选择。",
+                "假设三个观察方向均可在后续4小时产能内完成。",
+                "假设该互动机制不会被视为诱导互动。"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "quality_review": "not_performed",
+  "model": "deepseek-flash",
+  "expected_workflows": [
+    "topics.recommend"
+  ],
+  "finished_at": "2026-10-08T13:40:28.036Z"
+}

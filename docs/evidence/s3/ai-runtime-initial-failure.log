@@ -1,0 +1,68 @@
+{"event":"http.request","request_id":"eafe5afc-68db-48c4-b19d-b8860eafa292","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":6}
+{"event":"http.request","request_id":"6cb18471-77f8-4d44-8698-81d44bfcd9f5","method":"POST","path":"/api/v1/setup","status":201,"duration_ms":38}
+{"event":"http.request","request_id":"1f6feb59-a235-4aa9-b546-5cf03b23f569","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"f2dcba54-88f8-4082-908a-272577cf7102","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":25}
+{"event":"http.request","request_id":"5df0d8c2-156d-4deb-9947-8359af932e1c","method":"GET","path":"/api/v1/me","status":200,"duration_ms":85}
+{"event":"http.request","request_id":"a0557742-be56-4b6e-aa0d-91eede5d37bb","method":"POST","path":"/api/v1/accounts","status":201,"duration_ms":7}
+{"event":"request.failed","request_id":"11771951-6475-4f3b-bd07-1a99bf9383cb","error_code":"42703"}
+{"event":"http.request","request_id":"11771951-6475-4f3b-bd07-1a99bf9383cb","method":"POST","path":"/api/v1/topic-generations","status":500,"duration_ms":21}
+✖ API幂等受理冻结输入，Outbox/worker产生建议而不建立内容，契约响应可读 (413.129083ms)
+{"event":"http.request","request_id":"6032f104-f5c9-40d5-b632-92b17393f6a1","method":"POST","path":"/api/v1/topic-generations","status":422,"duration_ms":6}
+{"event":"http.request","request_id":"a677a3da-16ce-463e-913e-48f3fa309919","method":"POST","path":"/api/v1/topic-generations","status":503,"duration_ms":5}
+{"event":"http.request","request_id":"0ba98d08-97df-4e0f-a51d-4ce597c27f88","method":"GET","path":"/api/v1/ai-requests/fd302691-4eb4-49c7-a5e1-0c8abca69633","status":404,"duration_ms":2}
+✔ 配置未启用和无效时段拒绝；未知请求不泄漏 (23.985584ms)
+{"event":"request.failed","request_id":"eb16763c-f556-4103-b476-b15fd914ea53","error_code":"42703"}
+{"event":"http.request","request_id":"eb16763c-f556-4103-b476-b15fd914ea53","method":"POST","path":"/api/v1/topic-generations","status":500,"duration_ms":5}
+✖ 账号版本变化或模型失败不能落成成功结果，任务失败有明确代码 (6.912583ms)
+{"event":"request.failed","request_id":"f5d909b5-68ed-4a5f-ab4b-b6cfd2c645aa","error_code":"42703"}
+{"event":"http.request","request_id":"f5d909b5-68ed-4a5f-ab4b-b6cfd2c645aa","method":"POST","path":"/api/v1/topic-generations","status":500,"duration_ms":6}
+✖ 排队任务取消同步状态并不调用模型 (7.233459ms)
+✔ 业务事件回滚不产生任务，Outbox并发分发只创建一个Job (60.97675ms)
+✔ 租约保证单领取；心跳延长租约；已完成不会重复通知 (5.828208ms)
+✔ 真实领取进程被SIGKILL后，重启领取恢复；旧租约结果被拒绝 (2450.875417ms)
+✔ 取消与过期版本阻止结果及副作用提交 (33.21825ms)
+✔ 失败退避重试有上限，管理员可重试；提醒池不受一般池积压影响 (58.056583ms)
+✔ 超过最大尝试的失联任务进入失败；未来调度事件暂不分发 (6.329958ms)
+✔ 长任务心跳跨越初始租约，超时拒绝迟到结果和副作用 (4829.738375ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 8
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8926.123792
+
+✖ failing tests:
+
+test at tests/ai-tasks.test.ts:2:3601
+✖ API幂等受理冻结输入，Outbox/worker产生建议而不建立内容，契约响应可读 (413.129083ms)
+  Error: Undocumented response POST /topic-generations 500
+      at checkContract (/Users/junlong/projects/social-mdeida-ops-platform/tests/helpers.ts:15:108)
+      at Client.call (/Users/junlong/projects/social-mdeida-ops-platform/tests/helpers.ts:31:31)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/ai-tasks.test.ts:18:49)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+
+test at tests/ai-tasks.test.ts:2:5359
+✖ 账号版本变化或模型失败不能落成成功结果，任务失败有明确代码 (6.912583ms)
+  Error: Undocumented response POST /topic-generations 500
+      at checkContract (/Users/junlong/projects/social-mdeida-ops-platform/tests/helpers.ts:15:108)
+      at Client.call (/Users/junlong/projects/social-mdeida-ops-platform/tests/helpers.ts:31:31)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async queue (/Users/junlong/projects/social-mdeida-ops-platform/tests/ai-tasks.test.ts:14:32)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/ai-tasks.test.ts:27:11)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7)
+
+test at tests/ai-tasks.test.ts:2:6200
+✖ 排队任务取消同步状态并不调用模型 (7.233459ms)
+  Error: Undocumented response POST /topic-generations 500
+      at checkContract (/Users/junlong/projects/social-mdeida-ops-platform/tests/helpers.ts:15:108)
+      at Client.call (/Users/junlong/projects/social-mdeida-ops-platform/tests/helpers.ts:31:31)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async queue (/Users/junlong/projects/social-mdeida-ops-platform/tests/ai-tasks.test.ts:14:32)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/ai-tasks.test.ts:31:11)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7)
