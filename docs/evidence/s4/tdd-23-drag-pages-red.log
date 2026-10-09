@@ -1,0 +1,103 @@
+[2m[WebServer] [22m(node:74623) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:74624) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:74630) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:74630) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:74662) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:74662) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 tests/production-browser.spec.ts:3:5 › 图文人工新建、逐页保存排序、刷新恢复与历史快照比较 (6.1s)
+(node:74700) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:74700) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  2 tests/production-browser.spec.ts:14:5 › 逐页PNG成品上传预览、素材引用及未保存离开提示 (30.1s)
+(node:74727) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:74727) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 tests/production-browser.spec.ts:24:5 › 人工上传成品后显式提交审核并逐项确认批准 (3.4s)
+
+
+  1) tests/production-browser.spec.ts:3:5 › 图文人工新建、逐页保存排序、刷新恢复与历史快照比较 ──────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveValue[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator:  getByLabel('第1页文案')
+    Expected: [32m"第[7m一[27m页"[39m
+    Received: [31m"第[7m二[27m页"[39m
+    Timeout:  5000ms
+
+    Call log:
+    [2m  - Expect "toHaveValue" with timeout 5000ms[22m
+    [2m  - waiting for getByLabel('第1页文案')[22m
+    [2m    9 × locator resolved to <textarea>第二页</textarea>[22m
+    [2m      - unexpected value "第二页"[22m
+
+
+       7 |  await page.getByRole('link',{name:'工作区设置'}).click();await page.getByRole('button',{name:'运营账号',exact:true}).click();await page.getByRole('button',{name:'添加账号',exact:true}).click();await page.getByLabel('平台内部账号 ID').fill('sandbox-s4-browser');await page.getByLabel('名称',{exact:false}).fill('沙盒验收账号');await page.getByRole('button',{name:'保存',exact:true}).click();
+       8 |  await page.getByRole('link',{name:'内容工作间'}).click();await page.getByRole('button',{name:'新建图文',exact:true}).click();await page.getByLabel('图文标题').fill('浏览器人工图文');await page.getByRole('button',{name:'创建图文草稿',exact:true}).click();
+    >  9 |  await page.getByRole('button',{name:'编辑图文',exact:true}).click();await page.getByLabel('发布正文').fill('人工设计稿正文');await page.getByRole('button',{name:'添加图文页',exact:true}).click();await page.getByLabel('第1页画面').fill('封面');await page.getByLabel('第1页文案').fill('第一页');await page.getByRole('button',{name:'添加图文页',exact:true}).click();await page.getByLabel('第2页文案').fill('第二页');await page.getByRole('button',{name:'第2页上移',exact:true}).click();await page.getByRole('group',{name:'第1页 · 封面',exact:true}).dragTo(page.getByRole('group',{name:'第2页',exact:true}));await expect(page.getByLabel('第1页文案')).toHaveValue('第一页');await page.getByRole('button',{name:'第2页上移',exact:true}).click();await page.getByRole('button',{name:'保存新快照',exact:true}).click();await expect(page.getByRole('status').filter({hasText:'图文快照已保存'})).toBeVisible();
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             ^
+      10 |  await page.reload();await page.getByRole('button',{name:'查看制作单与版本'}).click();await page.getByRole('button',{name:'编辑图文',exact:true}).click();await expect(page.getByLabel('发布正文')).toHaveValue('人工设计稿正文');await expect(page.getByLabel('第1页文案')).toHaveValue('第二页');
+      11 |  mkdirSync('docs/evidence/s4/screenshots',{recursive:true});for(const width of [1440,1280,390]){await page.setViewportSize({width,height:1000});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:`docs/evidence/s4/screenshots/edit-${width}.png`});}
+      12 |  expect(failures).toEqual([]);
+        at /Users/junlong/projects/social-mdeida-ops-platform/tests/production-browser.spec.ts:9:589
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/production-browser-图文人工新建、逐页保存排序、刷新恢复与历史快照比较/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/production-browser-图文人工新建、逐页保存排序、刷新恢复与历史快照比较/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/production-browser-图文人工新建、逐页保存排序、刷新恢复与历史快照比较/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/production-browser-图文人工新建、逐页保存排序、刷新恢复与历史快照比较/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) tests/production-browser.spec.ts:14:5 › 逐页PNG成品上传预览、素材引用及未保存离开提示 ──────────────────────────────
+
+    [31mTest timeout of 30000ms exceeded.[39m
+
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+    Call log:
+    [2m  - waiting for getByLabel('第1页文案')[22m
+
+
+      15 |  await page.goto('/');await page.getByLabel('邮箱').fill('s4-browser@example.test');await page.getByLabel('密码',{exact:false}).fill('Browser-test-password-987');await page.getByRole('button',{name:'登录',exact:true}).click();
+      16 |  await page.getByRole('link',{name:'IP 资产库'}).click();await page.getByText('上传素材 / 新建文件夹',{exact:true}).click();await page.getByLabel('文件（单个最大 2 GiB，最多同时上传两个）').setInputFiles('tests/fixtures/transparent.png');await page.getByLabel('素材来源',{exact:false}).fill('S4合成素材测试');await page.getByRole('button',{name:'开始上传 / 续传'}).click();await expect(page.getByRole('heading',{name:'transparent.png',exact:true})).toBeVisible();
+    > 17 |  await page.getByRole('link',{name:'内容工作间'}).click();await page.getByRole('button',{name:'查看制作单与版本'}).click();await page.getByRole('button',{name:'编辑图文',exact:true}).click();await page.getByLabel('第1页文案').fill('未保存草稿');
+         |                                                                                                                                                                                                              ^
+      18 |  page.once('dialog',d=>d.dismiss());await page.keyboard.press('Escape');await expect(page.getByRole('dialog')).toHaveCount(1);await expect(page.getByLabel('第1页文案')).toHaveValue('未保存草稿');
+      19 |  await page.getByLabel('上传第1页PNG成品').setInputFiles('tests/fixtures/transparent.png');await expect(page.getByText('第1页成品原件已上传')).toBeVisible();
+      20 |  await page.getByRole('button',{name:'第1页添加素材引用'}).click();const picker=page.getByRole('dialog',{name:'选择素材',exact:true});await picker.getByRole('button',{name:'选择此版本'}).click();await expect(page.getByText('使用范围待确认')).toBeVisible();await page.getByRole('button',{name:'保存新快照',exact:true}).click();await expect(page.getByRole('status').filter({hasText:'图文快照已保存'})).toBeVisible();
+        at /Users/junlong/projects/social-mdeida-ops-platform/tests/production-browser.spec.ts:17:206
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/production-browser-逐页PNG成品上传预览、素材引用及未保存离开提示/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/production-browser-逐页PNG成品上传预览、素材引用及未保存离开提示/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/production-browser-逐页PNG成品上传预览、素材引用及未保存离开提示/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/production-browser-逐页PNG成品上传预览、素材引用及未保存离开提示/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    tests/production-browser.spec.ts:3:5 › 图文人工新建、逐页保存排序、刷新恢复与历史快照比较 ───────────────────────────────
+    tests/production-browser.spec.ts:14:5 › 逐页PNG成品上传预览、素材引用及未保存离开提示 ───────────────────────────────
+  1 passed (41.4s)

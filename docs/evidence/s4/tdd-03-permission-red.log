@@ -1,0 +1,40 @@
+{"event":"http.request","request_id":"21aab5d5-f6fb-4e3d-b8dd-0e1a239b02b6","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":6}
+{"event":"http.request","request_id":"96e17291-5c75-44d6-bc89-c6c9153ceb45","method":"POST","path":"/api/v1/setup","status":201,"duration_ms":31}
+{"event":"http.request","request_id":"2179b862-6b16-4492-802d-6e18486a4105","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"1bf4d42a-841a-4454-ac9f-e0db961a8905","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":22}
+{"event":"http.request","request_id":"c3f7c60f-647e-48fd-bbc2-4a74235e38b8","method":"GET","path":"/api/v1/me","status":200,"duration_ms":72}
+{"event":"http.request","request_id":"782dbf41-0603-4f45-b4e3-09018737392c","method":"POST","path":"/api/v1/accounts","status":201,"duration_ms":10}
+{"event":"http.request","request_id":"a69747cb-05a3-4f39-90a2-ba2e587ba179","method":"POST","path":"/api/v1/contents","status":201,"duration_ms":10}
+{"event":"http.request","request_id":"9bbcf57d-776f-4ebd-94b0-2059ac965e79","method":"GET","path":"/api/v1/contents/e7c9915d-0470-4a69-86e2-9a0099805e01","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"0e8a6d1b-5de7-4d1c-be89-bffc9e0d8518","method":"POST","path":"/api/v1/contents/e7c9915d-0470-4a69-86e2-9a0099805e01/revisions","status":201,"duration_ms":10}
+{"event":"http.request","request_id":"3cd469d8-dd3b-4f4d-8b31-f37754741b2f","method":"GET","path":"/api/v1/contents/e7c9915d-0470-4a69-86e2-9a0099805e01","status":200,"duration_ms":3}
+✔ 人工新建图文后保存逐页文案，再从详情恢复原始快照 (369.5185ms)
+{"event":"http.request","request_id":"208a059d-8b08-4c25-b561-719ef8f1df4c","method":"POST","path":"/api/v1/contents","status":201,"duration_ms":7}
+{"event":"http.request","request_id":"14d54cf6-6153-4b9e-9421-20b8beb96735","method":"POST","path":"/api/v1/contents/ca66ed4d-2c38-43db-8a65-1f6d90dd4969/revisions","status":201,"duration_ms":6}
+{"event":"http.request","request_id":"c85e8834-b062-42a7-85fb-4b1c97afa3d5","method":"POST","path":"/api/v1/contents/ca66ed4d-2c38-43db-8a65-1f6d90dd4969/revisions","status":409,"duration_ms":8}
+{"event":"http.request","request_id":"06e0cab1-4e92-4d48-a77e-45548366e52b","method":"GET","path":"/api/v1/contents/ca66ed4d-2c38-43db-8a65-1f6d90dd4969","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"d7ebad81-c123-4e90-82e8-f98bb72bfeef","method":"POST","path":"/api/v1/contents/ca66ed4d-2c38-43db-8a65-1f6d90dd4969/restore","status":201,"duration_ms":8}
+{"event":"http.request","request_id":"da1d85a0-eaaa-4d32-8ebe-a5f63b7947a0","method":"GET","path":"/api/v1/contents/ca66ed4d-2c38-43db-8a65-1f6d90dd4969","status":200,"duration_ms":2}
+✔ 同一基础版本并发保存只有一个成功，恢复历史版本产生新快照 (29.756416ms)
+{"event":"http.request","request_id":"1416deaa-f4c9-485e-9f30-f59457607b6b","method":"POST","path":"/api/v1/members","status":422,"duration_ms":3}
+{"event":"http.request","request_id":"586bbd04-6052-4c0f-8eca-5cf9ebd93e49","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":0}
+✖ 运营只能修改发布文案，不能改逐页制作内容；只读不能保存 (7.045375ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 2
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 809.007542
+
+✖ failing tests:
+
+test at tests/production.test.ts:2:4865
+✖ 运营只能修改发布文案，不能改逐页制作内容；只读不能保存 (7.045375ms)
+  TypeError: Cannot read properties of undefined (reading 'invitation_token')
+      at member (/Users/junlong/projects/social-mdeida-ops-platform/tests/production.test.ts:26:117)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/production.test.ts:29:17)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7)

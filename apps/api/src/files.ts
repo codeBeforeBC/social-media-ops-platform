@@ -4,6 +4,7 @@ import {Database,Tx} from '../../../packages/db/src/db';
 import {Storage,storageError} from '../../../packages/domain/src/storage';
 import {Actor,AppError,authorize,parse,text,uuid} from '../../../packages/domain/src/protocol';
 import {Commands,audit} from './commands';
+import {exportGuard} from '../../../packages/domain/src/export-package';
 export const PART_SIZE=8388608;
 const hash=z.string().regex(/^[a-f0-9]{64}$/);
 export class Files {
@@ -81,6 +82,12 @@ export class Files {
   if(!preview)authorize(a,'download.original');
   const r=await this.db.query('SELECT * FROM file_objects WHERE id=$1 AND workspace_id=$2',[parse(uuid,fileId),a.workspaceId]);
   if(!r.rowCount)throw new AppError(404,'NOT_FOUND','文件不存在或不可见');let f=r.rows[0];
+  if(f.detected_mime==='application/zip')await this.db.transaction(async tx=>{
+   const packages=(await tx.query('SELECT id,account_id FROM export_packages WHERE workspace_id=$1 AND file_id=$2',[a.workspaceId,fileId])).rows;
+   if(!packages.length)throw new AppError(404,'NOT_FOUND','发布包不存在');
+   let allowed=false;for(const e of packages){try{await this.commands.accountScope(tx,a,e.account_id);await exportGuard(tx,a.workspaceId,e.id);allowed=true;break;}catch(error){if(!(error instanceof AppError)&&!(error instanceof Error))throw error;}}
+   if(!allowed)throw new AppError(409,'EXPORT_STALE','批准或素材状态已变化，不能下载旧发布包');
+  });
   if(f.file_status!=='ready')throw new AppError(409,'FILE_NOT_READY','文件尚不可用');
   if(preview&&!f.is_preview){if(pageNumber!==undefined){if(!Number.isInteger(pageNumber)||pageNumber<1)throw new AppError(422,'PAGE_INVALID','页码无效');const page=f.metadata.pages_preview?.find((p:any)=>p.page===pageNumber);if(!page)throw new AppError(404,'PAGE_NOT_FOUND','页面预览不可用');f.preview_file_id=page.file_id;}if(!f.preview_file_id)throw new AppError(409,'PREVIEW_UNAVAILABLE','预览未就绪，请查看处理状态或由有权限成员下载原件');const p=await this.db.query('SELECT * FROM file_objects WHERE id=$1 AND workspace_id=$2',[f.preview_file_id,a.workspaceId]);f=p.rows[0];}
   try{return {...await this.storage.signed(f.object_key,f.original_name,f.detected_mime,preview),file_id:fileId};}catch(e){storageError(e);}

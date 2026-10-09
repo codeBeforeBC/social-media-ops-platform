@@ -9,7 +9,7 @@ import {Files} from './files';
 import {Assets} from './assets';
 import {AIRequests} from './ai';
 import {Topics} from './topics';
-import {Contents} from './contents';
+import {Publications} from './publications';
 import {Collection} from '../../../packages/domain/src/collection';
 import {SourceEvidence} from '../../../packages/domain/src/source-evidence';
 import helmet from 'helmet';
@@ -38,9 +38,15 @@ class ApiController {
     if(method!=='GET'&&method!=='HEAD')await this.auth.checkCsrf(req);
     const c=this.commands;
     const command=async(permission:Permission,fn:Parameters<Commands['command']>[6])=>{const r=await c.command(a,req.headers['idempotency-key'],method,path,req.body??{},permission,fn);return send(r.data,r.status);};
-    const contents=new Contents(this.db);
+    const contents=new Publications(this.db);
+    if(path==='/contents'&&method==='POST')return command('content.production',(tx,actor)=>contents.create(tx,actor,req.body));
     if(path==='/contents'&&method==='GET')return send(await contents.list(a,req.query));
-    const content=path.match(/^\/contents\/([^/]+)(?:\/(generate-brief|apply-generated))?$/);if(content){if(method==='GET'&&!content[2])return send(await contents.detail(a,content[1]!));if(method==='POST'&&content[2]==='generate-brief')return command('content.production',(tx,actor)=>contents.generate(tx,actor,content[1]!,req.body));if(method==='POST'&&content[2]==='apply-generated')return command('content.production',(tx,actor)=>contents.apply(tx,actor,content[1]!,req.body));}
+    const content=path.match(/^\/contents\/([^/]+)(?:\/(generate-brief|apply-generated|revisions|restore|submit-review|start-production|cancel|export-package|create-revision-work-item|check))?$/);if(content){if(method==='GET'&&!content[2])return send(await contents.detail(a,content[1]!));if(method==='PATCH'&&!content[2])return command('content.copy',(tx,actor)=>contents.metadata(tx,actor,content[1]!,req.body));if(method==='POST'&&content[2]==='check')return command('read',(tx,actor)=>contents.check(tx,actor,content[1]!,req.body));if(method==='POST'&&content[2]==='create-revision-work-item')return command('content.production',(tx,actor)=>contents.workItem(tx,actor,content[1]!,req.body));if(method==='POST'&&content[2]==='export-package')return command('download.original',(tx,actor)=>contents.exportPackage(tx,actor,content[1]!,req.body));if(method==='POST'&&content[2]==='start-production')return command('content.production',(tx,actor)=>contents.start(tx,actor,content[1]!,req.body));if(method==='POST'&&content[2]==='cancel')return command('content.production',(tx,actor)=>contents.cancel(tx,actor,content[1]!,req.body));if(method==='POST'&&content[2]==='submit-review')return command('content.production',(tx,actor)=>contents.submit(tx,actor,content[1]!,req.body));if(method==='POST'&&content[2]==='restore')return command('content.production',(tx,actor)=>contents.restore(tx,actor,content[1]!,req.body));if(method==='POST'&&content[2]==='revisions')return command('content.copy',(tx,actor)=>contents.save(tx,actor,content[1]!,req.body));if(method==='POST'&&content[2]==='generate-brief')return command('content.production',(tx,actor)=>contents.generate(tx,actor,content[1]!,req.body));if(method==='POST'&&content[2]==='apply-generated')return command('content.production',(tx,actor)=>contents.apply(tx,actor,content[1]!,req.body));}
+    const review=path.match(/^\/reviews\/([^/]+)\/(decide|withdraw)$/);if(review&&method==='POST'){if(review[2]==='decide')return command('review',(tx,actor)=>contents.decide(tx,actor,review[1]!,req.body));return command('content.production',(tx,actor)=>contents.withdraw(tx,actor,review[1]!,req.body));}
+    const exported=path.match(/^\/export-packages\/([^/]+)(?:\/(download))?$/);if(exported&&method==='GET'){if(exported[2]){authorize(a,'download.original');return send(await contents.packageDownload(a,exported[1]!));}return send(await contents.packageDetail(a,exported[1]!));}
+    const publication=path.match(/^\/publications\/([^/]+)(?:\/(changes))?$/);if(publication){if(method==='GET'&&!publication[2])return send(await contents.publication(a,publication[1]!));if(method==='POST'&&publication[2])return command('operate',(tx,actor)=>contents.change(tx,actor,publication[1]!,req.body));}
+    if(path==='/publication-drafts'&&method==='POST')return command('operate',(tx,actor)=>contents.draft(tx,actor,req.body));
+    if(path==='/publications'&&method==='POST')return command('operate',(tx,actor)=>contents.register(tx,actor,req.body));
     const topics=new Topics(this.db);
     if(path==='/topics'&&method==='GET')return send(await topics.list(a,req.query));
     const topic=path.match(/^\/topics\/([^/]+)(?:\/(accept|reject|variants))?$/);
@@ -121,7 +127,7 @@ export async function createApp(db=new Database()){
   @Module({controllers:[ApiController],providers:[{provide:DB,useValue:db}]})class ApiModule{}
   const app=await NestFactory.create<NestExpressApplication>(ApiModule,{logger:false});
   app.use((req:Request,res:Response,next:NextFunction)=>{(req as any).requestId=id();res.setHeader('X-Request-Id',resRequestId(req));res.setHeader('Cache-Control','no-store');const start=Date.now();res.on('finish',()=>console.log(JSON.stringify({event:'http.request',request_id:resRequestId(req),method:req.method,path:req.originalUrl.split('?')[0],status:res.statusCode,duration_ms:Date.now()-start})));next();});
-  app.use(helmet({contentSecurityPolicy:{directives:{upgradeInsecureRequests:config.secure?[]:null,imgSrc:["'self'",'data:',new URL(process.env.S3_PUBLIC_ENDPOINT??process.env.S3_ENDPOINT??'http://localhost:59000').origin]}}}));
+  app.use(helmet({contentSecurityPolicy:{directives:{upgradeInsecureRequests:config.secure?[]:null,imgSrc:["'self'",'data:',new URL(process.env.S3_PUBLIC_ENDPOINT??process.env.S3_ENDPOINT??'http://127.0.0.1:59000').origin]}}}));
   app.use('/api/v1/uploads',raw({type:'application/octet-stream',limit:8388608}));
   app.use(cookieParser());app.useGlobalFilters(new ApiErrors());
   app.useStaticAssets(resolve('apps/web/dist'),{index:'index.html'});

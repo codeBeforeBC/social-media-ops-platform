@@ -1,0 +1,45 @@
+{"event":"http.request","request_id":"e9d0dd3c-99de-4b76-bc2a-603d6c5c37e7","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":6}
+{"event":"http.request","request_id":"7c9e4e99-b08a-4493-aede-50941d04b524","method":"POST","path":"/api/v1/setup","status":201,"duration_ms":35}
+{"event":"http.request","request_id":"60bdb384-bc5f-4700-8e4b-1615cb157015","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"ad236735-2468-4515-a9e8-3c6bde84543f","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":23}
+{"event":"http.request","request_id":"426a7068-18ff-4548-8e06-7446290c685c","method":"GET","path":"/api/v1/me","status":200,"duration_ms":77}
+{"event":"http.request","request_id":"cdef370c-06cf-47d5-a700-729375fee615","method":"POST","path":"/api/v1/accounts","status":201,"duration_ms":9}
+{"event":"http.request","request_id":"2917c29d-048c-4d80-a94a-7ff7f79f2b4a","method":"POST","path":"/api/v1/contents","status":201,"duration_ms":11}
+{"event":"http.request","request_id":"d3d14f7f-ed70-40a0-9c3c-7bb33dfb6887","method":"GET","path":"/api/v1/contents/85971059-3613-4cb3-a943-937b42c5799f","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"a477904e-5774-4646-94ec-1994412c4247","method":"POST","path":"/api/v1/contents/85971059-3613-4cb3-a943-937b42c5799f/revisions","status":201,"duration_ms":10}
+{"event":"http.request","request_id":"48b2e4dc-d9cc-4cf5-8e14-46416c3ce95f","method":"GET","path":"/api/v1/contents/85971059-3613-4cb3-a943-937b42c5799f","status":200,"duration_ms":3}
+✔ 人工新建图文后保存逐页文案，再从详情恢复原始快照 (398.762583ms)
+{"event":"http.request","request_id":"b377b5ac-ff0f-49fe-8afe-c23ffb3c40a7","method":"POST","path":"/api/v1/contents","status":201,"duration_ms":7}
+{"event":"http.request","request_id":"6b1e7697-5356-46f0-a017-94ca82f3cc90","method":"POST","path":"/api/v1/contents/cd02d613-4009-40f4-82fe-1a20c9286402/revisions","status":201,"duration_ms":6}
+{"event":"http.request","request_id":"add6d975-91af-4e5a-aa64-cc46456efcc9","method":"POST","path":"/api/v1/contents/cd02d613-4009-40f4-82fe-1a20c9286402/revisions","status":409,"duration_ms":9}
+{"event":"http.request","request_id":"4210b046-f663-41f3-b2fa-13d96fad202c","method":"GET","path":"/api/v1/contents/cd02d613-4009-40f4-82fe-1a20c9286402","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"132aa753-a8a8-4578-a5ec-a803e37a1a94","method":"POST","path":"/api/v1/contents/cd02d613-4009-40f4-82fe-1a20c9286402/restore","status":404,"duration_ms":1}
+✖ 同一基础版本并发保存只有一个成功，恢复历史版本产生新快照 (23.672625ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 1
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 821.216709
+
+✖ failing tests:
+
+test at tests/production.test.ts:2:2855
+✖ 同一基础版本并发保存只有一个成功，恢复历史版本产生新快照 (23.672625ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  404 !== 201
+  
+      at TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/production.test.ts:21:198)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 404,
+    expected: 201,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

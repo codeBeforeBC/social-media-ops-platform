@@ -1,0 +1,56 @@
+[2m[WebServer] [22m(node:75944) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:75945) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:75951) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:75951) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:75988) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:75988) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/production-browser.spec.ts:4:5 › 图文人工新建、逐页保存排序、刷新恢复与历史快照比较 (1.5s)
+  ✘  2 tests/production-browser.spec.ts:15:5 › 逐页PNG成品上传预览、素材引用及未保存离开提示 (30.1s)
+  -  3 tests/production-browser.spec.ts:27:5 › 人工上传成品后显式提交审核并逐项确认批准
+
+
+  1) tests/production-browser.spec.ts:15:5 › 逐页PNG成品上传预览、素材引用及未保存离开提示 ──────────────────────────────
+
+    [31mTest timeout of 30000ms exceeded.[39m
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+    [2m  - waiting for getByRole('dialog', { name: '选择素材', exact: true }).getByRole('button', { name: '查看历史版本', exact: true })[22m
+
+
+      21 |  page.once('dialog',d=>d.dismiss());await page.evaluate(()=>{location.hash='home';});await expect(page).toHaveURL(/#contents$/);await expect(page.getByLabel('第1页文案')).toHaveValue('未保存草稿');
+      22 |  await page.getByLabel('上传第1页PNG成品').setInputFiles('tests/fixtures/transparent.png');await expect(page.getByText('第1页成品原件已上传')).toBeVisible();
+    > 23 |  await page.getByRole('button',{name:'第1页添加素材引用'}).click();const picker=page.getByRole('dialog',{name:'选择素材',exact:true});await picker.getByRole('button',{name:'查看历史版本',exact:true}).click();await picker.getByRole('button',{name:'选择历史版本 1',exact:true}).click();await expect(page.getByText('使用范围待确认')).toBeVisible();await page.getByRole('button',{name:'保存新快照',exact:true}).click();await expect(page.getByRole('status').filter({hasText:'图文快照已保存'})).toBeVisible();
+         |                                                                                                                                                                                       ^
+      24 |  await expect(async()=>{await page.getByRole('button',{name:'刷新成品状态'}).click();await expect(page.getByRole('img',{name:'第1页成品'})).toBeVisible();}).toPass({timeout:20000});
+      25 |  await expect.poll(()=>page.getByRole('img',{name:'第1页成品'}).evaluate((img:HTMLImageElement)=>img.naturalWidth)).toBeGreaterThan(0);
+      26 | });
+        at /Users/junlong/projects/social-mdeida-ops-platform/tests/production-browser.spec.ts:23:183
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/production-browser-逐页PNG成品上传预览、素材引用及未保存离开提示/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/production-browser-逐页PNG成品上传预览、素材引用及未保存离开提示/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/production-browser-逐页PNG成品上传预览、素材引用及未保存离开提示/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/production-browser-逐页PNG成品上传预览、素材引用及未保存离开提示/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/production-browser.spec.ts:15:5 › 逐页PNG成品上传预览、素材引用及未保存离开提示 ───────────────────────────────
+  1 did not run
+  1 passed (32.8s)

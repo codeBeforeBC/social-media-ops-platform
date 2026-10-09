@@ -4169,6 +4169,48 @@
           },
           {
             "in": "query",
+            "name": "media_type",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/MediaType"
+            }
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/ContentStatus"
+            }
+          },
+          {
+            "in": "query",
+            "name": "owner_id",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "planned_start",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "in": "query",
+            "name": "planned_end",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "in": "query",
             "name": "limit",
             "required": false,
             "schema": {
@@ -4307,7 +4349,7 @@
         ]
       },
       "post": {
-        "operationId": "post_contents",
+        "operationId": "s4_post__contents",
         "summary": "draft",
         "description": "draft；列表支持状态/负责人/形式/排期",
         "security": [
@@ -4338,29 +4380,6 @@
           }
         ],
         "responses": {
-          "201": {
-            "description": "成功；仅表示契约，运行实现待S1以后",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/Content"
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "meta"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          },
           "401": {
             "description": "权限、版本、业务校验或外部服务错误",
             "content": {
@@ -4430,6 +4449,29 @@
                 }
               }
             }
+          },
+          "201": {
+            "description": "S4 production workflow",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/S3Content"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -4437,18 +4479,19 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ContentCreate"
+                "$ref": "#/components/schemas/S4GraphicCreate"
               }
             }
           }
         },
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-business-guards": [
           "workspace_membership",
           "account_consistency",
           "optimistic_concurrency",
           "transactional_audit"
-        ]
+        ],
+        "x-required-permission": "content.production"
       }
     },
     "/contents/{id}": {
@@ -4571,11 +4614,9 @@
           "workspace_membership",
           "account_consistency"
         ]
-      }
-    },
-    "/contents/{id}/revisions": {
-      "post": {
-        "operationId": "post_contents_id_revisions",
+      },
+      "patch": {
+        "operationId": "s4_patch__contents_id",
         "summary": "创建新版本",
         "description": "创建新版本；服务端计算 payload_hash；冻结版本不可原地改",
         "security": [
@@ -4614,29 +4655,6 @@
           }
         ],
         "responses": {
-          "201": {
-            "description": "成功；仅表示契约，运行实现待S1以后",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/ContentRevision"
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "meta"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          },
           "401": {
             "description": "权限、版本、业务校验或外部服务错误",
             "content": {
@@ -4706,6 +4724,29 @@
                 }
               }
             }
+          },
+          "200": {
+            "description": "S4 production workflow",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/S3Content"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -4713,18 +4754,174 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ContentRevisionInput"
+                "$ref": "#/components/schemas/S4Metadata"
               }
             }
           }
         },
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-business-guards": [
           "workspace_membership",
           "account_consistency",
           "optimistic_concurrency",
           "transactional_audit"
-        ]
+        ],
+        "x-required-permission": "content.copy"
+      }
+    },
+    "/contents/{id}/revisions": {
+      "post": {
+        "operationId": "s4_post__contents_id_revisions",
+        "summary": "创建新版本",
+        "description": "创建新版本；服务端计算 payload_hash；冻结版本不可原地改",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Id"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "S4 production workflow",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/S3Content"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/S4GraphicRevision"
+              }
+            }
+          }
+        },
+        "x-implementation-status": "implemented",
+        "x-business-guards": [
+          "workspace_membership",
+          "account_consistency",
+          "optimistic_concurrency",
+          "transactional_audit"
+        ],
+        "x-required-permission": "content.copy"
       }
     },
     "/contents/{id}/generate-brief": {
@@ -23949,6 +24146,161 @@
           "account_consistency"
         ]
       }
+    },
+    "/contents/{id}/restore": {
+      "post": {
+        "operationId": "s4_post__contents_id_restore",
+        "summary": "创建新版本",
+        "description": "创建新版本；服务端计算 payload_hash；冻结版本不可原地改",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Id"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "权限、版本、业务校验或外部服务错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "S4 production workflow",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/S3Content"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/S4Restore"
+              }
+            }
+          }
+        },
+        "x-implementation-status": "implemented",
+        "x-business-guards": [
+          "workspace_membership",
+          "account_consistency",
+          "optimistic_concurrency",
+          "transactional_audit"
+        ],
+        "x-required-permission": "content.production"
+      }
     }
   },
   "components": {
@@ -31283,6 +31635,177 @@
           "revision_id",
           "version",
           "reused"
+        ],
+        "additionalProperties": false
+      },
+      "S4GraphicCreate": {
+        "type": "object",
+        "properties": {
+          "account_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "media_type": {
+            "const": "graphic"
+          },
+          "owner_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "account_id",
+          "media_type",
+          "owner_id",
+          "title"
+        ],
+        "additionalProperties": false
+      },
+      "S4GraphicPage": {
+        "type": "object",
+        "properties": {
+          "position": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "visual_instruction": {
+            "type": "string",
+            "maxLength": 10000
+          },
+          "page_copy": {
+            "type": "string",
+            "maxLength": 10000
+          },
+          "asset_version_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Id"
+            },
+            "maxItems": 100
+          },
+          "publish_file_id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Id"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "position",
+          "visual_instruction",
+          "page_copy",
+          "asset_version_ids",
+          "publish_file_id"
+        ],
+        "additionalProperties": false
+      },
+      "S4GraphicRevision": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "body": {
+            "type": "string",
+            "maxLength": 10000
+          },
+          "tags": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            }
+          },
+          "brief": {
+            "type": "object"
+          },
+          "pages": {
+            "type": "array",
+            "maxItems": 30,
+            "items": {
+              "$ref": "#/components/schemas/S4GraphicPage"
+            }
+          },
+          "base_revision_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "expected_version": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "title",
+          "body",
+          "tags",
+          "brief",
+          "pages",
+          "base_revision_id",
+          "expected_version"
+        ],
+        "additionalProperties": false
+      },
+      "S4Restore": {
+        "type": "object",
+        "properties": {
+          "source_revision_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "base_revision_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "expected_version": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "source_revision_id",
+          "base_revision_id",
+          "expected_version"
+        ],
+        "additionalProperties": false
+      },
+      "S4Metadata": {
+        "type": "object",
+        "properties": {
+          "expected_version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "internal_notes": {
+            "type": "string",
+            "maxLength": 10000
+          },
+          "planned_publish_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "estimated_hours": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 10000
+          }
+        },
+        "required": [
+          "expected_version"
         ],
         "additionalProperties": false
       }

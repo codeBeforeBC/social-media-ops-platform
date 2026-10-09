@@ -1,0 +1,61 @@
+[2m[WebServer] [22m(node:71245) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:71246) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:71252) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:71252) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+(node:71277) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:71277) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/production-browser.spec.ts:3:5 › 图文人工新建、逐页保存排序、刷新恢复与历史快照比较 (1.2s)
+  ✘  2 tests/production-browser.spec.ts:14:5 › 逐页PNG成品上传预览、素材引用及未保存离开提示 (5.7s)
+
+
+  1) tests/production-browser.spec.ts:14:5 › 逐页PNG成品上传预览、素材引用及未保存离开提示 ──────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveCount[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator:  getByRole('dialog')
+    Expected: [32m1[39m
+    Received: [31m0[39m
+    Timeout:  5000ms
+
+    Call log:
+    [2m  - Expect "toHaveCount" with timeout 5000ms[22m
+    [2m  - waiting for getByRole('dialog')[22m
+    [2m    9 × locator resolved to 0 elements[22m
+    [2m      - unexpected value "0"[22m
+
+
+      16 |  await page.getByRole('link',{name:'IP 资产库'}).click();await page.getByText('上传素材 / 新建文件夹',{exact:true}).click();await page.getByLabel('文件（单个最大 2 GiB，最多同时上传两个）').setInputFiles('tests/fixtures/transparent.png');await page.getByLabel('素材来源',{exact:false}).fill('S4合成素材测试');await page.getByRole('button',{name:'开始上传 / 续传'}).click();await expect(page.getByRole('heading',{name:'transparent.png',exact:true})).toBeVisible();
+      17 |  await page.getByRole('link',{name:'内容工作间'}).click();await page.getByRole('button',{name:'查看制作单与版本'}).click();await page.getByRole('button',{name:'编辑图文',exact:true}).click();await page.getByLabel('第1页文案').fill('未保存草稿');
+    > 18 |  page.once('dialog',d=>d.dismiss());await page.keyboard.press('Escape');await expect(page.getByRole('dialog')).toHaveCount(1);await expect(page.getByLabel('第1页文案')).toHaveValue('未保存草稿');
+         |                                                                                                                ^
+      19 |  await page.getByLabel('上传第1页PNG成品').setInputFiles('tests/fixtures/transparent.png');await expect(page.getByText('第1页成品原件已上传')).toBeVisible();
+      20 |  await page.getByRole('button',{name:'第1页添加素材引用'}).click();const picker=page.getByRole('dialog',{name:'选择素材',exact:true});await picker.getByRole('button',{name:'选择此版本'}).click();await expect(page.getByText('使用范围待确认')).toBeVisible();await page.getByRole('button',{name:'保存新快照',exact:true}).click();await expect(page.getByRole('status').filter({hasText:'图文快照已保存'})).toBeVisible();
+      21 |  await expect(async()=>{await page.getByRole('button',{name:'刷新成品状态'}).click();await expect(page.getByRole('img',{name:'第1页成品'})).toBeVisible();}).toPass({timeout:20000});
+        at /Users/junlong/projects/social-mdeida-ops-platform/tests/production-browser.spec.ts:18:112
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/production-browser-逐页PNG成品上传预览、素材引用及未保存离开提示/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/production-browser-逐页PNG成品上传预览、素材引用及未保存离开提示/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/production-browser-逐页PNG成品上传预览、素材引用及未保存离开提示/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/production-browser-逐页PNG成品上传预览、素材引用及未保存离开提示/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/production-browser.spec.ts:14:5 › 逐页PNG成品上传预览、素材引用及未保存离开提示 ───────────────────────────────
+  1 passed (8.1s)

@@ -10,9 +10,10 @@ export class Jobs {
       await tx.query(`INSERT INTO notifications(workspace_id,recipient_id,event_key,job_id,title,task_ref) VALUES($1,$2,$3,$4,$5,$6) ON CONFLICT DO NOTHING`,[j.workspace_id,j.created_by,'diagnostic:'+j.id,j.id,'运行检查完成',`job:${j.id}`]);
     }};},...handlers};
   }
+  // Publication recovery events stay durable until the S6/S7 business consumer is installed.
   async dispatch(){
     return this.db.transaction(async tx=>{
-      const rows=await tx.query('SELECT * FROM outbox WHERE dispatched_at IS NULL AND available_at<=now() ORDER BY available_at,id FOR UPDATE SKIP LOCKED LIMIT 50');
+      const rows=await tx.query("SELECT * FROM outbox WHERE dispatched_at IS NULL AND event_type<>'publication.recorded' AND available_at<=now() ORDER BY available_at,id FOR UPDATE SKIP LOCKED LIMIT 50");
       for(const event of rows.rows){
         const p=event.payload;
         await tx.query(`INSERT INTO jobs(workspace_id,account_id,created_by,outbox_id,type,pool,input,input_version,request_id,timeout_seconds) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,CASE WHEN $6='media' THEN 1800 ELSE 120 END) ON CONFLICT(outbox_id) DO NOTHING`,[event.workspace_id,event.account_id,p.created_by,event.id,event.event_type,p.pool??'general',JSON.stringify(p.input??{}),p.input_version??null,p.request_id]);
