@@ -1,0 +1,211 @@
+ Image yoyo-local:0.1.0 Building
+ Image yoyo-media-local:0.1.0 Building
+ Image yoyo-local:0.1.0 Building
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.54kB done
+#1 DONE 0.0s
+
+#2 [media-executor internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.19kB done
+#2 DONE 0.0s
+
+#3 [migrate internal] load build definition from Dockerfile
+#3 transferring dockerfile: 1.71kB done
+#3 DONE 0.0s
+
+#4 [media-executor internal] load metadata for docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#4 DONE 0.0s
+
+#5 [api internal] load .dockerignore
+#5 transferring context: 177B done
+#5 DONE 0.0s
+
+#6 [migrate build 1/4] FROM docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#6 resolve docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c done
+#6 DONE 0.0s
+
+#7 [media-executor internal] load build context
+#7 transferring context: 191B done
+#7 DONE 0.0s
+
+#8 [media-executor stage-1 3/6] COPY --from=build /media-sandbox /usr/local/bin/media-sandbox
+#8 CACHED
+
+#9 [media-executor build 3/4] COPY tools/media/sandbox.c /sandbox.c
+#9 CACHED
+
+#10 [media-executor build 2/4] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && apt-get -o Acquire::Retries=3 install -y --no-install-recommends gcc libc6-dev linux-libc-dev
+#10 CACHED
+
+#11 [media-executor stage-1 5/6] COPY tools/media/import-validate.py /usr/local/lib/yoyo/import-validate.py
+#11 CACHED
+
+#12 [media-executor stage-1 4/6] COPY tools/media/server.mjs /app/server.mjs
+#12 CACHED
+
+#13 [media-executor stage-1 2/6] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && (apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil ca-certificates || apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil ca-certificates) && rm -rf /var/lib/apt/lists/* && mkdir /scratch && chown node:node /scratch
+#13 CACHED
+
+#14 [media-executor build 4/4] RUN gcc -O2 -Wall /sandbox.c -o /media-sandbox
+#14 CACHED
+
+#15 [api internal] load build context
+#15 transferring context: 1.35MB 0.0s done
+#15 DONE 0.0s
+
+#16 [media-executor stage-1 6/6] WORKDIR /app
+#16 CACHED
+
+#17 [api build  2/20] RUN apt-get update && apt-get install -y --no-install-recommends openssl ca-certificates && rm -rf /var/lib/apt/lists/*
+#17 CACHED
+
+#18 [api build 11/20] COPY packages/domain/package.json ./packages/domain/package.json
+#18 CACHED
+
+#19 [api build  6/20] COPY apps/api/package.json ./apps/api/package.json
+#19 CACHED
+
+#20 [api build  8/20] COPY apps/worker/package.json ./apps/worker/package.json
+#20 CACHED
+
+#21 [api build  4/20] WORKDIR /app
+#21 CACHED
+
+#22 [api build 12/20] COPY packages/contracts/package.json ./packages/contracts/package.json
+#22 CACHED
+
+#23 [api build  7/20] COPY apps/web/package.json ./apps/web/package.json
+#23 CACHED
+
+#24 [api build  5/20] COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+#24 CACHED
+
+#25 [api build  3/20] RUN corepack enable && corepack prepare pnpm@10.33.0 --activate
+#25 CACHED
+
+#26 [api build  9/20] COPY apps/scheduler/package.json ./apps/scheduler/package.json
+#26 CACHED
+
+#27 [api build 10/20] COPY packages/db/package.json ./packages/db/package.json
+#27 CACHED
+
+#28 [api build 13/20] RUN --mount=type=cache,id=yoyo-pnpm,target=/pnpm/store pnpm config set store-dir /pnpm/store && pnpm install --frozen-lockfile
+#28 CACHED
+
+#29 [migrate build 14/20] COPY apps ./apps
+#29 DONE 0.0s
+
+#30 [media-executor] exporting to image
+#30 exporting layers done
+#30 exporting manifest sha256:defd449d7c51d05128338b9b6d9b80bfb1815749eb94009b9d9f1b81c9482835 done
+#30 exporting config sha256:b3ef6cb939e293cb1bdea410e359f4e5ead97407d49264eb049418d6ccecde6b done
+#30 exporting attestation manifest sha256:6560a6ace820839d27ff5c873c395d76a2abfa397e9ce045e89e10965ea8bd2b done
+#30 exporting manifest list sha256:81897743ea3b43aa84673100cbdc82a9bb99c689030eb300573ab8ba924f5904 done
+#30 naming to docker.io/library/yoyo-media-local:0.1.0 done
+#30 unpacking to docker.io/library/yoyo-media-local:0.1.0 0.0s done
+#30 DONE 0.1s
+
+#31 [api build 15/20] COPY packages ./packages
+#31 DONE 0.0s
+
+#32 [api build 16/20] COPY tools ./tools
+#32 DONE 0.0s
+
+#33 [api build 17/20] COPY tests ./tests
+#33 DONE 0.0s
+
+#34 [api build 18/20] COPY contracts ./contracts
+#34 DONE 0.0s
+
+#35 [media-executor] resolving provenance for metadata file
+#35 DONE 0.0s
+
+#36 [api build 19/20] COPY tsconfig.json prisma.config.ts ./
+#36 DONE 0.0s
+
+#37 [api build 20/20] RUN pnpm build
+#37 0.219
+#37 0.219 > yoyo-workbench@0.1.0 build /app
+#37 0.219 > pnpm db:generate && tsc -p tsconfig.json && pnpm --filter @yoyo/web build
+#37 0.219
+#37 0.347
+#37 0.347 > yoyo-workbench@0.1.0 db:generate /app
+#37 0.347 > prisma generate
+#37 0.347
+#37 0.711 Loaded Prisma config from prisma.config.ts.
+#37 0.711
+#37 0.739 Prisma schema loaded from packages/db/prisma/schema.prisma.
+#37 1.156
+#37 1.156 ✔ Generated Prisma Client (v7.10.0) to ./node_modules/.pnpm/@prisma+client@7.10.0_prisma@7.10.0_@types+react-dom@19.2.2_@types+react@19.2.2__@types_a5f616641512722fa171c0ec0738743a/node_modules/@prisma/client in 273ms
+#37 1.156
+#37 1.156 Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+#37 1.156
+#37 1.156
+#37 3.408
+#37 3.408 > @yoyo/web@0.1.0 build /app/apps/web
+#37 3.408 > vite build
+#37 3.408
+#37 3.505 vite v8.3.3 building client environment for production...
+#37 3.514 transforming...
+#37 3.579 ✓ 20 modules transformed.
+#37 3.601 rendering chunks...
+#37 3.621 computing gzip size...
+#37 3.624 dist/index.html                   0.36 kB │ gzip:  0.29 kB
+#37 3.624 dist/assets/index-Cy1lPCNN.css    8.82 kB │ gzip:  2.68 kB
+#37 3.624 dist/assets/index-BrPEiW5j.js   270.75 kB │ gzip: 82.25 kB
+#37 3.624
+#37 3.624 ✓ built in 119ms
+#37 DONE 3.7s
+
+#38 [api stage-1 2/8] WORKDIR /app
+#38 CACHED
+
+#39 [api stage-1 3/8] COPY --from=build --chown=node:node /app/node_modules ./node_modules
+#39 CACHED
+
+#38 [migrate stage-1 2/8] WORKDIR /app
+#38 CACHED
+
+#40 [migrate stage-1 4/8] COPY --from=build --chown=node:node /app/dist ./dist
+#40 DONE 0.0s
+
+#41 [api stage-1 5/8] COPY --from=build --chown=node:node /app/apps/web/dist ./apps/web/dist
+#41 DONE 0.0s
+
+#42 [migrate stage-1 6/8] COPY --from=build --chown=node:node /app/packages/db/migrations ./packages/db/migrations
+#42 DONE 0.0s
+
+#43 [api stage-1 7/8] COPY --from=build --chown=node:node /app/tools/s3 ./tools/s3
+#43 DONE 0.0s
+
+#44 [migrate stage-1 8/8] COPY --from=build --chown=node:node /app/tools/s0 ./tools/s0
+#44 DONE 0.0s
+
+#45 [migrate] exporting to image
+#45 exporting layers 0.1s done
+#45 exporting manifest sha256:8ae59b8be0b8fff5902c112283ea40cab01720bb1af2ff6b32b9a37daa627a09 done
+#45 exporting config sha256:2f49f92eb5dba710bb11a65d82ebcc5b221ccc6653e2c28b2a8411e4822e43ea done
+#45 exporting attestation manifest sha256:d4d4d2d5b1b8387b8ae317521d98f9bbc11211b18fb7f5e969e97585095c0fac 0.0s done
+#45 exporting manifest list sha256:c266806a78dfc37f339005479312ac7dc344c53f47927da4bd8ab29deb5edea3 done
+#45 naming to docker.io/library/yoyo-local:0.1.0 done
+#45 unpacking to docker.io/library/yoyo-local:0.1.0 0.0s done
+#45 DONE 0.1s
+
+#46 [api] exporting to image
+#46 exporting layers 0.1s done
+#46 exporting manifest sha256:72968e5d66ea071f0cf14b5226f8e00b49f31eaf97ab892e7ad2cee39d49d9cb done
+#46 exporting config sha256:182002fc442ea6859b66c8548bf1e879f3c25cff395f600f5ac040570d12e1eb done
+#46 exporting attestation manifest sha256:2db5a751f4506183910f67f3eed8b40fdf48b0f88c2544413df1e7eade0a59cd 0.0s done
+#46 exporting manifest list sha256:16bf1cedf7d0171cd79b3f58e44af5ca45e638d7cd4f449c5766076f3f44b449 done
+#46 naming to docker.io/library/yoyo-local:0.1.0 done
+#46 unpacking to docker.io/library/yoyo-local:0.1.0 0.0s done
+#46 DONE 0.2s
+
+#47 [migrate] resolving provenance for metadata file
+#47 DONE 0.0s
+
+#48 [api] resolving provenance for metadata file
+#48 DONE 0.0s
+ Image yoyo-local:0.1.0 Built
+ Image yoyo-media-local:0.1.0 Built
+ Image yoyo-local:0.1.0 Built

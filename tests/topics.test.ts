@@ -26,7 +26,7 @@ test('拒绝原因不可丢失；与采纳竞争只有一条最终决策，过�
  const expired=await seed(candidate({expires_at:new Date(Date.now()-1000).toISOString()}));assert.equal((await client.call('/topics/'+expired.id+'/accept','POST',{expected_version:1})).error.code,'TOPIC_EXPIRED');assert.equal((await client.call('/topics?status=expired')).data.items.some((i:any)=>i.id===expired.id),true);
 });
 test('显式变体保留父题/理由/证据并独立采纳；越权负责人和空间拒绝',async()=>{
- const t=await seed();const variants=await Promise.all([client.call('/topics/'+t.id+'/variants','POST',{goal:'明确换一个角度',media_type:'video'}),client.call('/topics/'+t.id+'/variants','POST',{goal:'另一个图文角度',media_type:'graphic'})]);assert.ok(variants.every(v=>v.status===201));assert.notEqual(variants[0]!.data.id,variants[1]!.data.id);assert.equal(variants[0]!.data.parent_topic_id,t.id);
+ const t=await seed();await env.db.query("UPDATE topics SET candidate=jsonb_set(candidate,'{estimated_hours}','2') WHERE id=$1",[t.id]);const variants=await Promise.all([client.call('/topics/'+t.id+'/variants','POST',{goal:'明确换一个角度',media_type:'video'}),client.call('/topics/'+t.id+'/variants','POST',{goal:'另一个图文角度',media_type:'graphic'})]);assert.ok(variants.every(v=>v.status===201));assert.notEqual(variants[0]!.data.id,variants[1]!.data.id);assert.equal(variants[0]!.data.parent_topic_id,t.id);assert.ok(variants.every(v=>v.data.candidate.estimated_hours===null));
  assert.equal((await client.call('/topics/'+t.id+'/accept','POST',{owner_id:randomUUID(),expected_version:1})).error.code,'OWNER_INVALID');await assert.rejects(new Topics(env.db).scope(env.db,{...actor,workspaceId:randomUUID()},t.id),(e:any)=>e.code==='NOT_FOUND');
 });
 test('事实缺观察/伪造来源使整个候选事务回滚，不用高分掩盖错误',async()=>{

@@ -1,0 +1,244 @@
+{
+  "started_at": "2026-10-10T00:39:01.987Z",
+  "environment": "isolated *_test database",
+  "input_kind": "explicit_synthetic_sources_metrics_and_attacks; not_live_platform_samples",
+  "actual_model_calls": true,
+  "evaluation_version": "s3-eval-v1.2",
+  "cases": [
+    {
+      "id": "E06",
+      "kind": "topics",
+      "scenario": "极少样本，产能不足，无素材和涨粉归因",
+      "expected": "缺涨粉/归因保持未知，估时作提案，产能及素材缺项不掩盖",
+      "input": {
+        "scope_version": "v1.2",
+        "synthetic": true,
+        "evaluation_id": "E06",
+        "account": {
+          "name": "明确合成YOYO账号"
+        },
+        "columns": [
+          "日常视觉观察"
+        ],
+        "capacity_hours": 0.25,
+        "requested_candidate_count": 2,
+        "sources": [
+          {
+            "id": "a1000000-0000-4000-8000-000000000001",
+            "title": "明确合成：雨天观察",
+            "summary": "测试材料：观察雨滴落在叶面，不代表真实热点。",
+            "published_at": null,
+            "captured_at": "2026-10-09T08:00:00.000Z",
+            "pipeline_type": "weibo_hot",
+            "content_hash": "synthetic-only"
+          }
+        ],
+        "metrics": {
+          "sample_size": 1,
+          "followers": null,
+          "follow_attribution": null
+        },
+        "goal": "观察日常里的小细节，提出下一次观察方向",
+        "audience": "喜欢轻松日常和角色表达的年轻人",
+        "follow_reason": "每周学习一个观察细节"
+      },
+      "input_hash": "20ae57d99b8f17b6c918de9369ad629d7e3fdfc60144a72629ecc65a2d22c631",
+      "prompt_version": "yoyo-v1.2.2",
+      "schema_version": "ai-v1.2",
+      "started_at": "2026-10-10T00:39:02.165Z",
+      "run_id": "cc74c46b-a169-4801-979f-785e8d1d49e7",
+      "state": "succeeded",
+      "output": {
+        "schema_version": "ai-v1.2",
+        "input_version": "20ae57d99b8f17b6c918de9369ad629d7e3fdfc60144a72629ecc65a2d22c631",
+        "summary": "基于1条合成来源（a1000000-0000-4000-8000-000000000001，标题“明确合成：雨天观察”，摘要“测试材料：观察雨滴落在叶面，不代表真实热点。”，captured_at 2026-10-09T08:00:00.000Z，published_at为null）与账号给定栏目“日常视觉观察”、目标“观察日常里的小细节，提出下一次观察方向”、连续关注承诺“每周学习一个观察细节”。该来源synthetic=true且摘要明确不代表真实热点；metrics仅sample_size=1，followers与follow_attribution均为null；capacity_hours=0.25为总预算。按requested_candidate_count=2生成2个原创常青候选，因缺真实工时样本，estimated_hours均为null。",
+        "evidence_refs": [
+          "a1000000-0000-4000-8000-000000000001"
+        ],
+        "assumptions": [
+          "仅1条合成来源，属于极少样本，不能证明热点、趋势、活动日期或传播时机。",
+          "captured_at是捕获时间，不证明活动日期或传播时机。",
+          "capacity_hours=0.25是总预算，不用于单条工时估算；因缺actual_work_hours，全部estimated_hours为null。",
+          "候选为原创常青假设，不称为热点或已有事实。",
+          "follow_reason由账号给定，作为系列结构假设使用。",
+          "受众与YOYO表达适配度缺少实测样本，只能按编辑假设评分。"
+        ],
+        "missing_inputs": [
+          "真实热点/趋势来源证据：当前仅1条合成来源，且摘要明确不代表真实热点。",
+          "真实工时样本actual_work_hours：未提供，无法给出单条Estimate。",
+          "指标与归因：followers、follow_attribution均为null，sample_size=1。",
+          "受众需求/反馈样本：未提供评论、私信、问卷或搜索需求数据。",
+          "YOYO表达样本：未提供口播、图文或角色语气样本。",
+          "发布/传播时机数据：published_at为null，captured_at不能证明活动日期或传播时机。"
+        ],
+        "warnings": [
+          "来源synthetic=true，且摘要写有“不代表真实热点”；不得把该来源当真实热点或传播依据。",
+          "metrics.sample_size=1，仅为极少样本，不能推算自然涨粉或爆款概率。",
+          "captured_at=2026-10-09T08:00:00.000Z只证明捕获时间，不证明活动日期或传播时机。",
+          "因缺actual_work_hours，所有候选estimated_hours为null；不得用capacity_hours=0.25均分或反推单条工时。",
+          "评分为编辑维度评分，不是爆款概率。"
+        ],
+        "task_payload": {
+          "candidates": [
+            {
+              "title": "雨天叶面水滴观察：一滴水如何停在叶面",
+              "audience": "喜欢轻松日常和角色表达的年轻人",
+              "need": "提供低压力、可跟看的日常视觉细节，并用一个明确观察问题承接下一期。",
+              "scene": "雨天窗外或普通绿叶近景；假设可拍叶面与雨滴的微距画面，不要求品牌或素材库支持。",
+              "column": "日常视觉观察",
+              "emotion": "安静、好奇",
+              "media_type": "video",
+              "follow_reason": "用“每周学习一个观察细节”的系列承诺，每次只拆解一个视觉细节，并末尾提出下一次观察方向。",
+              "evidence_refs": [
+                {
+                  "source_item_id": "a1000000-0000-4000-8000-000000000001",
+                  "claim": "明确合成：雨天观察",
+                  "evidence_kind": "fact"
+                },
+                {
+                  "source_item_id": null,
+                  "claim": "该来源是合成测试材料且不代表真实热点，因此候选只能作为原创常青观察假设，不能称为热点。",
+                  "evidence_kind": "inference"
+                },
+                {
+                  "source_item_id": null,
+                  "claim": "若按每周一个观察细节的栏目结构，可围绕雨天叶面水滴形成轻量系列。",
+                  "evidence_kind": "original_hypothesis"
+                }
+              ],
+              "original_angle": "不追热点，把雨天观察拆成一个可重复的视觉问题：雨滴在叶面停留、聚拢还是滑落。",
+              "score_breakdown": [
+                {
+                  "criterion": "audience_need",
+                  "score": 2,
+                  "reason": "账号给定受众描述存在，可形成低压力日常内容假设；但无受众反馈或需求数据，不能视为已验证需求。"
+                },
+                {
+                  "criterion": "yoyo_expression",
+                  "score": 2,
+                  "reason": "无YOYO表达样本可对照；仅有账号名与角色表达目标，表达适配度属编辑假设。"
+                },
+                {
+                  "criterion": "follow_reason",
+                  "score": 3,
+                  "reason": "follow_reason由账号给定为“每周学习一个观察细节”，可自然形成系列钩子；但无连续关注实测数据。"
+                },
+                {
+                  "criterion": "clarity",
+                  "score": 4,
+                  "reason": "观察对象和问题具体，标题能说明视频要看的细节；清晰度来自结构假设，非平台数据。"
+                },
+                {
+                  "criterion": "feasibility",
+                  "score": 3,
+                  "reason": "仅需普通雨天或喷水模拟的叶面近景，属可执行假设；但无真实工时样本，实际投入未验证。"
+                },
+                {
+                  "criterion": "timing",
+                  "score": 2,
+                  "reason": "published_at为null，captured_at不证明活动日期或传播时机；该题适合常青，但无时机证据。"
+                }
+              ],
+              "estimated_hours": null,
+              "expires_at": null,
+              "assumptions": [
+                "此候选为基于合成材料的原创常青假设，不是热点。",
+                "estimated_hours为null，因缺真实工时样本；capacity_hours=0.25为总预算，不用于反推。",
+                "拍摄条件为假设描述，不代表已有素材或场地资产。"
+              ]
+            },
+            {
+              "title": "雨天叶面观察：水滴停留方式的轻量拆解",
+              "audience": "喜欢轻松日常和角色表达的年轻人",
+              "need": "把日常视觉观察变成可学习的小方法，让观众每周获得一个可复用的观察点。",
+              "scene": "雨天室内窗边或户外叶面近景；假设用自然雨或喷壶模拟，不依赖素材库。",
+              "column": "日常视觉观察",
+              "emotion": "轻松、发现感",
+              "media_type": "graphic",
+              "follow_reason": "延续“每周学习一个观察细节”，每期留下一个可观察问题，形成连续关注理由。",
+              "evidence_refs": [
+                {
+                  "source_item_id": "a1000000-0000-4000-8000-000000000001",
+                  "claim": "测试材料：观察雨滴落在叶面，不代表真实热点。",
+                  "evidence_kind": "fact"
+                },
+                {
+                  "source_item_id": null,
+                  "claim": "摘要明确不代表真实热点，说明不能作为热点时效依据。",
+                  "evidence_kind": "inference"
+                },
+                {
+                  "source_item_id": null,
+                  "claim": "可将雨滴落在叶面扩展为图文式观察笔记，训练观众留意形态与声音。",
+                  "evidence_kind": "original_hypothesis"
+                }
+              ],
+              "original_angle": "把一场普通雨天做成观察笔记：先看水滴形状，再听雨声节奏，最后提出下一次观察方向。",
+              "score_breakdown": [
+                {
+                  "criterion": "audience_need",
+                  "score": 2,
+                  "reason": "有账号给定受众方向，但无受众评论、问卷或搜索需求数据；需求判断为编辑假设。"
+                },
+                {
+                  "criterion": "yoyo_expression",
+                  "score": 2,
+                  "reason": "没有YOYO过往表达样本可参照，角色化程度只能按轻松陪伴假设评分。"
+                },
+                {
+                  "criterion": "follow_reason",
+                  "score": 3,
+                  "reason": "账号给出每周学习一个观察细节的连续承诺，适合系列化；但无实际追更或关注归因数据。"
+                },
+                {
+                  "criterion": "clarity",
+                  "score": 4,
+                  "reason": "主题聚焦观察雨天叶面，能说清看什么和下一次观察方向；属结构清晰假设。"
+                },
+                {
+                  "criterion": "feasibility",
+                  "score": 3,
+                  "reason": "图文或短视频只需近景素材与简单描述，属低门槛假设；缺真实工时样本，不能确认投入。"
+                },
+                {
+                  "criterion": "timing",
+                  "score": 2,
+                  "reason": "无published_at或时效信号，captured_at不等于活动日期或传播时机；只能按常青内容假设。"
+                }
+              ],
+              "estimated_hours": null,
+              "expires_at": null,
+              "assumptions": [
+                "该候选仅为原创常青假设，来源为合成测试材料且摘要明确不代表真实热点。",
+                "estimated_hours为null；capacity_hours=0.25是总预算，不能均分或反推单条工时。",
+                "场景条件为假设描述，不作为系统资产库要求。"
+              ]
+            }
+          ]
+        }
+      },
+      "hard_errors": [],
+      "merged_payload": null,
+      "semantic_review": "pending",
+      "attempts": [
+        {
+          "attempt": 1,
+          "state": "succeeded",
+          "usage": {
+            "input_tokens": 1994,
+            "total_tokens": 8157,
+            "output_tokens": 6163
+          },
+          "cost_basis": "unknown",
+          "estimated_cost": null,
+          "duration_ms": 29926
+        }
+      ],
+      "finished_at": "2026-10-10T00:39:32.124Z"
+    }
+  ],
+  "quality_review": "pending",
+  "model": "deepseek-flash",
+  "finished_at": "2026-10-10T00:39:32.124Z",
+  "completed_cases": 1
+}
