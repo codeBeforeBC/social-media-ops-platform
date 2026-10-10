@@ -30,7 +30,7 @@ export class Files {
    catch(e){await this.storage.abort(key,uploadId);throw e;}
   }catch(e){storageError(e);}
  }
- async get(a:Actor,uploadId:string){return this.safe(await this.scope(this.db,a,uploadId));}
+ async get(a:Actor,uploadId:string){const u=await this.scope(this.db,a,uploadId);const file=u.file_id?await this.file(this.db,a,u.file_id):null;if(file?.metadata?.table){const {table,...metadata}=file.metadata;file.metadata={...metadata,table_header:table[0]};}return {...this.safe(u),file};}
  async register(tx:Tx,a:Actor,uploadId:string,input:unknown){
   const b=parse(z.object({part_number:z.number().int().positive(),checksum:hash}).strict(),input);const u=await this.scope(tx,a,uploadId,true);this.active(u);
   if(b.part_number>Math.ceil(Number(u.size_bytes)/PART_SIZE))throw new AppError(422,'PART_INVALID','分片编号超出范围');
@@ -69,6 +69,10 @@ export class Files {
    else{const r=await tx.query("INSERT INTO file_objects(workspace_id,created_by,upload_session_id,object_key,original_name,size_bytes,sha256,detected_mime,preview_status,file_status,account_id,purpose) VALUES($1,$2,$3,$4,$5,$6,$7,$8,'processing','uploading',$9,$10) ON CONFLICT(workspace_id,account_id,purpose,sha256,is_preview) DO UPDATE SET sha256=EXCLUDED.sha256 RETURNING *",[a.workspaceId,a.memberId,u.id,u.object_key,u.original_name,size,checksum,mime,u.account_id,u.purpose]);f=r.rows[0];
     if(f.object_key!==u.object_key)await this.storage.remove(u.object_key);
     await tx.query("INSERT INTO outbox(workspace_id,account_id,event_key,event_type,payload) VALUES($1,$2,$3,'file.validate',$4) ON CONFLICT DO NOTHING",[a.workspaceId,u.account_id,'file:'+f.id,JSON.stringify({pool:'media',created_by:a.memberId,input:{file_id:f.id},request_id:a.requestId})]);
+   }
+   if(f.purpose==='import_table'&&f.file_status==='ready'&&f.metadata?.table_parser_version!=='table-v1'){
+    f=(await tx.query("UPDATE file_objects SET file_status='uploading',preview_status='processing',version=version+1,updated_at=now() WHERE id=$1 RETURNING *",[f.id])).rows[0];
+    await tx.query("INSERT INTO outbox(workspace_id,account_id,event_key,event_type,payload) VALUES($1,$2,$3,'file.validate',$4) ON CONFLICT DO NOTHING",[a.workspaceId,u.account_id,'file:'+f.id+':table-v1',JSON.stringify({pool:'media',created_by:a.memberId,input:{file_id:f.id},request_id:a.requestId})]);
    }
    await tx.query("UPDATE upload_sessions SET status='completed',file_id=$1,updated_at=now(),version=version+1 WHERE id=$2",[f.id,u.id]);await audit(tx,a,'upload.complete','file',f.id,{size_bytes:size,sha256:checksum});return {status:200,data:safeFile(f)};
   }catch(e){storageError(e);}

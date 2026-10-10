@@ -10,7 +10,7 @@ import spec from '../contracts/openapi.json';
 const ajv=new Ajv2020({strict:false,allErrors:true});addFormats(ajv);
 const validators=new Map<string,ReturnType<typeof ajv.compile>>();
 function checkContract(path:string,method:string,status:number,value:unknown){
-  const route=Object.entries(spec.paths).find(([p])=>new RegExp('^'+p.replace(/\{[^}]+\}/g,'[^/]+')+'$').test(path.split('?')[0]!));
+  const route=Object.entries(spec.paths).sort(([a],[b])=>a.includes('{')===b.includes('{')?0:a.includes('{')?1:-1).find(([p])=>new RegExp('^'+p.replace(/\{[^}]+\}/g,'[^/]+')+'$').test(path.split('?')[0]!));
   const operation=(route?.[1] as any)?.[method.toLowerCase()];if(!operation||operation['x-implementation-status']!=='implemented')return;
   const schema=operation.responses[String(status)]?.content?.['application/json']?.schema;if(!schema)throw new Error(`Undocumented response ${method} ${path} ${status}`);
   const key=route![0]+method+status;if(!validators.has(key))validators.set(key,ajv.compile({...schema,components:spec.components}));
@@ -18,7 +18,7 @@ function checkContract(path:string,method:string,status:number,value:unknown){
 }
 export async function database(){const db=new Database(databaseUrl(true));await migrate(db);return db;}
 export async function reset(db:Database){
-  if(!new URL(databaseUrl(true)).pathname.endsWith('_test'))throw new Error('Not test database');
+  const name=new URL(databaseUrl(true)).pathname.slice(1);if(!name.endsWith('_test')||name==='yoyo_test'||process.env.ALLOW_TEST_RESET!==name)throw new Error('Reset requires an explicitly disposable database; preserved yoyo_test is forbidden');
   await db.query('TRUNCATE invitations,process_health,audit_logs,notifications,jobs,outbox,idempotency_records,login_limits,sessions,account_memberships,accounts,memberships,users,workspaces CASCADE');
   await db.query('UPDATE instance_state SET initialized_at=NULL WHERE id=1');
 }

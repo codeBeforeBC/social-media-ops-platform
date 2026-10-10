@@ -2,7 +2,7 @@
 
 设计范围已按2026-10-09的[CHANGE-008](docs/decisions/ADR-008-删除排期日历与活动.md)收缩为工作台、选题策划、数据复盘三导航，取消全部IP资产库、内容工作间、排期日历与活动（含AI排期/开奖/公告/提醒/活动标记及回收节点）。代码清退计划及验收状态见[开发进度](docs/tracking/开发进度.md)。
 
-当前实现已收口三导航、选题人工决策、系统外已发布笔记登记与私有导入文件基础。指标导入确认、OCR、复盘报告及反馈尚未开发；实际任务状态以台账为准。
+当前实现已收口三导航、选题人工决策、系统外已发布笔记登记与私有导入文件基础。无需OCR的CSV/XLSX模板、字段映射、手工批次、人工部分确认/去重、更正撤销及指标计算/来源已实现；OCR、S8复盘报告及反馈尚未开发；实际任务状态以台账为准。
 
 025/026兼容迁移保留001–024历史SQL、旧Publication身份和文件引用，取消在途旧任务并把16张专属表及原关系移入受限retired schema。迁移不会删除持久对象；切换前停止旧API/worker/scheduler、备份数据库/objects/state，再升级。旧程序不能在迁出表后的库直接降级，回滚须停写并恢复同一备份点；实际副本演练见 [S11证据](docs/evidence/s11/README.md)。
 
@@ -71,17 +71,18 @@ pnpm dev
 
 ## 验证
 
-测试使用独立名称以 `_test` 结尾的数据库，启动使用实例时不自动写入测试种子。首次本地准备测试数据库：
+测试只使用显式授权可重置的独立数据库。`yoyo_test`保留历史数据，所有测试入口拒绝清空该库。当前整套检查使用专用`yoyo_s7_test`，工具仅在不存在时创建`yoyo_s7_dev/test`，不会迁移实际使用库yoyo或保留库yoyo_test。
 
 ```sh
-docker compose -f compose.yaml -f compose.dev.yaml exec -T db psql -U yoyo -d postgres -c 'CREATE DATABASE yoyo_test'
 pnpm exec playwright install chromium
-pnpm check:s11
+pnpm check:s7
 ```
 
-`pnpm check:s11`准备独立的 `yoyo-s11-tests` 对象存储与解析器（59040/59050），运行构建、前后端类型检查、真实PostgreSQL/S3/HTTP集成与浏览器测试；凭据、对象与使用实例分离。`pnpm check`适用于已显式配置存储/解析器的环境。测试脚本从本地受限凭据构造开发测试连接；CI/外部数据库显式设置 `TEST_DATABASE_URL`（必须 `_test` 后缀），`STATE_DIR`指定实例凭据目录。测试会清空该测试库数据，不连接使用实例数据库。
+契约验证需Python环境安装jsonschema；可通过`CONTRACT_PYTHON=/path/to/python pnpm check:s7`选择已有环境。检查会在S7可重置库运行构建/类型、PostgreSQL/HTTP/S3/安全解析、设计12金标准及浏览器；独立对象/解析器59070/59080，不与实际数据共享凭据或对象。证据含明确合成输入，见[S7证据](docs/evidence/s7/README.md)。测试后执行`docker compose -f compose.s7-test.yaml stop`，保留卷。
 
-浏览器测试使用独立3001端口，包含首次设置、表单、三导航、键盘抽屉、空/错/加载、登录过期与1440/1280/390布局。CI定义见 `.github/workflows/ci.yml`；本地执行不代表已经在托管CI运行。当前清退验收见 [S11证据](docs/evidence/s11/README.md)，旧验收事实见 [S1证据](docs/evidence/s1/README.md) 与 [S2证据](docs/evidence/s2/README.md)，开发状态以 [任务台账](docs/tracking/开发进度.md) 为准。
+原生开发本轮用`node tools/s7/env.mjs pnpm db:migrate`迁移独立yoyo_s7_dev；实际使用库升级仍须另行备份、停写及批准。重建当前原dev解析器：`docker compose -f compose.yaml -f compose.dev.yaml up -d --build --no-deps media-executor`。单批最多5000数据行/100MiB，原表格单文件50MiB；超限拆批，不静默截断。模板示例永久排除；未匹配笔记先人工登记，待确认数据不进入正式指标。
+
+`pnpm check:s11`保留历史专用验证入口，须显式提供可重置的`TEST_DATABASE_URL`和与库名完全一致的`ALLOW_TEST_RESET`，且该库名以`_test`结尾并不能是yoyo_test。不要把这些设置指向保留数据。
 
 ## 外部能力与排障
 

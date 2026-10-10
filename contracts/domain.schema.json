@@ -537,12 +537,16 @@
           "type": "object",
           "properties": {
             "account_id": {
-              "$ref": "#/$defs/Id"
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
             },
             "publication_id": {
               "anyOf": [
                 {
-                  "$ref": "#/$defs/Id"
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                 },
                 {
                   "type": "null"
@@ -558,26 +562,25 @@
         "metric_key": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 200
+          "maxLength": 100
         },
         "definition_version": {
-          "type": "integer",
-          "minimum": 1
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50
         },
         "aggregation_kind": {
           "type": "string",
           "enum": [
             "snapshot",
             "cumulative",
-            "interval",
-            "rate",
-            "duration"
+            "interval"
           ]
         },
         "value": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Decimal"
+              "type": "string"
             },
             {
               "type": "null"
@@ -587,13 +590,12 @@
         "unit": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 200
+          "maxLength": 20
         },
         "missing_reason": {
           "anyOf": [
             {
-              "type": "string",
-              "maxLength": 10000
+              "type": "string"
             },
             {
               "type": "null"
@@ -604,7 +606,8 @@
           "anyOf": [
             {
               "type": "string",
-              "format": "date-time"
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
             },
             {
               "type": "null"
@@ -615,7 +618,8 @@
           "anyOf": [
             {
               "type": "string",
-              "format": "date-time"
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
             },
             {
               "type": "null"
@@ -626,7 +630,8 @@
           "anyOf": [
             {
               "type": "string",
-              "format": "date-time"
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
             },
             {
               "type": "null"
@@ -634,14 +639,35 @@
           ]
         },
         "traffic_type": {
-          "$ref": "#/$defs/TrafficType"
+          "type": "string",
+          "enum": [
+            "organic",
+            "paid",
+            "mixed",
+            "unknown"
+          ]
         },
         "is_approximate": {
+          "default": false,
           "type": "boolean"
         },
         "source_definition": {
           "type": "string",
-          "maxLength": 10000
+          "minLength": 1,
+          "maxLength": 1000
+        },
+        "time_precision": {
+          "type": "string",
+          "enum": [
+            "day",
+            "minute",
+            "second"
+          ]
+        },
+        "source_note": {
+          "default": "",
+          "type": "string",
+          "maxLength": 2000
         }
       },
       "required": [
@@ -652,79 +678,12 @@
         "value",
         "unit",
         "traffic_type",
-        "is_approximate"
+        "is_approximate",
+        "source_definition",
+        "time_precision",
+        "source_note"
       ],
-      "additionalProperties": false,
-      "allOf": [
-        {
-          "if": {
-            "properties": {
-              "value": {
-                "type": "null"
-              }
-            }
-          },
-          "then": {
-            "required": [
-              "missing_reason"
-            ],
-            "properties": {
-              "missing_reason": {
-                "type": "string",
-                "minLength": 1
-              }
-            }
-          }
-        },
-        {
-          "if": {
-            "properties": {
-              "aggregation_kind": {
-                "enum": [
-                  "snapshot",
-                  "cumulative"
-                ]
-              }
-            }
-          },
-          "then": {
-            "required": [
-              "observed_at"
-            ],
-            "properties": {
-              "observed_at": {
-                "type": "string",
-                "format": "date-time"
-              }
-            }
-          }
-        },
-        {
-          "if": {
-            "properties": {
-              "aggregation_kind": {
-                "const": "interval"
-              }
-            }
-          },
-          "then": {
-            "required": [
-              "window_start",
-              "window_end"
-            ],
-            "properties": {
-              "window_start": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "window_end": {
-                "type": "string",
-                "format": "date-time"
-              }
-            }
-          }
-        }
-      ]
+      "additionalProperties": false
     },
     "ReportPayload": {
       "type": "object",
@@ -1512,102 +1471,104 @@
       }
     },
     "ImportBatch": {
-      "allOf": [
-        {
-          "$ref": "#/$defs/BaseEntity"
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Id"
         },
-        {
-          "type": "object",
-          "properties": {
-            "account_id": {
-              "$ref": "#/$defs/Id"
-            },
-            "input_file_ids": {
-              "type": "array",
-              "items": {
-                "$ref": "#/$defs/Id"
-              }
-            },
-            "parser_version": {
-              "type": "string",
-              "maxLength": 10000
-            },
-            "status": {
-              "$ref": "#/$defs/ImportStatus"
-            },
-            "confirmed_by": {
-              "type": "string",
-              "maxLength": 10000
-            },
-            "at": {
-              "type": "string",
-              "maxLength": 10000
-            },
-            "supersedes_batch": {
-              "anyOf": [
-                {
-                  "type": "string",
-                  "maxLength": 10000
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            }
-          },
-          "required": [],
-          "additionalProperties": true
+        "workspace_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "account_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "source_type": {
+          "enum": [
+            "csv",
+            "xlsx",
+            "manual"
+          ]
+        },
+        "status": {
+          "$ref": "#/$defs/ImportStatus"
+        },
+        "input_file_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          }
+        },
+        "parser_version": {
+          "type": "string"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "mapping": {
+          "type": "object"
         }
-      ]
+      },
+      "required": [
+        "id",
+        "workspace_id",
+        "account_id",
+        "source_type",
+        "status",
+        "input_file_ids",
+        "parser_version",
+        "version",
+        "mapping"
+      ],
+      "additionalProperties": true
     },
     "ImportRow": {
-      "allOf": [
-        {
-          "$ref": "#/$defs/BaseEntity"
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Id"
         },
-        {
-          "type": "object",
-          "properties": {
-            "account_id": {
-              "$ref": "#/$defs/Id"
+        "batch_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "raw": {
+          "type": "object"
+        },
+        "metric": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/MetricInput"
             },
-            "input_file_ids": {
-              "type": "array",
-              "items": {
-                "$ref": "#/$defs/Id"
-              }
-            },
-            "parser_version": {
-              "type": "string",
-              "maxLength": 10000
-            },
-            "status": {
-              "$ref": "#/$defs/ImportRowStatus"
-            },
-            "confirmed_by": {
-              "type": "string",
-              "maxLength": 10000
-            },
-            "at": {
-              "type": "string",
-              "maxLength": 10000
-            },
-            "supersedes_batch": {
-              "anyOf": [
-                {
-                  "type": "string",
-                  "maxLength": 10000
-                },
-                {
-                  "type": "null"
-                }
-              ]
+            {
+              "type": "null"
             }
-          },
-          "required": [],
-          "additionalProperties": true
+          ]
+        },
+        "status": {
+          "$ref": "#/$defs/ImportRowStatus"
+        },
+        "is_example": {
+          "type": "boolean"
+        },
+        "corrections": {
+          "type": "array"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
         }
-      ]
+      },
+      "required": [
+        "id",
+        "batch_id",
+        "raw",
+        "metric",
+        "status",
+        "is_example",
+        "corrections",
+        "version"
+      ],
+      "additionalProperties": true
     },
     "MetricDefinition": {
       "allOf": [
@@ -1659,53 +1620,54 @@
       ]
     },
     "MetricObservation": {
-      "allOf": [
-        {
-          "$ref": "#/$defs/BaseEntity"
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Id"
         },
-        {
-          "type": "object",
-          "properties": {
-            "unit": {
-              "type": "string",
-              "maxLength": 10000
+        "workspace_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "account_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "publication_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Id"
             },
-            "scope": {
-              "type": "string",
-              "maxLength": 10000
-            },
-            "aggregation": {
-              "type": "string",
-              "maxLength": 10000
-            },
-            "account": {
-              "type": "string",
-              "maxLength": 10000
-            },
-            "publication": {
-              "type": "string",
-              "maxLength": 10000
-            },
-            "value": {
-              "type": "string",
-              "maxLength": 10000
-            },
-            "null": {
-              "type": "string",
-              "maxLength": 10000
-            },
-            "is_approximate": {
-              "type": "boolean"
-            },
-            "traffic_type": {
-              "type": "string",
-              "maxLength": 10000
+            {
+              "type": "null"
             }
-          },
-          "required": [],
-          "additionalProperties": true
+          ]
+        },
+        "metric": {
+          "$ref": "#/$defs/MetricInput"
+        },
+        "value": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "validity": {
+          "enum": [
+            "confirmed",
+            "superseded",
+            "reverted"
+          ]
         }
-      ]
+      },
+      "required": [
+        "id",
+        "workspace_id",
+        "account_id",
+        "publication_id",
+        "metric",
+        "value",
+        "validity"
+      ],
+      "additionalProperties": true
     },
     "MetricEvidence": {
       "allOf": [
@@ -1768,21 +1730,70 @@
       ]
     },
     "Calculation": {
-      "allOf": [
-        {
-          "$ref": "#/$defs/BaseEntity"
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Id"
         },
-        {
-          "type": "object",
-          "properties": {
-            "calculation_id": {
-              "$ref": "#/$defs/Id"
-            }
-          },
-          "required": [],
-          "additionalProperties": true
+        "metric_key": {
+          "type": "string"
+        },
+        "calculation_version": {
+          "type": "string"
+        },
+        "input_observation_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          }
+        },
+        "rounding_rule": {
+          "type": "string"
+        },
+        "window_start": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "window_end": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "value": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "missing_reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "is_approximate": {
+          "type": "boolean"
+        },
+        "validity": {
+          "enum": [
+            "current",
+            "stale"
+          ]
         }
-      ]
+      },
+      "required": [
+        "id",
+        "metric_key",
+        "calculation_version",
+        "input_observation_ids",
+        "rounding_rule",
+        "window_start",
+        "window_end",
+        "value",
+        "missing_reason",
+        "is_approximate",
+        "validity"
+      ],
+      "additionalProperties": true
     },
     "Report": {
       "allOf": [
@@ -2820,22 +2831,39 @@
           }
         },
         "source_type": {
-          "type": "string",
           "enum": [
-            "screenshot",
             "csv",
             "xlsx",
             "manual"
           ]
         },
-        "hint": {
-          "type": "string",
-          "maxLength": 10000
-        },
         "manual_rows": {
           "type": "array",
           "items": {
-            "$ref": "#/$defs/MetricInput"
+            "type": "object"
+          }
+        },
+        "field_mapping": {
+          "type": "object",
+          "additionalProperties": {
+            "enum": [
+              "account_id",
+              "platform_note_id",
+              "metric_key",
+              "value",
+              "unit",
+              "window_start",
+              "window_end",
+              "observed_at",
+              "traffic_type",
+              "source_note",
+              "definition_version",
+              "aggregation_kind",
+              "source_definition",
+              "missing_reason",
+              "time_precision",
+              "is_example"
+            ]
           }
         }
       },
@@ -2844,48 +2872,23 @@
         "file_ids",
         "source_type"
       ],
-      "additionalProperties": false,
-      "allOf": [
-        {
-          "if": {
-            "properties": {
-              "source_type": {
-                "const": "manual"
-              }
-            }
-          },
-          "then": {
-            "required": [
-              "manual_rows"
-            ],
-            "properties": {
-              "manual_rows": {
-                "minItems": 1
-              }
-            }
-          },
-          "else": {
-            "properties": {
-              "file_ids": {
-                "minItems": 1
-              }
-            }
-          }
-        }
-      ]
+      "additionalProperties": false
     },
     "ImportRowPatch": {
       "type": "object",
       "properties": {
         "metric": {
-          "$ref": "#/$defs/MetricInput"
+          "type": "object"
         },
         "status": {
-          "type": "string",
           "enum": [
             "valid",
             "excluded"
           ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
         },
         "expected_version": {
           "type": "integer",
@@ -2893,6 +2896,7 @@
         }
       },
       "required": [
+        "reason",
         "expected_version"
       ],
       "additionalProperties": false
@@ -2938,12 +2942,17 @@
         "expected_version": {
           "type": "integer",
           "minimum": 1
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
         }
       },
       "required": [
         "row_ids",
         "conflict_resolutions",
-        "expected_version"
+        "expected_version",
+        "reason"
       ],
       "additionalProperties": false
     },
@@ -4346,6 +4355,45 @@
         "etag",
         "upload_url",
         "method"
+      ],
+      "additionalProperties": false
+    },
+    "ImportTemplate": {
+      "type": "object",
+      "properties": {
+        "field_version": {
+          "type": "string"
+        },
+        "fields": {
+          "type": "object"
+        },
+        "metric_definitions": {
+          "type": "array"
+        },
+        "format": {
+          "enum": [
+            "csv",
+            "xlsx"
+          ]
+        },
+        "filename": {
+          "type": "string"
+        },
+        "content_base64": {
+          "type": "string"
+        },
+        "example_policy": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "field_version",
+        "fields",
+        "metric_definitions",
+        "format",
+        "filename",
+        "content_base64",
+        "example_policy"
       ],
       "additionalProperties": false
     }

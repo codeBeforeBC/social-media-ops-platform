@@ -1,3 +1,5 @@
+import {Metrics} from './metrics';
+import {Imports} from './imports';
 import 'reflect-metadata';
 import {All,Controller,Module,Req,Res,Inject,Catch,ExceptionFilter,ArgumentsHost,HttpException} from '@nestjs/common';
 import {NestFactory} from '@nestjs/core';
@@ -37,6 +39,18 @@ class ApiController {
     if(method!=='GET'&&method!=='HEAD')await this.auth.checkCsrf(req);
     const c=this.commands;
     const command=async(permission:Permission,fn:Parameters<Commands['command']>[6])=>{const r=await c.command(a,req.headers['idempotency-key'],method,path,req.body??{},permission,fn);return send(r.data,r.status);};
+    const metrics=new Metrics(this.db);
+    if(path==='/metrics'&&method==='GET')return send(await metrics.list(a,req.query));
+    if(path==='/metrics/calculations'&&method==='GET')return send(await metrics.calculate(a,req.query));
+    const metricSources=path.match(/^\/metrics\/([^/]+)\/sources$/);if(metricSources&&method==='GET')return send(await metrics.sources(a,metricSources[1]!));
+    const calculation=path.match(/^\/calculations\/([^/]+)$/);if(calculation&&method==='GET')return send(await metrics.calculation(a,calculation[1]!));
+    const imports=new Imports(this.db);
+    if(path==='/imports/template'&&method==='GET')return send(imports.template(req.query.format));
+    if(path==='/imports'&&method==='POST')return command('operate',(tx,actor)=>imports.create(tx,actor,req.body));
+    if(path==='/imports'&&method==='GET')return send(await imports.list(a,req.query));
+    const batch=path.match(/^\/imports\/([^/]+)(?:\/(rows|confirm|revert))?$/);
+    if(batch){if(method==='POST'&&batch[2]==='revert')return command('operate',(tx,actor)=>imports.revert(tx,actor,batch[1]!,req.body));if(method==='POST'&&batch[2]==='confirm')return command('operate',(tx,actor)=>imports.confirm(tx,actor,batch[1]!,req.body));if(method==='GET'&&!batch[2])return send(await imports.get(a,batch[1]!));if(method==='GET'&&batch[2]==='rows')return send(await imports.rows(a,batch[1]!,req.query));}
+    const importRow=path.match(/^\/import-rows\/([^/]+)$/);if(importRow&&method==='PATCH')return command('operate',(tx,actor)=>imports.patch(tx,actor,importRow[1]!,req.body));
     const publications=new Publications(this.db);
     if(path==='/publications'&&method==='POST')return command('operate',(tx,actor)=>publications.register(tx,actor,req.body));
     if(path==='/publications'&&method==='GET')return send(await publications.list(a,req.query));

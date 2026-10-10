@@ -1,0 +1,70 @@
+{"database":"yoyo","migrations":8}
+{"database":"yoyo_test","migrations":26}
+[WebServer] (node:98787) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:98788) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:98794) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:98794) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 1 worker
+
+(node:98859) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:98859) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/browser.spec.ts:5:5 › 首次设置、三导航、账号表单、设置保存、键盘抽屉和退出 (2.1s)
+  ✓  2 tests/browser.spec.ts:24:5 › 请求失败显示可重试错误，加载状态和登录过期可见 (1.6s)
+  ✓  3 tests/browser.spec.ts:31:5 › 来源连接保存、独立待验证状态、启用和同源运行记录 (1.3s)
+  ✓  4 tests/browser.spec.ts:41:5 › 来源证据详情保留原始观察、采集时间和缺失发布时间 (1.3s)
+  ✓  5 tests/browser.spec.ts:47:5 › 候选理由/评分/证据、默认本人采纳、拒绝留因与显式变体 (1.9s)
+  ✓  6 tests/browser.spec.ts:58:5 › T26 独立笔记登记与更正、旧深链回退、三导航窄屏无溢出 (912ms)
+  ✓  7 tests/browser.spec.ts:66:5 › S7 手工待确认→部分确认→冲突更正→撤销旧批次，来源及计算可核对 (2.0s)
+  ✘  8 tests/browser.spec.ts:75:5 › S7 模板上传、安全解析状态、字段映射和不可入账示例，键盘可关闭抽屉 (15.5s)
+
+
+  1) tests/browser.spec.ts:75:5 › S7 模板上传、安全解析状态、字段映射和不可入账示例，键盘可关闭抽屉 ───────────────────────────────
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('dialog').getByLabel('account_id', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('dialog').getByLabel('account_id', { exact: true })
+
+
+    Call Log:
+    - Timeout 15000ms exceeded while waiting on the predicate
+
+      74 | });
+      75 | test('S7 模板上传、安全解析状态、字段映射和不可入账示例，键盘可关闭抽屉',async({page})=>{
+    > 76 |  await page.goto('/');await page.getByLabel('邮箱').fill('browser@example.test');await page.getByLabel('密码',{exact:false}).fill('Browser-test-password-987');await page.getByRole('button',{name:'登录',exact:true}).click();await page.getByRole('link',{name:'数据复盘',exact:true}).click();for(const format of ['csv','xlsx']){await page.getByLabel('上传 CSV/XLSX').setInputFiles('docs/templates/yoyo-import-v1.'+format);const d=page.getByRole('dialog');await expect(d).toBeVisible();await expect(async()=>{await d.getByRole('button',{name:'读取解析结果'}).click();await expect(d.getByLabel('account_id',{exact:true})).toBeVisible();}).toPass({timeout:15000});await d.getByRole('button',{name:'创建解析批次'}).click();await expect(d).toHaveCount(0);await expect(async()=>{await page.getByRole('button',{name:'刷新批次详情'}).click();await expect(page.getByRole('row').filter({hasText:'示例（不可入账）'})).toBeVisible();}).toPass({timeout:15000});const row=page.getByRole('row').filter({hasText:'示例（不可入账）'});await expect(row.getByRole('checkbox')).toBeDisabled();await expect(row.getByRole('button',{name:'更正 / 匹配'})).toHaveCount(0);}
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ^
+      77 |  await page.getByRole('button',{name:'手工录入',exact:true}).focus();await page.keyboard.press('Enter');await expect(page.getByRole('dialog')).toBeVisible();await page.keyboard.press('Escape');await expect(page.getByRole('dialog')).toHaveCount(0);await expect(page.getByRole('button',{name:'手工录入',exact:true})).toBeFocused();
+      78 | });
+      79 |
+        at /Users/junlong/projects/social-mdeida-ops-platform/tests/browser.spec.ts:76:617
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser-S7-模板上传、安全解析状态、字段映射和不可入账示例，键盘可关闭抽屉/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/browser-S7-模板上传、安全解析状态、字段映射和不可入账示例，键盘可关闭抽屉/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/browser-S7-模板上传、安全解析状态、字段映射和不可入账示例，键盘可关闭抽屉/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/browser-S7-模板上传、安全解析状态、字段映射和不可入账示例，键盘可关闭抽屉/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/browser.spec.ts:75:5 › S7 模板上传、安全解析状态、字段映射和不可入账示例，键盘可关闭抽屉 ────────────────────────────────
+  7 passed (29.0s)

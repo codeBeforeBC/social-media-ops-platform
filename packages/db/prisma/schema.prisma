@@ -68,6 +68,10 @@ model accounts {
 
   @@unique([workspace_id, id])
   @@unique([workspace_id, platform, platform_user_id])
+  calculations        calculations[]
+  import_batches      import_batches[]
+  metric_observations metric_observations[]
+  reports             reports[]
 }
 
 model audit_logs {
@@ -204,6 +208,12 @@ model memberships {
 
   @@unique([workspace_id, id])
   @@unique([workspace_id, user_id])
+  import_batches_import_batches_workspace_id_confirmed_byTomemberships       import_batches[]      @relation("import_batches_workspace_id_confirmed_byTomemberships")
+  import_batches_import_batches_workspace_id_created_byTomemberships         import_batches[]      @relation("import_batches_workspace_id_created_byTomemberships")
+  import_reversions                                                          import_reversions[]
+  import_rows                                                                import_rows[]
+  metric_evidence                                                            metric_evidence[]
+  metric_observations                                                        metric_observations[]
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
@@ -316,6 +326,7 @@ model file_objects {
   @@unique([workspace_id, id])
   @@unique([workspace_id, account_id, purpose, sha256, is_preview], map: "file_account_purpose_hash")
   @@index([workspace_id, preview_status], map: "file_media_status", where: raw("(is_preview = false)"))
+  import_rows                                                                  import_rows[]
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
@@ -481,6 +492,8 @@ model publications {
 
   @@unique([account_id, platform_note_id])
   @@unique([workspace_id, id])
+  calculations        calculations[]
+  metric_observations metric_observations[]
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
@@ -633,4 +646,216 @@ model topics {
   @@unique([generation_request_id, candidate_position])
   @@unique([workspace_id, id])
   @@index([workspace_id, account_id, created_at(sort: Desc), id(sort: Desc)], map: "topic_inventory")
+}
+
+
+model import_batches {
+  id                                                                String                      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspace_id                                                      String                      @db.Uuid
+  account_id                                                        String                      @db.Uuid
+  created_by                                                        String                      @db.Uuid
+  source_type                                                       String
+  input_file_ids                                                    String[]                    @default([]) @db.Uuid
+  parser_version                                                    String                      @default("table-v1")
+  status                                                            String
+  mapping                                                           Json                        @default("{}")
+  confirmed_by                                                      String?                     @db.Uuid
+  confirmed_at                                                      DateTime?                   @db.Timestamptz(6)
+  version                                                           Int                         @default(1)
+  created_at                                                        DateTime                    @default(now()) @db.Timestamptz(6)
+  updated_at                                                        DateTime                    @default(now()) @db.Timestamptz(6)
+  accounts                                                          accounts                    @relation(fields: [workspace_id, account_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  memberships_import_batches_workspace_id_confirmed_byTomemberships memberships?                @relation("import_batches_workspace_id_confirmed_byTomemberships", fields: [workspace_id, confirmed_by], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  memberships_import_batches_workspace_id_created_byTomemberships   memberships                 @relation("import_batches_workspace_id_created_byTomemberships", fields: [workspace_id, created_by], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  import_reversions                                                 import_reversions[]
+  import_rows                                                       import_rows[]
+  metric_evidence                                                   metric_evidence[]
+  observation_supersessions                                         observation_supersessions[]
+
+  @@unique([workspace_id, id])
+  @@index([workspace_id, account_id, created_at(sort: Desc), id(sort: Desc)], map: "import_batch_page")
+}
+
+model import_rows {
+  id              String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspace_id    String           @db.Uuid
+  batch_id        String           @db.Uuid
+  row_number      Int
+  file_id         String?          @db.Uuid
+  raw             Json
+  metric          Json?
+  error           String?
+  status          String
+  is_example      Boolean          @default(false)
+  corrections     Json             @default("[]")
+  confirmed_by    String?          @db.Uuid
+  confirmed_at    DateTime?        @db.Timestamptz(6)
+  version         Int              @default(1)
+  created_at      DateTime         @default(now()) @db.Timestamptz(6)
+  updated_at      DateTime         @default(now()) @db.Timestamptz(6)
+  import_batches  import_batches   @relation(fields: [workspace_id, batch_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  memberships     memberships?     @relation(fields: [workspace_id, confirmed_by], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  file_objects    file_objects?    @relation(fields: [workspace_id, file_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  metric_evidence metric_evidence[]
+
+  @@unique([batch_id, row_number])
+  @@unique([workspace_id, id])
+  @@index([batch_id, row_number], map: "import_row_page")
+}
+
+model metric_observations {
+  id                                                                                           String                      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspace_id                                                                                 String                      @db.Uuid
+  account_id                                                                                   String                      @db.Uuid
+  publication_id                                                                               String?                     @db.Uuid
+  logical_key                                                                                  String                      @unique(map: "metric_one_current", where: raw("(validity = 'confirmed'::text)"))
+  revision                                                                                     Int
+  metric                                                                                       Json
+  value                                                                                        Decimal?                    @db.Decimal(24, 6)
+  validity                                                                                     String
+  created_by                                                                                   String                      @db.Uuid
+  created_at                                                                                   DateTime                    @default(now()) @db.Timestamptz(6)
+  metric_evidence                                                                              metric_evidence[]
+  accounts                                                                                     accounts                    @relation(fields: [workspace_id, account_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  memberships                                                                                  memberships                 @relation(fields: [workspace_id, created_by], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  publications                                                                                 publications?               @relation(fields: [workspace_id, publication_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  observation_supersessions_observation_supersessions_workspace_id_new_idTometric_observations observation_supersessions[] @relation("observation_supersessions_workspace_id_new_idTometric_observations")
+  observation_supersessions_observation_supersessions_workspace_id_old_idTometric_observations observation_supersessions[] @relation("observation_supersessions_workspace_id_old_idTometric_observations")
+  report_invalidations                                                                         report_invalidations[]
+  report_observations                                                                          report_observations[]
+
+  @@unique([logical_key, revision])
+  @@unique([workspace_id, id])
+  @@index([workspace_id, account_id, publication_id, created_at(sort: Desc), id(sort: Desc)], map: "metric_scope")
+}
+
+model metric_evidence {
+  id                  String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspace_id        String              @db.Uuid
+  batch_id            String              @db.Uuid
+  row_id              String              @unique @db.Uuid
+  observation_id      String              @db.Uuid
+  supports_value      Boolean
+  active              Boolean             @default(true)
+  confirmed_by        String              @db.Uuid
+  confirmed_at        DateTime            @default(now()) @db.Timestamptz(6)
+  import_batches      import_batches      @relation(fields: [workspace_id, batch_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  memberships         memberships         @relation(fields: [workspace_id, confirmed_by], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  metric_observations metric_observations @relation(fields: [workspace_id, observation_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  import_rows         import_rows         @relation(fields: [workspace_id, row_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([observation_id, active], map: "metric_evidence_observation")
+}
+
+model observation_supersessions {
+  id                                                                                     String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspace_id                                                                           String              @db.Uuid
+  old_id                                                                                 String              @db.Uuid
+  new_id                                                                                 String              @db.Uuid
+  batch_id                                                                               String              @db.Uuid
+  reason                                                                                 String
+  active                                                                                 Boolean             @default(true)
+  created_at                                                                             DateTime            @default(now()) @db.Timestamptz(6)
+  import_batches                                                                         import_batches      @relation(fields: [workspace_id, batch_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  metric_observations_observation_supersessions_workspace_id_new_idTometric_observations metric_observations @relation("observation_supersessions_workspace_id_new_idTometric_observations", fields: [workspace_id, new_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  metric_observations_observation_supersessions_workspace_id_old_idTometric_observations metric_observations @relation("observation_supersessions_workspace_id_old_idTometric_observations", fields: [workspace_id, old_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([batch_id, old_id, new_id])
+}
+
+model reports {
+  id                   String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspace_id         String                 @db.Uuid
+  account_id           String                 @db.Uuid
+  status               String
+  version              Int                    @default(1)
+  created_at           DateTime               @default(now()) @db.Timestamptz(6)
+  updated_at           DateTime               @default(now()) @db.Timestamptz(6)
+  report_calculations  report_calculations[]
+  report_invalidations report_invalidations[]
+  report_observations  report_observations[]
+  accounts             accounts               @relation(fields: [workspace_id, account_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([workspace_id, id])
+}
+
+model report_observations {
+  workspace_id        String              @db.Uuid
+  report_id           String              @db.Uuid
+  observation_id      String              @db.Uuid
+  metric_observations metric_observations @relation(fields: [workspace_id, observation_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  reports             reports             @relation(fields: [workspace_id, report_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([report_id, observation_id])
+}
+
+model report_invalidations {
+  id                  String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspace_id        String              @db.Uuid
+  report_id           String              @db.Uuid
+  observation_id      String              @db.Uuid
+  reason              String
+  request_id          String              @db.Uuid
+  created_at          DateTime            @default(now()) @db.Timestamptz(6)
+  metric_observations metric_observations @relation(fields: [workspace_id, observation_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  reports             reports             @relation(fields: [workspace_id, report_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model import_reversions {
+  batch_id       String         @id @db.Uuid
+  workspace_id   String         @db.Uuid
+  actor_id       String         @db.Uuid
+  reason         String
+  created_at     DateTime       @default(now()) @db.Timestamptz(6)
+  memberships    memberships    @relation(fields: [workspace_id, actor_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  import_batches import_batches @relation(fields: [workspace_id, batch_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model metric_definitions {
+  key                String
+  definition_version String
+  label              String
+  unit               String
+  scope              String
+  kinds              String[]
+
+  @@id([key, definition_version])
+}
+
+model calculations {
+  id                    String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspace_id          String                @db.Uuid
+  account_id            String                @db.Uuid
+  publication_id        String?               @db.Uuid
+  metric_key            String
+  calculation_version   String
+  input_observation_ids String[]              @db.Uuid
+  window_start          DateTime              @db.Timestamptz(6)
+  window_end            DateTime              @db.Timestamptz(6)
+  traffic_type          String
+  source_definition     String
+  time_precision        String
+  rounding_rule         String
+  value                 Decimal?              @db.Decimal(24, 6)
+  missing_reason        String?
+  is_approximate        Boolean
+  fingerprint           String                @unique
+  validity              String                @default("current")
+  created_at            DateTime              @default(now()) @db.Timestamptz(6)
+  accounts              accounts              @relation(fields: [workspace_id, account_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  publications          publications?         @relation(fields: [workspace_id, publication_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  report_calculations   report_calculations[]
+
+  @@unique([workspace_id, id])
+  @@index([workspace_id, account_id, window_start, window_end], map: "calculation_scope")
+}
+
+model report_calculations {
+  workspace_id   String       @db.Uuid
+  report_id      String       @db.Uuid
+  calculation_id String       @db.Uuid
+  calculations   calculations @relation(fields: [workspace_id, calculation_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  reports        reports      @relation(fields: [workspace_id, report_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([report_id, calculation_id])
 }

@@ -16,6 +16,7 @@ export class Publications {
  }
  async patch(tx:Tx,a:Actor,pid:string,input:unknown){const b=parse(z.object({title:text(200).optional(),published_at:z.iso.datetime({offset:true}).optional(),traffic_type:traffic.optional(),lifecycle:z.enum(['active','deleted']).optional(),reason:text(10000),expected_version:version}).strict(),input),p=await this.scope(tx,a,pid,true);
   if(p.version!==b.expected_version)throw new AppError(409,'VERSION_CONFLICT','笔记登记已修改',{version:p.version});if(b.published_at&&Date.parse(b.published_at)>Date.now())throw new AppError(422,'PUBLICATION_TIME_INVALID','实际发布时间不能在未来');
+  if(b.published_at&&new Date(p.published_at).getTime()!==Date.parse(b.published_at))await tx.query('SELECT metric_invalidate_reports($1,$2,$3,$4)',[a.workspaceId,(await tx.query('SELECT id FROM metric_observations WHERE publication_id=$1',[p.id])).rows.map(r=>r.id),'笔记发布时间更正，请重验分析窗口',a.requestId]);
   const next=(await tx.query(`UPDATE publications SET title=COALESCE($2,title),published_at=COALESCE($3,published_at),traffic_type=COALESCE($4,traffic_type),lifecycle=COALESCE($5,lifecycle),version=version+1,updated_at=now() WHERE id=$1 RETURNING ${fields}`,[p.id,b.title??null,b.published_at??null,b.traffic_type??null,b.lifecycle??null])).rows[0];await audit(tx,a,'publication.correct','publication',p.id,{reason:b.reason,before:p,after:next});return {status:200,data:next};
  }
 }
