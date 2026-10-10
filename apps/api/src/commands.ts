@@ -14,6 +14,7 @@ export class Commands {
     const k=parse(text(200),key);const fingerprint=sha(canonical(input));
     return this.db.transaction(async tx=>{
       const actor=await reloadActor(tx,a);authorize(actor,permission);
+      route=route+'@v1.2';
       const lock=canonical([a.workspaceId,a.memberId,method,route,k]);
       await tx.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))',[lock]);
       const r=await tx.query('SELECT request_hash,status,response FROM idempotency_records WHERE workspace_id=$1 AND actor_id=$2 AND method=$3 AND route=$4 AND key=$5',[a.workspaceId,a.memberId,method,route,k]);
@@ -85,9 +86,17 @@ export class Commands {
     }
     if(b.active===false){
       const owned=await tx.query('SELECT id FROM accounts WHERE owner_id=$1 AND workspace_id=$2',[memberId,a.workspaceId]);
-      if(owned.rowCount&&!b.successor_id)throw new AppError(422,'SUCCESSOR_REQUIRED','停用负责人前需指定接替人');
-      if(b.successor_id){const successor=await tx.query('SELECT id FROM memberships WHERE id=$1 AND workspace_id=$2 AND active AND id<>$3 FOR SHARE',[b.successor_id,a.workspaceId,memberId]);if(!successor.rowCount)throw new AppError(422,'SUCCESSOR_INVALID','接替人必须是其他有效成员');
+      const topics=await tx.query('SELECT id,account_id FROM topics WHERE accepted_owner_id=$1 AND workspace_id=$2 FOR UPDATE',[memberId,a.workspaceId]);
+      if((owned.rowCount||topics.rowCount)&&!b.successor_id)throw new AppError(422,'SUCCESSOR_REQUIRED','停用负责人前需指定接替人');
+      if(b.successor_id){const successor=await tx.query('SELECT id,roles FROM memberships WHERE id=$1 AND workspace_id=$2 AND active AND id<>$3 FOR SHARE',[b.successor_id,a.workspaceId,memberId]);if(!successor.rowCount)throw new AppError(422,'SUCCESSOR_INVALID','接替人必须是其他有效成员');
+        if(topics.rowCount&&!successor.rows[0].roles.some((r:string)=>['admin','operator','editor'].includes(r)))throw new AppError(422,'SUCCESSOR_INVALID','选题接替人必须能处理选题');
         for(const ac of owned.rows){await tx.query('INSERT INTO account_memberships VALUES($1,$2,$3) ON CONFLICT DO NOTHING',[a.workspaceId,ac.id,b.successor_id]);await tx.query('UPDATE accounts SET owner_id=$1,version=version+1,updated_at=now() WHERE id=$2',[b.successor_id,ac.id]);}
+        for(const topic of topics.rows){
+          await tx.query('INSERT INTO account_memberships VALUES($1,$2,$3) ON CONFLICT DO NOTHING',[a.workspaceId,topic.account_id,b.successor_id]);
+          await tx.query('UPDATE topics SET accepted_owner_id=$2,version=version+1,updated_at=now() WHERE id=$1',[topic.id,b.successor_id]);
+          await audit(tx,a,'topic.owner_transferred','topic',topic.id,{previous_owner:memberId,owner_id:b.successor_id});
+          await tx.query("INSERT INTO notifications(workspace_id,recipient_id,event_key,title,task_ref) VALUES($1,$2,$3,'选题负责人已移交，请核验后续事项',$4) ON CONFLICT DO NOTHING",[a.workspaceId,b.successor_id,'topic.owner:'+topic.id+':'+m.version,'topic:'+topic.id]);
+        }
       }
       await tx.query('DELETE FROM sessions WHERE user_id=$1 AND workspace_id=$2',[m.user_id,a.workspaceId]);
     }
@@ -108,15 +117,15 @@ export class Commands {
     if(!r.rowCount)throw new AppError(404,'NOT_FOUND','通知不存在或不可见');await audit(tx,a,'notification.read','notification',notificationId);return {status:200,data:r.rows[0]};
   }
   async jobScope(query:Pick<Database,'query'>|Tx,a:Actor,jobId:string,lock=false){
-    parse(uuid,jobId);const r=await query.query(`SELECT * FROM jobs WHERE id=$1 AND workspace_id=$2 AND ($3::boolean OR created_by=$4) ${lock?'FOR UPDATE':''}`,[jobId,a.workspaceId,a.roles.includes('admin'),a.memberId]);
+    parse(uuid,jobId);const r=await query.query(`SELECT * FROM jobs WHERE yoyo_job_supported(type,pool,input) AND id=$1 AND workspace_id=$2 AND ($3::boolean OR created_by=$4) ${lock?'FOR UPDATE':''}`,[jobId,a.workspaceId,a.roles.includes('admin'),a.memberId]);
     if(!r.rowCount)throw new AppError(404,'NOT_FOUND','任务不存在或不可见');
     if(r.rows[0].account_id)await this.accountScope(query,a,r.rows[0].account_id);return r.rows[0];
   }
   async jobs(a:Actor,q:Record<string,unknown>){
-    const {limit,cursor}=pagination(q);const r=await this.db.query(`SELECT j.* FROM jobs j WHERE workspace_id=$1 AND ($2::boolean OR created_by=$3) AND ($4::timestamptz IS NULL OR (created_at,id)<($4,$5::uuid)) AND (account_id IS NULL OR $2::boolean OR EXISTS(SELECT 1 FROM account_memberships am WHERE am.account_id=j.account_id AND am.membership_id=$3)) ORDER BY created_at DESC,id DESC LIMIT $6`,[a.workspaceId,a.roles.includes('admin'),a.memberId,cursor?.at??null,cursor?.id??null,limit+1]);return page(r.rows.map(safeJob),limit);
+    const {limit,cursor}=pagination(q);const r=await this.db.query(`SELECT j.* FROM jobs j WHERE yoyo_job_supported(type,pool,input) AND workspace_id=$1 AND ($2::boolean OR created_by=$3) AND ($4::timestamptz IS NULL OR (created_at,id)<($4,$5::uuid)) AND (account_id IS NULL OR $2::boolean OR EXISTS(SELECT 1 FROM account_memberships am WHERE am.account_id=j.account_id AND am.membership_id=$3)) ORDER BY created_at DESC,id DESC LIMIT $6`,[a.workspaceId,a.roles.includes('admin'),a.memberId,cursor?.at??null,cursor?.id??null,limit+1]);return page(r.rows.map(safeJob),limit);
   }
   async diagnostic(tx:Tx,a:Actor,input:unknown){
-    const b=parse(z.object({pool:z.enum(['general','reminder']),account_id:uuid.optional()}).strict(),input);
+    const b=parse(z.object({pool:z.enum(['general']),account_id:uuid.optional()}).strict(),input);
     if(b.account_id)await this.accountScope(tx,a,b.account_id);
     const w=await tx.query('SELECT version FROM workspaces WHERE id=$1 FOR SHARE',[a.workspaceId]);
     const out=await tx.query(`INSERT INTO outbox(workspace_id,account_id,event_key,event_type,payload) VALUES($1,$2,$3,'system.check',$4) RETURNING id`,[a.workspaceId,b.account_id??null,a.requestId,JSON.stringify({pool:b.pool,created_by:a.memberId,input_version:w.rows[0].version,request_id:a.requestId})]);
@@ -136,8 +145,8 @@ export class Commands {
     await audit(tx,a,'job.retry','job',jobId);return {status:202,data:safeJob(r.rows[0])};
   }
   async monitor(a:Actor){
-    authorize(a,'admin');const jobs=await this.db.query("SELECT pool,state,count(*)::int count,min(created_at) oldest FROM jobs WHERE workspace_id=$1 GROUP BY pool,state ORDER BY pool,state",[a.workspaceId]);
-    const processes=await this.db.query("SELECT name,pool,last_seen_at,(last_seen_at>now()-interval '15 seconds') healthy FROM process_health ORDER BY name");
+    authorize(a,'admin');const jobs=await this.db.query("SELECT pool,state,count(*)::int count,min(created_at) oldest FROM jobs WHERE yoyo_job_supported(type,pool,input) AND workspace_id=$1 GROUP BY pool,state ORDER BY pool,state",[a.workspaceId]);
+    const processes=await this.db.query("SELECT name,pool,last_seen_at,(last_seen_at>now()-interval '15 seconds') healthy FROM process_health WHERE pool<>'reminder' ORDER BY name");
     const outbox=await this.db.query('SELECT count(*)::int pending FROM outbox WHERE workspace_id=$1 AND dispatched_at IS NULL',[a.workspaceId]);
     return {jobs:jobs.rows,processes:processes.rows,outbox_pending:outbox.rows[0].pending,external_capabilities:{ai:'disabled',ocr:'disabled',sources:'unverified'}};
   }

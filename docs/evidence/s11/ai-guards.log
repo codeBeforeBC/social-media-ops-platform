@@ -1,0 +1,111 @@
+Instance credentials ready; no secrets printed.
+ Image yoyo-import-parser-local:1.2.0 Building
+#1 [internal] load local bake definitions
+#1 reading from stdin 611B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.19kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 177B done
+#4 DONE 0.0s
+
+#5 [build 1/4] FROM docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#5 resolve docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 191B done
+#6 DONE 0.0s
+
+#7 [build 4/4] RUN gcc -O2 -Wall /sandbox.c -o /media-sandbox
+#7 CACHED
+
+#8 [build 2/4] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && apt-get -o Acquire::Retries=3 install -y --no-install-recommends gcc libc6-dev linux-libc-dev
+#8 CACHED
+
+#9 [build 3/4] COPY tools/media/sandbox.c /sandbox.c
+#9 CACHED
+
+#10 [stage-1 4/6] COPY tools/media/server.mjs /app/server.mjs
+#10 CACHED
+
+#11 [stage-1 2/6] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && (apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil ca-certificates || apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil ca-certificates) && rm -rf /var/lib/apt/lists/* && mkdir /scratch && chown node:node /scratch
+#11 CACHED
+
+#12 [stage-1 5/6] COPY tools/media/import-validate.py /usr/local/lib/yoyo/import-validate.py
+#12 CACHED
+
+#13 [stage-1 3/6] COPY --from=build /media-sandbox /usr/local/bin/media-sandbox
+#13 CACHED
+
+#14 [stage-1 6/6] WORKDIR /app
+#14 CACHED
+
+#15 exporting to image
+#15 exporting layers done
+#15 exporting manifest sha256:51786bd5c267c0bf22604c3a91434d05b85bae98ea1a2ffaa0ad7f78ef41656f done
+#15 exporting config sha256:5d0192fe4ce853f3a44320fe5c892a0b89aef300aaed94a38b681f5e3fa1ccbc done
+#15 exporting attestation manifest sha256:53917a2c3ffebafa017421d8f7ee66cea2e0c592ebcbfc75b7064869386cefc1 0.0s done
+#15 exporting manifest list sha256:a42d7efd9d83dab94bc50d238d9f9d640b3e548aa7d6cbc5f55924f0e0511075 done
+#15 naming to docker.io/library/yoyo-import-parser-local:1.2.0 done
+#15 unpacking to docker.io/library/yoyo-import-parser-local:1.2.0 done
+#15 DONE 0.0s
+
+#16 resolving provenance for metadata file
+#16 DONE 0.0s
+ Image yoyo-import-parser-local:1.2.0 Built
+ Container yoyo-s11-tests-storage-1 Running
+ Container yoyo-s11-tests-media-executor-1 Recreate
+ Container yoyo-s11-tests-media-executor-1 Recreated
+ Container yoyo-s11-tests-media-executor-1 Starting
+ Container yoyo-s11-tests-media-executor-1 Started
+ Container yoyo-s11-tests-media-executor-1 Waiting
+ Container yoyo-s11-tests-storage-1 Waiting
+ Container yoyo-s11-tests-media-executor-1 Healthy
+ Container yoyo-s11-tests-storage-1 Healthy
+Private storage ready.
+✔ 新范围固定20例可重现，覆盖来源/许可/旧版本和零素材，无生产工作流 (3.486417ms)
+✔ 伪造ID、生产/排期字段、注入、许可撤回、旧Schema与无来源fact无法通过硬门槛 (0.778167ms)
+✔ 白名单ID不是事实证明，必须逐字引用对应冻结来源 (0.094542ms)
+✔ 未知真实工时及已取消输入缺口不能进入当前模型结果 (0.133583ms)
+{"event":"http.request","request_id":"403c93a1-2a9f-48ec-953b-f2207644192a","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"c481357f-c1bb-4ac9-95c4-8a8dccffcdff","method":"POST","path":"/api/v1/setup","status":201,"duration_ms":29}
+{"event":"http.request","request_id":"4b20d4be-2e71-4a90-a821-6dbe606dcadb","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"6c010e18-2400-49c6-a42a-2a00bea916dd","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":21}
+{"event":"http.request","request_id":"6b1d87a1-2c45-465f-9112-83437d2155a5","method":"GET","path":"/api/v1/me","status":200,"duration_ms":85}
+{"event":"http.request","request_id":"2352d75f-be08-4d0d-af3e-80c5759932e6","method":"POST","path":"/api/v1/accounts","status":201,"duration_ms":11}
+{"event":"http.request","request_id":"7eabf620-d785-4e48-a0ac-41271720fbb8","method":"POST","path":"/api/v1/topic-generations","status":202,"duration_ms":14}
+{"event":"http.request","request_id":"156c6c77-cd86-4693-bcd1-cc8dc8677116","method":"POST","path":"/api/v1/topic-generations","status":202,"duration_ms":4}
+{"event":"http.request","request_id":"c12cb734-6f69-466c-b102-a4f25c211d75","method":"GET","path":"/api/v1/ai-requests/88f1d6a6-83a7-47e6-b458-576ce00761cf","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"90d91555-9fbb-4843-b4b5-b2485474fc5f","method":"GET","path":"/api/v1/ai-requests/88f1d6a6-83a7-47e6-b458-576ce00761cf","status":200,"duration_ms":2}
+✔ API幂等受理冻结输入，Outbox/worker产生建议而不建立内容，契约响应可读 (443.915875ms)
+{"event":"http.request","request_id":"cdd74f2c-83f6-4171-8b21-b30c58ae97bd","method":"POST","path":"/api/v1/topic-generations","status":422,"duration_ms":4}
+{"event":"http.request","request_id":"421d1c9f-b177-4934-a68d-cdf38d3f232a","method":"POST","path":"/api/v1/topic-generations","status":503,"duration_ms":3}
+{"event":"http.request","request_id":"2cd3b5a8-1130-448e-9998-117729aaea61","method":"GET","path":"/api/v1/ai-requests/096ed942-3c70-4aba-8e5e-6dfb209dcc50","status":404,"duration_ms":1}
+✔ 配置未启用和无效时段拒绝；未知请求不泄漏 (13.828166ms)
+{"event":"http.request","request_id":"c8d8baf1-30c2-4103-a6cd-5408e32459d8","method":"POST","path":"/api/v1/topic-generations","status":202,"duration_ms":5}
+{"event":"http.request","request_id":"f4f07edc-2a79-4711-bff9-5e310a0cd74e","method":"GET","path":"/api/v1/ai-requests/37b3bd95-e775-45d7-a93a-b0302149502f","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"3973696b-bae8-4d83-96a5-55a9d8382ff4","method":"POST","path":"/api/v1/topic-generations","status":202,"duration_ms":5}
+{"event":"http.request","request_id":"eee1b864-2fc5-4fb3-9cfa-c6d559004bda","method":"GET","path":"/api/v1/ai-requests/e4916d63-7121-4615-a26e-4485b0404a20","status":200,"duration_ms":1}
+✔ 账号版本变化或模型失败不能落成成功结果，任务失败有明确代码 (37.346416ms)
+{"event":"http.request","request_id":"d34483b4-f4b2-4e7f-8642-a6eb17923497","method":"POST","path":"/api/v1/topic-generations","status":202,"duration_ms":6}
+{"event":"http.request","request_id":"e56902d5-c28b-4a0c-9016-a77060faaa47","method":"POST","path":"/api/v1/jobs/8dffeebb-3ed7-4a30-80a2-1998acab0211/cancel","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"60b6083e-1f98-4ffd-9e5d-f8650162b88b","method":"GET","path":"/api/v1/ai-requests/9e5ebb4a-5939-46e4-8af1-ebe22457957e","status":200,"duration_ms":3}
+✔ 排队任务取消同步状态并不调用模型 (18.231709ms)
+{"event":"http.request","request_id":"3afc3d68-61e3-4fca-b9dd-2e8043ecbdb9","method":"POST","path":"/api/v1/topic-generations","status":202,"duration_ms":5}
+{"event":"http.request","request_id":"43826b3a-8cad-4d14-b072-9800a7ebef0e","method":"GET","path":"/api/v1/ai-requests/81001ff1-3026-4f9c-8fff-ae8f4bde4043","status":200,"duration_ms":2}
+✔ 处理器返回后到最终提交前发生竞争，guard原子拒绝旧结果 (20.355459ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1285.507125

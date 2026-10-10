@@ -102,20 +102,6 @@ services:
     security_opt: ['no-new-privileges:true']
     mem_limit: 512m
     cpus: 1
-  reminder:
-    image: yoyo-local:0.1.0
-    depends_on:
-      migrate:
-        condition: service_completed_successfully
-    environment:
-      <<: *environment
-      WORKER_POOL: reminder
-    volumes: *volumes
-    command: ['node', 'dist/apps/worker/src/main.js']
-    restart: unless-stopped
-    security_opt: ['no-new-privileges:true']
-    mem_limit: 256m
-    cpus: 0.5
   media:
     image: yoyo-local:0.1.0
     depends_on:

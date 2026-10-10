@@ -37,12 +37,12 @@ test('取消与过期版本阻止结果及副作用提交',async()=>{
   await enqueue('system.check','general',1);const stale=(await jobs.claim('general'))!;await db.query('UPDATE workspaces SET version=version+1 WHERE id=$1',[actor.workspaceId]);
   assert.equal(await jobs.complete(stale,{},async()=>{effects++;}),false);assert.equal(effects,0);assert.equal((await db.query('SELECT error_code FROM jobs WHERE id=$1',[stale.id])).rows[0].error_code,'STALE_INPUT');
 });
-test('失败退避重试有上限，管理员可重试；提醒池不受一般池积压影响',async()=>{
+test('失败退避重试有上限，管理员可重试；独立解析池不受一般池积压影响',async()=>{
   const seed=await enqueue('unsupported');
   for(let i=0;i<3;i++){const j=(await jobs.claim('general'))!;assert.equal(j.id,seed.id);await jobs.process(j);if(i<2){const r=(await db.query('SELECT state,available_at FROM jobs WHERE id=$1',[j.id])).rows[0];assert.equal(r.state,'queued');assert.ok(new Date(r.available_at).getTime()>Date.now());await db.query('UPDATE jobs SET available_at=now() WHERE id=$1',[j.id]);}}
   assert.equal((await db.query('SELECT state,error_code FROM jobs WHERE id=$1',[seed.id])).rows[0].state,'failed');
   const c=new Commands(db);await db.transaction(tx=>c.retryJob(tx,actor,seed.id,{reason:'受控重试'}));const retried=(await jobs.claim('general'))!;assert.equal(retried.attempts,1);await db.transaction(tx=>c.cancelJob(tx,actor,retried.id,{reason:'结束用例'}));
-  await enqueue();const blocked=(await jobs.claim('general'))!;await enqueue('system.check','reminder');const reminder=(await jobs.claim('reminder'))!;assert.equal(reminder.pool,'reminder');await jobs.process(reminder);
+  await enqueue();const blocked=(await jobs.claim('general'))!;await enqueue('system.check','media');const reminder=(await jobs.claim('media'))!;assert.equal(reminder.pool,'media');await jobs.process(reminder);
   assert.equal((await db.query('SELECT state FROM jobs WHERE id=$1',[reminder.id])).rows[0].state,'succeeded');assert.equal((await db.query('SELECT state FROM jobs WHERE id=$1',[blocked.id])).rows[0].state,'running');await jobs.process(blocked);
 });
 test('超过最大尝试的失联任务进入失败；未来调度事件暂不分发',async()=>{

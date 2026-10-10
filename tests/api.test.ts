@@ -42,14 +42,14 @@ test('expected_version竞争只允许一个写入，错误和分页协议统一'
 });
 let viewer:Client,operator:Client,editor:Client,editorMember:any;
 test('邀请、组合角色及只读权限；重复使用邀请被拒绝',async()=>{
-  for(const [name,assigned] of [['viewer',['viewer']],['operator',['operator']],['editor',['editor','reviewer']]] as const){
+  for(const [name,assigned] of [['viewer',['viewer']],['operator',['operator']],['editor',['editor']]] as const){
     const email=name+'@example.test';const invite=await admin.call('/members','POST',{email,roles:assigned,display_name:name});assert.equal(invite.status,201);
     const client=new Client(s.url);await client.init();assert.equal((await client.call('/auth/accept-invite','POST',{invitation_token:invite.data.invitation_token,password:adminInput.password})).status,200);
     assert.equal((await client.call('/auth/accept-invite','POST',{invitation_token:invite.data.invitation_token,password:adminInput.password})).status,422);
     await client.login(email);
     if(name==='viewer')viewer=client;if(name==='operator')operator=client;if(name==='editor'){editor=client;editorMember=invite.data;}
   }
-  const m=await editor.call('/me');assert.ok(m.data.permissions.includes('asset.edit')&&m.data.permissions.includes('review'));
+  const m=await editor.call('/me');assert.ok(m.data.permissions.includes('topic.edit')&&!m.data.permissions.includes('download.original'));
   assert.equal((await viewer.call('/accounts/'+account.id)).status,200);
   assert.equal((await viewer.call('/accounts/'+account.id,'PATCH',{name:'越权',expected_version:account.version})).status,403);
   assert.equal((await viewer.call('/members')).status,403);
@@ -57,11 +57,11 @@ test('邀请、组合角色及只读权限；重复使用邀请被拒绝',async(
   assert.equal((await viewer.call('/files/'+randomUUID()+'/download')).status,403);
   assert.equal((await viewer.call('/files/'+randomUUID()+'/preview')).status,404);
   assert.equal((await viewer.call('/jobs/'+randomUUID()+'/cancel','POST',{reason:'只读越权'})).status,403);
-  const stored=JSON.stringify((await s.db.query("SELECT response FROM idempotency_records WHERE route='/members'")).rows);
+  const stored=JSON.stringify((await s.db.query("SELECT response FROM idempotency_records WHERE route='/members@v1.2'")).rows);
   assert.ok(!stored.includes('invitation_token'));assert.ok(stored.includes('encrypted'));
 });
 test('诊断202立即可查询Job；其他用户/账号不可见，生产Cookie为Secure',async()=>{
-  const diagnostic=await admin.call('/diagnostics','POST',{pool:'reminder',account_id:account.id});assert.equal(diagnostic.status,202);assert.match(diagnostic.data.status_url,/\/jobs\//);
+  const diagnostic=await admin.call('/diagnostics','POST',{pool:'general',account_id:account.id});assert.equal(diagnostic.status,202);assert.match(diagnostic.data.status_url,/\/jobs\//);
   assert.equal((await admin.call('/jobs/'+diagnostic.data.job_id)).data.state,'queued');assert.equal((await viewer.call('/jobs/'+diagnostic.data.job_id)).status,404);
   const old=config.secure;config.secure=true;try{const client=new Client(s.url);await client.init();assert.match((await client.login('operator@example.test')).headers.get('set-cookie')!,/Secure/);}finally{config.secure=old;}
 });

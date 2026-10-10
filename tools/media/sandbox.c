@@ -26,7 +26,7 @@ int main(int argc,char **argv){
  allow(fd,"/usr",read);allow(fd,"/lib",read);if(access("/lib64",F_OK)==0)allow(fd,"/lib64",read);
  allow(fd,argv[1],read|write);
  allow(fd,"/dev/null",LANDLOCK_ACCESS_FS_READ_FILE|LANDLOCK_ACCESS_FS_WRITE_FILE);
- allow(fd,"/etc/fonts",LANDLOCK_ACCESS_FS_READ_DIR|LANDLOCK_ACCESS_FS_READ_FILE);
+ if(access("/etc/fonts",F_OK)==0)allow(fd,"/etc/fonts",LANDLOCK_ACCESS_FS_READ_DIR|LANDLOCK_ACCESS_FS_READ_FILE);
  if(syscall(SYS_landlock_restrict_self,fd,0))die("landlock restrict");close(fd);
 #if defined(__aarch64__)
  #define NATIVE_ARCH AUDIT_ARCH_AARCH64

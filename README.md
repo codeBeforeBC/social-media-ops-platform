@@ -2,7 +2,9 @@
 
 设计范围已按2026-10-09的[CHANGE-008](docs/decisions/ADR-008-删除排期日历与活动.md)收缩为工作台、选题策划、数据复盘三导航，取消全部IP资产库、内容工作间、排期日历与活动（含AI排期/开奖/公告/提醒/活动标记及回收节点）。代码清退计划及验收状态见[开发进度](docs/tracking/开发进度.md)。
 
-以下运行命令适用于当前a290414代码，仍含旧资产/规范、制作单及图文编辑/审核/发布链、日历占位、提醒执行池和活动标记；它们尚未因文档更新而删除。新目标中的独立笔记登记、采纳决策与导入文件接口仍需按[实施计划](docs/开发实施计划-v1.0.md)改造。下方旧模块/提醒池命令仅说明现有实现，尚未随目标范围清退；来源定时采集、通用任务/系统通知和必要导入文件继续保留。
+当前实现已收口三导航、选题人工决策、系统外已发布笔记登记与私有导入文件基础。指标导入确认、OCR、复盘报告及反馈尚未开发；实际任务状态以台账为准。
+
+025/026兼容迁移保留001–024历史SQL、旧Publication身份和文件引用，取消在途旧任务并把16张专属表及原关系移入受限retired schema。迁移不会删除持久对象；切换前停止旧API/worker/scheduler、备份数据库/objects/state，再升级。旧程序不能在迁出表后的库直接降级，回滚须停写并恢复同一备份点；实际副本演练见 [S11证据](docs/evidence/s11/README.md)。
 
 ## 本地启动
 
@@ -31,7 +33,7 @@ docker compose exec api node dist/tools/setup-token.js
 
 ```sh
 docker compose ps
-docker compose logs --tail=100 api worker reminder media media-executor scheduler
+docker compose logs --tail=100 api worker media media-executor scheduler
 docker compose stop
 docker compose up -d
 ```
@@ -63,7 +65,7 @@ pnpm setup-token
 pnpm dev
 ```
 
-普通Compose使用 `yoyo-workbench` 项目，开发Compose使用独立的 `yoyo-dev` 项目和数据库卷，避免两种入口混用凭据或数据。开发Compose把实例凭据写入忽略目录 `.local/state`，向本机暴露数据库54329、私有对象59000、媒体执行器59010端口。前端为 `http://localhost:5173`；**原生开发在 `.env` 将 `APP_ORIGIN` 改为 `http://localhost:5173`**，Vite代理 `/api` 到3000。原生开发另设 `MEDIA_ENDPOINT=http://127.0.0.1:59010`，并将 `S3_PUBLIC_ENDPOINT=http://localhost:59000`；签名地址须可从浏览器访问。也可构建后直接 `node dist/apps/api/src/main.js` 在3000访问。`pnpm worker`、`WORKER_POOL=reminder pnpm worker` 和 `pnpm scheduler` 分别运行一般池、提醒池与调度进程；`WORKER_POOL=media pnpm worker`运行媒体池；`pnpm dev`统一启动这些进程和前后端。
+普通Compose使用 `yoyo-workbench` 项目，开发Compose使用独立的 `yoyo-dev` 项目和数据库卷，避免两种入口混用凭据或数据。开发Compose把实例凭据写入忽略目录 `.local/state`，向本机暴露数据库54329、私有对象59000、媒体执行器59010端口。前端为 `http://localhost:5173`；**原生开发在 `.env` 将 `APP_ORIGIN` 改为 `http://localhost:5173`**，Vite代理 `/api` 到3000。原生开发另设 `MEDIA_ENDPOINT=http://127.0.0.1:59010`，并将 `S3_PUBLIC_ENDPOINT=http://localhost:59000`；签名地址须可从浏览器访问。也可构建后直接 `node dist/apps/api/src/main.js` 在3000访问。`pnpm worker` 和 `pnpm scheduler` 分别运行一般池与来源调度进程；`WORKER_POOL=media pnpm worker`运行媒体池；`pnpm dev`统一启动这些进程和前后端。
 
 自行准备数据库时显式配置 `DATABASE_URL`，并运行 `STATE_DIR=.local/state node tools/init-state.mjs` 创建持久内部凭据。迁移源为 `packages/db/migrations/*.sql`，Prisma Schema反映关系；CHECK、部分索引、行锁和审计触发器由SQL负责。禁止用 `prisma db push` 替代迁移。
 
@@ -74,12 +76,12 @@ pnpm dev
 ```sh
 docker compose -f compose.yaml -f compose.dev.yaml exec -T db psql -U yoyo -d postgres -c 'CREATE DATABASE yoyo_test'
 pnpm exec playwright install chromium
-pnpm check:s2
+pnpm check:s11
 ```
 
-`pnpm check:s2`准备独立的 `yoyo-s2-tests` 对象存储与解析器（59020/59030），运行构建、前后端类型检查、真实PostgreSQL/S3/HTTP集成与浏览器测试；凭据、对象与使用实例分离。`pnpm check`适用于已显式配置存储/解析器的环境。测试脚本从本地受限凭据构造开发测试连接；CI/外部数据库显式设置 `TEST_DATABASE_URL`（必须 `_test` 后缀），`STATE_DIR`指定实例凭据目录。测试会清空该测试库数据，不连接使用实例数据库。
+`pnpm check:s11`准备独立的 `yoyo-s11-tests` 对象存储与解析器（59040/59050），运行构建、前后端类型检查、真实PostgreSQL/S3/HTTP集成与浏览器测试；凭据、对象与使用实例分离。`pnpm check`适用于已显式配置存储/解析器的环境。测试脚本从本地受限凭据构造开发测试连接；CI/外部数据库显式设置 `TEST_DATABASE_URL`（必须 `_test` 后缀），`STATE_DIR`指定实例凭据目录。测试会清空该测试库数据，不连接使用实例数据库。
 
-浏览器测试使用独立3001端口，包含首次设置、表单、六导航、键盘抽屉、空/错/加载、登录过期与1440/1280/390布局。CI定义见 `.github/workflows/ci.yml`；本地执行不代表已经在托管CI运行。验收事实见 [S1证据](docs/evidence/s1/README.md) 与 [S2证据](docs/evidence/s2/README.md)，开发状态以 [任务台账](docs/tracking/开发进度.md) 为准。
+浏览器测试使用独立3001端口，包含首次设置、表单、三导航、键盘抽屉、空/错/加载、登录过期与1440/1280/390布局。CI定义见 `.github/workflows/ci.yml`；本地执行不代表已经在托管CI运行。当前清退验收见 [S11证据](docs/evidence/s11/README.md)，旧验收事实见 [S1证据](docs/evidence/s1/README.md) 与 [S2证据](docs/evidence/s2/README.md)，开发状态以 [任务台账](docs/tracking/开发进度.md) 为准。
 
 ## 外部能力与排障
 
@@ -91,7 +93,7 @@ AI/OCR没有默认密钥或预算，来源没有默认账号凭据。按需配�
 - 写操作403：核对浏览器地址与APP_ORIGIN、刷新CSRF、当前成员角色。401须重新登录。
 - 版本冲突409：重新加载当前对象后确认修改，不静默覆盖。
 - 后台任务失败：管理员在设置→后台任务查看错误和请求编号，可填写原因重试；输入过期结果不会自动覆盖当前版本。
-- 本地电脑休眠/服务停止：持续任务暂停；进程恢复后重新领取过期租约。现有提醒池待S11退出；保留来源/AI/解析任务与系统通知，站内已读不代表任务已完成。
+- 本地电脑休眠/服务停止：持续任务暂停；进程恢复后重新领取过期租约。来源/AI/解析任务与系统通知保留，站内已读不代表任务已完成。
 
 ## PNG 与品牌规范使用（旧实现说明，目标范围已取消）
 

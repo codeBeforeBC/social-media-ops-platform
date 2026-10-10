@@ -1,0 +1,218 @@
+Instance credentials ready; no secrets printed.
+ Image yoyo-import-parser-local:1.2.0 Building
+#1 [internal] load local bake definitions
+#1 reading from stdin 611B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.19kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 177B done
+#4 DONE 0.0s
+
+#5 [build 1/4] FROM docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#5 resolve docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 191B done
+#6 DONE 0.0s
+
+#7 [stage-1 3/6] COPY --from=build /media-sandbox /usr/local/bin/media-sandbox
+#7 CACHED
+
+#8 [build 2/4] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && apt-get -o Acquire::Retries=3 install -y --no-install-recommends gcc libc6-dev linux-libc-dev
+#8 CACHED
+
+#9 [build 4/4] RUN gcc -O2 -Wall /sandbox.c -o /media-sandbox
+#9 CACHED
+
+#10 [stage-1 5/6] COPY tools/media/import-validate.py /usr/local/lib/yoyo/import-validate.py
+#10 CACHED
+
+#11 [build 3/4] COPY tools/media/sandbox.c /sandbox.c
+#11 CACHED
+
+#12 [stage-1 4/6] COPY tools/media/server.mjs /app/server.mjs
+#12 CACHED
+
+#13 [stage-1 2/6] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && (apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil ca-certificates || apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil ca-certificates) && rm -rf /var/lib/apt/lists/* && mkdir /scratch && chown node:node /scratch
+#13 CACHED
+
+#14 [stage-1 6/6] WORKDIR /app
+#14 CACHED
+
+#15 exporting to image
+#15 exporting layers done
+#15 exporting manifest sha256:51786bd5c267c0bf22604c3a91434d05b85bae98ea1a2ffaa0ad7f78ef41656f done
+#15 exporting config sha256:5d0192fe4ce853f3a44320fe5c892a0b89aef300aaed94a38b681f5e3fa1ccbc done
+#15 exporting attestation manifest sha256:0220a56a849d4a6dc47b1efd7e94ef2a78fc3de11360cdb5f622cc6f39e20c14 done
+#15 exporting manifest list sha256:db89052dff64feb262e15ac65761db07f3f70eae90557c01751ed39f13779951 done
+#15 naming to docker.io/library/yoyo-import-parser-local:1.2.0 done
+#15 unpacking to docker.io/library/yoyo-import-parser-local:1.2.0 done
+#15 DONE 0.0s
+
+#16 resolving provenance for metadata file
+#16 DONE 0.0s
+ Image yoyo-import-parser-local:1.2.0 Built
+ Container yoyo-s11-tests-storage-1 Running
+ Container yoyo-s11-tests-media-executor-1 Recreate
+ Container yoyo-s11-tests-media-executor-1 Recreated
+ Container yoyo-s11-tests-media-executor-1 Starting
+ Container yoyo-s11-tests-media-executor-1 Started
+ Container yoyo-s11-tests-media-executor-1 Waiting
+ Container yoyo-s11-tests-storage-1 Waiting
+ Container yoyo-s11-tests-media-executor-1 Healthy
+ Container yoyo-s11-tests-storage-1 Healthy
+Private storage ready.
+{"event":"http.request","request_id":"42daaa37-9b0e-4413-8e8b-a993422cbe98","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"226735ba-4792-40a3-96d8-72f4039bc8c8","method":"POST","path":"/api/v1/setup","status":201,"duration_ms":30}
+{"event":"http.request","request_id":"c6871ad4-ca0e-4e6c-a3bb-2e509d195f9d","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"33a292bb-d0a2-4ec5-a32e-ef7a2c2abc43","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":21}
+{"event":"http.request","request_id":"ce339e7e-e56e-42cb-bef8-c91351b1c248","method":"GET","path":"/api/v1/me","status":200,"duration_ms":74}
+{"event":"http.request","request_id":"7ed8e301-4ccf-44af-81e0-25a9f0950758","method":"POST","path":"/api/v1/accounts","status":201,"duration_ms":7}
+{"event":"http.request","request_id":"b915063a-0b68-45e0-acbc-28f37f624827","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":10}
+{"event":"http.request","request_id":"0e663a7f-f2bb-4c59-aa93-0e725075bb0d","method":"POST","path":"/api/v1/uploads/53d94542-c713-495a-a4ed-a52a1fc38323/parts","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"7411f59c-7e4d-44fb-8b1a-5c95c25f65c3","method":"PUT","path":"/api/v1/uploads/53d94542-c713-495a-a4ed-a52a1fc38323/parts/1","status":200,"duration_ms":7}
+{"event":"http.request","request_id":"1cc2afbf-1b51-434d-92be-de5f50a82951","method":"POST","path":"/api/v1/uploads/53d94542-c713-495a-a4ed-a52a1fc38323/complete","status":200,"duration_ms":12}
+{"event":"http.request","request_id":"8613b084-c184-4f83-b9f1-71970919fc2e","method":"GET","path":"/api/v1/files/5e92f138-aa70-4880-aea5-05f3e95f0cdb/download","status":409,"duration_ms":2}
+{"event":"http.request","request_id":"a11c419f-298e-47c7-b5d3-3a2f99fe592e","method":"GET","path":"/api/v1/files/5e92f138-aa70-4880-aea5-05f3e95f0cdb/download","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"7554082c-79e7-442d-9704-dee9cf71ddeb","method":"GET","path":"/api/v1/files/5e92f138-aa70-4880-aea5-05f3e95f0cdb/preview","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"47c37ac4-bd24-44e8-845b-b3c350f0ff7a","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":7}
+{"event":"http.request","request_id":"93fef479-4b02-48e6-9739-91c02fd8da27","method":"POST","path":"/api/v1/uploads/2e2c2136-dad9-4056-b1bb-bf425734cb4b/parts","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"82ae9290-e470-426a-a285-19eedd2d1ccb","method":"PUT","path":"/api/v1/uploads/2e2c2136-dad9-4056-b1bb-bf425734cb4b/parts/1","status":200,"duration_ms":6}
+{"event":"http.request","request_id":"0c6fa833-3913-449a-ab29-6368daa1e826","method":"POST","path":"/api/v1/uploads/2e2c2136-dad9-4056-b1bb-bf425734cb4b/complete","status":200,"duration_ms":9}
+{"event":"http.request","request_id":"8dd678dc-d36a-420a-8184-d93079499839","method":"GET","path":"/api/v1/files/f05e86e8-28e8-498e-9f41-7a0adcdb0985/download","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"fce5fff1-c982-430a-af5c-e36890e163d4","method":"GET","path":"/api/v1/files/f05e86e8-28e8-498e-9f41-7a0adcdb0985/preview","status":409,"duration_ms":1}
+{"event":"http.request","request_id":"558d2a21-6b2b-453b-a54c-016065625208","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":6}
+{"event":"http.request","request_id":"69fb88f0-83f2-4350-9c9b-2483f03fc107","method":"POST","path":"/api/v1/uploads/3b24ed02-fc86-47c2-9c72-95c9f4047469/parts","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"edbb283b-270a-4bce-8a39-286847a145d9","method":"PUT","path":"/api/v1/uploads/3b24ed02-fc86-47c2-9c72-95c9f4047469/parts/1","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"8547a054-e6fa-4899-8d9f-95be2dcfe3b4","method":"POST","path":"/api/v1/uploads/3b24ed02-fc86-47c2-9c72-95c9f4047469/complete","status":200,"duration_ms":8}
+{"event":"http.request","request_id":"54eda4bc-5469-4484-aa95-454ecdb33598","method":"GET","path":"/api/v1/files/413e2576-fb8e-4996-a770-7c60d69fa4cc/download","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"383d94a2-05fb-4cf2-844a-440be669c495","method":"GET","path":"/api/v1/files/413e2576-fb8e-4996-a770-7c60d69fa4cc/preview","status":409,"duration_ms":2}
+✔ 导入PNG/CSV/XLSX通过真实隔离解析，哈希原件/私有签名与表格禁预览保留 (659.106834ms)
+{"event":"http.request","request_id":"a5f38081-a487-4d82-977a-727b2211045c","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"c6d64903-8dcd-4756-bd63-3dcf4f12aee7","method":"POST","path":"/api/v1/setup","status":201,"duration_ms":22}
+{"event":"http.request","request_id":"9dcd3af1-fe16-4269-9d9b-130400d54855","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"b5ef1fab-46fe-40ca-9a1d-3370f3b386cf","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":20}
+{"event":"http.request","request_id":"753c1695-6014-4e9d-8dd2-806e5c1fdd78","method":"GET","path":"/api/v1/me","status":200,"duration_ms":8}
+{"event":"http.request","request_id":"a8b29a6f-124b-49fa-b4ef-007c8e31537d","method":"POST","path":"/api/v1/accounts","status":201,"duration_ms":5}
+{"event":"http.request","request_id":"50b40cd8-1041-412d-b2e0-9cc8525b7fea","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":7}
+{"event":"http.request","request_id":"e551dc2d-bca7-4af6-a355-6e29bd20e9ab","method":"POST","path":"/api/v1/uploads/6766636f-8afa-434e-bc14-e57f6e1b810e/parts","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"87f76da5-d6eb-4a1d-98a8-6026084d745d","method":"PUT","path":"/api/v1/uploads/6766636f-8afa-434e-bc14-e57f6e1b810e/parts/1","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"58410627-4682-4e50-bd9e-124162096cfd","method":"POST","path":"/api/v1/uploads/6766636f-8afa-434e-bc14-e57f6e1b810e/complete","status":200,"duration_ms":9}
+{"event":"http.request","request_id":"74b91146-4374-4f7d-a525-510a6a560872","method":"POST","path":"/api/v1/accounts","status":201,"duration_ms":5}
+{"event":"http.request","request_id":"e635dc20-6a13-44fc-b335-0fac9647b1cd","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":5}
+{"event":"http.request","request_id":"5f8361eb-9568-4987-8000-975836fe928a","method":"POST","path":"/api/v1/uploads/68834e52-f976-46e7-b89e-99df2b4fb225/parts","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"0fba4e7f-3f9a-445f-a14e-27ab52714e8b","method":"PUT","path":"/api/v1/uploads/68834e52-f976-46e7-b89e-99df2b4fb225/parts/1","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"371b4011-6907-44d8-826d-49925955420d","method":"POST","path":"/api/v1/uploads/68834e52-f976-46e7-b89e-99df2b4fb225/complete","status":200,"duration_ms":8}
+{"event":"http.request","request_id":"d4db17c5-a16a-4777-84c1-f81c121fcf96","method":"POST","path":"/api/v1/uploads","status":422,"duration_ms":3}
+{"event":"http.request","request_id":"9e94aa38-87d1-450f-af7a-4554bada3908","method":"POST","path":"/api/v1/uploads","status":422,"duration_ms":3}
+{"event":"http.request","request_id":"c6311ec2-4e2a-42be-b40c-4796796c5be5","method":"POST","path":"/api/v1/uploads","status":422,"duration_ms":2}
+{"event":"http.request","request_id":"531ab0d4-8ada-4a82-8c0d-b86f0811d4c5","method":"POST","path":"/api/v1/uploads","status":422,"duration_ms":3}
+{"event":"http.request","request_id":"0a069e72-6ab3-443d-b750-87e8ad2293df","method":"POST","path":"/api/v1/uploads","status":422,"duration_ms":3}
+{"event":"http.request","request_id":"ba04c8e5-0855-4121-b743-0efd5636500c","method":"GET","path":"/api/v1/files/b3c96802-51a2-4ed5-9e0f-1160c60b5aab/download","status":403,"duration_ms":1}
+{"event":"http.request","request_id":"e8bde3ad-0fc7-4f46-a1f6-b247e90c1564","method":"GET","path":"/api/v1/files/b3c96802-51a2-4ed5-9e0f-1160c60b5aab/preview","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"570c05c4-21c5-4a37-8ac4-a6c5f4b69aa3","method":"POST","path":"/api/v1/uploads","status":403,"duration_ms":2}
+{"event":"http.request","request_id":"139de005-cb9c-4302-88b1-254b8f5d9e82","method":"GET","path":"/api/v1/files/b3c96802-51a2-4ed5-9e0f-1160c60b5aab/download","status":403,"duration_ms":1}
+{"event":"http.request","request_id":"df0d1bde-8d0e-41b0-a4e0-fd58f0ac42b3","method":"GET","path":"/api/v1/files/b3c96802-51a2-4ed5-9e0f-1160c60b5aab/preview","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"8f6f849f-d34e-488a-a191-77f4bd963d9b","method":"POST","path":"/api/v1/uploads","status":403,"duration_ms":3}
+{"event":"http.request","request_id":"dca20b20-b70e-4e77-9672-7d8339cbe3c1","method":"GET","path":"/api/v1/files/b3c96802-51a2-4ed5-9e0f-1160c60b5aab/preview","status":404,"duration_ms":2}
+{"event":"http.request","request_id":"b2331b8a-fc29-467f-b80b-82eb4289f7d6","method":"GET","path":"/api/v1/files/b3c96802-51a2-4ed5-9e0f-1160c60b5aab/download","status":404,"duration_ms":1}
+✔ 账号/目的隔离、角色矩阵、旧用途和旧文件ID拒绝，hash不跨账号复用 (240.994583ms)
+{"event":"http.request","request_id":"ae950b14-1ac6-4986-9da4-cd6b9004bf04","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"ba802fc3-342b-45ee-9dd1-70eda14f118b","method":"POST","path":"/api/v1/setup","status":201,"duration_ms":20}
+{"event":"http.request","request_id":"bdfe9e6f-45ad-4ddc-8a0e-46084c90edb6","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"c3c880ab-dbf0-4881-9d10-64f27700c3d9","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":20}
+{"event":"http.request","request_id":"8e8bc2dd-83d7-456c-a9b2-d5538a5b95d7","method":"GET","path":"/api/v1/me","status":200,"duration_ms":8}
+{"event":"http.request","request_id":"a440310b-f1d5-4824-9236-c6195edc79f1","method":"POST","path":"/api/v1/accounts","status":201,"duration_ms":5}
+{"event":"http.request","request_id":"887a0082-9f35-44c0-bb32-50748ab50742","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":7}
+{"event":"http.request","request_id":"dc7d9bbe-d5b5-474d-99bf-189b281d9947","method":"POST","path":"/api/v1/uploads/e7f0d23b-7db5-4352-9a79-4a2431fe674e/parts","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"7baeea61-b12e-40ba-a1d1-37189621742b","method":"PUT","path":"/api/v1/uploads/e7f0d23b-7db5-4352-9a79-4a2431fe674e/parts/1","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"7c08826c-827d-4975-8f6e-d27809cf8400","method":"POST","path":"/api/v1/uploads/e7f0d23b-7db5-4352-9a79-4a2431fe674e/complete","status":200,"duration_ms":9}
+{"event":"http.request","request_id":"cce82175-766c-402f-b4fa-2de1eaaa2607","method":"GET","path":"/api/v1/files/0d1ed118-a8a0-4840-a8c5-73ac343b547e/download","status":409,"duration_ms":1}
+{"event":"http.request","request_id":"25adfff0-d6e2-41b1-966d-df0126cd4504","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":5}
+{"event":"http.request","request_id":"9fd474db-a2db-4eba-b1d6-dace29dd7533","method":"POST","path":"/api/v1/uploads/81efd7ff-11dc-4474-8b31-cba53e123861/parts","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"7caf132b-7317-4106-9465-9a9b508bdeac","method":"PUT","path":"/api/v1/uploads/81efd7ff-11dc-4474-8b31-cba53e123861/parts/1","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"3b4ced5b-7731-4098-ace5-86d5f6bc0ae9","method":"POST","path":"/api/v1/uploads/81efd7ff-11dc-4474-8b31-cba53e123861/complete","status":200,"duration_ms":8}
+{"event":"http.request","request_id":"c827e4a6-0bdd-47e3-92c0-713d8059c2b7","method":"GET","path":"/api/v1/files/be47dc31-3461-4e51-9ab4-926d98e98552/download","status":409,"duration_ms":2}
+{"event":"http.request","request_id":"4df1ee6e-519f-4e55-8854-d6f25350817e","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":5}
+{"event":"http.request","request_id":"f25a6048-2ca3-4149-a8d0-1ada1b15a490","method":"POST","path":"/api/v1/uploads/73a22551-8d6e-48b6-8fd6-02e2499058a5/parts","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"76be93ff-0fca-4c06-ad4a-3b14e280b284","method":"PUT","path":"/api/v1/uploads/73a22551-8d6e-48b6-8fd6-02e2499058a5/parts/1","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"8d10b5be-0d20-4ff6-bd27-1b45f86af328","method":"POST","path":"/api/v1/uploads/73a22551-8d6e-48b6-8fd6-02e2499058a5/complete","status":200,"duration_ms":8}
+{"event":"http.request","request_id":"08ca1025-a298-4232-96ef-61cc77041c91","method":"GET","path":"/api/v1/files/973476be-e68a-467c-b1e0-a6b51e6de44d/download","status":409,"duration_ms":2}
+{"event":"http.request","request_id":"bed165ed-3118-4be7-bee9-e146dfb2c48e","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":6}
+{"event":"http.request","request_id":"ecbe1527-5f90-48ff-8161-1cd500fd6cd5","method":"POST","path":"/api/v1/uploads/61070933-fc24-4df1-a32e-8db824e40fee/parts","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"5503d31f-f2d8-46c3-abe0-0dcda87c3026","method":"PUT","path":"/api/v1/uploads/61070933-fc24-4df1-a32e-8db824e40fee/parts/1","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"6fd9725c-81b0-43a6-9998-fad5f9e223a2","method":"POST","path":"/api/v1/uploads/61070933-fc24-4df1-a32e-8db824e40fee/complete","status":200,"duration_ms":7}
+{"event":"http.request","request_id":"24a7410c-9287-4034-a764-76398462679f","method":"GET","path":"/api/v1/files/99afd9c5-9d9c-4c62-9e8b-744300432be9/download","status":409,"duration_ms":2}
+{"event":"http.request","request_id":"4c472950-4a89-436c-9cd6-6d4a71edf68a","method":"POST","path":"/api/v1/uploads","status":422,"duration_ms":4}
+{"event":"http.request","request_id":"762514bd-99ee-44b2-b505-fe3f18d168d5","method":"POST","path":"/api/v1/uploads","status":422,"duration_ms":4}
+{"event":"http.request","request_id":"54a5d9ec-2685-4896-8bfd-6e93a4decef3","method":"POST","path":"/api/v1/uploads","status":422,"duration_ms":3}
+✔ 恶意PNG/公式CSV/宏或公式XLSX隔离，伪装/大小/MIME失败且不发签名 (339.187458ms)
+{"event":"http.request","request_id":"b829ae31-cc28-4413-a40a-d8170dfc9523","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"84cb19f0-44bf-48b0-8ed1-ed76257f06ae","method":"POST","path":"/api/v1/setup","status":201,"duration_ms":23}
+{"event":"http.request","request_id":"e2327dc7-0b84-4a6c-a98d-2077d37674e8","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"e67a83d3-bf12-47c6-9b88-46bf115943a2","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":21}
+{"event":"http.request","request_id":"2f4a28ef-23ce-4ef3-9282-040026d1e213","method":"GET","path":"/api/v1/me","status":200,"duration_ms":8}
+{"event":"http.request","request_id":"707b307e-2da9-483d-a52f-67e363a6d71f","method":"POST","path":"/api/v1/accounts","status":201,"duration_ms":5}
+{"event":"http.request","request_id":"6bc7ae6f-4cd3-4765-afd1-effd9318201c","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":7}
+{"event":"http.request","request_id":"09d6e999-b251-47c1-9c6a-f086445783f9","method":"POST","path":"/api/v1/uploads/5764c498-1951-4076-9fc2-ae1b523a6a71/parts","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"39476ab1-9b90-46db-a4ea-0adcd9c3f32c","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"8ff81377-8353-4180-9ee0-922131de2d34","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":20}
+{"event":"http.request","request_id":"2ddcb4d4-5690-44db-a789-4dd3fdb138ff","method":"PUT","path":"/api/v1/uploads/5764c498-1951-4076-9fc2-ae1b523a6a71/parts/1","status":422,"duration_ms":3}
+{"event":"http.request","request_id":"2f98ac27-caad-43c4-acb9-45e910c67143","method":"PUT","path":"/api/v1/uploads/5764c498-1951-4076-9fc2-ae1b523a6a71/parts/1","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"574e1a4a-3080-4399-a2b8-5ce07b1a47c8","method":"PUT","path":"/api/v1/uploads/5764c498-1951-4076-9fc2-ae1b523a6a71/parts/1","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"59381504-b2fd-486a-9955-a7d7b6beb575","method":"GET","path":"/api/v1/uploads/5764c498-1951-4076-9fc2-ae1b523a6a71","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"ae75f50e-2529-4e12-9eef-80add44e672c","method":"POST","path":"/api/v1/uploads/5764c498-1951-4076-9fc2-ae1b523a6a71/parts","status":409,"duration_ms":3}
+{"event":"http.request","request_id":"0cf808dd-5d2c-40c0-9574-ed2b77869ed6","method":"POST","path":"/api/v1/uploads/5764c498-1951-4076-9fc2-ae1b523a6a71/complete","status":422,"duration_ms":3}
+{"event":"http.request","request_id":"3856ce7b-de01-4f8d-89cc-51b5a88da7a1","method":"POST","path":"/api/v1/uploads/5764c498-1951-4076-9fc2-ae1b523a6a71/complete","status":200,"duration_ms":8}
+{"event":"http.request","request_id":"6d59db92-4e3c-4827-80b6-5a4198df3748","method":"POST","path":"/api/v1/uploads/5764c498-1951-4076-9fc2-ae1b523a6a71/complete","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"5f9401bb-c8ed-4539-84f7-6cafa2997248","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":5}
+{"event":"http.request","request_id":"54fb4ab7-b99c-4a86-a931-c9eeead9f76e","method":"POST","path":"/api/v1/uploads/65259c46-eadb-4be4-a616-a5939211f2ad/parts","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"245f5f12-d447-482b-a1a7-e0ed377eff70","method":"PUT","path":"/api/v1/uploads/65259c46-eadb-4be4-a616-a5939211f2ad/parts/1","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"28007e81-5e38-47da-865d-9398c19547fa","method":"POST","path":"/api/v1/uploads/65259c46-eadb-4be4-a616-a5939211f2ad/complete","status":422,"duration_ms":5}
+{"event":"http.request","request_id":"c64e620b-4e20-482e-a989-1e65e71a0ca6","method":"POST","path":"/api/v1/uploads/65259c46-eadb-4be4-a616-a5939211f2ad/abort","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"ae6bfacf-8cef-4d05-ab2d-47e212b03d30","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":5}
+{"event":"http.request","request_id":"30d1d364-06f6-41d5-b530-ee68dbecff16","method":"GET","path":"/api/v1/uploads/3a6aa1be-b246-4ed7-acdb-61d24fb74d03","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"62498791-029e-4111-be55-b6f04f651d4a","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":5}
+{"event":"http.request","request_id":"6ceea431-bd8c-407a-91ff-245b315407d7","method":"POST","path":"/api/v1/uploads/ee96278f-06b0-44ae-b046-6ca459555482/abort","status":200,"duration_ms":6}
+✔ 续传分片/登录恢复/幂等/校验/取消/过期保留，未完成文件不能下载 (219.061459ms)
+{"event":"http.request","request_id":"2220f61a-6f03-4767-b481-672ff7c88f6e","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"30278650-2288-492d-9bd7-062ce774eb14","method":"POST","path":"/api/v1/setup","status":201,"duration_ms":20}
+{"event":"http.request","request_id":"f0eff48e-edce-4649-afde-99376db71666","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"d0c8ee11-a73d-4bda-a61a-94bf14b8a4bc","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":19}
+{"event":"http.request","request_id":"f7729fbc-0beb-4a90-a3ae-78a19bca996c","method":"GET","path":"/api/v1/me","status":200,"duration_ms":8}
+{"event":"http.request","request_id":"50c1b346-c590-433a-a21a-9d957e9e0b0a","method":"POST","path":"/api/v1/accounts","status":201,"duration_ms":4}
+{"event":"http.request","request_id":"131b0fdd-c428-459c-99ba-971fa5f7fe22","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":8}
+{"event":"http.request","request_id":"2514e5b7-a45c-4727-9d76-6d1851a900cc","method":"POST","path":"/api/v1/uploads/2b90f510-adb3-48be-a133-50e982221f65/parts","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"2b61ee85-10f9-4ed2-8754-3a938910d9d4","method":"PUT","path":"/api/v1/uploads/2b90f510-adb3-48be-a133-50e982221f65/parts/1","status":200,"duration_ms":91}
+{"event":"http.request","request_id":"863de036-02f6-47e6-9c53-c41b9e1ca899","method":"POST","path":"/api/v1/uploads/2b90f510-adb3-48be-a133-50e982221f65/parts","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"86997a00-5fbb-42d7-b753-68bd9d83d799","method":"PUT","path":"/api/v1/uploads/2b90f510-adb3-48be-a133-50e982221f65/parts/2","status":200,"duration_ms":14}
+{"event":"http.request","request_id":"16d2246f-fe36-42ad-b27f-b010514883ae","method":"POST","path":"/api/v1/uploads/2b90f510-adb3-48be-a133-50e982221f65/complete","status":200,"duration_ms":48}
+{"event":"http.request","request_id":"8f9a9a42-aec9-4ef9-b88b-056ef5e3c2c3","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":6}
+{"event":"http.request","request_id":"534d252b-9ea2-4a31-9c26-971731fd600d","method":"POST","path":"/api/v1/uploads/85c65420-adbd-4368-92c7-be4bf52f89fb/parts","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"98baf19a-a6af-4f26-9236-6405b54ba154","method":"PUT","path":"/api/v1/uploads/85c65420-adbd-4368-92c7-be4bf52f89fb/parts/1","status":200,"duration_ms":81}
+{"event":"http.request","request_id":"e845e0ac-dea3-4690-9b46-7fc899e1cc9a","method":"POST","path":"/api/v1/uploads/85c65420-adbd-4368-92c7-be4bf52f89fb/parts","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"84ab75a5-e27e-4087-bfc1-721a73a9be89","method":"PUT","path":"/api/v1/uploads/85c65420-adbd-4368-92c7-be4bf52f89fb/parts/2","status":200,"duration_ms":11}
+{"event":"http.request","request_id":"fabd6c73-0151-48a1-a3c2-b1d73374e8bb","method":"POST","path":"/api/v1/uploads/85c65420-adbd-4368-92c7-be4bf52f89fb/complete","status":200,"duration_ms":42}
+{"event":"http.request","request_id":"28f33b76-25e5-4d0f-8f88-778a6da29607","method":"GET","path":"/api/v1/files/b6a39ae2-7644-474c-ba60-4beb76b42f66/download","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"d596847e-e1d0-4b6d-85a8-3b606143dab5","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":6}
+{"event":"http.request","request_id":"32f3a234-b4fb-42b1-baad-69a9f373f40f","method":"POST","path":"/api/v1/uploads/e2f4e488-63df-4685-b049-f1f38e526f24/parts","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"fd2a718e-60b0-429b-924b-730b86caf810","method":"PUT","path":"/api/v1/uploads/e2f4e488-63df-4685-b049-f1f38e526f24/parts/1","status":200,"duration_ms":6}
+{"event":"http.request","request_id":"32b5e3fd-dbd8-4bea-919c-39014ba68791","method":"POST","path":"/api/v1/uploads/e2f4e488-63df-4685-b049-f1f38e526f24/complete","status":200,"duration_ms":10}
+{"event":"http.request","request_id":"bec137d7-057d-4ada-a110-a766e141ecb8","method":"GET","path":"/api/v1/files/13073057-7e7b-4069-9a52-5a634dcc1e44/preview","status":409,"duration_ms":2}
+✔ 两分片CSV续传与同目的去重、撤销权限阻止解析提交 (681.202625ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2793.121708

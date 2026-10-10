@@ -8,26 +8,25 @@ datasource db {
 }
 
 model Workspace {
-  id                    String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name                  String                  @db.VarChar(200)
-  timezone              String                  @default("Asia/Shanghai")
-  settings              Json                    @default("{}")
-  version               Int                     @default(1)
-  created_at            DateTime                @default(now()) @db.Timestamptz(6)
-  updated_at            DateTime                @default(now()) @db.Timestamptz(6)
-  accounts              accounts[]
-  assets                assets[]
-  audit_logs            audit_logs[]
-  file_objects          file_objects[]
-  folders               folders[]
-  invitations           invitations[]
-  jobs                  jobs[]
-  memberships           memberships[]
-  notifications         notifications[]
-  operational_proposals operational_proposals[]
-  outbox                outbox[]
-  sessions              sessions[]
-  upload_sessions       upload_sessions[]
+  id                 String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name               String               @db.VarChar(200)
+  timezone           String               @default("Asia/Shanghai")
+  settings           Json                 @default("{}")
+  version            Int                  @default(1)
+  created_at         DateTime             @default(now()) @db.Timestamptz(6)
+  updated_at         DateTime             @default(now()) @db.Timestamptz(6)
+  accounts           accounts[]
+  ai_runs            ai_runs[]
+  audit_logs         audit_logs[]
+  file_objects       file_objects[]
+  invitations        invitations[]
+  jobs               jobs[]
+  memberships        memberships[]
+  notifications      notifications[]
+  outbox             outbox[]
+  sessions           sessions[]
+  source_connections source_connections[]
+  upload_sessions    upload_sessions[]
 
   @@map("workspaces")
 }
@@ -59,9 +58,13 @@ model accounts {
   account_memberships account_memberships[]
   workspaces          Workspace             @relation(fields: [workspace_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   memberships         memberships           @relation(fields: [workspace_id, owner_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
-  contents            contents[]
+  ai_requests         ai_requests[]
+  file_objects        file_objects[]
   jobs                jobs[]
   outbox              outbox[]
+  publications        publications[]
+  topics              topics[]
+  upload_sessions     upload_sessions[]
 
   @@unique([workspace_id, id])
   @@unique([workspace_id, platform, platform_user_id])
@@ -119,36 +122,39 @@ model invitations {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model jobs {
-  id               String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  workspace_id     String          @db.Uuid
-  account_id       String?         @db.Uuid
-  created_by       String          @db.Uuid
-  outbox_id        String?         @unique @db.Uuid
+  id               String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspace_id     String            @db.Uuid
+  account_id       String?           @db.Uuid
+  created_by       String            @db.Uuid
+  outbox_id        String?           @unique @db.Uuid
   type             String
   pool             String
-  input            Json            @default("{}")
+  input            Json              @default("{}")
   input_version    Int?
-  state            String          @default("queued")
-  attempts         Int             @default(0)
-  max_attempts     Int             @default(3)
-  available_at     DateTime        @default(now()) @db.Timestamptz(6)
-  lease_token      String?         @db.Uuid
-  lease_until      DateTime?       @db.Timestamptz(6)
-  heartbeat_at     DateTime?       @db.Timestamptz(6)
-  cancel_requested Boolean         @default(false)
-  timeout_seconds  Int             @default(120)
-  started_at       DateTime?       @db.Timestamptz(6)
-  finished_at      DateTime?       @db.Timestamptz(6)
+  state            String            @default("queued")
+  attempts         Int               @default(0)
+  max_attempts     Int               @default(3)
+  available_at     DateTime          @default(now()) @db.Timestamptz(6)
+  lease_token      String?           @db.Uuid
+  lease_until      DateTime?         @db.Timestamptz(6)
+  heartbeat_at     DateTime?         @db.Timestamptz(6)
+  cancel_requested Boolean           @default(false)
+  timeout_seconds  Int               @default(120)
+  started_at       DateTime?         @db.Timestamptz(6)
+  finished_at      DateTime?         @db.Timestamptz(6)
   result           Json?
   error_code       String?
-  request_id       String          @db.Uuid
-  version          Int             @default(1)
-  created_at       DateTime        @default(now()) @db.Timestamptz(6)
-  updated_at       DateTime        @default(now()) @db.Timestamptz(6)
-  accounts         accounts?       @relation(fields: [workspace_id, account_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
-  memberships      memberships     @relation(fields: [workspace_id, created_by], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
-  workspaces       Workspace       @relation(fields: [workspace_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  outbox           outbox?         @relation(fields: [workspace_id, outbox_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  request_id       String            @db.Uuid
+  version          Int               @default(1)
+  created_at       DateTime          @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime          @default(now()) @db.Timestamptz(6)
+  ai_requests      ai_requests[]
+  ai_runs          ai_runs[]
+  collection_runs  collection_runs[]
+  accounts         accounts?         @relation(fields: [workspace_id, account_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  memberships      memberships       @relation(fields: [workspace_id, created_by], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  workspaces       Workspace         @relation(fields: [workspace_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  outbox           outbox?           @relation(fields: [workspace_id, outbox_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
   notifications    notifications[]
 
   @@unique([workspace_id, outbox_id], map: "jobs_workspace_outbox_unique")
@@ -164,46 +170,37 @@ model login_limits {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model memberships {
-  id                                                                              String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  workspace_id                                                                    String                  @db.Uuid
-  user_id                                                                         String                  @db.Uuid
-  roles                                                                           String[]
-  active                                                                          Boolean                 @default(true)
-  version                                                                         Int                     @default(1)
-  created_at                                                                      DateTime                @default(now()) @db.Timestamptz(6)
-  updated_at                                                                      DateTime                @default(now()) @db.Timestamptz(6)
-  account_memberships                                                             account_memberships[]
-  accounts                                                                        accounts[]
-  asset_favorites                                                                 asset_favorites[]
-  asset_relations                                                                 asset_relations[]
-  asset_relations_asset_relations_workspace_id_created_byTomemberships            asset_relations[]       @relation("asset_relations_workspace_id_created_byTomemberships")
-  asset_usages                                                                    asset_usages[]
-  asset_usages_asset_usages_workspace_id_created_byTomemberships                  asset_usages[]          @relation("asset_usages_workspace_id_created_byTomemberships")
-  asset_versions_asset_versions_created_byTomemberships                           asset_versions[]        @relation("asset_versions_created_byTomemberships")
-  asset_versions_asset_versions_workspace_id_created_byTomemberships              asset_versions[]        @relation("asset_versions_workspace_id_created_byTomemberships")
-  asset_versions_asset_versions_workspace_id_permission_confirmed_byTomemberships asset_versions[]        @relation("asset_versions_workspace_id_permission_confirmed_byTomemberships")
-  assets_assets_created_byTomemberships                                           assets[]                @relation("assets_created_byTomemberships")
-  assets_assets_workspace_id_created_byTomemberships                              assets[]                @relation("assets_workspace_id_created_byTomemberships")
-  assets_assets_workspace_id_owner_idTomemberships                                assets[]                @relation("assets_workspace_id_owner_idTomemberships")
-  audit_logs                                                                      audit_logs[]
-  content_revisions                                                               content_revisions[]
-  contents                                                                        contents[]
-  file_objects                                                                    file_objects[]
-  file_objects_file_objects_workspace_id_created_byTomemberships                  file_objects[]          @relation("file_objects_workspace_id_created_byTomemberships")
-  folders                                                                         folders[]
-  folders_folders_workspace_id_created_byTomemberships                            folders[]               @relation("folders_workspace_id_created_byTomemberships")
-  idempotency_records                                                             idempotency_records[]
-  invitations                                                                     invitations[]
-  jobs                                                                            jobs[]
-  users                                                                           users                   @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  workspaces                                                                      Workspace               @relation(fields: [workspace_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  notifications                                                                   notifications[]
-  operational_proposals                                                           operational_proposals[]
-  rule_sets_rule_sets_created_byTomemberships                                     rule_sets[]             @relation("rule_sets_created_byTomemberships")
-  rule_sets_rule_sets_workspace_id_activated_byTomemberships                      rule_sets[]              @relation("rule_sets_workspace_id_activated_byTomemberships")
-  rule_sets_rule_sets_workspace_id_created_byTomemberships                        rule_sets[]              @relation("rule_sets_workspace_id_created_byTomemberships")
-  upload_sessions                                                                 upload_sessions[]
-  upload_sessions_upload_sessions_workspace_id_created_byTomemberships            upload_sessions[]       @relation("upload_sessions_workspace_id_created_byTomemberships")
+  id                                                                         String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspace_id                                                               String                @db.Uuid
+  user_id                                                                    String                @db.Uuid
+  roles                                                                      String[]
+  active                                                                     Boolean               @default(true)
+  version                                                                    Int                   @default(1)
+  created_at                                                                 DateTime              @default(now()) @db.Timestamptz(6)
+  updated_at                                                                 DateTime              @default(now()) @db.Timestamptz(6)
+  account_memberships                                                        account_memberships[]
+  accounts                                                                   accounts[]
+  ai_requests                                                                ai_requests[]
+  ai_runs                                                                    ai_runs[]
+  audit_logs                                                                 audit_logs[]
+  collection_runs                                                            collection_runs[]
+  file_objects                                                               file_objects[]
+  file_objects_file_objects_workspace_id_created_byTomemberships             file_objects[]        @relation("file_objects_workspace_id_created_byTomemberships")
+  idempotency_records                                                        idempotency_records[]
+  invitations                                                                invitations[]
+  jobs                                                                       jobs[]
+  users                                                                      users                 @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  workspaces                                                                 Workspace             @relation(fields: [workspace_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  notifications                                                              notifications[]
+  publications                                                               publications[]
+  source_connections_source_connections_workspace_id_created_byTomemberships source_connections[]  @relation("source_connections_workspace_id_created_byTomemberships")
+  source_connections_source_connections_workspace_id_owner_idTomemberships   source_connections[]  @relation("source_connections_workspace_id_owner_idTomemberships")
+  topic_decisions_topic_decisions_workspace_id_actor_idTomemberships         topic_decisions[]     @relation("topic_decisions_workspace_id_actor_idTomemberships")
+  topic_decisions_topic_decisions_workspace_id_owner_idTomemberships         topic_decisions[]     @relation("topic_decisions_workspace_id_owner_idTomemberships")
+  topics_topics_workspace_id_accepted_owner_idTomemberships                  topics[]              @relation("topics_workspace_id_accepted_owner_idTomemberships")
+  topics_topics_workspace_id_created_byTomemberships                         topics[]              @relation("topics_workspace_id_created_byTomemberships")
+  upload_sessions                                                            upload_sessions[]
+  upload_sessions_upload_sessions_workspace_id_created_byTomemberships       upload_sessions[]     @relation("upload_sessions_workspace_id_created_byTomemberships")
 
   @@unique([workspace_id, id])
   @@unique([workspace_id, user_id])
@@ -230,18 +227,20 @@ model notifications {
 }
 
 model outbox {
-  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  workspace_id  String    @db.Uuid
-  account_id    String?   @db.Uuid
-  event_key     String
-  event_type    String
-  payload       Json
-  available_at  DateTime  @default(now()) @db.Timestamptz(6)
-  dispatched_at DateTime? @db.Timestamptz(6)
-  created_at    DateTime  @default(now()) @db.Timestamptz(6)
-  jobs          jobs?
-  accounts      accounts? @relation(fields: [workspace_id, account_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
-  workspaces    Workspace @relation(fields: [workspace_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id                String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspace_id      String    @db.Uuid
+  account_id        String?   @db.Uuid
+  event_key         String
+  event_type        String
+  payload           Json
+  available_at      DateTime  @default(now()) @db.Timestamptz(6)
+  dispatched_at     DateTime? @db.Timestamptz(6)
+  created_at        DateTime  @default(now()) @db.Timestamptz(6)
+  retired_at        DateTime? @db.Timestamptz(6)
+  retirement_reason String?
+  jobs              jobs?
+  accounts          accounts? @relation(fields: [workspace_id, account_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  workspaces        Workspace @relation(fields: [workspace_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@unique([workspace_id, event_key])
   @@unique([workspace_id, id])
@@ -284,182 +283,6 @@ model users {
   sessions      sessions[]
 }
 
-model asset_favorites {
-  workspace_id  String      @db.Uuid
-  asset_id      String      @db.Uuid
-  membership_id String      @db.Uuid
-  assets        assets      @relation(fields: [workspace_id, asset_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
-  memberships   memberships @relation(fields: [workspace_id, membership_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
-
-  @@id([asset_id, membership_id])
-}
-
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model asset_relations {
-  id                                                                          String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  workspace_id                                                                String         @db.Uuid
-  created_by                                                                  String         @db.Uuid
-  from_version_id                                                             String         @db.Uuid
-  to_version_id                                                               String         @db.Uuid
-  relation_type                                                               String
-  created_at                                                                  DateTime       @default(now()) @db.Timestamptz(6)
-  version                                                                     Int            @default(1)
-  updated_at                                                                  DateTime       @default(now()) @db.Timestamptz(6)
-  memberships                                                                 memberships    @relation(fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  memberships_asset_relations_workspace_id_created_byTomemberships            memberships    @relation("asset_relations_workspace_id_created_byTomemberships", fields: [workspace_id, created_by], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
-  asset_versions_asset_relations_workspace_id_from_version_idToasset_versions asset_versions @relation("asset_relations_workspace_id_from_version_idToasset_versions", fields: [workspace_id, from_version_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
-  asset_versions_asset_relations_workspace_id_to_version_idToasset_versions   asset_versions @relation("asset_relations_workspace_id_to_version_idToasset_versions", fields: [workspace_id, to_version_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
-
-  @@unique([from_version_id, to_version_id, relation_type])
-}
-
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model asset_usages {
-  id                                                            String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  workspace_id                                                  String            @db.Uuid
-  created_by                                                    String            @db.Uuid
-  asset_version_id                                              String            @db.Uuid
-  revision_id                                                   String            @db.Uuid
-  usage_role                                                    String
-  clip_start_ms                                                 Int?
-  clip_end_ms                                                   Int?
-  permission_snapshot                                           Json
-  created_at                                                    DateTime          @default(now()) @db.Timestamptz(6)
-  version                                                       Int               @default(1)
-  updated_at                                                    DateTime          @default(now()) @db.Timestamptz(6)
-  memberships                                                   memberships       @relation(fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  asset_versions                                                asset_versions    @relation(fields: [workspace_id, asset_version_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
-  memberships_asset_usages_workspace_id_created_byTomemberships memberships       @relation("asset_usages_workspace_id_created_byTomemberships", fields: [workspace_id, created_by], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
-  content_revisions                                             content_revisions @relation(fields: [workspace_id, revision_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
-
-  @@unique([asset_version_id, revision_id, usage_role])
-  @@index([workspace_id, revision_id], map: "usage_revision")
-}
-
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model asset_versions {
-  id                                                                           String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  workspace_id                                                                 String            @db.Uuid
-  created_by                                                                   String            @db.Uuid
-  asset_id                                                                     String            @db.Uuid
-  version_no                                                                   Int
-  source_file_id                                                               String            @db.Uuid
-  preview_file_id                                                              String?           @db.Uuid
-  parent_version_id                                                            String?           @db.Uuid
-  usage_scope                                                                  String            @default("")
-  valid_until                                                                  DateTime?         @db.Timestamptz(6)
-  software                                                                     String?
-  dependencies                                                                 String[]          @default([]) @db.Uuid
-  permission_confirmed_by                                                      String?           @db.Uuid
-  permission_confirmed_at                                                      DateTime?         @db.Timestamptz(6)
-  checklist                                                                    String[]          @default([])
-  version                                                                      Int               @default(1)
-  created_at                                                                   DateTime          @default(now()) @db.Timestamptz(6)
-  updated_at                                                                   DateTime          @default(now()) @db.Timestamptz(6)
-  asset_relations_asset_relations_workspace_id_from_version_idToasset_versions asset_relations[] @relation("asset_relations_workspace_id_from_version_idToasset_versions")
-  asset_relations_asset_relations_workspace_id_to_version_idToasset_versions   asset_relations[] @relation("asset_relations_workspace_id_to_version_idToasset_versions")
-  asset_usages                                                                 asset_usages[]
-  memberships_asset_versions_created_byTomemberships                           memberships       @relation("asset_versions_created_byTomemberships", fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  assets_asset_versions_workspace_id_asset_idToassets                          assets            @relation("asset_versions_workspace_id_asset_idToassets", fields: [workspace_id, asset_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
-  memberships_asset_versions_workspace_id_created_byTomemberships              memberships       @relation("asset_versions_workspace_id_created_byTomemberships", fields: [workspace_id, created_by], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
-  asset_versions                                                               asset_versions?   @relation("asset_versionsToasset_versions", fields: [workspace_id, parent_version_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
-  other_asset_versions                                                         asset_versions[]  @relation("asset_versionsToasset_versions")
-  memberships_asset_versions_workspace_id_permission_confirmed_byTomemberships memberships?      @relation("asset_versions_workspace_id_permission_confirmed_byTomemberships", fields: [workspace_id, permission_confirmed_by], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
-  file_objects_asset_versions_workspace_id_preview_file_idTofile_objects       file_objects?     @relation("asset_versions_workspace_id_preview_file_idTofile_objects", fields: [workspace_id, preview_file_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
-  file_objects_asset_versions_workspace_id_source_file_idTofile_objects        file_objects      @relation("asset_versions_workspace_id_source_file_idTofile_objects", fields: [workspace_id, source_file_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
-  assets_assets_workspace_id_current_version_idToasset_versions                assets[]          @relation("assets_workspace_id_current_version_idToasset_versions")
-
-  @@unique([asset_id, version_no])
-  @@unique([workspace_id, id])
-}
-
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model assets {
-  id                                                                    String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  workspace_id                                                          String            @db.Uuid
-  created_by                                                            String            @db.Uuid
-  name                                                                  String
-  category                                                              String
-  ip_identity                                                           String
-  folder_id                                                             String?           @db.Uuid
-  owner_id                                                              String            @db.Uuid
-  source                                                                String
-  series                                                                String            @default("")
-  tags                                                                  String[]          @default([])
-  business_status                                                       String            @default("pending_confirmation")
-  current_version_id                                                    String?           @db.Uuid
-  version                                                               Int               @default(1)
-  created_at                                                            DateTime          @default(now()) @db.Timestamptz(6)
-  updated_at                                                            DateTime          @default(now()) @db.Timestamptz(6)
-  retired_reason                                                        String?
-  retired_at                                                            DateTime?         @db.Timestamptz(6)
-  asset_favorites                                                       asset_favorites[]
-  asset_versions_asset_versions_workspace_id_asset_idToassets           asset_versions[]  @relation("asset_versions_workspace_id_asset_idToassets")
-  memberships_assets_created_byTomemberships                            memberships       @relation("assets_created_byTomemberships", fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  memberships_assets_workspace_id_created_byTomemberships               memberships       @relation("assets_workspace_id_created_byTomemberships", fields: [workspace_id, created_by], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
-  asset_versions_assets_workspace_id_current_version_idToasset_versions asset_versions?   @relation("assets_workspace_id_current_version_idToasset_versions", fields: [workspace_id, current_version_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
-  workspaces                                                            Workspace         @relation(fields: [workspace_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  folders                                                               folders?          @relation(fields: [workspace_id, folder_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
-  memberships_assets_workspace_id_owner_idTomemberships                 memberships       @relation("assets_workspace_id_owner_idTomemberships", fields: [workspace_id, owner_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
-
-  @@unique([workspace_id, id])
-  @@index([workspace_id, category, created_at(sort: Desc), id(sort: Desc)], map: "asset_search_filter")
-}
-
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model brand_rules {
-  id               String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  workspace_id     String    @db.Uuid
-  rule_set_id      String    @db.Uuid
-  category         String
-  rule_text        String
-  source_page      Int
-  severity         String
-  uncertainty_note String?
-  version          Int       @default(1)
-  created_at       DateTime  @default(now()) @db.Timestamptz(6)
-  updated_at       DateTime  @default(now()) @db.Timestamptz(6)
-  rule_sets        rule_sets @relation(fields: [workspace_id, rule_set_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model content_revisions {
-  id           String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  workspace_id String         @db.Uuid
-  content_id   String         @db.Uuid
-  created_by   String         @db.Uuid
-  revision_no  Int
-  frozen       Boolean        @default(false)
-  payload      Json           @default("{}")
-  version      Int            @default(1)
-  created_at   DateTime       @default(now()) @db.Timestamptz(6)
-  updated_at   DateTime       @default(now()) @db.Timestamptz(6)
-  asset_usages asset_usages[]
-  memberships  memberships    @relation(fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  contents     contents       @relation(fields: [workspace_id, content_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
-
-  @@unique([content_id, revision_no])
-  @@unique([workspace_id, id])
-}
-
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model contents {
-  id                String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  workspace_id      String              @db.Uuid
-  account_id        String              @db.Uuid
-  created_by        String              @db.Uuid
-  title             String              @default("")
-  business_status   String              @default("draft")
-  version           Int                 @default(1)
-  created_at        DateTime            @default(now()) @db.Timestamptz(6)
-  updated_at        DateTime            @default(now()) @db.Timestamptz(6)
-  content_revisions content_revisions[]
-  memberships       memberships         @relation(fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  accounts          accounts            @relation(fields: [workspace_id, account_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
-
-  @@unique([workspace_id, id])
-}
-
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model file_objects {
   id                                                                           String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
@@ -479,75 +302,20 @@ model file_objects {
   created_at                                                                   DateTime          @default(now()) @db.Timestamptz(6)
   updated_at                                                                   DateTime          @default(now()) @db.Timestamptz(6)
   is_preview                                                                   Boolean           @default(false)
-  asset_versions_asset_versions_workspace_id_preview_file_idTofile_objects     asset_versions[]  @relation("asset_versions_workspace_id_preview_file_idTofile_objects")
-  asset_versions_asset_versions_workspace_id_source_file_idTofile_objects      asset_versions[]  @relation("asset_versions_workspace_id_source_file_idTofile_objects")
+  account_id                                                                   String?           @db.Uuid
+  purpose                                                                      String?
   memberships                                                                  memberships       @relation(fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  accounts                                                                     accounts?         @relation(fields: [workspace_id, account_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
   memberships_file_objects_workspace_id_created_byTomemberships                memberships       @relation("file_objects_workspace_id_created_byTomemberships", fields: [workspace_id, created_by], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
   workspaces                                                                   Workspace         @relation(fields: [workspace_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   file_objects                                                                 file_objects?     @relation("file_objectsTofile_objects", fields: [workspace_id, preview_file_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
   other_file_objects                                                           file_objects[]    @relation("file_objectsTofile_objects")
   upload_sessions_file_objects_workspace_id_upload_session_idToupload_sessions upload_sessions?  @relation("file_objects_workspace_id_upload_session_idToupload_sessions", fields: [workspace_id, upload_session_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
-  rule_sets                                                                    rule_sets[]
   upload_sessions_upload_sessions_workspace_id_file_idTofile_objects           upload_sessions[] @relation("upload_sessions_workspace_id_file_idTofile_objects")
 
   @@unique([workspace_id, id])
-  @@unique([workspace_id, sha256, is_preview])
+  @@unique([workspace_id, account_id, purpose, sha256, is_preview], map: "file_account_purpose_hash")
   @@index([workspace_id, preview_status], map: "file_media_status", where: raw("(is_preview = false)"))
-}
-
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model folders {
-  id                                                       String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  workspace_id                                             String      @db.Uuid
-  created_by                                               String      @db.Uuid
-  name                                                     String
-  parent_id                                                String?     @db.Uuid
-  version                                                  Int         @default(1)
-  created_at                                               DateTime    @default(now()) @db.Timestamptz(6)
-  updated_at                                               DateTime    @default(now()) @db.Timestamptz(6)
-  assets                                                   assets[]
-  memberships                                              memberships @relation(fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  memberships_folders_workspace_id_created_byTomemberships memberships @relation("folders_workspace_id_created_byTomemberships", fields: [workspace_id, created_by], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
-  workspaces                                               Workspace   @relation(fields: [workspace_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  folders                                                  folders?    @relation("foldersTofolders", fields: [workspace_id, parent_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
-  other_folders                                            folders[]   @relation("foldersTofolders")
-
-  @@unique([workspace_id, id])
-}
-
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model operational_proposals {
-  id           String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  workspace_id String      @db.Uuid
-  created_by   String      @db.Uuid
-  proposal     String
-  status       String      @default("proposed")
-  created_at   DateTime    @default(now()) @db.Timestamptz(6)
-  memberships  memberships @relation(fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  workspaces   Workspace   @relation(fields: [workspace_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model rule_sets {
-  id                                                           String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  workspace_id                                                 String        @db.Uuid
-  created_by                                                   String        @db.Uuid
-  edition                                                      String
-  source_file_id                                               String        @db.Uuid
-  status                                                       String        @default("draft")
-  activated_by                                                 String?       @db.Uuid
-  activated_at                                                 DateTime?     @db.Timestamptz(6)
-  checklist                                                    String[]      @default([])
-  version                                                      Int           @default(1)
-  created_at                                                   DateTime      @default(now()) @db.Timestamptz(6)
-  updated_at                                                   DateTime      @default(now()) @db.Timestamptz(6)
-  brand_rules                                                  brand_rules[]
-  memberships_rule_sets_created_byTomemberships                memberships   @relation("rule_sets_created_byTomemberships", fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  memberships_rule_sets_workspace_id_activated_byTomemberships memberships?  @relation("rule_sets_workspace_id_activated_byTomemberships", fields: [workspace_id, activated_by], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
-  memberships_rule_sets_workspace_id_created_byTomemberships   memberships   @relation("rule_sets_workspace_id_created_byTomemberships", fields: [workspace_id, created_by], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
-  file_objects                                                 file_objects  @relation(fields: [workspace_id, source_file_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
-
-  @@unique([workspace_id, id])
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
@@ -570,12 +338,299 @@ model upload_sessions {
   version                                                                   Int            @default(1)
   created_at                                                                DateTime       @default(now()) @db.Timestamptz(6)
   updated_at                                                                DateTime       @default(now()) @db.Timestamptz(6)
+  account_id                                                                String?        @db.Uuid
   file_objects_file_objects_workspace_id_upload_session_idToupload_sessions file_objects[] @relation("file_objects_workspace_id_upload_session_idToupload_sessions")
   memberships                                                               memberships    @relation(fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  accounts                                                                  accounts?      @relation(fields: [workspace_id, account_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
   memberships_upload_sessions_workspace_id_created_byTomemberships          memberships    @relation("upload_sessions_workspace_id_created_byTomemberships", fields: [workspace_id, created_by], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
   file_objects_upload_sessions_workspace_id_file_idTofile_objects           file_objects?  @relation("upload_sessions_workspace_id_file_idTofile_objects", fields: [workspace_id, file_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
   workspaces                                                                Workspace      @relation(fields: [workspace_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@unique([workspace_id, id])
   @@index([expires_at], map: "upload_expiry", where: raw("(status = ANY (ARRAY['created'::text, 'uploading'::text]))"))
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model ai_attempts {
+  id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspace_id    String    @db.Uuid
+  run_id          String    @db.Uuid
+  attempt         Int
+  state           String    @default("reserved")
+  budget_mode     String
+  currency        String?
+  reserved_cost   Decimal?  @db.Decimal(24, 10)
+  estimated_cost  Decimal?  @db.Decimal(24, 10)
+  pricing_version String?
+  usage           Json?
+  cost_basis      String    @default("unknown")
+  error_code      String?
+  started_at      DateTime  @default(now()) @db.Timestamptz(6)
+  finished_at     DateTime? @db.Timestamptz(6)
+  duration_ms     Int?
+  ai_runs         ai_runs   @relation(fields: [workspace_id, run_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([run_id, attempt])
+  @@index([workspace_id, started_at], map: "ai_daily_budget")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model ai_requests {
+  id            String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspace_id  String      @db.Uuid
+  account_id    String      @db.Uuid
+  created_by    String      @db.Uuid
+  kind          String
+  input_version String
+  snapshot      Json
+  state         String      @default("queued")
+  job_id        String?     @db.Uuid
+  ai_run_id     String?     @db.Uuid
+  result        Json?
+  error_code    String?
+  created_at    DateTime    @default(now()) @db.Timestamptz(6)
+  finished_at   DateTime?   @db.Timestamptz(6)
+  accounts      accounts    @relation(fields: [workspace_id, account_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  ai_runs       ai_runs?    @relation(fields: [workspace_id, ai_run_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  memberships   memberships @relation(fields: [workspace_id, created_by], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  jobs          jobs?       @relation(fields: [workspace_id, job_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  topics        topics[]
+
+  @@unique([workspace_id, id])
+  @@index([workspace_id, account_id, created_at(sort: Desc)], map: "ai_request_history")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model ai_runs {
+  id             String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspace_id   String        @db.Uuid
+  created_by     String        @db.Uuid
+  job_id         String?       @db.Uuid
+  workflow       String
+  cache_key      String
+  input_version  String
+  input_hash     String
+  input_refs     Json
+  model          String
+  provider       String
+  prompt_version String
+  schema_version String
+  state          String        @default("running")
+  result         Json?
+  error_code     String?
+  validation     Json          @default("{}")
+  started_at     DateTime      @default(now()) @db.Timestamptz(6)
+  finished_at    DateTime?     @db.Timestamptz(6)
+  ai_attempts    ai_attempts[]
+  ai_requests    ai_requests[]
+  memberships    memberships   @relation(fields: [workspace_id, created_by], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  workspaces     Workspace     @relation(fields: [workspace_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  jobs           jobs?         @relation(fields: [workspace_id, job_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([workspace_id, id])
+  @@unique([workspace_id, cache_key], map: "ai_single_cached_run", where: raw("(state = ANY (ARRAY['running'::text, 'succeeded'::text]))"))
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model collection_runs {
+  id                  String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspace_id        String                @db.Uuid
+  connection_id       String                @unique(map: "collection_single_active", where: raw("(state = ANY (ARRAY['queued'::text, 'running'::text]))")) @db.Uuid
+  created_by          String                @db.Uuid
+  job_id              String?               @db.Uuid
+  connection_version  Int
+  trigger             String
+  scheduled_slot      String?
+  state               String                @default("queued")
+  item_count          Int                   @default(0)
+  error_code          String?
+  coverage            Json                  @default("{}")
+  warnings            String[]              @default([])
+  adapter_version     String?
+  started_at          DateTime?             @db.Timestamptz(6)
+  finished_at         DateTime?             @db.Timestamptz(6)
+  created_at          DateTime              @default(now()) @db.Timestamptz(6)
+  source_connections  source_connections    @relation(fields: [workspace_id, connection_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  memberships         memberships           @relation(fields: [workspace_id, created_by], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  jobs                jobs?                 @relation(fields: [workspace_id, job_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  source_observations source_observations[]
+
+  @@unique([connection_id, scheduled_slot])
+  @@unique([workspace_id, id])
+  @@index([workspace_id, created_at(sort: Desc), id(sort: Desc)], map: "collection_history")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model publications {
+  id               String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspace_id     String      @db.Uuid
+  account_id       String      @db.Uuid
+  platform_note_id String
+  url              String
+  published_at     DateTime    @db.Timestamptz(6)
+  recorded_by      String      @db.Uuid
+  traffic_type     String
+  lifecycle        String      @default("active")
+  version          Int         @default(1)
+  created_at       DateTime    @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime    @default(now()) @db.Timestamptz(6)
+  title            String?
+  media_type       String?
+  accounts         accounts    @relation(fields: [workspace_id, account_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  memberships      memberships @relation(fields: [workspace_id, recorded_by], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([account_id, platform_note_id])
+  @@unique([workspace_id, id])
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model source_connections {
+  id                                                                  String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspace_id                                                        String           @db.Uuid
+  created_by                                                          String           @db.Uuid
+  owner_id                                                            String           @db.Uuid
+  platform                                                            String
+  source_type                                                         String
+  provider                                                            String
+  name                                                                String
+  config                                                              Json             @default("{}")
+  capabilities                                                        Json             @default("{\"list_items\": null, \"read_detail\": null, \"read_comments\": false, \"historical_metrics\": false, \"own_account_metrics\": false}")
+  schedule                                                            String[]         @default(["09:00", "16:00"])
+  timezone                                                            String           @default("Asia/Shanghai")
+  enabled                                                             Boolean          @default(false)
+  paused                                                              Boolean          @default(false)
+  health                                                              String           @default("unverified")
+  consecutive_failures                                                Int              @default(0)
+  min_interval_seconds                                                Int              @default(1800)
+  last_attempt_at                                                     DateTime?        @db.Timestamptz(6)
+  last_success_at                                                     DateTime?        @db.Timestamptz(6)
+  error_code                                                          String?
+  version                                                             Int              @default(1)
+  created_at                                                          DateTime         @default(now()) @db.Timestamptz(6)
+  updated_at                                                          DateTime         @default(now()) @db.Timestamptz(6)
+  collection_runs                                                     collection_runs[]
+  memberships_source_connections_workspace_id_created_byTomemberships memberships      @relation("source_connections_workspace_id_created_byTomemberships", fields: [workspace_id, created_by], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  workspaces                                                          Workspace        @relation(fields: [workspace_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  memberships_source_connections_workspace_id_owner_idTomemberships   memberships      @relation("source_connections_workspace_id_owner_idTomemberships", fields: [workspace_id, owner_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  source_items                                                        source_items[]
+
+  @@unique([workspace_id, id])
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model source_items {
+  id                  String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspace_id        String                @db.Uuid
+  connection_id       String                @db.Uuid
+  external_id         String
+  canonical_url       String
+  actual_source_type  String
+  title               String
+  summary             String                @default("")
+  author              String?
+  published_at        DateTime?             @db.Timestamptz(6)
+  date_label_raw      String?
+  captured_at         DateTime              @db.Timestamptz(6)
+  media_type          String
+  visible_counts      Json                  @default("{}")
+  rank                Int?
+  keyword             String?
+  cluster_key         String
+  reference_only      Boolean               @default(true)
+  content_hash        String
+  availability        String                @default("observed")
+  version             Int                   @default(1)
+  created_at          DateTime              @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime              @default(now()) @db.Timestamptz(6)
+  source_connections  source_connections    @relation(fields: [workspace_id, connection_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  source_observations source_observations[]
+  topic_evidence      topic_evidence[]
+
+  @@unique([connection_id, external_id])
+  @@unique([workspace_id, id])
+  @@index([workspace_id, cluster_key], map: "source_items_cluster")
+  @@index([workspace_id, captured_at(sort: Desc), id(sort: Desc)], map: "source_items_feed")
+}
+
+model source_observations {
+  id                                                                                            String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspace_id                                                                                  String           @db.Uuid
+  source_item_id                                                                                String           @db.Uuid
+  run_id                                                                                        String           @db.Uuid
+  captured_at                                                                                   DateTime         @db.Timestamptz(6)
+  payload                                                                                       Json
+  content_hash                                                                                  String
+  created_at                                                                                    DateTime         @default(now()) @db.Timestamptz(6)
+  collection_runs                                                                               collection_runs  @relation(fields: [workspace_id, run_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  source_items                                                                                  source_items     @relation(fields: [workspace_id, source_item_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  topic_evidence_topic_evidence_workspace_id_observation_idTosource_observations                topic_evidence[] @relation("topic_evidence_workspace_id_observation_idTosource_observations")
+  topic_evidence_topic_evidence_workspace_id_source_item_id_observation_idTosource_observations topic_evidence[] @relation("topic_evidence_workspace_id_source_item_id_observation_idTosource_observations")
+
+  @@unique([source_item_id, run_id])
+  @@unique([workspace_id, id])
+  @@unique([workspace_id, source_item_id, id])
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model topic_decisions {
+  id                                                             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspace_id                                                   String       @db.Uuid
+  topic_id                                                       String       @unique(map: "topic_single_acceptance", where: raw("(decision = 'accepted'::text)")) @db.Uuid
+  actor_id                                                       String       @db.Uuid
+  decision                                                       String
+  reason                                                         String
+  decided_at                                                     DateTime     @default(now()) @db.Timestamptz(6)
+  owner_id                                                       String?      @db.Uuid
+  memberships_topic_decisions_workspace_id_actor_idTomemberships memberships  @relation("topic_decisions_workspace_id_actor_idTomemberships", fields: [workspace_id, actor_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  memberships_topic_decisions_workspace_id_owner_idTomemberships memberships? @relation("topic_decisions_workspace_id_owner_idTomemberships", fields: [workspace_id, owner_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  topics                                                         topics       @relation(fields: [workspace_id, topic_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model topic_evidence {
+  id                                                                                                 String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspace_id                                                                                       String               @db.Uuid
+  topic_id                                                                                           String               @db.Uuid
+  source_item_id                                                                                     String?              @db.Uuid
+  observation_id                                                                                     String?              @db.Uuid
+  claim                                                                                              String
+  evidence_kind                                                                                      String
+  created_at                                                                                         DateTime             @default(now()) @db.Timestamptz(6)
+  source_observations_topic_evidence_workspace_id_observation_idTosource_observations                source_observations? @relation("topic_evidence_workspace_id_observation_idTosource_observations", fields: [workspace_id, observation_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  source_items                                                                                       source_items?        @relation(fields: [workspace_id, source_item_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  source_observations_topic_evidence_workspace_id_source_item_id_observation_idTosource_observations source_observations? @relation("topic_evidence_workspace_id_source_item_id_observation_idTosource_observations", fields: [workspace_id, source_item_id, observation_id], references: [workspace_id, source_item_id, id], onDelete: NoAction, onUpdate: NoAction)
+  topics                                                                                             topics               @relation(fields: [workspace_id, topic_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model topics {
+  id                                                             String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspace_id                                                   String           @db.Uuid
+  account_id                                                     String           @db.Uuid
+  created_by                                                     String           @db.Uuid
+  generation_request_id                                          String           @db.Uuid
+  candidate_position                                             Int
+  parent_topic_id                                                String?          @db.Uuid
+  candidate                                                      Json
+  score                                                          Decimal          @db.Decimal(5, 2)
+  status                                                         String           @default("proposed")
+  missing_inputs                                                 String[]         @default([])
+  warnings                                                       String[]         @default([])
+  expires_at                                                     DateTime?        @db.Timestamptz(6)
+  accepted_owner_id                                              String?          @db.Uuid
+  version                                                        Int              @default(1)
+  created_at                                                     DateTime         @default(now()) @db.Timestamptz(6)
+  updated_at                                                     DateTime         @default(now()) @db.Timestamptz(6)
+  topic_decisions                                                topic_decisions[]
+  topic_evidence                                                 topic_evidence[]
+  memberships_topics_workspace_id_accepted_owner_idTomemberships memberships?     @relation("topics_workspace_id_accepted_owner_idTomemberships", fields: [workspace_id, accepted_owner_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  accounts                                                       accounts         @relation(fields: [workspace_id, account_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  memberships_topics_workspace_id_created_byTomemberships        memberships      @relation("topics_workspace_id_created_byTomemberships", fields: [workspace_id, created_by], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  ai_requests                                                    ai_requests      @relation(fields: [workspace_id, generation_request_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  topics                                                         topics?          @relation("topicsTotopics", fields: [workspace_id, parent_topic_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  other_topics                                                   topics[]         @relation("topicsTotopics")
+
+  @@unique([generation_request_id, candidate_position])
+  @@unique([workspace_id, id])
+  @@index([workspace_id, account_id, created_at(sort: Desc), id(sort: Desc)], map: "topic_inventory")
 }

@@ -6,7 +6,6 @@ import {Request,Response,NextFunction} from 'express';
 import cookieParser from 'cookie-parser';
 import {raw} from 'express';
 import {Files} from './files';
-import {Assets} from './assets';
 import {AIRequests} from './ai';
 import {Topics} from './topics';
 import {Publications} from './publications';
@@ -38,21 +37,16 @@ class ApiController {
     if(method!=='GET'&&method!=='HEAD')await this.auth.checkCsrf(req);
     const c=this.commands;
     const command=async(permission:Permission,fn:Parameters<Commands['command']>[6])=>{const r=await c.command(a,req.headers['idempotency-key'],method,path,req.body??{},permission,fn);return send(r.data,r.status);};
-    const contents=new Publications(this.db);
-    if(path==='/contents'&&method==='POST')return command('content.production',(tx,actor)=>contents.create(tx,actor,req.body));
-    if(path==='/contents'&&method==='GET')return send(await contents.list(a,req.query));
-    const content=path.match(/^\/contents\/([^/]+)(?:\/(generate-brief|apply-generated|revisions|restore|submit-review|start-production|cancel|export-package|create-revision-work-item|check))?$/);if(content){if(method==='GET'&&!content[2])return send(await contents.detail(a,content[1]!));if(method==='PATCH'&&!content[2])return command('content.copy',(tx,actor)=>contents.metadata(tx,actor,content[1]!,req.body));if(method==='POST'&&content[2]==='check')return command('read',(tx,actor)=>contents.check(tx,actor,content[1]!,req.body));if(method==='POST'&&content[2]==='create-revision-work-item')return command('content.production',(tx,actor)=>contents.workItem(tx,actor,content[1]!,req.body));if(method==='POST'&&content[2]==='export-package')return command('download.original',(tx,actor)=>contents.exportPackage(tx,actor,content[1]!,req.body));if(method==='POST'&&content[2]==='start-production')return command('content.production',(tx,actor)=>contents.start(tx,actor,content[1]!,req.body));if(method==='POST'&&content[2]==='cancel')return command('content.production',(tx,actor)=>contents.cancel(tx,actor,content[1]!,req.body));if(method==='POST'&&content[2]==='submit-review')return command('content.production',(tx,actor)=>contents.submit(tx,actor,content[1]!,req.body));if(method==='POST'&&content[2]==='restore')return command('content.production',(tx,actor)=>contents.restore(tx,actor,content[1]!,req.body));if(method==='POST'&&content[2]==='revisions')return command('content.copy',(tx,actor)=>contents.save(tx,actor,content[1]!,req.body));if(method==='POST'&&content[2]==='generate-brief')return command('content.production',(tx,actor)=>contents.generate(tx,actor,content[1]!,req.body));if(method==='POST'&&content[2]==='apply-generated')return command('content.production',(tx,actor)=>contents.apply(tx,actor,content[1]!,req.body));}
-    const review=path.match(/^\/reviews\/([^/]+)\/(decide|withdraw)$/);if(review&&method==='POST'){if(review[2]==='decide')return command('review',(tx,actor)=>contents.decide(tx,actor,review[1]!,req.body));return command('content.production',(tx,actor)=>contents.withdraw(tx,actor,review[1]!,req.body));}
-    const exported=path.match(/^\/export-packages\/([^/]+)(?:\/(download))?$/);if(exported&&method==='GET'){if(exported[2]){authorize(a,'download.original');return send(await contents.packageDownload(a,exported[1]!));}return send(await contents.packageDetail(a,exported[1]!));}
-    const publication=path.match(/^\/publications\/([^/]+)(?:\/(changes))?$/);if(publication){if(method==='GET'&&!publication[2])return send(await contents.publication(a,publication[1]!));if(method==='POST'&&publication[2])return command('operate',(tx,actor)=>contents.change(tx,actor,publication[1]!,req.body));}
-    if(path==='/publication-drafts'&&method==='POST')return command('operate',(tx,actor)=>contents.draft(tx,actor,req.body));
-    if(path==='/publications'&&method==='POST')return command('operate',(tx,actor)=>contents.register(tx,actor,req.body));
+    const publications=new Publications(this.db);
+    if(path==='/publications'&&method==='POST')return command('operate',(tx,actor)=>publications.register(tx,actor,req.body));
+    if(path==='/publications'&&method==='GET')return send(await publications.list(a,req.query));
+    const publication=path.match(/^\/publications\/([^/]+)$/);if(publication){if(method==='GET')return send(await publications.scope(this.db,a,publication[1]!));if(method==='PATCH')return command('operate',(tx,actor)=>publications.patch(tx,actor,publication[1]!,req.body));}
     const topics=new Topics(this.db);
     if(path==='/topics'&&method==='GET')return send(await topics.list(a,req.query));
     const topic=path.match(/^\/topics\/([^/]+)(?:\/(accept|reject|variants))?$/);
-    if(topic){if(method==='GET'&&!topic[2])return send(await topics.detail(a,topic[1]!));if(method==='POST'&&topic[2]==='accept')return command('content.copy',(tx,actor)=>topics.accept(tx,actor,topic[1]!,req.body));if(method==='POST'&&topic[2]==='reject')return command('content.copy',(tx,actor)=>topics.reject(tx,actor,topic[1]!,req.body));if(method==='POST'&&topic[2]==='variants')return command('content.copy',(tx,actor)=>topics.variant(tx,actor,topic[1]!,req.body));}
+    if(topic){if(method==='GET'&&!topic[2])return send(await topics.detail(a,topic[1]!));if(method==='POST'&&topic[2]==='accept')return command('topic.edit',(tx,actor)=>topics.accept(tx,actor,topic[1]!,req.body));if(method==='POST'&&topic[2]==='reject')return command('topic.edit',(tx,actor)=>topics.reject(tx,actor,topic[1]!,req.body));if(method==='POST'&&topic[2]==='variants')return command('topic.edit',(tx,actor)=>topics.variant(tx,actor,topic[1]!,req.body));}
     const ai=new AIRequests(this.db);
-    if(path==='/topic-generations'&&method==='POST')return command('content.copy',(tx,actor)=>ai.generateTopics(tx,actor,req.body));
+    if(path==='/topic-generations'&&method==='POST')return command('topic.edit',(tx,actor)=>ai.generateTopics(tx,actor,req.body));
     const aiRequest=path.match(/^\/ai-requests\/([^/]+)$/);if(aiRequest&&method==='GET')return send(await ai.get(a,aiRequest[1]!));
     const sourceEvidence=new SourceEvidence(this.db);
     if(path==='/source-items'&&method==='GET')return send(await sourceEvidence.list(a,req.query));
@@ -62,24 +56,9 @@ class ApiController {
     const source=path.match(/^\/source-connections\/([^/]+)(?:\/(refresh|verify|runs|pause))?$/);
     if(source){const sid=source[1]!;if(method==='GET'&&!source[2])return send(await collection.scope(this.db,a,sid));if(method==='PATCH'&&!source[2])return command('admin',(tx,actor)=>collection.patch(tx,actor,sid,req.body));if(method==='GET'&&source[2]==='runs')return send(await collection.runs(a,sid));if(method==='POST'&&['refresh','verify'].includes(source[2]!))return command('operate',(tx,actor)=>collection.refresh(tx,actor,sid,source[2]==='verify'));if(method==='POST'&&source[2]==='pause')return command('operate',(tx,actor)=>collection.pause(tx,actor,sid,req.body));}
     const files=this.files;
-    if(path==='/uploads'&&method==='POST')return command('asset.edit',(tx,actor)=>files.create(tx,actor,req.body));
+    if(path==='/uploads'&&method==='POST')return command('import.edit',(tx,actor)=>files.create(tx,actor,req.body));
     const upload=path.match(/^\/uploads\/([^/]+)(?:\/(parts|complete|abort)(?:\/(\d+))?)?$/);
-    if(upload){const uid=upload[1]!;if(method==='GET'&&!upload[2])return send(await files.get(a,uid));if(method==='POST'&&upload[2]==='parts')return command('asset.edit',(tx,actor)=>files.register(tx,actor,uid,req.body));if(method==='PUT'&&upload[2]==='parts'&&upload[3])return send(await files.put(a,uid,Number(upload[3]),req.body));if(method==='POST'&&upload[2]==='complete')return command('asset.edit',(tx,actor)=>files.finish(tx,actor,uid,req.body));if(method==='POST'&&upload[2]==='abort')return command('asset.edit',(tx,actor)=>files.abort(tx,actor,uid,req.body));}
-    const assets=new Assets(this.db,files);
-    if(path==='/assets'){if(method==='GET')return send(await assets.list(a,req.query));if(method==='POST')return command('asset.edit',(tx,actor)=>assets.create(tx,actor,req.body));}
-    const asset=path.match(/^\/assets\/([^/]+)(?:\/(versions|retire|confirm|usages|favorite))?$/);
-    if(asset){const aid=asset[1]!;if(method==='GET'&&!asset[2])return send(await assets.detail(a,aid));if(method==='PATCH'&&!asset[2])return command('asset.edit',(tx,actor)=>assets.patch(tx,actor,aid,req.body));if(method==='GET'&&asset[2]==='versions')return send({items:(await assets.detail(a,aid)).versions});if(method==='POST'&&asset[2]==='versions')return command('asset.edit',(tx,actor)=>assets.newVersion(tx,actor,aid,req.body));if(method==='POST'&&asset[2]==='retire')return command('asset.edit',(tx,actor)=>assets.retire(tx,actor,aid,req.body));if(method==='POST'&&asset[2]==='confirm')return command('review',(tx,actor)=>assets.confirm(tx,actor,aid,req.body));if(method==='GET'&&asset[2]==='usages')return send(await assets.usages(a,aid));if(['PUT','DELETE'].includes(method)&&asset[2]==='favorite')return command('read',(tx,actor)=>assets.favorite(tx,actor,aid,method==='DELETE'));}
-    const assetVersionConfirm=path.match(/^\/asset-versions\/([^/]+)\/confirm$/);if(assetVersionConfirm&&method==='POST')return command('review',(tx,actor)=>assets.confirmVersion(tx,actor,assetVersionConfirm[1]!,req.body));
-    if(path==='/asset-relations'&&method==='GET')return send(await assets.relations(a,req.query));
-    if(path==='/asset-relations'&&method==='POST')return command('asset.edit',(tx,actor)=>assets.relate(tx,actor,req.body));
-    if(path==='/asset-usages'&&method==='POST')return command('content.production',(tx,actor)=>assets.use(tx,actor,req.body));
-    const revisionAssets=path.match(/^\/content-revisions\/([^/]+)\/assets$/);if(revisionAssets&&method==='GET')return send(await assets.revisionAssets(a,revisionAssets[1]!));
-    if(path==='/folders'){if(method==='GET')return send(await assets.folders(a));if(method==='POST')return command('asset.edit',(tx,actor)=>assets.saveFolder(tx,actor,req.body));}
-    const folder=path.match(/^\/folders\/([^/]+)$/);if(folder){if(method==='GET')return send(await this.db.transaction(tx=>assets.folder(tx,a,folder[1]!)));if(method==='PATCH')return command('asset.edit',(tx,actor)=>assets.saveFolder(tx,actor,req.body,folder[1]!));}
-    const guideFile=path.match(/^\/guideline-files\/([^/]+)$/);if(guideFile&&method==='GET'){const f=await files.file(this.db,a,guideFile[1]!);if(f.detected_mime!=='application/pdf')throw new AppError(404,'NOT_FOUND','规范文件不可见');return send(f);}
-    if(path==='/guideline-files'&&method==='GET')return send({items:(await this.db.query("SELECT id,original_name,preview_status,metadata->'pages' pages FROM file_objects WHERE workspace_id=$1 AND detected_mime='application/pdf' AND file_status='ready' AND is_preview=false ORDER BY created_at DESC LIMIT 100",[a.workspaceId])).rows,next_cursor:null});
-    if(path==='/rule-sets'){if(method==='GET')return send(await assets.ruleSets(a));if(method==='POST')return command('asset.edit',(tx,actor)=>assets.createRules(tx,actor,req.body));}
-    const rule=path.match(/^\/rule-sets\/([^/]+)(?:\/(activate))?$/);if(rule){if(method==='GET'&&!rule[2])return send(await assets.ruleDetail(a,rule[1]!));if(method==='POST'&&rule[2])return command('review',(tx,actor)=>assets.activateRules(tx,actor,rule[1]!,req.body));}
+    if(upload){const uid=upload[1]!;if(method==='GET'&&!upload[2])return send(await files.get(a,uid));if(method==='POST'&&upload[2]==='parts')return command('import.edit',(tx,actor)=>files.register(tx,actor,uid,req.body));if(method==='PUT'&&upload[2]==='parts'&&upload[3])return send(await files.put(a,uid,Number(upload[3]),req.body));if(method==='POST'&&upload[2]==='complete')return command('import.edit',(tx,actor)=>files.finish(tx,actor,uid,req.body));if(method==='POST'&&upload[2]==='abort')return command('import.edit',(tx,actor)=>files.abort(tx,actor,uid,req.body));}
     if(method==='GET'&&(path==='/me'||path==='/auth/session'))return send(await this.auth.me(a));
     if(method==='POST'&&path==='/auth/logout'){
       const r=await c.command(a,req.headers['idempotency-key'],method,path,req.body??{},'read',async(tx,actor)=>{await tx.query('DELETE FROM sessions WHERE token_hash=$1',[a.sessionHash]);await audit(tx,actor,'auth.logout','membership',a.memberId);return {status:200,data:{success:true}};});
@@ -106,7 +85,7 @@ class ApiController {
     if(method==='GET'&&path==='/monitor')return send(await c.monitor(a));
     if(method==='GET'&&path==='/dashboard'){if(req.query.account_id)await c.accountScope(this.db,a,parse(uuid,req.query.account_id));return send({stage:'S1',metrics:null,priority_tasks:[],external_capabilities:{ai:'disabled',ocr:'disabled',sources:'unverified'}});}
     const file=path.match(/^\/files\/([^/]+)\/(download|preview)$/);
-    if(file&&method==='GET')return send(await files.link(a,file[1]!,file[2]==='preview',req.query.page===undefined?undefined:Number(req.query.page)));
+    if(file&&method==='GET')return send(await files.link(a,file[1]!,file[2]==='preview'));
     throw new AppError(404,'NOT_FOUND','接口不存在或尚未实现');
   }
 }

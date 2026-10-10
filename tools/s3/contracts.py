@@ -5,7 +5,7 @@ p=Path('contracts/openapi.json');spec=json.loads(p.read_text());schemas=spec['co
 ref=lambda n:{'$ref':'#/components/schemas/'+n}
 obj=lambda properties,required: {'type':'object','properties':properties,'required':required,'additionalProperties':False}
 nullable=lambda value:{'anyOf':[value,{'type':'null'}]}
-schemas['CollectionSettings']=obj({'keywords':{'type':'array','minItems':1,'maxItems':10,'items':{'type':'string','minLength':1,'maxLength':100}},'profile':{'type':'string','minLength':1,'maxLength':100},'max_items':{'type':'integer','minimum':1,'maximum':50}},[])
+schemas['CollectionSettings']=obj({'keywords':{'type':'array','minItems':1,'maxItems':10,'items':{'type':'string','minLength':1,'maxLength':100}},'profile':{'type':'string','minLength':1,'maxLength':100},'reference_accounts':{'type':'array','maxItems':2,'uniqueItems':True,'items':{'type':'string','pattern':'^[a-fA-F0-9]{24}$'}},'max_items':{'type':'integer','minimum':1,'maximum':50}},[])
 fields={'name':{'type':'string','minLength':1,'maxLength':200},'schedule':{'type':'array','maxItems':4,'uniqueItems':True,'items':{'type':'string','pattern':'^(?:[01]\\d|2[0-3]):[0-5]\\d$'}},'timezone':ref('Timezone'),'enabled':{'type':'boolean'},'min_interval_seconds':{'type':'integer','minimum':60,'maximum':86400},'config':ref('CollectionSettings')}
 schemas['CollectionConnectionCreate']=obj({**fields,'platform':{'enum':['weibo','xiaohongshu']},'source_type':{'enum':['weibo_hot','xhs_topic_signal','xhs_quality_note']},'provider':{'enum':['weibo_web','opencli']}},['name','platform','source_type','provider'])
 schemas['CollectionConnectionPatch']=obj({**fields,'expected_version':{'type':'integer','minimum':1}},['expected_version'])

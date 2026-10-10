@@ -19,15 +19,10 @@ async function run(dir,command,args,signal){
 async function parse(dir,mime,signal){
  const execute=(command,args)=>run(dir,command,args,signal);
  const input=join(dir,'input'),output=[];let metadata={};
- if(mime==='application/pdf'){
-  const info=await execute('pdfinfo',[input]);const pages=Number(info.match(/^Pages:\s+(\d+)/m)?.[1]);if(!pages||pages>2000)throw new Error('PDF_PAGE_LIMIT');metadata={pages,pdf_page_order:true};
-  await execute('pdftotext',['-layout',input,join(dir,'text.txt')]);
-  const size=(await stat(join(dir,'text.txt'))).size;if(size>20*1024*1024)throw new Error('PDF_TEXT_LIMIT');metadata.text=(await readFile(join(dir,'text.txt'),'utf8')).slice(0,1000000);
-  for(let n=1;n<=pages;n++){await execute('pdftoppm',['-f',String(n),'-l',String(n),'-scale-to','1200','-png','-singlefile',input,join(dir,'page-'+n)]);output.push({name:'page-'+n+'.png',mime:'image/png',page:n});}
- }else if(mime==='image/png'){
-  metadata=JSON.parse(await execute('python3',['/usr/local/lib/yoyo/png-preview.py',input,join(dir,'preview.png')]));output.push({name:'preview.png',mime:'image/png'});
- }else return {status:'unsupported',metadata:{},outputs:[]};
- return {status:'ready',metadata,outputs:output};
+ metadata=JSON.parse(await execute('python3',['/usr/local/lib/yoyo/import-validate.py',input,join(dir,'preview.png'),mime]));
+ if(mime==='image/png'||mime==='image/jpeg')output.push({name:'preview.png',mime:'image/png'});
+
+ return {status:output.length?'ready':'unsupported',metadata,outputs:output};
 }
 for(const dir of await readdir(root))await rm(join(root,dir),{recursive:true,force:true});
 const server=http.createServer(async(req,res)=>{
@@ -35,11 +30,11 @@ const server=http.createServer(async(req,res)=>{
  try{
   if(req.method==='POST'&&req.url==='/process'){
    if(busy){res.writeHead(429);res.end();return;}busy=true;const controller=new AbortController();res.on('close',()=>{if(!res.writableEnded)controller.abort();});const id=randomUUID(),dir=join(root,id);await import('node:fs/promises').then(f=>f.mkdir(dir,{mode:0o700}));active.add(id);
-   try{let size=0;await pipeline(req,new Transform({transform(b,e,cb){size+=b.length;cb(size>2147483648?new Error('FILE_TOO_LARGE'):null,b);}}),createWriteStream(join(dir,'input'),{flags:'wx'}));const result=await parse(dir,String(req.headers['x-media-mime']),controller.signal);res.setHeader('Content-Type','application/json');res.end(JSON.stringify({id,...result}));}
-   catch(e){await rm(dir,{recursive:true,force:true});active.delete(id);res.writeHead(422);res.end(JSON.stringify({code:String(req.headers['x-media-mime'])==='image/png'&&e.exitCode===1?'INVALID_PNG':'MEDIA_PARSE_FAILED'}));}
+   try{let size=0;await pipeline(req,new Transform({transform(b,e,cb){size+=b.length;cb(size>52428800?new Error('FILE_TOO_LARGE'):null,b);}}),createWriteStream(join(dir,'input'),{flags:'wx'}));const result=await parse(dir,String(req.headers['x-media-mime']),controller.signal);res.setHeader('Content-Type','application/json');res.end(JSON.stringify({id,...result}));}
+   catch(e){await rm(dir,{recursive:true,force:true});active.delete(id);res.writeHead(422);res.end(JSON.stringify({code:e.exitCode===1?'INVALID_IMPORT':'MEDIA_PARSE_FAILED'}));}
    finally{busy=false;}return;
   }
-  const m=req.url?.match(/^\/outputs\/([a-f0-9-]{36})(?:\/((?:page-\d+|preview|poster)\.(?:png|mp4|m4a)))?$/);if(!m||!active.has(m[1])){res.writeHead(404);res.end();return;}
+  const m=req.url?.match(/^\/outputs\/([a-f0-9-]{36})(?:\/(preview\.png))?$/);if(!m||!active.has(m[1])){res.writeHead(404);res.end();return;}
   if(req.method==='DELETE'&&!m[2]){await rm(join(root,m[1]),{recursive:true,force:true});active.delete(m[1]);res.end('{}');return;}
   if(req.method==='GET'&&m[2]){const path=join(root,m[1],m[2]),s=await stat(path);res.setHeader('Content-Length',s.size);await pipeline(createReadStream(path),res);return;}
   res.writeHead(404);res.end();
