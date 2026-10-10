@@ -3320,28 +3320,11 @@
         ],
         "parameters": [
           {
-            "name": "workspace_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
             "name": "account_id",
             "in": "query",
             "required": false,
             "schema": {
               "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "cursor",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "maxLength": 10000
             }
           },
           {
@@ -3351,243 +3334,37 @@
             "schema": {
               "type": "integer",
               "minimum": 1,
-              "maximum": 100,
-              "default": 20
+              "maximum": 100
             }
           },
           {
-            "name": "start",
+            "name": "cursor",
             "in": "query",
             "required": false,
             "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "end",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "status",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "owner_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "media_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/MediaType"
-            }
-          },
-          {
-            "name": "traffic_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/TrafficType"
-            }
-          },
-          {
-            "name": "kind",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "revision_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "purpose",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "import_screenshot",
-                "import_table",
-                "source_evidence"
-              ]
-            }
-          },
-          {
-            "name": "unread",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "problem_only",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "keys",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 200
-              }
+              "type": "string"
             }
           },
           {
             "name": "publication_id",
             "in": "query",
-            "required": false,
             "schema": {
               "$ref": "#/components/schemas/Id"
             }
           },
           {
-            "name": "source_type",
+            "name": "status",
             "in": "query",
-            "required": false,
             "schema": {
-              "$ref": "#/components/schemas/SourceType"
-            }
-          },
-          {
-            "name": "freshness",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "keyword",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "date",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date"
-            }
-          },
-          {
-            "name": "timezone",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Timezone"
-            }
-          },
-          {
-            "name": "captured_after",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
+              "enum": [
+                "new",
+                "triaged",
+                "archived"
+              ]
             }
           }
         ],
         "responses": {
-          "200": {
-            "description": "成功",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "items": {
-                          "type": "array",
-                          "items": {
-                            "$ref": "#/components/schemas/Feedback"
-                          }
-                        },
-                        "next_cursor": {
-                          "anyOf": [
-                            {
-                              "type": "string",
-                              "maxLength": 10000
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
-                        }
-                      },
-                      "required": [
-                        "items",
-                        "next_cursor"
-                      ],
-                      "additionalProperties": false
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "meta"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          },
           "401": {
             "description": "错误",
             "content": {
@@ -3667,9 +3444,55 @@
                 }
               }
             }
+          },
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Feedback"
+                          }
+                        },
+                        "next_cursor": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "items",
+                        "next_cursor"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
           }
         },
-        "x-implementation-status": "planned"
+        "x-implementation-status": "implemented"
       },
       "post": {
         "operationId": "post_feedback",
@@ -3703,6 +3526,86 @@
           }
         ],
         "responses": {
+          "401": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
           "201": {
             "description": "成功",
             "content": {
@@ -3725,7 +3628,42 @@
                 }
               }
             }
-          },
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeedbackCreate"
+              }
+            }
+          }
+        },
+        "x-implementation-status": "implemented"
+      }
+    },
+    "/feedback/{id}": {
+      "get": {
+        "operationId": "get_feedback_id",
+        "summary": "内部运营工作台接口",
+        "description": "内部运营工作台接口",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Id"
+            }
+          }
+        ],
+        "responses": {
           "401": {
             "description": "错误",
             "content": {
@@ -3805,262 +3743,7 @@
                 }
               }
             }
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/FeedbackCreate"
-              }
-            }
-          }
-        },
-        "x-implementation-status": "planned"
-      }
-    },
-    "/feedback/{id}": {
-      "get": {
-        "operationId": "get_feedback_id",
-        "summary": "内部运营工作台接口",
-        "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
           },
-          {
-            "name": "workspace_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "account_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "cursor",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "maxLength": 10000
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 100,
-              "default": 20
-            }
-          },
-          {
-            "name": "start",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "end",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "status",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "owner_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "media_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/MediaType"
-            }
-          },
-          {
-            "name": "traffic_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/TrafficType"
-            }
-          },
-          {
-            "name": "kind",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "revision_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "purpose",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "import_screenshot",
-                "import_table",
-                "source_evidence"
-              ]
-            }
-          },
-          {
-            "name": "unread",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "problem_only",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "keys",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 200
-              }
-            }
-          },
-          {
-            "name": "publication_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "source_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/SourceType"
-            }
-          },
-          {
-            "name": "freshness",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "keyword",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "date",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date"
-            }
-          },
-          {
-            "name": "timezone",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Timezone"
-            }
-          },
-          {
-            "name": "captured_after",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          }
-        ],
-        "responses": {
           "200": {
             "description": "成功",
             "content": {
@@ -4083,89 +3766,9 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
           }
         },
-        "x-implementation-status": "planned"
+        "x-implementation-status": "implemented"
       },
       "patch": {
         "operationId": "patch_feedback_id",
@@ -4207,29 +3810,6 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "成功",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/Feedback"
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "meta"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          },
           "401": {
             "description": "错误",
             "content": {
@@ -4309,6 +3889,29 @@
                 }
               }
             }
+          },
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Feedback"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -4321,7 +3924,7 @@
             }
           }
         },
-        "x-implementation-status": "planned"
+        "x-implementation-status": "implemented"
       }
     },
     "/imports": {
@@ -5002,28 +4605,11 @@
         ],
         "parameters": [
           {
-            "name": "workspace_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
             "name": "account_id",
             "in": "query",
             "required": false,
             "schema": {
               "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "cursor",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "maxLength": 10000
             }
           },
           {
@@ -5033,243 +4619,19 @@
             "schema": {
               "type": "integer",
               "minimum": 1,
-              "maximum": 100,
-              "default": 20
+              "maximum": 100
             }
           },
           {
-            "name": "start",
+            "name": "cursor",
             "in": "query",
             "required": false,
             "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "end",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "status",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "owner_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "media_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/MediaType"
-            }
-          },
-          {
-            "name": "traffic_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/TrafficType"
-            }
-          },
-          {
-            "name": "kind",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "revision_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "purpose",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "import_screenshot",
-                "import_table",
-                "source_evidence"
-              ]
-            }
-          },
-          {
-            "name": "unread",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "problem_only",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "keys",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 200
-              }
-            }
-          },
-          {
-            "name": "publication_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "source_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/SourceType"
-            }
-          },
-          {
-            "name": "freshness",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "keyword",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "date",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date"
-            }
-          },
-          {
-            "name": "timezone",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Timezone"
-            }
-          },
-          {
-            "name": "captured_after",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
+              "type": "string"
             }
           }
         ],
         "responses": {
-          "200": {
-            "description": "成功",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "items": {
-                          "type": "array",
-                          "items": {
-                            "$ref": "#/components/schemas/Report"
-                          }
-                        },
-                        "next_cursor": {
-                          "anyOf": [
-                            {
-                              "type": "string",
-                              "maxLength": 10000
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
-                        }
-                      },
-                      "required": [
-                        "items",
-                        "next_cursor"
-                      ],
-                      "additionalProperties": false
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "meta"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          },
           "401": {
             "description": "错误",
             "content": {
@@ -5349,9 +4711,55 @@
                 }
               }
             }
+          },
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Report"
+                          }
+                        },
+                        "next_cursor": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "items",
+                        "next_cursor"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
           }
         },
-        "x-implementation-status": "planned"
+        "x-implementation-status": "implemented"
       },
       "post": {
         "operationId": "post_reports",
@@ -5385,29 +4793,6 @@
           }
         ],
         "responses": {
-          "202": {
-            "description": "成功",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/Report"
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "meta"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          },
           "401": {
             "description": "错误",
             "content": {
@@ -5487,6 +4872,29 @@
                 }
               }
             }
+          },
+          "202": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ReportAccepted"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -5499,7 +4907,7 @@
             }
           }
         },
-        "x-implementation-status": "planned"
+        "x-implementation-status": "implemented"
       }
     },
     "/reports/{id}": {
@@ -5520,229 +4928,89 @@
             "schema": {
               "$ref": "#/components/schemas/Id"
             }
-          },
-          {
-            "name": "workspace_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "account_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "cursor",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "maxLength": 10000
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 100,
-              "default": 20
-            }
-          },
-          {
-            "name": "start",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "end",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "status",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "owner_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "media_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/MediaType"
-            }
-          },
-          {
-            "name": "traffic_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/TrafficType"
-            }
-          },
-          {
-            "name": "kind",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "revision_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "purpose",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "import_screenshot",
-                "import_table",
-                "source_evidence"
-              ]
-            }
-          },
-          {
-            "name": "unread",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "problem_only",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "keys",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 200
-              }
-            }
-          },
-          {
-            "name": "publication_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "source_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/SourceType"
-            }
-          },
-          {
-            "name": "freshness",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "keyword",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "date",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date"
-            }
-          },
-          {
-            "name": "timezone",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Timezone"
-            }
-          },
-          {
-            "name": "captured_after",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
           }
         ],
         "responses": {
+          "401": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
           "200": {
             "description": "成功",
             "content": {
@@ -5765,89 +5033,9 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
           }
         },
-        "x-implementation-status": "planned"
+        "x-implementation-status": "implemented"
       }
     },
     "/jobs": {
@@ -5889,6 +5077,20 @@
               "type": "string",
               "minLength": 1,
               "maxLength": 200
+            }
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "schema": {
+              "enum": [
+                "queued",
+                "running",
+                "succeeded",
+                "partial",
+                "failed",
+                "cancelled"
+              ]
             }
           }
         ],
@@ -9130,7 +8332,7 @@
         ],
         "responses": {
           "401": {
-            "description": "权限、会话、输入或并发错误",
+            "description": "错误",
             "content": {
               "application/json": {
                 "schema": {
@@ -9140,7 +8342,7 @@
             }
           },
           "403": {
-            "description": "权限、会话、输入或并发错误",
+            "description": "错误",
             "content": {
               "application/json": {
                 "schema": {
@@ -9150,7 +8352,7 @@
             }
           },
           "404": {
-            "description": "权限、会话、输入或并发错误",
+            "description": "错误",
             "content": {
               "application/json": {
                 "schema": {
@@ -9160,7 +8362,7 @@
             }
           },
           "409": {
-            "description": "权限、会话、输入或并发错误",
+            "description": "错误",
             "content": {
               "application/json": {
                 "schema": {
@@ -9170,7 +8372,7 @@
             }
           },
           "422": {
-            "description": "权限、会话、输入或并发错误",
+            "description": "错误",
             "content": {
               "application/json": {
                 "schema": {
@@ -9180,7 +8382,7 @@
             }
           },
           "429": {
-            "description": "权限、会话、输入或并发错误",
+            "description": "错误",
             "content": {
               "application/json": {
                 "schema": {
@@ -9190,7 +8392,7 @@
             }
           },
           "503": {
-            "description": "权限、会话、输入或并发错误",
+            "description": "错误",
             "content": {
               "application/json": {
                 "schema": {
@@ -9200,7 +8402,7 @@
             }
           },
           "500": {
-            "description": "内部错误（脱敏）",
+            "description": "错误",
             "content": {
               "application/json": {
                 "schema": {
@@ -9210,14 +8412,14 @@
             }
           },
           "200": {
-            "description": "S1实现；验收范围见docs/evidence/s1/README.md",
+            "description": "成功",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
                     "data": {
-                      "$ref": "#/components/schemas/S1Dashboard"
+                      "$ref": "#/components/schemas/Dashboard"
                     },
                     "meta": {
                       "$ref": "#/components/schemas/Meta"
@@ -9249,7 +8451,7 @@
         "parameters": [],
         "responses": {
           "401": {
-            "description": "权限、会话、输入或并发错误",
+            "description": "错误",
             "content": {
               "application/json": {
                 "schema": {
@@ -9259,7 +8461,7 @@
             }
           },
           "403": {
-            "description": "权限、会话、输入或并发错误",
+            "description": "错误",
             "content": {
               "application/json": {
                 "schema": {
@@ -9269,7 +8471,7 @@
             }
           },
           "404": {
-            "description": "权限、会话、输入或并发错误",
+            "description": "错误",
             "content": {
               "application/json": {
                 "schema": {
@@ -9279,7 +8481,7 @@
             }
           },
           "409": {
-            "description": "权限、会话、输入或并发错误",
+            "description": "错误",
             "content": {
               "application/json": {
                 "schema": {
@@ -9289,7 +8491,7 @@
             }
           },
           "422": {
-            "description": "权限、会话、输入或并发错误",
+            "description": "错误",
             "content": {
               "application/json": {
                 "schema": {
@@ -9299,7 +8501,7 @@
             }
           },
           "429": {
-            "description": "权限、会话、输入或并发错误",
+            "description": "错误",
             "content": {
               "application/json": {
                 "schema": {
@@ -9309,7 +8511,7 @@
             }
           },
           "503": {
-            "description": "权限、会话、输入或并发错误",
+            "description": "错误",
             "content": {
               "application/json": {
                 "schema": {
@@ -9319,7 +8521,7 @@
             }
           },
           "500": {
-            "description": "内部错误（脱敏）",
+            "description": "错误",
             "content": {
               "application/json": {
                 "schema": {
@@ -9329,7 +8531,7 @@
             }
           },
           "200": {
-            "description": "S1实现；验收范围见docs/evidence/s1/README.md",
+            "description": "成功",
             "content": {
               "application/json": {
                 "schema": {
@@ -12023,7 +11225,7 @@
     },
     "/reports/{id}/accept-actions": {
       "post": {
-        "operationId": "post_reports_id_accept_actions",
+        "operationId": "post_reports_id_accept-actions",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
         "security": [
@@ -12062,6 +11264,86 @@
           }
         ],
         "responses": {
+          "401": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
           "200": {
             "description": "成功",
             "content": {
@@ -12084,86 +11366,6 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
           }
         },
         "requestBody": {
@@ -12176,12 +11378,12 @@
             }
           }
         },
-        "x-implementation-status": "planned"
+        "x-implementation-status": "implemented"
       }
     },
     "/strategy-memories/{id}/activate": {
       "post": {
-        "operationId": "post_strategy_memories_id_activate",
+        "operationId": "post_strategy-memories_id_activate",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
         "security": [
@@ -12220,29 +11422,6 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "成功",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/StrategyMemory"
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "meta"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          },
           "401": {
             "description": "错误",
             "content": {
@@ -12322,6 +11501,29 @@
                 }
               }
             }
+          },
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/StrategyMemory"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -12334,7 +11536,7 @@
             }
           }
         },
-        "x-implementation-status": "planned"
+        "x-implementation-status": "implemented"
       }
     },
     "/health": {
@@ -15111,6 +14313,1290 @@
         },
         "x-implementation-status": "implemented"
       }
+    },
+    "/metrics/analysis": {
+      "get": {
+        "operationId": "get_metrics_analysis",
+        "summary": "内部运营工作台接口",
+        "description": "内部运营工作台接口",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "account_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Id"
+            }
+          },
+          {
+            "name": "publication_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Id"
+            }
+          },
+          {
+            "name": "media_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "traffic_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "groups": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/AnalysisGroup"
+                          }
+                        },
+                        "window": {
+                          "type": "object"
+                        },
+                        "observations_count": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "missing_reason": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "groups",
+                        "window",
+                        "observations_count",
+                        "missing_reason"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "x-implementation-status": "implemented"
+      }
+    },
+    "/strategy-memories": {
+      "get": {
+        "operationId": "get_strategy-memories",
+        "summary": "内部运营工作台接口",
+        "description": "内部运营工作台接口",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "account_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Id"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/StrategyMemory"
+                          }
+                        },
+                        "next_cursor": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "items",
+                        "next_cursor"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        },
+        "x-implementation-status": "implemented"
+      }
+    },
+    "/strategy-memories/{id}/retire": {
+      "post": {
+        "operationId": "post_strategy-memories_id_retire",
+        "summary": "内部运营工作台接口",
+        "description": "内部运营工作台接口",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Id"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/StrategyMemory"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReasonVersion"
+              }
+            }
+          }
+        },
+        "x-implementation-status": "implemented"
+      }
+    },
+    "/feedback/{id}/organize": {
+      "post": {
+        "operationId": "post_feedback_id_organize",
+        "summary": "内部运营工作台接口",
+        "description": "内部运营工作台接口",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Id"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/FeedbackAccepted"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeedbackOrganize"
+              }
+            }
+          }
+        },
+        "x-implementation-status": "implemented"
+      }
+    },
+    "/source-organizations": {
+      "get": {
+        "operationId": "get_source-organizations",
+        "summary": "内部运营工作台接口",
+        "description": "内部运营工作台接口",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "account_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Id"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/SourceOrganization"
+                          }
+                        },
+                        "next_cursor": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "items",
+                        "next_cursor"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        },
+        "x-implementation-status": "implemented"
+      },
+      "post": {
+        "operationId": "post_source-organizations",
+        "summary": "内部运营工作台接口",
+        "description": "内部运营工作台接口",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/SourceOrganizationAccepted"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SourceOrganizationCreate"
+              }
+            }
+          }
+        },
+        "x-implementation-status": "implemented"
+      }
+    },
+    "/source-organizations/{id}": {
+      "get": {
+        "operationId": "get_source-organizations_id",
+        "summary": "内部运营工作台接口",
+        "description": "内部运营工作台接口",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Id"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/SourceOrganization"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        },
+        "x-implementation-status": "implemented"
+      }
+    },
+    "/source-organizations/{id}/accept": {
+      "post": {
+        "operationId": "post_source-organizations_id_accept",
+        "summary": "内部运营工作台接口",
+        "description": "内部运营工作台接口",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Id"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/SourceOrganization"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SourceOrganizationAccept"
+              }
+            }
+          }
+        },
+        "x-implementation-status": "implemented"
+      }
     }
   },
   "components": {
@@ -16403,84 +16889,201 @@
         "additionalProperties": false
       },
       "Feedback": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/BaseEntity"
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/Id"
           },
-          {
+          "workspace_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "account_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "publication_id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Id"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "source_time": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 10000
+          },
+          "author_alias": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "compliment",
+              "question",
+              "story",
+              "complaint",
+              "other"
+            ]
+          },
+          "consent_status": {
+            "enum": [
+              "unknown",
+              "internal_only",
+              "approved",
+              "revoked"
+            ]
+          },
+          "permitted_usage": {
             "type": "object",
             "properties": {
-              "publication_id": {
-                "anyOf": [
-                  {
-                    "$ref": "#/components/schemas/Id"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
+              "public_reply": {
+                "type": "boolean"
               },
-              "source_url": {
-                "anyOf": [
-                  {
-                    "type": "string",
-                    "maxLength": 10000
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              "text": {
-                "type": "string",
-                "maxLength": 10000
-              },
-              "source_time": {
-                "anyOf": [
-                  {
-                    "type": "string",
-                    "maxLength": 10000
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              "category": {
-                "type": "string",
-                "maxLength": 10000
-              },
-              "author_alias": {
-                "anyOf": [
-                  {
-                    "type": "string",
-                    "maxLength": 10000
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              "consent_status": {
-                "$ref": "#/components/schemas/ConsentStatus"
-              },
-              "permitted_usage": {
-                "type": "string",
-                "maxLength": 10000
-              },
-              "reply_draft": {
-                "type": "string",
-                "maxLength": 10000
-              },
-              "status": {
-                "type": "string",
-                "maxLength": 10000
+              "topic_reference": {
+                "type": "boolean"
               }
             },
-            "required": [],
-            "additionalProperties": true
+            "required": [
+              "public_reply",
+              "topic_reference"
+            ],
+            "additionalProperties": false
+          },
+          "reply_draft": {
+            "type": "string",
+            "maxLength": 10000
+          },
+          "quotes": {
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2000
+            }
+          },
+          "topic_leads": {
+            "maxItems": 5,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                "quote": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 2000
+                }
+              },
+              "required": [
+                "title",
+                "quote"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "status": {
+            "enum": [
+              "new",
+              "triaged",
+              "archived"
+            ]
+          },
+          "created_by": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "job_id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Id"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "ai_run_id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Id"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
           }
-        ]
+        },
+        "required": [
+          "id",
+          "workspace_id",
+          "account_id",
+          "publication_id",
+          "source_url",
+          "source_time",
+          "text",
+          "author_alias",
+          "category",
+          "consent_status",
+          "permitted_usage",
+          "reply_draft",
+          "quotes",
+          "topic_leads",
+          "status",
+          "created_by",
+          "job_id",
+          "ai_run_id",
+          "version",
+          "created_at",
+          "updated_at"
+        ],
+        "additionalProperties": false
       },
       "FileObject": {
         "type": "object",
@@ -16916,90 +17519,242 @@
         "additionalProperties": true
       },
       "Report": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/BaseEntity"
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/Id"
           },
-          {
-            "type": "object",
-            "properties": {
-              "status": {
-                "$ref": "#/components/schemas/ReportStatus"
+          "account_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "status": {
+            "enum": [
+              "draft",
+              "partial",
+              "final",
+              "stale"
+            ]
+          },
+          "state": {
+            "enum": [
+              "queued",
+              "running",
+              "succeeded",
+              "failed",
+              "cancelled"
+            ]
+          },
+          "error_code": {
+            "anyOf": [
+              {
+                "type": "string"
               },
-              "facts": {
-                "type": "string",
-                "maxLength": 10000
-              },
-              "hypotheses": {
-                "type": "string",
-                "maxLength": 10000
-              },
-              "actions": {
-                "type": "string",
-                "maxLength": 10000
-              },
-              "missing_data": {
-                "type": "string",
-                "maxLength": 10000
-              },
-              "active": {
-                "type": "string",
-                "maxLength": 10000
-              },
-              "retired": {
-                "type": "string",
-                "maxLength": 10000
-              },
-              "payload": {
-                "$ref": "#/components/schemas/ReportPayload"
+              {
+                "type": "null"
               }
-            },
-            "required": [],
-            "additionalProperties": true
+            ]
+          },
+          "window_start": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "window_end": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "snapshot": {
+            "type": "object"
+          },
+          "result": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ReportResult"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "strategies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StrategyMemory"
+            }
           }
-        ]
+        },
+        "required": [
+          "id",
+          "account_id",
+          "status",
+          "state",
+          "error_code",
+          "window_start",
+          "window_end",
+          "version",
+          "created_at",
+          "updated_at"
+        ],
+        "additionalProperties": true
       },
       "StrategyMemory": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/BaseEntity"
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/Id"
           },
-          {
+          "account_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "report_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "action_index": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "action": {
             "type": "object",
             "properties": {
-              "status": {
+              "title": {
                 "type": "string",
-                "maxLength": 10000
+                "minLength": 1,
+                "maxLength": 2000
               },
-              "facts": {
+              "hypothesis": {
                 "type": "string",
-                "maxLength": 10000
+                "minLength": 1,
+                "maxLength": 2000
               },
-              "hypotheses": {
+              "measurement": {
                 "type": "string",
-                "maxLength": 10000
+                "minLength": 1,
+                "maxLength": 2000
               },
-              "actions": {
-                "type": "string",
-                "maxLength": 10000
+              "evidence_calculation_ids": {
+                "maxItems": 100,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                }
               },
-              "missing_data": {
+              "review_at": {
                 "type": "string",
-                "maxLength": 10000
-              },
-              "active": {
-                "type": "string",
-                "maxLength": 10000
-              },
-              "retired": {
-                "type": "string",
-                "maxLength": 10000
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
               }
             },
-            "required": [],
-            "additionalProperties": true
+            "required": [
+              "title",
+              "hypothesis",
+              "measurement",
+              "evidence_calculation_ids",
+              "review_at"
+            ],
+            "additionalProperties": false
+          },
+          "status": {
+            "enum": [
+              "proposed",
+              "active",
+              "retired"
+            ]
+          },
+          "created_by": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "activated_by": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Id"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "activated_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "review_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "retired_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
           }
-        ]
+        },
+        "required": [
+          "id",
+          "account_id",
+          "report_id",
+          "action_index",
+          "action",
+          "status",
+          "created_by",
+          "activated_by",
+          "activated_at",
+          "review_at",
+          "retired_reason",
+          "version",
+          "created_at",
+          "updated_at"
+        ],
+        "additionalProperties": true
       },
       "Experiment": {
         "allOf": [
@@ -17279,9 +18034,11 @@
         "type": "object",
         "properties": {
           "category": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 200
+            "enum": [
+              "workspace",
+              "capacity",
+              "ai_budget"
+            ]
           },
           "settings": {
             "type": "object"
@@ -17616,6 +18373,9 @@
       "FeedbackCreate": {
         "type": "object",
         "properties": {
+          "account_id": {
+            "$ref": "#/components/schemas/Id"
+          },
           "publication_id": {
             "anyOf": [
               {
@@ -17629,16 +18389,12 @@
           "source_url": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/Url"
+                "type": "string"
               },
               {
                 "type": "null"
               }
             ]
-          },
-          "text": {
-            "type": "string",
-            "maxLength": 10000
           },
           "source_time": {
             "anyOf": [
@@ -17651,43 +18407,60 @@
               }
             ]
           },
-          "category": {
+          "text": {
             "type": "string",
             "minLength": 1,
-            "maxLength": 200
+            "maxLength": 10000
           },
           "author_alias": {
             "anyOf": [
               {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 200
+                "type": "string"
               },
               {
                 "type": "null"
               }
+            ]
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "compliment",
+              "question",
+              "story",
+              "complaint",
+              "other"
             ]
           },
           "consent_status": {
-            "$ref": "#/components/schemas/ConsentStatus"
+            "enum": [
+              "unknown",
+              "internal_only",
+              "approved",
+              "revoked"
+            ]
           },
           "permitted_usage": {
+            "type": "object",
+            "properties": {
+              "public_reply": {
+                "type": "boolean"
+              },
+              "topic_reference": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "public_reply",
+              "topic_reference"
+            ],
+            "additionalProperties": false
+          },
+          "reply_draft": {
             "type": "string",
             "maxLength": 10000
           },
-          "reply_draft": {
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 10000
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
           "status": {
-            "type": "string",
             "enum": [
               "new",
               "triaged",
@@ -17696,9 +18469,8 @@
           }
         },
         "required": [
-          "text",
-          "consent_status",
-          "permitted_usage"
+          "account_id",
+          "text"
         ],
         "additionalProperties": false
       },
@@ -17718,16 +18490,12 @@
           "source_url": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/Url"
+                "type": "string"
               },
               {
                 "type": "null"
               }
             ]
-          },
-          "text": {
-            "type": "string",
-            "maxLength": 10000
           },
           "source_time": {
             "anyOf": [
@@ -17740,48 +18508,69 @@
               }
             ]
           },
-          "category": {
+          "text": {
             "type": "string",
             "minLength": 1,
-            "maxLength": 200
+            "maxLength": 10000
           },
           "author_alias": {
             "anyOf": [
               {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 200
+                "type": "string"
               },
               {
                 "type": "null"
               }
+            ]
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "compliment",
+              "question",
+              "story",
+              "complaint",
+              "other"
             ]
           },
           "consent_status": {
-            "$ref": "#/components/schemas/ConsentStatus"
+            "enum": [
+              "unknown",
+              "internal_only",
+              "approved",
+              "revoked"
+            ]
           },
           "permitted_usage": {
+            "type": "object",
+            "properties": {
+              "public_reply": {
+                "type": "boolean"
+              },
+              "topic_reference": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "public_reply",
+              "topic_reference"
+            ],
+            "additionalProperties": false
+          },
+          "reply_draft": {
             "type": "string",
             "maxLength": 10000
           },
-          "reply_draft": {
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 10000
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
           "status": {
-            "type": "string",
             "enum": [
               "new",
               "triaged",
               "archived"
             ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
           },
           "expected_version": {
             "type": "integer",
@@ -17789,6 +18578,7 @@
           }
         },
         "required": [
+          "reason",
           "expected_version"
         ],
         "additionalProperties": false
@@ -18082,52 +18872,54 @@
           "account_id": {
             "$ref": "#/components/schemas/Id"
           },
-          "period": {
-            "type": "object",
-            "properties": {
-              "start": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "end": {
-                "type": "string",
-                "format": "date-time"
-              }
-            },
-            "required": [
-              "start",
-              "end"
-            ],
-            "additionalProperties": false
+          "publication_id": {
+            "$ref": "#/components/schemas/Id"
           },
-          "filters": {
-            "type": "object",
-            "properties": {
-              "media_type": {
-                "$ref": "#/components/schemas/MediaType"
-              },
-              "traffic_type": {
-                "$ref": "#/components/schemas/TrafficType"
-              }
-            },
-            "required": [],
-            "additionalProperties": false
+          "media_type": {
+            "enum": [
+              "graphic",
+              "video"
+            ]
+          },
+          "traffic_type": {
+            "enum": [
+              "organic",
+              "paid",
+              "mixed",
+              "unknown"
+            ]
+          },
+          "start": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "end": {
+            "type": "string",
+            "format": "date-time"
           }
         },
         "required": [
           "account_id",
-          "period"
+          "start",
+          "end"
         ],
         "additionalProperties": false
       },
       "ReportAcceptActions": {
         "type": "object",
         "properties": {
-          "action_ids": {
+          "action_indexes": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Id"
-            }
+              "type": "integer",
+              "minimum": 0
+            },
+            "minItems": 1,
+            "maxItems": 10
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
           },
           "expected_version": {
             "type": "integer",
@@ -18135,7 +18927,8 @@
           }
         },
         "required": [
-          "action_ids",
+          "action_indexes",
+          "reason",
           "expected_version"
         ],
         "additionalProperties": false
@@ -18522,6 +19315,10 @@
       "Monitor": {
         "type": "object",
         "properties": {
+          "as_of": {
+            "type": "string",
+            "format": "date-time"
+          },
           "jobs": {
             "type": "array",
             "items": {
@@ -18540,13 +19337,51 @@
           },
           "external_capabilities": {
             "type": "object"
+          },
+          "ai_usage": {
+            "type": "object",
+            "properties": {
+              "window": {
+                "type": "string"
+              },
+              "groups": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              }
+            },
+            "required": [
+              "window",
+              "groups"
+            ],
+            "additionalProperties": false
+          },
+          "import_limits": {
+            "type": "object",
+            "properties": {
+              "screenshot_bytes": {
+                "type": "integer"
+              },
+              "table_bytes": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "screenshot_bytes",
+              "table_bytes"
+            ],
+            "additionalProperties": false
           }
         },
         "required": [
+          "as_of",
           "jobs",
           "processes",
           "outbox_pending",
-          "external_capabilities"
+          "external_capabilities",
+          "ai_usage",
+          "import_limits"
         ],
         "additionalProperties": false
       },
@@ -19514,6 +20349,1104 @@
           "filename",
           "content_base64",
           "example_policy"
+        ],
+        "additionalProperties": false
+      },
+      "AnalysisPoint": {
+        "type": "object",
+        "properties": {
+          "observation_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "publication_id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Id"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "publication_title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "media_type": {
+            "anyOf": [
+              {
+                "enum": [
+                  "graphic",
+                  "video"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "missing_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "is_approximate": {
+            "type": "boolean"
+          },
+          "observed_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "window_start": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "window_end": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "published_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "age_seconds": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "analysis_warning": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "observation_id",
+          "publication_id",
+          "publication_title",
+          "media_type",
+          "value",
+          "missing_reason",
+          "is_approximate",
+          "observed_at",
+          "window_start",
+          "window_end",
+          "published_at",
+          "age_seconds",
+          "analysis_warning"
+        ],
+        "additionalProperties": false
+      },
+      "AnalysisGroup": {
+        "type": "object",
+        "properties": {
+          "metric_key": {
+            "type": "string"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "aggregation_kind": {
+            "enum": [
+              "snapshot",
+              "cumulative",
+              "interval"
+            ]
+          },
+          "traffic_type": {
+            "enum": [
+              "organic",
+              "paid",
+              "mixed",
+              "unknown"
+            ]
+          },
+          "source_definition": {
+            "type": "string"
+          },
+          "time_precision": {
+            "enum": [
+              "day",
+              "minute",
+              "second"
+            ]
+          },
+          "definition_version": {
+            "type": "string"
+          },
+          "points": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AnalysisPoint"
+            }
+          },
+          "trend_available": {
+            "type": "boolean"
+          },
+          "comparison_note": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "metric_key",
+          "unit",
+          "aggregation_kind",
+          "traffic_type",
+          "source_definition",
+          "time_precision",
+          "definition_version",
+          "points",
+          "trend_available",
+          "comparison_note"
+        ],
+        "additionalProperties": false
+      },
+      "ReportAIOutput": {
+        "type": "object",
+        "properties": {
+          "schema_version": {
+            "type": "string"
+          },
+          "input_version": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string",
+            "maxLength": 10000
+          },
+          "evidence_refs": {
+            "maxItems": 200,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            }
+          },
+          "assumptions": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 10000
+            }
+          },
+          "missing_inputs": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 10000
+            }
+          },
+          "warnings": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 10000
+            }
+          },
+          "task_payload": {
+            "type": "object",
+            "properties": {
+              "facts": {
+                "maxItems": 100,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "calculation_id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "value": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "calculation_id",
+                    "value"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "hypotheses": {
+                "maxItems": 20,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "text": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 2000
+                    },
+                    "evidence_calculation_ids": {
+                      "maxItems": 100,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                      }
+                    }
+                  },
+                  "required": [
+                    "text",
+                    "evidence_calculation_ids"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "actions": {
+                "maxItems": 10,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 2000
+                    },
+                    "hypothesis": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 2000
+                    },
+                    "measurement": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 2000
+                    },
+                    "evidence_calculation_ids": {
+                      "maxItems": 100,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                      }
+                    },
+                    "review_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "hypothesis",
+                    "measurement",
+                    "evidence_calculation_ids",
+                    "review_at"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "missing_data": {
+                "maxItems": 100,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 2000
+                }
+              }
+            },
+            "required": [
+              "facts",
+              "hypotheses",
+              "actions",
+              "missing_data"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "schema_version",
+          "input_version",
+          "summary",
+          "evidence_refs",
+          "assumptions",
+          "missing_inputs",
+          "warnings",
+          "task_payload"
+        ],
+        "additionalProperties": false
+      },
+      "ReportResult": {
+        "type": "object",
+        "properties": {
+          "facts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Calculation"
+            }
+          },
+          "summary": {
+            "type": "string"
+          },
+          "hypotheses": {
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 2000
+                },
+                "evidence_calculation_ids": {
+                  "maxItems": 100,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  }
+                }
+              },
+              "required": [
+                "text",
+                "evidence_calculation_ids"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "actions": {
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 2000
+                },
+                "hypothesis": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 2000
+                },
+                "measurement": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 2000
+                },
+                "evidence_calculation_ids": {
+                  "maxItems": 100,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  }
+                },
+                "review_at": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                }
+              },
+              "required": [
+                "title",
+                "hypothesis",
+                "measurement",
+                "evidence_calculation_ids",
+                "review_at"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "missing_data": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "facts",
+          "summary",
+          "hypotheses",
+          "actions",
+          "missing_data",
+          "warnings"
+        ],
+        "additionalProperties": false
+      },
+      "ReportAccepted": {
+        "type": "object",
+        "properties": {
+          "report_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "job_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "state": {
+            "const": "queued"
+          },
+          "status_url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "report_id",
+          "job_id",
+          "state",
+          "status_url"
+        ],
+        "additionalProperties": false
+      },
+      "FeedbackAIOutput": {
+        "type": "object",
+        "properties": {
+          "schema_version": {
+            "type": "string"
+          },
+          "input_version": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string",
+            "maxLength": 10000
+          },
+          "evidence_refs": {
+            "maxItems": 200,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            }
+          },
+          "assumptions": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 10000
+            }
+          },
+          "missing_inputs": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 10000
+            }
+          },
+          "warnings": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 10000
+            }
+          },
+          "task_payload": {
+            "type": "object",
+            "properties": {
+              "category": {
+                "type": "string",
+                "enum": [
+                  "compliment",
+                  "question",
+                  "story",
+                  "complaint",
+                  "other"
+                ]
+              },
+              "reply_draft": {
+                "type": "string",
+                "maxLength": 10000
+              },
+              "quotes": {
+                "maxItems": 10,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 2000
+                }
+              },
+              "topic_leads": {
+                "maxItems": 5,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200
+                    },
+                    "quote": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 2000
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "quote"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "category",
+              "reply_draft",
+              "quotes",
+              "topic_leads"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "schema_version",
+          "input_version",
+          "summary",
+          "evidence_refs",
+          "assumptions",
+          "missing_inputs",
+          "warnings",
+          "task_payload"
+        ],
+        "additionalProperties": false
+      },
+      "FeedbackOrganize": {
+        "type": "object",
+        "properties": {
+          "expected_version": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "expected_version"
+        ],
+        "additionalProperties": false
+      },
+      "FeedbackAccepted": {
+        "type": "object",
+        "properties": {
+          "feedback_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "job_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "state": {
+            "enum": [
+              "queued",
+              "running"
+            ]
+          },
+          "status_url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "feedback_id",
+          "job_id",
+          "state",
+          "status_url"
+        ],
+        "additionalProperties": false
+      },
+      "Dashboard": {
+        "type": "object",
+        "properties": {
+          "stage": {
+            "const": "S8"
+          },
+          "as_of": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "accounts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "priority_tasks": {
+            "type": "array",
+            "maxItems": 3,
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "kind": {
+                  "enum": [
+                    "import_confirmation",
+                    "source_health",
+                    "missing_data",
+                    "feedback"
+                  ]
+                },
+                "title": {
+                  "type": "string"
+                },
+                "detail": {
+                  "type": "string"
+                },
+                "updated_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "href": {
+                  "type": "string",
+                  "pattern": "^#(?:reports|topics)\\?"
+                }
+              },
+              "required": [
+                "id",
+                "kind",
+                "title",
+                "detail",
+                "updated_at",
+                "href"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "metrics": {
+            "type": "array",
+            "maxItems": 15,
+            "items": {
+              "type": "object"
+            }
+          },
+          "metrics_limit": {
+            "const": 15
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "external_capabilities": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "stage",
+          "as_of",
+          "accounts",
+          "priority_tasks",
+          "metrics",
+          "metrics_limit",
+          "sources",
+          "external_capabilities"
+        ],
+        "additionalProperties": false
+      },
+      "SourceOrganizationAIOutput": {
+        "type": "object",
+        "properties": {
+          "schema_version": {
+            "type": "string"
+          },
+          "input_version": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string",
+            "maxLength": 10000
+          },
+          "evidence_refs": {
+            "maxItems": 200,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            }
+          },
+          "assumptions": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 10000
+            }
+          },
+          "missing_inputs": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 10000
+            }
+          },
+          "warnings": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 10000
+            }
+          },
+          "task_payload": {
+            "type": "object",
+            "properties": {
+              "groups": {
+                "maxItems": 10,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "theme": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 2000
+                    },
+                    "audience_need": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 2000
+                    },
+                    "source_item_ids": {
+                      "minItems": 1,
+                      "maxItems": 20,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                      }
+                    },
+                    "quotes": {
+                      "minItems": 1,
+                      "maxItems": 20,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "source_item_id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "quote": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 2000
+                          }
+                        },
+                        "required": [
+                          "source_item_id",
+                          "quote"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "theme",
+                    "audience_need",
+                    "source_item_ids",
+                    "quotes"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "duplicate_suggestions": {
+                "maxItems": 10,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "source_item_ids": {
+                      "minItems": 2,
+                      "maxItems": 20,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                      }
+                    },
+                    "reason": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 2000
+                    }
+                  },
+                  "required": [
+                    "source_item_ids",
+                    "reason"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "groups",
+              "duplicate_suggestions"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "schema_version",
+          "input_version",
+          "summary",
+          "evidence_refs",
+          "assumptions",
+          "missing_inputs",
+          "warnings",
+          "task_payload"
+        ],
+        "additionalProperties": false
+      },
+      "SourceOrganization": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "account_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "state": {
+            "enum": [
+              "queued",
+              "running",
+              "succeeded",
+              "failed",
+              "cancelled"
+            ]
+          },
+          "error_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "reviewed_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "snapshot": {
+            "type": "object"
+          },
+          "result": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SourceOrganizationAIOutput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "current": {
+            "type": "boolean"
+          },
+          "accepted_group_indexes": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "required": [
+          "id",
+          "account_id",
+          "state",
+          "error_code",
+          "version",
+          "reviewed_at",
+          "created_at",
+          "updated_at"
+        ],
+        "additionalProperties": true
+      },
+      "SourceOrganizationCreate": {
+        "type": "object",
+        "properties": {
+          "account_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "source_item_ids": {
+            "type": "array",
+            "maxItems": 20,
+            "uniqueItems": true,
+            "items": {
+              "$ref": "#/components/schemas/Id"
+            }
+          }
+        },
+        "required": [
+          "account_id",
+          "source_item_ids"
+        ],
+        "additionalProperties": false
+      },
+      "SourceOrganizationAccept": {
+        "type": "object",
+        "properties": {
+          "group_indexes": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 10,
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "expected_version": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "group_indexes",
+          "reason",
+          "expected_version"
+        ],
+        "additionalProperties": false
+      },
+      "SourceOrganizationAccepted": {
+        "type": "object",
+        "properties": {
+          "organization_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "job_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "state": {
+            "const": "queued"
+          },
+          "status_url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "organization_id",
+          "job_id",
+          "state",
+          "status_url"
         ],
         "additionalProperties": false
       }

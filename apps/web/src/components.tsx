@@ -1,6 +1,6 @@
 import React,{useEffect,useRef} from 'react';
 export function Field({label,name,type='text',defaultValue,required=true,minLength}:{label:string;name:string;type?:string;defaultValue?:string;required?:boolean;minLength?:number}){
-  return <label className="field"><span>{label}{required&&<span aria-hidden="true"> *</span>}</span><input name={name} type={type} defaultValue={defaultValue} required={required} minLength={minLength} autoComplete={type==='password'?'current-password':name==='email'?'email':'off'}/></label>;
+  return <label className="field"><span>{label}{required&&<span aria-hidden="true"> *</span>}</span><input name={name} type={type} step={type==='number'?'any':undefined} defaultValue={defaultValue} required={required} minLength={minLength} autoComplete={type==='password'?'current-password':name==='email'?'email':'off'}/></label>;
 }
 export function Empty({title,children}:{title:string;children:React.ReactNode}){return <section className="empty"><span className="empty-icon" aria-hidden="true">◇</span><h2>{title}</h2><p>{children}</p></section>;}
 export function Loading(){return <p role="status" className="loading">正在加载…</p>;}

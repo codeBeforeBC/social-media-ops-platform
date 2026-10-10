@@ -72,6 +72,7 @@ model accounts {
   import_batches      import_batches[]
   metric_observations metric_observations[]
   reports             reports[]
+  strategy_memories   strategy_memories[]
 }
 
 model audit_logs {
@@ -164,6 +165,7 @@ model jobs {
   @@unique([workspace_id, outbox_id], map: "jobs_workspace_outbox_unique")
   @@unique([workspace_id, id])
   @@index([pool, available_at], map: "jobs_claim", where: raw("(state = ANY (ARRAY['queued'::text, 'running'::text]))"))
+  reports          reports[]
 }
 
 model login_limits {
@@ -214,6 +216,9 @@ model memberships {
   import_rows                                                                import_rows[]
   metric_evidence                                                            metric_evidence[]
   metric_observations                                                        metric_observations[]
+  reports                                                                    reports[]
+  strategy_memories_strategy_memories_workspace_id_activated_byTomemberships strategy_memories[]   @relation("strategy_memories_workspace_id_activated_byTomemberships")
+  strategy_memories_strategy_memories_workspace_id_created_byTomemberships   strategy_memories[]   @relation("strategy_memories_workspace_id_created_byTomemberships")
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
@@ -440,6 +445,7 @@ model ai_runs {
 
   @@unique([workspace_id, id])
   @@unique([workspace_id, cache_key], map: "ai_single_cached_run", where: raw("(state = ANY (ARRAY['running'::text, 'succeeded'::text]))"))
+  reports        reports[]
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
@@ -771,12 +777,26 @@ model reports {
   version              Int                    @default(1)
   created_at           DateTime               @default(now()) @db.Timestamptz(6)
   updated_at           DateTime               @default(now()) @db.Timestamptz(6)
+  window_start         DateTime?              @db.Timestamptz(6)
+  window_end           DateTime?              @db.Timestamptz(6)
+  created_by           String?                @db.Uuid
+  job_id               String?                @db.Uuid
+  ai_run_id            String?                @db.Uuid
+  state                String                 @default("queued")
+  snapshot             Json                   @default("{}")
+  result               Json?
+  error_code           String?
   report_calculations  report_calculations[]
   report_invalidations report_invalidations[]
   report_observations  report_observations[]
   accounts             accounts               @relation(fields: [workspace_id, account_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  ai_runs              ai_runs?               @relation(fields: [workspace_id, ai_run_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  memberships          memberships?           @relation(fields: [workspace_id, created_by], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  jobs                 jobs?                  @relation(fields: [workspace_id, job_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  strategy_memories    strategy_memories[]
 
   @@unique([workspace_id, id])
+  @@index([workspace_id, account_id, created_at(sort: Desc), id(sort: Desc)], map: "report_history")
 }
 
 model report_observations {
@@ -839,7 +859,7 @@ model calculations {
   value                 Decimal?              @db.Decimal(24, 6)
   missing_reason        String?
   is_approximate        Boolean
-  fingerprint           String                @unique
+  fingerprint           String
   validity              String                @default("current")
   created_at            DateTime              @default(now()) @db.Timestamptz(6)
   accounts              accounts              @relation(fields: [workspace_id, account_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
@@ -858,4 +878,79 @@ model report_calculations {
   reports        reports      @relation(fields: [workspace_id, report_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
 
   @@id([report_id, calculation_id])
+}
+
+
+model strategy_memories {
+  id                                                                   String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspace_id                                                         String       @db.Uuid
+  account_id                                                           String       @db.Uuid
+  report_id                                                            String       @db.Uuid
+  action_index                                                         Int
+  action                                                               Json
+  status                                                               String       @default("proposed")
+  created_by                                                           String       @db.Uuid
+  activated_by                                                         String?      @db.Uuid
+  activated_at                                                         DateTime?    @db.Timestamptz(6)
+  retired_reason                                                       String?
+  review_at                                                            DateTime     @db.Timestamptz(6)
+  version                                                              Int          @default(1)
+  created_at                                                           DateTime     @default(now()) @db.Timestamptz(6)
+  updated_at                                                           DateTime     @default(now()) @db.Timestamptz(6)
+  accounts                                                             accounts     @relation(fields: [workspace_id, account_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  memberships_strategy_memories_workspace_id_activated_byTomemberships memberships? @relation("strategy_memories_workspace_id_activated_byTomemberships", fields: [workspace_id, activated_by], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  memberships_strategy_memories_workspace_id_created_byTomemberships   memberships  @relation("strategy_memories_workspace_id_created_byTomemberships", fields: [workspace_id, created_by], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+  reports                                                              reports      @relation(fields: [workspace_id, report_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([report_id, action_index])
+  @@unique([workspace_id, id])
+}
+
+model Feedback {
+ id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+ workspace_id String @db.Uuid
+ account_id String @db.Uuid
+ publication_id String? @db.Uuid
+ source_url String?
+ source_time DateTime? @db.Timestamptz(6)
+ text String
+ author_alias String?
+ category String @default("other")
+ consent_status String @default("unknown")
+ permitted_usage Json @default("{\"public_reply\":false,\"topic_reference\":false}")
+ reply_draft String @default("")
+ quotes Json @default("[]")
+ topic_leads Json @default("[]")
+ status String @default("new")
+ created_by String @db.Uuid
+ job_id String? @db.Uuid
+ ai_run_id String? @db.Uuid
+ version Int @default(1)
+ created_at DateTime @default(now()) @db.Timestamptz(6)
+ updated_at DateTime @default(now()) @db.Timestamptz(6)
+ @@unique([workspace_id,id])
+ @@index([workspace_id,account_id,created_at(sort: Desc),id(sort: Desc)],map:"feedback_history")
+ @@map("feedback")
+}
+
+model SourceOrganization {
+ id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+ workspace_id String @db.Uuid
+ account_id String @db.Uuid
+ created_by String @db.Uuid
+ snapshot Json
+ result Json?
+ job_id String? @db.Uuid
+ ai_run_id String? @db.Uuid
+ state String @default("queued")
+ error_code String?
+ accepted_group_indexes Int[] @default([])
+ reviewed_by String? @db.Uuid
+ reviewed_at DateTime? @db.Timestamptz(6)
+ version Int @default(1)
+ created_at DateTime @default(now()) @db.Timestamptz(6)
+ updated_at DateTime @default(now()) @db.Timestamptz(6)
+ @@unique([workspace_id,id])
+ @@index([workspace_id,account_id,created_at(sort: Desc),id(sort: Desc)],map:"source_organization_history")
+ @@map("source_organizations")
 }

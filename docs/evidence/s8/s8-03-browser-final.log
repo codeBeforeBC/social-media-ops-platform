@@ -1,0 +1,61 @@
+{"database":"yoyo","migrations":8}
+{"database":"yoyo_test","migrations":26}
+[2m[WebServer] [22m(node:13253) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:13254) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:13260) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:13260) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+(node:13330) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:13330) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/browser.spec.ts:5:5 › 首次设置、三导航、账号表单、设置保存、键盘抽屉和退出 (2.2s)
+  ✘  2 tests/browser.spec.ts:100:5 › S8 反馈录入、未知许可分类、明确用途草案和撤回，键盘及窄屏无自动发送 (920ms)
+
+
+  1) tests/browser.spec.ts:100:5 › S8 反馈录入、未知许可分类、明确用途草案和撤回，键盘及窄屏无自动发送 ─────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoContainText[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: getByRole('status')
+    Expected substring: [32m"AI整理已排队"[39m
+    Error: strict mode violation: getByRole('status') resolved to 2 elements:
+        1) <p role="status">反馈已保存，许可和草案已按用途核验</p> aka getByText('反馈已保存，许可和草案已按用途核验')
+        2) <p role="status" class="loading">正在加载…</p> aka getByText('正在加载…')
+
+    Call log:
+    [2m  - Expect "toContainText" with timeout 5000ms[22m
+    [2m  - waiting for getByRole('status')[22m
+
+
+      100 | test('S8 反馈录入、未知许可分类、明确用途草案和撤回，键盘及窄屏无自动发送',async({page})=>{
+      101 |  execFileSync('pnpm',['exec','tsx','tools/s8/browser-login-reset.ts'],{stdio:'pipe'});
+    > 102 |  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('/');await page.getByLabel('邮箱').fill('browser@example.test');await page.getByLabel('密码',{exact:false}).fill('Browser-test-password-987');await page.getByRole('button',{name:'登录',exact:true}).click();await expect(page.getByRole('heading',{name:'测试运营，欢迎回来'})).toBeVisible();await page.getByRole('link',{name:'数据复盘',exact:true}).click();await page.getByRole('button',{name:'录入反馈',exact:true}).click();let d=page.getByRole('dialog');await d.getByLabel('反馈原文',{exact:true}).fill('明确合成：想知道怎样观察熟悉场景');await d.getByRole('button',{name:'保存反馈',exact:true}).click();await expect(d.getByRole('button',{name:'AI 分类与草案'})).toBeVisible();await d.getByRole('button',{name:'AI 分类与草案'}).click();await expect(page.getByRole('status')).toContainText('AI整理已排队');await expect.poll(async()=>{await d.getByRole('button',{name:'刷新整理结果'}).click();return d.getByLabel('分类',{exact:true}).inputValue();}).toBe('question');await expect(d.getByLabel('公开回复草案',{exact:true})).toHaveCount(0);await d.getByLabel('许可状态').selectOption('approved');await d.locator('input[name=public_reply]').check();await d.getByLabel('选题线索引用').check();await d.getByLabel('反馈修改/许可确认原因').fill('明确合成用途确认');await d.getByRole('button',{name:'保存反馈',exact:true}).click();await d.getByRole('button',{name:'AI 分类与草案'}).click();await expect.poll(async()=>{await d.getByRole('button',{name:'刷新整理结果'}).click();return d.locator('textarea[name=reply_draft]').inputValue();}).toContain('谢谢分享');await expect(d.getByRole('heading',{name:'许可内选题线索（待人工参考）'})).toBeVisible();await d.getByRole('button',{name:'撤回全部许可'}).click();await expect(d.getByLabel('许可状态')).toHaveValue('revoked');await expect(d.locator('textarea[name=reply_draft]')).toHaveCount(0);await expect(d.getByRole('heading',{name:'许可内选题线索（待人工参考）'})).toHaveCount(0);await expect(d.getByRole('button',{name:'AI 分类与草案'})).toBeDisabled();await page.setViewportSize({width:390,height:1000});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:(process.env.EVIDENCE_DIR??'docs/evidence/s8')+'/screenshots/feedback-revoked-mobile.png',fullPage:true});await page.keyboard.press('Escape');await expect(d).toHaveCount(0);expect(errors).toEqual([]);
+          |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       ^
+      103 | });
+      104 |
+        at /Users/junlong/projects/social-mdeida-ops-platform/tests/browser.spec.ts:102:807
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser-S8-反馈录入、未知许可分类、明确用途草案和撤回，键盘及窄屏无自动发送/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/browser-S8-反馈录入、未知许可分类、明确用途草案和撤回，键盘及窄屏无自动发送/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/browser-S8-反馈录入、未知许可分类、明确用途草案和撤回，键盘及窄屏无自动发送/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/browser-S8-反馈录入、未知许可分类、明确用途草案和撤回，键盘及窄屏无自动发送/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/browser.spec.ts:100:5 › S8 反馈录入、未知许可分类、明确用途草案和撤回，键盘及窄屏无自动发送 ──────────────────────────────
+  1 passed (4.6s)

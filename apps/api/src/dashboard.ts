@@ -1,0 +1,20 @@
+import {z} from 'zod';
+import {Database} from '../../../packages/db/src/db';
+import {Actor,parse,uuid} from '../../../packages/domain/src/protocol';
+import {loadAIConfig,AIFailure} from '../../../packages/domain/src/ai-gateway';
+import {Commands} from './commands';
+export class Dashboard {
+ constructor(readonly db:Database){}
+ async get(a:Actor,query:Record<string,unknown>){const q=parse(z.object({account_id:uuid.optional()}).strict(),query),c=new Commands(this.db);if(q.account_id)await c.accountScope(this.db,a,q.account_id);const accounts=(await c.accounts(a)).items,ids=accounts.filter(r=>!q.account_id||r.id===q.account_id).map(r=>r.id);
+ const [imports,missing,sources,metrics,feedback]=await Promise.all([
+ this.db.query("SELECT b.id,b.account_id,b.updated_at,count(r.id)::int remaining FROM import_batches b JOIN import_rows r ON r.batch_id=b.id AND r.status IN ('valid','conflict','unmatched') AND NOT r.is_example WHERE b.workspace_id=$1 AND b.account_id=ANY($2::uuid[]) AND b.status IN ('needs_confirmation','partially_confirmed') GROUP BY b.id ORDER BY b.updated_at,b.id LIMIT 3",[a.workspaceId,ids]),
+ this.db.query("SELECT p.id,p.account_id,p.title,p.updated_at FROM publications p WHERE p.workspace_id=$1 AND p.account_id=ANY($2::uuid[]) AND p.lifecycle='active' AND NOT EXISTS(SELECT 1 FROM metric_observations o WHERE o.publication_id=p.id AND o.validity='confirmed' AND o.metric->>'value' IS NOT NULL) ORDER BY p.published_at,p.id LIMIT 3",[a.workspaceId,ids]),
+ this.db.query('SELECT id,name,health,paused,enabled,error_code,last_success_at,updated_at FROM source_connections WHERE workspace_id=$1 ORDER BY updated_at,id',[a.workspaceId]),
+ this.db.query("SELECT DISTINCT ON(account_id,metric->>'metric_key',metric->>'source_definition',metric->>'traffic_type') id,account_id,metric,created_at AS confirmed_at FROM metric_observations WHERE workspace_id=$1 AND account_id=ANY($2::uuid[]) AND publication_id IS NULL AND validity='confirmed' ORDER BY account_id,metric->>'metric_key',metric->>'source_definition',metric->>'traffic_type',COALESCE((metric->>'observed_at')::timestamptz,(metric->>'window_end')::timestamptz) DESC,id DESC LIMIT 15",[a.workspaceId,ids]),
+ this.db.query("SELECT id,account_id,updated_at FROM feedback WHERE workspace_id=$1 AND account_id=ANY($2::uuid[]) AND status='new' ORDER BY created_at,id LIMIT 3",[a.workspaceId,ids])]);
+ const href=(account:string,extra:Record<string,string>)=>'#reports?'+new URLSearchParams({account_id:account,...extra});
+ const tasks=[...imports.rows.map(r=>({id:'import:'+r.id,kind:'import_confirmation',title:'核对待确认导入',detail:`${r.remaining}行尚未确认`,updated_at:r.updated_at,href:href(r.account_id,{batch_id:r.id})})),...sources.rows.filter(s=>s.enabled&&(s.paused||s.health!=='healthy')).slice(0,3).map(s=>({id:'source:'+s.id,kind:'source_health',title:'检查来源状态：'+s.name,detail:s.health+(s.error_code?' · '+s.error_code:''),updated_at:s.updated_at,href:'#topics?'+new URLSearchParams({source_id:s.id})})),...missing.rows.map(r=>({id:'publication:'+r.id,kind:'missing_data',title:'补充笔记数据：'+(r.title??'待核对标题'),detail:'没有非空已确认观察；不能判断效果',updated_at:r.updated_at,href:href(r.account_id,{publication_id:r.id,section:'imports'})})),...feedback.rows.map(r=>({id:'feedback:'+r.id,kind:'feedback',title:'核对新反馈及许可',detail:'内部整理不等于允许公开引用',updated_at:r.updated_at,href:href(r.account_id,{feedback_id:r.id})}))].slice(0,3);
+ let ai:Record<string,unknown>;try{const config=loadAIConfig();ai={state:config.enabled?'enabled':'disabled',model:config.model};}catch(e){ai={state:'unavailable',error_code:e instanceof AIFailure?e.code:'AI_NOT_CONFIGURED'};}
+ return {stage:'S8',as_of:new Date().toISOString(),accounts:accounts.map(r=>({id:r.id,name:r.name})),priority_tasks:tasks,metrics:metrics.rows.map(r=>({observation_id:r.id,account_id:r.account_id,...r.metric,confirmed_at:r.confirmed_at,historical:true,source_url:'/metrics/'+r.id+'/sources'})),metrics_limit:15,sources:sources.rows,external_capabilities:{ai,ocr:{state:'not_implemented'}}};
+ }
+}

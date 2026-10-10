@@ -1,3 +1,5 @@
+import {activeStrategies} from './reports';
+import {canonical} from './protocol';
 import {Database,Tx} from '../../db/src/db';
 import {AIGateway,AIFailure} from './ai-gateway';
 import {topicSpec,WorkflowInput} from './ai-workflows';
@@ -33,6 +35,7 @@ export class AITasks {
   const member=(await query.query('SELECT active,roles FROM memberships WHERE workspace_id=$1 AND id=$2 FOR SHARE',[r.workspace_id,r.created_by])).rows[0];
   if(r.kind!=='topics'||r.snapshot.scope_version!=='v1.2'||!account||account.version!==r.snapshot.account.version||workspace?.version!==r.snapshot.workspace_version||!member?.active)return true;
   if(!member.roles.some((role:string)=>['admin','editor','operator'].includes(role)))return true;
+  if(canonical(r.snapshot.strategies??[])!==canonical(await activeStrategies(query,r.workspace_id,r.account_id)))return true;
   if(!member.roles.includes('admin')&&!(await query.query('SELECT 1 FROM account_memberships WHERE account_id=$1 AND membership_id=$2',[r.account_id,r.created_by])).rowCount)return true;
   return false;
  }

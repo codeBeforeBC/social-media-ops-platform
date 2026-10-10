@@ -1,0 +1,14 @@
+
+> yoyo-workbench@0.1.0 typecheck /Users/junlong/projects/social-mdeida-ops-platform
+> tsc --noEmit -p tsconfig.json && pnpm --filter @yoyo/web typecheck
+
+tests/feedback.test.ts(24,333): error TS2345: Argument of type '{ schema_version: any; input_version: any; summary: string; evidence_refs: never[]; assumptions: string[]; missing_inputs: never[]; warnings: string[]; task_payload: { category: string; reply_draft: string; quotes: any[]; topic_leads: { ...; }[]; }; }' is not assignable to parameter of type '{ task_payload: { category: "other" | "compliment" | "question" | "story" | "complaint"; reply_draft: string; quotes: string[]; topic_leads: { title: string; quote: string; }[]; }; schema_version: string; ... 5 more ...; warnings: string[]; }'.
+  The types of 'task_payload.category' are incompatible between these types.
+    Type 'string' is not assignable to type '"other" | "compliment" | "question" | "story" | "complaint"'.
+tests/feedback.test.ts(24,394): error TS2345: Argument of type '{ schema_version: any; input_version: any; summary: string; evidence_refs: never[]; assumptions: string[]; missing_inputs: never[]; warnings: string[]; task_payload: { category: string; reply_draft: string; quotes: any[]; topic_leads: { ...; }[]; }; }' is not assignable to parameter of type '{ task_payload: { category: "other" | "compliment" | "question" | "story" | "complaint"; reply_draft: string; quotes: string[]; topic_leads: { title: string; quote: string; }[]; }; schema_version: string; ... 5 more ...; warnings: string[]; }'.
+  The types of 'task_payload.category' are incompatible between these types.
+    Type 'string' is not assignable to type '"other" | "compliment" | "question" | "story" | "complaint"'.
+tests/feedback.test.ts(24,457): error TS2345: Argument of type '{ category: string; reply_draft: string; quotes: any[]; topic_leads: { title: string; quote: any; }[]; }' is not assignable to parameter of type '{ category: "other" | "compliment" | "question" | "story" | "complaint"; reply_draft: string; quotes: string[]; topic_leads: { title: string; quote: string; }[]; }'.
+  Types of property 'category' are incompatible.
+    Type 'string' is not assignable to type '"other" | "compliment" | "question" | "story" | "complaint"'.
+ ELIFECYCLE  Command failed with exit code 2.

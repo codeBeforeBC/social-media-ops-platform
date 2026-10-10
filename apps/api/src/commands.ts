@@ -3,6 +3,8 @@ import {Database,Tx} from '../../../packages/db/src/db';
 import {AppError,Actor,Permission,authorize,canonical,sha,parse,text,uuid,roles,version,timezone,pagination,page,secret} from '../../../packages/domain/src/protocol';
 import {reloadActor,passwordHash} from './auth';
 import {storeResponse,readResponse} from '../../../packages/domain/src/response-storage';
+import {loadAIConfig,workspaceBudgetSchema,workspaceAIConfig,AIFailure} from '../../../packages/domain/src/ai-gateway';
+import {sourceOrganizationCurrent} from '../../../packages/domain/src/source-organization';
 import {config} from '../../../packages/domain/src/config';
 export type Result={status:number;data:unknown};
 export async function audit(tx:Tx,a:Actor,action:string,objectType:string,objectId:string,details:unknown={}){
@@ -18,7 +20,11 @@ export class Commands {
       const lock=canonical([a.workspaceId,a.memberId,method,route,k]);
       await tx.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))',[lock]);
       const r=await tx.query('SELECT request_hash,status,response FROM idempotency_records WHERE workspace_id=$1 AND actor_id=$2 AND method=$3 AND route=$4 AND key=$5',[a.workspaceId,a.memberId,method,route,k]);
-      if(r.rowCount){if(r.rows[0].request_hash!==fingerprint)throw new AppError(409,'IDEMPOTENCY_CONFLICT','相同请求键对应不同内容');return {status:r.rows[0].status,data:readResponse(r.rows[0].response)};}
+      if(r.rowCount){if(r.rows[0].request_hash!==fingerprint)throw new AppError(409,'IDEMPOTENCY_CONFLICT','相同请求键对应不同内容');let cached:any=readResponse(r.rows[0].response);
+        // Consent and evidence may be revoked after a successful write; replay must reflect current permissions and state.
+        const table=cached?.id&&(route.startsWith('/source-organizations/')?'source_organizations':route.startsWith('/feedback')?'feedback':route.startsWith('/strategy-memories/')?'strategy_memories':route.startsWith('/reports/')?'reports':null);
+        if(table){const current=(await tx.query(`SELECT * FROM ${table} WHERE workspace_id=$1 AND id=$2`,[a.workspaceId,cached.id])).rows[0];if(!current)throw new AppError(404,'NOT_FOUND','对象不存在或不可见');await this.accountScope(tx,actor,current.account_id);cached=current;if(table==='source_organizations')cached.current=await sourceOrganizationCurrent(tx,cached);if(table==='reports')cached.strategies=(await tx.query('SELECT * FROM strategy_memories WHERE report_id=$1 ORDER BY action_index',[cached.id])).rows;}
+        return {status:r.rows[0].status,data:cached};}
       const result=await fn(tx,actor);
       await tx.query('INSERT INTO idempotency_records(workspace_id,actor_id,method,route,key,request_hash,status,response) VALUES($1,$2,$3,$4,$5,$6,$7,$8)',[a.workspaceId,a.memberId,method,route,k,fingerprint,result.status,JSON.stringify(storeResponse(result.data))]);
       return result;
@@ -41,7 +47,7 @@ export class Commands {
     if(b.owner_id&&!a.roles.includes('admin'))throw new AppError(403,'FIELD_FORBIDDEN','仅管理员可以更换负责人');
     if(ac.version!==b.expected_version)throw new AppError(409,'VERSION_CONFLICT','账号已被其他人修改',{version:ac.version});
     if(b.owner_id){
-      const m=await tx.query('SELECT id FROM memberships WHERE id=$1 AND workspace_id=$2 AND active FOR SHARE',[b.owner_id,a.workspaceId]);
+      const m=await tx.query("SELECT id FROM memberships WHERE id=$1 AND workspace_id=$2 AND active AND roles && ARRAY['admin','operator']::text[] FOR SHARE",[b.owner_id,a.workspaceId]);
       if(!m.rowCount)throw new AppError(422,'OWNER_INVALID','负责人必须是本工作区的有效成员');
       await tx.query('INSERT INTO account_memberships VALUES($1,$2,$3) ON CONFLICT DO NOTHING',[a.workspaceId,accountId,b.owner_id]);
     }
@@ -50,9 +56,10 @@ export class Commands {
   }
   async settings(a:Actor){const r=await this.db.query('SELECT id,name,timezone,settings,version FROM workspaces WHERE id=$1',[a.workspaceId]);return r.rows[0];}
   async patchSettings(tx:Tx,a:Actor,input:unknown){
-    const b=parse(z.object({category:z.enum(['workspace','capacity']),settings:z.record(z.string(),z.unknown()),expected_version:version}).strict(),input);
-    const allowed=b.category==='workspace'?z.object({name:text().optional(),timezone:timezone.optional()}).strict():z.object({hours_per_week:z.number().min(0).max(168)}).strict();
+    const b=parse(z.object({category:z.enum(['workspace','capacity','ai_budget']),settings:z.record(z.string(),z.unknown()),expected_version:version}).strict(),input);
+    const allowed=b.category==='workspace'?z.object({name:text().optional(),timezone:timezone.optional()}).strict():b.category==='capacity'?z.object({hours_per_week:z.number().min(0).max(168)}).strict():workspaceBudgetSchema;
     const values=parse(allowed as z.ZodType<Record<string,unknown>>,b.settings);
+    if(b.category==='ai_budget')try{workspaceAIConfig(loadAIConfig(),{ai_budget:values});}catch(e){throw new AppError(422,e instanceof AIFailure?e.code:'AI_CONFIG_INVALID','预算需完整配置，有限预算需可核对单价及币种');}
     const old=await tx.query('SELECT version FROM workspaces WHERE id=$1 FOR UPDATE',[a.workspaceId]);
     if(old.rows[0].version!==b.expected_version)throw new AppError(409,'VERSION_CONFLICT','设置已被其他人修改',{version:old.rows[0].version});
     const r=await tx.query('UPDATE workspaces SET name=COALESCE($1,name),timezone=COALESCE($2,timezone),settings=jsonb_set(settings,ARRAY[$3],$4::jsonb),version=version+1,updated_at=now() WHERE id=$5 RETURNING id,name,timezone,settings,version',[values.name??null,values.timezone??null,b.category,JSON.stringify(values),a.workspaceId]);
@@ -84,13 +91,17 @@ export class Commands {
       const n=await tx.query("SELECT count(*)::int n FROM memberships WHERE workspace_id=$1 AND active AND 'admin'=ANY(roles)",[a.workspaceId]);
       if(n.rows[0].n<=1)throw new AppError(422,'LAST_ADMIN','不能停用或降级最后一位管理员');
     }
-    if(b.active===false){
-      const owned=await tx.query('SELECT id FROM accounts WHERE owner_id=$1 AND workspace_id=$2',[memberId,a.workspaceId]);
-      const topics=await tx.query('SELECT id,account_id FROM topics WHERE accepted_owner_id=$1 AND workspace_id=$2 FOR UPDATE',[memberId,a.workspaceId]);
-      if((owned.rowCount||topics.rowCount)&&!b.successor_id)throw new AppError(422,'SUCCESSOR_REQUIRED','停用负责人前需指定接替人');
+    const nextRoles=b.roles??m.roles,losingOperate=b.active===false||m.roles.some((r:string)=>['admin','operator'].includes(r))&&!nextRoles.some((r:string)=>['admin','operator'].includes(r)),losingTopics=b.active===false||m.roles.some((r:string)=>['admin','operator','editor'].includes(r))&&!nextRoles.some((r:string)=>['admin','operator','editor'].includes(r));
+    if(losingOperate||losingTopics){
+      const owned=await tx.query('SELECT id FROM accounts WHERE owner_id=$1 AND workspace_id=$2 AND $3',[memberId,a.workspaceId,losingOperate]);
+      const topics=await tx.query('SELECT id,account_id FROM topics WHERE accepted_owner_id=$1 AND workspace_id=$2 AND $3 FOR UPDATE',[memberId,a.workspaceId,losingTopics]);
+      const sources=await tx.query('SELECT id FROM source_connections WHERE owner_id=$1 AND workspace_id=$2 AND $3 FOR UPDATE',[memberId,a.workspaceId,losingOperate]);
+      if((owned.rowCount||topics.rowCount||sources.rowCount)&&!b.successor_id)throw new AppError(422,'SUCCESSOR_REQUIRED','停用或移除业务角色前需指定接替人');
       if(b.successor_id){const successor=await tx.query('SELECT id,roles FROM memberships WHERE id=$1 AND workspace_id=$2 AND active AND id<>$3 FOR SHARE',[b.successor_id,a.workspaceId,memberId]);if(!successor.rowCount)throw new AppError(422,'SUCCESSOR_INVALID','接替人必须是其他有效成员');
+        if((owned.rowCount||sources.rowCount)&&!successor.rows[0].roles.some((r:string)=>['admin','operator'].includes(r)))throw new AppError(422,'SUCCESSOR_INVALID','账号/来源接替人必须具备运营能力');
+        for(const source of sources.rows){await tx.query('UPDATE source_connections SET owner_id=$2,version=version+1,updated_at=now() WHERE id=$1',[source.id,b.successor_id]);await audit(tx,a,'source.owner_transferred','source_connection',source.id,{previous_owner:memberId,owner_id:b.successor_id});await tx.query("INSERT INTO notifications(workspace_id,recipient_id,event_key,title,task_ref) VALUES($1,$2,$3,'来源运行负责人已移交，请核验配置',$4) ON CONFLICT DO NOTHING",[a.workspaceId,b.successor_id,'source.owner:'+source.id+':'+m.version,'source:'+source.id]);}
         if(topics.rowCount&&!successor.rows[0].roles.some((r:string)=>['admin','operator','editor'].includes(r)))throw new AppError(422,'SUCCESSOR_INVALID','选题接替人必须能处理选题');
-        for(const ac of owned.rows){await tx.query('INSERT INTO account_memberships VALUES($1,$2,$3) ON CONFLICT DO NOTHING',[a.workspaceId,ac.id,b.successor_id]);await tx.query('UPDATE accounts SET owner_id=$1,version=version+1,updated_at=now() WHERE id=$2',[b.successor_id,ac.id]);}
+        for(const ac of owned.rows){await tx.query('INSERT INTO account_memberships VALUES($1,$2,$3) ON CONFLICT DO NOTHING',[a.workspaceId,ac.id,b.successor_id]);await tx.query('UPDATE accounts SET owner_id=$1,version=version+1,updated_at=now() WHERE id=$2',[b.successor_id,ac.id]);await audit(tx,a,'account.owner_transferred','account',ac.id,{previous_owner:memberId,owner_id:b.successor_id});await tx.query("INSERT INTO notifications(workspace_id,recipient_id,event_key,title,task_ref) VALUES($1,$2,$3,'账号负责人已移交，请核验数据',$4) ON CONFLICT DO NOTHING",[a.workspaceId,b.successor_id,'account.owner:'+ac.id+':'+m.version,'account:'+ac.id]);}
         for(const topic of topics.rows){
           await tx.query('INSERT INTO account_memberships VALUES($1,$2,$3) ON CONFLICT DO NOTHING',[a.workspaceId,topic.account_id,b.successor_id]);
           await tx.query('UPDATE topics SET accepted_owner_id=$2,version=version+1,updated_at=now() WHERE id=$1',[topic.id,b.successor_id]);
@@ -98,7 +109,7 @@ export class Commands {
           await tx.query("INSERT INTO notifications(workspace_id,recipient_id,event_key,title,task_ref) VALUES($1,$2,$3,'选题负责人已移交，请核验后续事项',$4) ON CONFLICT DO NOTHING",[a.workspaceId,b.successor_id,'topic.owner:'+topic.id+':'+m.version,'topic:'+topic.id]);
         }
       }
-      await tx.query('DELETE FROM sessions WHERE user_id=$1 AND workspace_id=$2',[m.user_id,a.workspaceId]);
+      if(b.active===false)await tx.query('DELETE FROM sessions WHERE user_id=$1 AND workspace_id=$2',[m.user_id,a.workspaceId]);
     }
     const updated=await tx.query('UPDATE memberships SET roles=COALESCE($1,roles),active=COALESCE($2,active),version=version+1,updated_at=now() WHERE id=$3 RETURNING *',[b.roles??null,b.active??null,memberId]);
     await audit(tx,a,'member.update','membership',memberId,{roles:b.roles,active:b.active,successor_id:b.successor_id});return {status:200,data:updated.rows[0]};
@@ -122,7 +133,8 @@ export class Commands {
     if(r.rows[0].account_id)await this.accountScope(query,a,r.rows[0].account_id);return r.rows[0];
   }
   async jobs(a:Actor,q:Record<string,unknown>){
-    const {limit,cursor}=pagination(q);const r=await this.db.query(`SELECT j.* FROM jobs j WHERE yoyo_job_supported(type,pool,input) AND workspace_id=$1 AND ($2::boolean OR created_by=$3) AND ($4::timestamptz IS NULL OR (created_at,id)<($4,$5::uuid)) AND (account_id IS NULL OR $2::boolean OR EXISTS(SELECT 1 FROM account_memberships am WHERE am.account_id=j.account_id AND am.membership_id=$3)) ORDER BY created_at DESC,id DESC LIMIT $6`,[a.workspaceId,a.roles.includes('admin'),a.memberId,cursor?.at??null,cursor?.id??null,limit+1]);return page(r.rows.map(safeJob),limit);
+    const state=q.state===undefined?null:parse(z.enum(['queued','running','succeeded','partial','failed','cancelled']),q.state);
+    const {limit,cursor}=pagination(q);const r=await this.db.query(`SELECT j.* FROM jobs j WHERE ($7::text IS NULL OR state=$7) AND yoyo_job_supported(type,pool,input) AND workspace_id=$1 AND ($2::boolean OR created_by=$3) AND ($4::timestamptz IS NULL OR (created_at,id)<($4,$5::uuid)) AND (account_id IS NULL OR $2::boolean OR EXISTS(SELECT 1 FROM account_memberships am WHERE am.account_id=j.account_id AND am.membership_id=$3)) ORDER BY created_at DESC,id DESC LIMIT $6`,[a.workspaceId,a.roles.includes('admin'),a.memberId,cursor?.at??null,cursor?.id??null,limit+1,state]);return page(r.rows.map(safeJob),limit);
   }
   async diagnostic(tx:Tx,a:Actor,input:unknown){
     const b=parse(z.object({pool:z.enum(['general']),account_id:uuid.optional()}).strict(),input);
@@ -148,7 +160,10 @@ export class Commands {
     authorize(a,'admin');const jobs=await this.db.query("SELECT pool,state,count(*)::int count,min(created_at) oldest FROM jobs WHERE yoyo_job_supported(type,pool,input) AND workspace_id=$1 GROUP BY pool,state ORDER BY pool,state",[a.workspaceId]);
     const processes=await this.db.query("SELECT name,pool,last_seen_at,(last_seen_at>now()-interval '15 seconds') healthy FROM process_health WHERE pool<>'reminder' ORDER BY name");
     const outbox=await this.db.query('SELECT count(*)::int pending FROM outbox WHERE workspace_id=$1 AND dispatched_at IS NULL',[a.workspaceId]);
-    return {jobs:jobs.rows,processes:processes.rows,outbox_pending:outbox.rows[0].pending,external_capabilities:{ai:'disabled',ocr:'disabled',sources:'unverified'}};
+    const workspace=(await this.db.query('SELECT settings FROM workspaces WHERE id=$1',[a.workspaceId])).rows[0];let ai:any;try{const cfg=workspaceAIConfig(loadAIConfig(),workspace.settings);ai={state:cfg.enabled?'enabled':'disabled',provider:cfg.provider,model:cfg.model,budget:cfg.budget,pricing:cfg.pricing??null,authorization_date:cfg.authorization_date};}catch(e){ai={state:'unavailable',error_code:e instanceof AIFailure?e.code:'AI_NOT_CONFIGURED'};}
+    const usage=await this.db.query("SELECT currency,cost_basis,count(*)::int attempts,sum((usage->>'input_tokens')::bigint)::text input_tokens,sum((usage->>'output_tokens')::bigint)::text output_tokens,sum((usage->>'total_tokens')::bigint)::text total_tokens,CASE WHEN count(*) FILTER(WHERE estimated_cost IS NULL)=0 THEN sum(estimated_cost)::text ELSE NULL END estimated_cost,sum(COALESCE(estimated_cost,reserved_cost))::text committed_or_reserved,count(*) FILTER(WHERE usage IS NULL OR usage='null'::jsonb)::int unknown_usage FROM ai_attempts WHERE workspace_id=$1 AND started_at>=(now() AT TIME ZONE 'UTC')::date AT TIME ZONE 'UTC' GROUP BY currency,cost_basis ORDER BY currency,cost_basis",[a.workspaceId]);
+    const sources=await this.db.query('SELECT id,name,health,enabled,paused,error_code,last_success_at,min_interval_seconds,schedule,timezone,version FROM source_connections WHERE workspace_id=$1 ORDER BY created_at,id',[a.workspaceId]);
+    return {as_of:new Date().toISOString(),jobs:jobs.rows,processes:processes.rows,outbox_pending:outbox.rows[0].pending,external_capabilities:{ai,ocr:{state:'not_implemented'},sources:sources.rows},ai_usage:{window:'UTC current day',groups:usage.rows},import_limits:{screenshot_bytes:20*1024*1024,table_bytes:50*1024*1024}};
   }
 }
 export function safeJob(j:Record<string,any>){const {lease_token,input,...safe}=j;return safe;}

@@ -1,0 +1,60 @@
+{"database":"yoyo","migrations":8}
+{"database":"yoyo_test","migrations":26}
+{"event":"http.request","request_id":"28ef7cb2-6012-4ad7-9b4b-49d294e9db89","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"7a187d54-a398-4b2e-ad39-2fe8d9273c35","method":"POST","path":"/api/v1/setup","status":201,"duration_ms":29}
+{"event":"http.request","request_id":"2c65e2c0-40d8-420e-ba7d-55549dfde3d0","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"c7e84956-c80f-449d-9385-f36118edae68","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":22}
+{"event":"http.request","request_id":"6a3c3a0a-ccf3-49ae-abbd-6f70dddfbdd3","method":"GET","path":"/api/v1/me","status":200,"duration_ms":89}
+{"event":"http.request","request_id":"cb02f47c-933c-41b0-917a-b4babb4fcb8a","method":"POST","path":"/api/v1/accounts","status":201,"duration_ms":11}
+{"event":"http.request","request_id":"bb8c70d6-f3c1-4d8b-be84-6a360c16619b","method":"GET","path":"/api/v1/dashboard","status":200,"duration_ms":11}
+{"event":"http.request","request_id":"3e9104e6-42aa-42d4-a8d8-ed850ecbdd38","method":"GET","path":"/api/v1/dashboard","status":422,"duration_ms":3}
+✔ 工作台真空态没有指标趋势或假任务，未知/禁用能力来自实际配置 (417.771167ms)
+{"event":"http.request","request_id":"35a9834f-137e-45f7-8541-d626783b21b4","method":"POST","path":"/api/v1/publications","status":201,"duration_ms":24}
+{"event":"http.request","request_id":"09fc0383-b968-44cc-af91-23a58b4f2a2e","method":"POST","path":"/api/v1/imports","status":202,"duration_ms":9}
+{"event":"http.request","request_id":"2819412a-6c15-4177-a593-4874cef67211","method":"POST","path":"/api/v1/source-connections","status":201,"duration_ms":5}
+{"event":"http.request","request_id":"107b9702-6f71-427f-97ae-0d7df2248208","method":"POST","path":"/api/v1/feedback","status":201,"duration_ms":5}
+{"event":"http.request","request_id":"63bae0ed-5a69-497d-bbad-8a52217d2cd5","method":"GET","path":"/api/v1/dashboard","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"b602edec-503c-4783-90ba-9879d72969bd","method":"GET","path":"/api/v1/imports/e8780e44-849b-40f8-bd01-d02415ab6e8a/rows","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"1c7a0e20-e41a-4cf6-b3ba-03df58517c0c","method":"POST","path":"/api/v1/imports/e8780e44-849b-40f8-bd01-d02415ab6e8a/confirm","status":200,"duration_ms":9}
+{"event":"http.request","request_id":"d822a7b7-58e5-4df2-896a-961a5b6e5686","method":"GET","path":"/api/v1/dashboard","status":200,"duration_ms":3}
+✖ 真实待确认/来源异常/缺数据最多三项可直达，已确认历史值溯源不冒充实时 (94.547ms)
+{"event":"http.request","request_id":"e831fda3-6cfb-495b-9194-f951e602a1ed","method":"POST","path":"/api/v1/members","status":201,"duration_ms":23}
+{"event":"http.request","request_id":"5fc88a4e-e74d-439c-a263-b2d251a4a133","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":0}
+{"event":"http.request","request_id":"7218f6a6-44fa-49dc-885e-391084214ee6","method":"POST","path":"/api/v1/auth/accept-invite","status":200,"duration_ms":19}
+{"event":"http.request","request_id":"df631c15-6cc5-4620-a443-35c4b864a7bc","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"c012a689-1b0c-49cc-ab29-6ad859ffa4f6","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":18}
+{"event":"http.request","request_id":"835ed932-d935-494d-8fea-429738aba0b4","method":"GET","path":"/api/v1/dashboard","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"3a8132bf-5109-43dc-a221-80bcd821410e","method":"GET","path":"/api/v1/dashboard","status":404,"duration_ms":1}
+{"event":"http.request","request_id":"e4a2f498-3af1-49dc-8547-4e030aeff2e5","method":"GET","path":"/api/v1/dashboard","status":422,"duration_ms":1}
+✔ 跨账号工作台不泄漏指标与反馈/导入任务，非法或不可见深链拒绝 (74.57025ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 2
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1208.755875
+
+✖ failing tests:
+
+test at tests/dashboard.test.ts:2:1932
+✖ 真实待确认/来源异常/缺数据最多三项可直达，已确认历史值溯源不冒充实时 (94.547ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + '631'
+  - '631.000000'
+        ^
+  
+      at TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/dashboard.test.ts:7:1735)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '631',
+    expected: '631.000000',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

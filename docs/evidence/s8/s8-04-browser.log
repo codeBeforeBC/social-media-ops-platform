@@ -1,0 +1,53 @@
+{"database":"yoyo","migrations":8}
+{"database":"yoyo_test","migrations":26}
+[2m[WebServer] [22m(node:14928) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:14929) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:14935) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:14935) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+(node:15001) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15001) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/browser.spec.ts:5:5 › 首次设置、三导航、账号表单、设置保存、键盘抽屉和退出 (1.8s)
+  ✘  2 tests/browser.spec.ts:105:5 › S8 工作台最多三项真实待办，批次/来源深链和历史指标可溯源，三种宽度与键盘可用 (30.1s)
+
+
+  1) tests/browser.spec.ts:105:5 › S8 工作台最多三项真实待办，批次/来源深链和历史指标可溯源，三种宽度与键盘可用 ────────────────────────
+
+    [31mTest timeout of 30000ms exceeded.[39m
+
+    Error: apiRequestContext._wrapApiCall: ENOENT: no such file or directory, copyfile '/Users/junlong/projects/social-mdeida-ops-platform/test-results/.playwright-artifacts-0/traces/fbeac1b2decfba2c3acd-f64186a04dca78fb50d5-recording1.network' -> '/Users/junlong/projects/social-mdeida-ops-platform/test-results/.playwright-artifacts-0/traces/fbeac1b2decfba2c3acd-f64186a04dca78fb50d5-recording1-pwnetcopy-1.network'
+
+    Error: locator.click: Test ended.
+    Call log:
+    [2m  - waiting for getByRole('button', { name: '刷新工作台' })[22m
+
+
+      104 |
+      105 | test('S8 工作台最多三项真实待办，批次/来源深链和历史指标可溯源，三种宽度与键盘可用',async({page})=>{
+    > 106 |  execFileSync('pnpm',['exec','tsx','tools/s8/browser-login-reset.ts'],{stdio:'pipe'});const failures:string[]=[];page.on('pageerror',e=>failures.push(e.message));await page.goto('/');await page.getByLabel('邮箱').fill('browser@example.test');await page.getByLabel('密码',{exact:false}).fill('Browser-test-password-987');const login=page.waitForResponse(r=>r.url().endsWith('/api/v1/auth/login')&&r.request().method()==='POST');await page.getByRole('button',{name:'登录',exact:true}).click();const csrf=(await (await login).json()).data.csrf_token;await expect(page.getByRole('heading',{name:'测试运营，欢迎回来'})).toBeVisible();const data=await page.evaluate(async token=>{const call=async(path:string,method='GET',body?:any)=>{const r=await fetch('/api/v1'+path,{method,headers:{'Content-Type':'application/json','X-CSRF-Token':token,'Idempotency-Key':crypto.randomUUID()},...(body?{body:JSON.stringify(body)}:{})});const j=await r.json();if(!r.ok)throw new Error(j.error.code);return j.data;};const a=await call('/accounts','POST',{name:'工作台合成独立账号',platform:'xiaohongshu',platform_user_id:'s8-dashboard-browser'});for(const s of (await call('/source-connections')).items)await call('/source-connections/'+s.id,'PATCH',{enabled:false,expected_version:s.version});const s=await call('/source-connections','POST',{name:'工作台待验证来源',platform:'weibo',source_type:'weibo_hot',provider:'weibo_web',enabled:true,config:{keywords:['旅行']}});await call('/publications','POST',{account_id:a.id,platform_note_id:'dashboard-browser-note',url:'https://www.xiaohongshu.com/explore/dashboard-browser-note',title:'工作台缺数据笔记',media_type:'graphic',published_at:'2026-09-01T00:00:00.000Z',traffic_type:'unknown'});const b=await call('/imports','POST',{account_id:a.id,file_ids:[],source_type:'manual',manual_rows:[{target:{account_id:a.id,publication_id:null},metric_key:'followers',definition_version:'1',aggregation_kind:'snapshot',value:'631',unit:'人',observed_at:'2026-09-01T00:00:00.000Z',traffic_type:'unknown',source_definition:'工作台合成历史观察',time_precision:'day'}]});return {account:a.id,batch:b.id,source:s.id};},csrf);await page.getByRole('button',{name:'刷新工作台'}).click();await page.getByRole('combobox',{name:'工作台账号'}).selectOption(data.account);const tasks=page.locator('ol.notification-list');await expect(tasks.locator('li')).toHaveCount(3);await tasks.getByRole('link',{name:'核对待确认导入'}).click();await expect(page).toHaveURL(new RegExp('batch_id='+data.batch));await expect(page.getByRole('heading',{name:'批次 待确认'})).toBeVisible();await page.getByRole('link',{name:'工作台',exact:true}).click();await page.getByRole('combobox',{name:'工作台账号'}).selectOption(data.account);await tasks.getByRole('link',{name:'检查来源状态：工作台待验证来源'}).click();await expect(page.getByRole('dialog',{name:'工作台待验证来源 · 运行记录'})).toBeVisible();await page.keyboard.press('Escape');await page.getByRole('link',{name:'工作台',exact:true}).click();await page.getByRole('combobox',{name:'工作台账号'}).selectOption(data.account);for(const width of [1440,1280,390]){await page.setViewportSize({width,height:1000});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:`${process.env.EVIDENCE_DIR??'docs/evidence/s8'}/screenshots/dashboard-${width}.png`,fullPage:true});}expect(failures).toEqual([]);
+          |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ^
+      107 | });
+      108 |
+        at /Users/junlong/projects/social-mdeida-ops-platform/tests/browser.spec.ts:106:2136
+
+    Error: ENOENT: no such file or directory, open '/Users/junlong/projects/social-mdeida-ops-platform/test-results/.playwright-artifacts-0/9ef42f274ca000457b6513a88cde9457.zip'
+
+    [31mTest timeout of 30000ms exceeded.[39m
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser-S8-工作台最多三项真实待办，批次-来源深链和历史指标可溯源，三种宽度与键盘可用/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/browser-S8-工作台最多三项真实待办，批次-来源深链和历史指标可溯源，三种宽度与键盘可用/error-context.md
+
+  1 failed
+    tests/browser.spec.ts:105:5 › S8 工作台最多三项真实待办，批次/来源深链和历史指标可溯源，三种宽度与键盘可用 ─────────────────────────
+  1 passed (1.1m)

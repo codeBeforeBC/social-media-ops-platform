@@ -1,0 +1,201 @@
+{
+  "date": "2026-10-10",
+  "input_kind": "explicit_synthetic_sources_not_live_platform",
+  "actual_provider": true,
+  "model": "deepseek-flash",
+  "cases": [
+    {
+      "id": "SOURCE-EMPTY",
+      "input": {
+        "account": {
+          "id": "734292d1-9dc3-4c58-8df3-a3986eeb52a4",
+          "name": "明确合成来源评估",
+          "version": 1
+        },
+        "sources": [],
+        "scope_version": "v1.2-s8",
+        "workspace_version": 1
+      },
+      "input_hash": "f56603dd6c9d94f7a95c285cdbf2771722966317bb85f793a124fb72b51c86aa",
+      "prompt_version": "yoyo-source-v1.0.1",
+      "schema_version": "ai-source-v1",
+      "started_at": "2026-10-10T03:17:48.987Z",
+      "state": "succeeded",
+      "error_code": null,
+      "output": {
+        "summary": "本次输入未包含任何来源条目，无法整理主题、受众需求、逐字原文摘要或去重建议。为避免捏造，分组与重复建议保持为空；需补充来源后再进行人工核验。",
+        "warnings": [
+          "无来源可用，groups 与 duplicate_suggestions 按规则为空。",
+          "保留原始来源不作自动去重；本次没有可保留或合并的来源。",
+          "captured_at 不代表原文发表时间或传播时机；本次输入亦无该字段可用。",
+          "结果必须人工核验采纳，不执行发布、发送、指标确认或权限变更。"
+        ],
+        "assumptions": [],
+        "task_payload": {
+          "groups": [],
+          "duplicate_suggestions": []
+        },
+        "evidence_refs": [],
+        "input_version": "f56603dd6c9d94f7a95c285cdbf2771722966317bb85f793a124fb72b51c86aa",
+        "missing_inputs": [
+          "未提供任何来源条目（sources 为空），无法生成主题分组、受众需求、逐字引文摘要与去重建议。",
+          "未提供来源标题、正文摘要、捕获时间等字段，无法区分不同日期、矛盾来源或判断是否为过期线索。"
+        ],
+        "schema_version": "ai-source-v1"
+      },
+      "output_hash": "a75ecf9c5cabd5544fb686597069dfba12e27e8e311749b1f1918e061cb02f09",
+      "attempts": [
+        {
+          "state": "succeeded",
+          "usage": {
+            "input_tokens": 1433,
+            "total_tokens": 1822,
+            "output_tokens": 389
+          },
+          "cost_basis": "unknown",
+          "estimated_cost": null,
+          "duration_ms": 2346
+        }
+      ],
+      "no_automatic_source_or_topic_mutation": true
+    },
+    {
+      "id": "SOURCE-CONFLICT-TITLE-ONLY",
+      "input": {
+        "account": {
+          "id": "734292d1-9dc3-4c58-8df3-a3986eeb52a4",
+          "name": "明确合成来源评估",
+          "version": 1
+        },
+        "sources": [
+          {
+            "id": "3ab58561-b6d5-470f-8e80-48fc70b8b3ee",
+            "title": "叶面雨滴观察",
+            "summary": "",
+            "version": 1,
+            "captured_at": "2026-10-10T00:00:00.000Z",
+            "source_type": "weibo_hot",
+            "content_hash": "ddf494b529a5ff32c90bfda472df9ee7dfcaa6d1501fd94fdbaf2168113dc0a1",
+            "published_at": "2025-01-01T00:00:00.000Z",
+            "canonical_url": "https://s.weibo.com/weibo?q=SOURCE-CONFLICT-TITLE-ONLY-1",
+            "actual_source_type": "search"
+          },
+          {
+            "id": "944af815-260b-48fb-88bd-02fbca5e0bd3",
+            "title": "叶面雨滴观察",
+            "summary": "甲称雨滴很快滑落，乙称雨滴缓慢滑落，两者未经核验。",
+            "version": 1,
+            "captured_at": "2026-10-10T00:00:00.000Z",
+            "source_type": "weibo_hot",
+            "content_hash": "2cc9930accef83ec1d5210044ae2793e618c9e5dcb093072db70be47b9a34e32",
+            "published_at": null,
+            "canonical_url": "https://s.weibo.com/weibo?q=SOURCE-CONFLICT-TITLE-ONLY-0",
+            "actual_source_type": "search"
+          }
+        ],
+        "scope_version": "v1.2-s8",
+        "workspace_version": 1
+      },
+      "input_hash": "ea99058c803e8af0f932f6172eea3c61378891b569097c3138f9784ebb583d3a",
+      "prompt_version": "yoyo-source-v1.0.1",
+      "schema_version": "ai-source-v1",
+      "started_at": "2026-10-10T03:17:51.409Z",
+      "state": "succeeded",
+      "error_code": null,
+      "output": {
+        "summary": "本次冻结来源中，存在标题相同的来源记录，标题为“叶面雨滴观察”。其中一条来源摘要为空，仅可依据标题；另一条来源摘要提到关于雨滴滑落快慢的不同说法，并注明未经核验。来源的捕获时间不能证明原文发表时间或传播时机，部分来源发布时间缺失。以下主题与受众需求为编辑推断，需人工核验后采纳；同标题来源建议复核重复，不应自动合并、删除或累计指标。",
+        "warnings": [
+          "存在同标题来源，建议人工复核是否为重复或同题不同内容。",
+          "来源摘要中的不同说法未经核验，不应作为事实传播。",
+          "捕获时间不是原文发表时间，不得称为今日热点或已确认时效。",
+          "所有主题与受众需求均为编辑推断，需人工核验后采纳。",
+          "不得自动合并、删除、累计指标或创建选题。"
+        ],
+        "assumptions": [
+          "主题与受众需求是基于现有标题和摘要的编辑推断，不代表已验证事实。",
+          "同标题来源可能为重复，但也可能是同题不同内容，需人工复核，不能自动合并。",
+          "捕获时间不证明原文发表时间或传播时机；发布时间缺失时不能推断时效性。",
+          "来源中出现的不同说法未经核验，不能当作已确认结论。"
+        ],
+        "task_payload": {
+          "groups": [
+            {
+              "theme": "编辑推断：围绕“叶面雨滴观察”的同题来源，关注雨滴滑落速度的不同说法。",
+              "quotes": [
+                {
+                  "quote": "叶面雨滴观察",
+                  "source_item_id": "3ab58561-b6d5-470f-8e80-48fc70b8b3ee"
+                },
+                {
+                  "quote": "叶面雨滴观察",
+                  "source_item_id": "944af815-260b-48fb-88bd-02fbca5e0bd3"
+                },
+                {
+                  "quote": "甲称雨滴很快滑落，乙称雨滴缓慢滑落，两者未经核验。",
+                  "source_item_id": "944af815-260b-48fb-88bd-02fbca5e0bd3"
+                }
+              ],
+              "audience_need": "编辑推断：受众可能想了解关于叶面雨滴滑落快慢的不同说法，以及这些说法是否经过核验；也可能需要区分仅有标题的来源与带有摘要的来源。",
+              "source_item_ids": [
+                "3ab58561-b6d5-470f-8e80-48fc70b8b3ee",
+                "944af815-260b-48fb-88bd-02fbca5e0bd3"
+              ]
+            }
+          ],
+          "duplicate_suggestions": [
+            {
+              "reason": "两条来源标题均为“叶面雨滴观察”；一条仅有标题且摘要为空，另一条摘要包含关于雨滴滑落快慢的不同说法并注明未经核验。建议人工复核是否重复或同题不同内容，不应自动合并、删除或累计指标。",
+              "source_item_ids": [
+                "3ab58561-b6d5-470f-8e80-48fc70b8b3ee",
+                "944af815-260b-48fb-88bd-02fbca5e0bd3"
+              ]
+            }
+          ]
+        },
+        "evidence_refs": [
+          "3ab58561-b6d5-470f-8e80-48fc70b8b3ee",
+          "944af815-260b-48fb-88bd-02fbca5e0bd3"
+        ],
+        "input_version": "ea99058c803e8af0f932f6172eea3c61378891b569097c3138f9784ebb583d3a",
+        "missing_inputs": [
+          "部分来源的正文/摘要为空，无法确认具体内容。",
+          "部分来源的发布时间缺失。",
+          "缺少来源全文、作者/账号信息、互动数据及传播指标。",
+          "缺少可确认原文发表时间的证据。",
+          "缺少对摘要中不同说法进行核验的独立来源。"
+        ],
+        "schema_version": "ai-source-v1"
+      },
+      "output_hash": "f0c4dd1615f16cfca6b7b3ad5c87aef9cd00d82ceeeaa0f2b5d56293bae0dd1b",
+      "attempts": [
+        {
+          "state": "succeeded",
+          "usage": {
+            "input_tokens": 1912,
+            "total_tokens": 4097,
+            "output_tokens": 2185
+          },
+          "cost_basis": "unknown",
+          "estimated_cost": null,
+          "duration_ms": 9624
+        },
+        {
+          "state": "succeeded",
+          "usage": {
+            "input_tokens": 1951,
+            "total_tokens": 6719,
+            "output_tokens": 4768
+          },
+          "cost_basis": "unknown",
+          "estimated_cost": null,
+          "duration_ms": 20370
+        }
+      ],
+      "accepted": [
+        0
+      ],
+      "no_automatic_source_or_topic_mutation": true
+    }
+  ],
+  "finished_at": "2026-10-10T03:18:21.470Z"
+}

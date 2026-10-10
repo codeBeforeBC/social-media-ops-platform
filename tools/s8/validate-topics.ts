@@ -1,0 +1,8 @@
+import {readFileSync,writeFileSync} from 'node:fs';
+import assert from 'node:assert/strict';
+import {evaluationCases} from '../s3/evaluation-fixtures';
+import {checkEvaluation} from '../s3/evaluation-checks';
+import {canonical,sha} from '../../packages/domain/src/protocol';
+const report=JSON.parse(readFileSync('docs/evidence/s8/ai-topics-live.json','utf8')),review=JSON.parse(readFileSync('docs/evidence/s8/ai-topics-review.json','utf8'));assert.equal(report.cases.length,20);assert.equal(review.cases.length,20);let attempts=0,tokens=0;
+for(const c of evaluationCases){const r=report.cases.find((r:any)=>r.id===c.definition.id),q=review.cases.find((r:any)=>r.id===c.definition.id);assert.equal(r.state,'succeeded',c.definition.id);assert.equal(r.input_hash,c.input.inputVersion);assert.equal(r.prompt_version,c.spec.promptVersion);assert.equal(r.schema_version,c.spec.schemaVersion);assert.deepEqual(checkEvaluation(c,r.output).hard_errors,[]);assert.equal(q.output_hash,sha(canonical(r.output)),c.definition.id);const scores=Object.values(q.scores) as number[];assert.equal(scores.length,5);assert.ok(scores.every(s=>s>=3&&s<=5));assert.equal(q.total,scores.reduce((a,b)=>a+b));assert.ok(q.total>=20);assert.deepEqual(q.hard_semantic_errors,[]);attempts+=r.attempts.length;tokens+=r.attempts.reduce((n:number,a:any)=>n+(a.usage?.total_tokens??0),0);}
+const result={date:'2026-10-10',cases:20,prompt_version:evaluationCases[0]!.spec.promptVersion,schemas_inputs_ids_hard_gates:'passed',review_hashes_scores:'passed',attempts,total_tokens:tokens,cost_basis:'unknown',actual_provider:true,synthetic_input:true,result:'passed'};writeFileSync('docs/evidence/s8/ai-topics-validation.json',JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));

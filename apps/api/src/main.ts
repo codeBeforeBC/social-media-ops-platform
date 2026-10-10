@@ -1,3 +1,7 @@
+import {SourceOrganizations} from './source-organization';
+import {Dashboard} from './dashboard';
+import {Feedback} from './feedback';
+import {Reports} from './reports';
 import {Metrics} from './metrics';
 import {Imports} from './imports';
 import 'reflect-metadata';
@@ -39,8 +43,24 @@ class ApiController {
     if(method!=='GET'&&method!=='HEAD')await this.auth.checkCsrf(req);
     const c=this.commands;
     const command=async(permission:Permission,fn:Parameters<Commands['command']>[6])=>{const r=await c.command(a,req.headers['idempotency-key'],method,path,req.body??{},permission,fn);return send(r.data,r.status);};
+    const organizations=new SourceOrganizations(this.db);
+    if(path==='/source-organizations'&&method==='GET')return send(await organizations.list(a,req.query));
+    if(path==='/source-organizations'&&method==='POST')return command('operate',(tx,actor)=>organizations.create(tx,actor,req.body));
+    const organization=path.match(/^\/source-organizations\/([^/]+)(?:\/(accept))?$/);if(organization){if(method==='GET'&&!organization[2])return send(await organizations.get(a,organization[1]!));if(method==='POST'&&organization[2])return command('operate',(tx,actor)=>organizations.accept(tx,actor,organization[1]!,req.body));}
+    const feedback=new Feedback(this.db);
+    if(path==='/feedback'&&method==='GET')return send(await feedback.list(a,req.query));
+    if(path==='/feedback'&&method==='POST')return command('operate',(tx,actor)=>feedback.create(tx,actor,req.body));
+    const feedbackPath=path.match(/^\/feedback\/([^/]+)(?:\/(organize))?$/);
+    if(feedbackPath){if(method==='GET'&&!feedbackPath[2])return send(await feedback.scope(this.db,a,feedbackPath[1]!));if(method==='PATCH'&&!feedbackPath[2])return command('operate',(tx,actor)=>feedback.patch(tx,actor,feedbackPath[1]!,req.body));if(method==='POST'&&feedbackPath[2])return command('operate',(tx,actor)=>feedback.organize(tx,actor,feedbackPath[1]!,req.body));}
+    const reports=new Reports(this.db);
+    if(path==='/reports'&&method==='GET')return send(await reports.list(a,req.query));
+    if(path==='/reports'&&method==='POST')return command('operate',(tx,actor)=>reports.create(tx,actor,req.body));
+    const report=path.match(/^\/reports\/([^/]+)(?:\/(accept-actions))?$/);if(report){if(method==='GET'&&!report[2])return send(await reports.get(a,report[1]!));if(method==='POST'&&report[2])return command('operate',(tx,actor)=>reports.accept(tx,actor,report[1]!,req.body));}
+    if(path==='/strategy-memories'&&method==='GET')return send(await reports.strategies(a,req.query));
+    const strategy=path.match(/^\/strategy-memories\/([^/]+)\/(activate|retire)$/);if(strategy&&method==='POST')return command('operate',(tx,actor)=>reports.strategy(tx,actor,strategy[1]!,req.body,strategy[2]==='activate'));
     const metrics=new Metrics(this.db);
     if(path==='/metrics'&&method==='GET')return send(await metrics.list(a,req.query));
+    if(path==='/metrics/analysis'&&method==='GET')return send(await metrics.analysis(a,req.query));
     if(path==='/metrics/calculations'&&method==='GET')return send(await metrics.calculate(a,req.query));
     const metricSources=path.match(/^\/metrics\/([^/]+)\/sources$/);if(metricSources&&method==='GET')return send(await metrics.sources(a,metricSources[1]!));
     const calculation=path.match(/^\/calculations\/([^/]+)$/);if(calculation&&method==='GET')return send(await metrics.calculation(a,calculation[1]!));
@@ -97,7 +117,7 @@ class ApiController {
     if(job){if(method==='GET'&&!job[2])return send(safeJob(await c.jobScope(this.db,a,job[1]!)));if(method==='POST'&&job[2]==='cancel')return command('job.manage',(tx,actor)=>c.cancelJob(tx,actor,job[1]!,req.body));if(method==='POST'&&job[2]==='retry')return command('admin',(tx,actor)=>c.retryJob(tx,actor,job[1]!,req.body));}
     if(method==='POST'&&path==='/diagnostics')return command('admin',(tx,actor)=>c.diagnostic(tx,actor,req.body));
     if(method==='GET'&&path==='/monitor')return send(await c.monitor(a));
-    if(method==='GET'&&path==='/dashboard'){if(req.query.account_id)await c.accountScope(this.db,a,parse(uuid,req.query.account_id));return send({stage:'S1',metrics:null,priority_tasks:[],external_capabilities:{ai:'disabled',ocr:'disabled',sources:'unverified'}});}
+    if(method==='GET'&&path==='/dashboard')return send(await new Dashboard(this.db).get(a,req.query));
     const file=path.match(/^\/files\/([^/]+)\/(download|preview)$/);
     if(file&&method==='GET')return send(await files.link(a,file[1]!,file[2]==='preview'));
     throw new AppError(404,'NOT_FOUND','接口不存在或尚未实现');
