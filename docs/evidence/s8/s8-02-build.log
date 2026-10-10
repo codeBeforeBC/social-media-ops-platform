@@ -13,32 +13,32 @@ Error: Prisma schema validation - (get-dmmf wasm)
 Error code: P1012
 error: Error parsing attribute "@relation": A one-to-one relation must use unique fields on the defining side. Either add an `@@unique([workspace_id, connection_id])` attribute to the model, or change the relation to one-to-many.
   -->  packages/db/prisma/schema.prisma:470
-   | 
+   |
 469 |   created_at          DateTime              @default(now()) @db.Timestamptz(6)
 470 |   source_connections  source_connections    @relation(fields: [workspace_id, connection_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
 471 |   memberships         memberships           @relation(fields: [workspace_id, created_by], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
-   | 
+   |
 error: Error parsing attribute "@relation": A one-to-one relation must use unique fields on the defining side. Either add an `@@unique([workspace_id, topic_id])` attribute to the model, or change the relation to one-to-many.
   -->  packages/db/prisma/schema.prisma:605
-   | 
+   |
 604 |   memberships_topic_decisions_workspace_id_owner_idTomemberships memberships? @relation("topic_decisions_workspace_id_owner_idTomemberships", fields: [workspace_id, owner_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
 605 |   topics                                                         topics       @relation(fields: [workspace_id, topic_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
 606 | }
-   | 
+   |
 error: Error parsing attribute "@relation": A one-to-one relation must use unique fields on the defining side. Either add an `@@unique([workspace_id, row_id])` attribute to the model, or change the relation to one-to-many.
   -->  packages/db/prisma/schema.prisma:750
-   | 
+   |
 749 |   metric_observations metric_observations @relation(fields: [workspace_id, observation_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
 750 |   import_rows         import_rows         @relation(fields: [workspace_id, row_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
-751 | 
-   | 
+751 |
+   |
 error: Error parsing attribute "@relation": A one-to-one relation must use unique fields on the defining side. Either add an `@@unique([workspace_id, batch_id])` attribute to the model, or change the relation to one-to-many.
   -->  packages/db/prisma/schema.prisma:830
-   | 
+   |
 829 |   memberships    memberships    @relation(fields: [workspace_id, actor_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
 830 |   import_batches import_batches @relation(fields: [workspace_id, batch_id], references: [workspace_id, id], onDelete: NoAction, onUpdate: NoAction)
 831 | }
-   | 
+   |
 
 Validation Error Count: 4
 [Context: getDmmf]

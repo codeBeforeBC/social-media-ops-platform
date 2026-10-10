@@ -54,3 +54,5 @@ S3-07重验：[20例v1.2.4真实提供方](ai-topics-live.json)、[逐例五维�
 复现完整检查：`CONTRACT_PYTHON=/tmp/yoyo-s0-validation/bin/python pnpm check:s8`；复现已保存质量审计：`pnpm exec tsx tools/s8/validate-quality.ts`；台账/依赖/链接审计：`python3 tools/s8/document-check.py`。真实模型评估需要现有受限配置与明确授权；不得为运行测试重置原库或把配置写入仓库。
 
 [最终数据库/配置/服务/卷实态](final-state.json)与[停止S8依赖记录](service-stop.log)通过；121项不同集成包括完整120项及[额外无依据/过期策略激活6项报告回归](s8-06-strategy-final.log)。本地交付由LOG-047对应Git提交定位。
+
+日志去除终端颜色及行尾空格，失败/成功正文与请求用量不改；实现交付`3d3e8a8`，格式收尾见LOG-048。
