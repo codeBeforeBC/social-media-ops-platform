@@ -1,0 +1,173 @@
+Instance credentials ready; no secrets printed.
+ Image yoyo-import-parser-ocr-local:1.0.0 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 618B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.36kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 177B done
+#4 DONE 0.0s
+
+#5 [build 1/4] FROM docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#5 resolve docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 235B done
+#6 DONE 0.0s
+
+#7 [build 4/4] RUN gcc -O2 -Wall /sandbox.c -o /media-sandbox
+#7 CACHED
+
+#8 [build 3/4] COPY tools/media/sandbox.c /sandbox.c
+#8 CACHED
+
+#9 [stage-1 3/7] COPY --from=build /media-sandbox /usr/local/bin/media-sandbox
+#9 CACHED
+
+#10 [stage-1 6/7] COPY tools/media/image-ocr.py /usr/local/lib/yoyo/image-ocr.py
+#10 CACHED
+
+#11 [build 2/4] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && apt-get -o Acquire::Retries=3 install -y --no-install-recommends gcc libc6-dev linux-libc-dev
+#11 CACHED
+
+#12 [stage-1 4/7] COPY tools/media/server.mjs /app/server.mjs
+#12 CACHED
+
+#13 [stage-1 5/7] COPY tools/media/import-validate.py /usr/local/lib/yoyo/import-validate.py
+#13 CACHED
+
+#14 [stage-1 2/7] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && (apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil ca-certificates tesseract-ocr tesseract-ocr-chi-sim tesseract-ocr-eng || apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil ca-certificates tesseract-ocr tesseract-ocr-chi-sim tesseract-ocr-eng) && rm -rf /var/lib/apt/lists/* && mkdir /scratch && chown node:node /scratch
+#14 CACHED
+
+#15 [stage-1 7/7] WORKDIR /app
+#15 CACHED
+
+#16 exporting to image
+#16 exporting layers done
+#16 exporting manifest sha256:8d06253b0f706d6af0fa1f6b1bceb839659aacd3038ba96ae7796b33cb156e58 done
+#16 exporting config sha256:8bc007247a7734fa6558cedf9adbca12d1ae0ea75fb912c63c77c91e59f1d705 done
+#16 exporting attestation manifest sha256:fbc1e6539c054f54f2ca034823200dd96e0b2712eb7712585f524da7f56978ae 0.0s done
+#16 exporting manifest list sha256:6f695793ec4662a7e52f03b77cab8c185519725f8926cd78956ccef25661c0ab
+#16 exporting manifest list sha256:6f695793ec4662a7e52f03b77cab8c185519725f8926cd78956ccef25661c0ab 0.0s done
+#16 naming to docker.io/library/yoyo-import-parser-ocr-local:1.0.0 done
+#16 unpacking to docker.io/library/yoyo-import-parser-ocr-local:1.0.0 done
+#16 DONE 0.1s
+
+#17 resolving provenance for metadata file
+#17 DONE 0.0s
+ Image yoyo-import-parser-ocr-local:1.0.0 Built 
+ Container yoyo-s7-ocr-tests-storage-1 Running 
+ Container yoyo-s7-ocr-tests-media-executor-1 Recreate 
+ Container yoyo-s7-ocr-tests-media-executor-1 Recreated 
+ Container yoyo-s7-ocr-tests-media-executor-1 Starting 
+ Container yoyo-s7-ocr-tests-media-executor-1 Started 
+ Container yoyo-s7-ocr-tests-media-executor-1 Waiting 
+ Container yoyo-s7-ocr-tests-storage-1 Waiting 
+ Container yoyo-s7-ocr-tests-media-executor-1 Healthy 
+ Container yoyo-s7-ocr-tests-storage-1 Healthy 
+Private storage ready.
+{"event":"http.request","request_id":"9e853713-0881-444c-bbb6-b786dd69e9eb","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":6}
+{"event":"http.request","request_id":"4c29bc5f-a6c9-42e5-ba14-7564bccd2313","method":"POST","path":"/api/v1/setup","status":201,"duration_ms":39}
+{"event":"http.request","request_id":"02945578-8609-4164-8429-4621f1ecbe5c","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"77ccf7d4-1082-45c6-abaf-3cbbf5c16b80","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":25}
+{"event":"http.request","request_id":"74bc2c19-3240-4584-949d-e666ea583cf3","method":"GET","path":"/api/v1/me","status":200,"duration_ms":87}
+{"event":"http.request","request_id":"5501b080-2a81-413f-bf77-aa7a072f220f","method":"POST","path":"/api/v1/accounts","status":201,"duration_ms":11}
+{"event":"http.request","request_id":"ca91d86b-ec9d-4d35-afed-d4e8cafcc940","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":23}
+{"event":"http.request","request_id":"c7cca23d-227e-4fec-a777-b93858f02c68","method":"POST","path":"/api/v1/uploads/08acc6b3-6ade-409d-8c0a-50e29c9d49c1/parts","status":200,"duration_ms":6}
+{"event":"http.request","request_id":"0a5f07df-6548-496a-8b1a-909c89743610","method":"PUT","path":"/api/v1/uploads/08acc6b3-6ade-409d-8c0a-50e29c9d49c1/parts/1","status":200,"duration_ms":11}
+{"event":"http.request","request_id":"d5e983d0-9622-4975-b677-a7baf0e3d982","method":"POST","path":"/api/v1/uploads/08acc6b3-6ade-409d-8c0a-50e29c9d49c1/complete","status":200,"duration_ms":12}
+{"event":"http.request","request_id":"29daf780-fc30-4926-ad7f-1968052fff55","method":"GET","path":"/api/v1/files/ac7ff824-4b4a-4f97-82bc-9c7f2d7e135e","status":404,"duration_ms":3}
+✖ 空白原图实际沙箱OCR保留原件和补录入口，所有识别行禁止直接确认 (754.544625ms)
+✖ 人工作用区域/单位/时间/账号校验，原识别不改，万保留约数，部分确认和撤销复用 (2.924416ms)
+{"event":"http.request","request_id":"b9bef17f-cfa4-40ca-baae-01f71c58f114","method":"POST","path":"/api/v1/imports","status":422,"duration_ms":6}
+✖ 手工补充必须真实引用原图，错用途/跨账号拒绝；只读可预览且不可下载或更正 (9.961041ms)
+{"event":"http.request","request_id":"83450c11-1a9d-423e-9281-d34640d294e5","method":"POST","path":"/api/v1/members","status":201,"duration_ms":27}
+{"event":"http.request","request_id":"16e019e3-9d26-4962-9154-9862406e368f","method":"POST","path":"/api/v1/accounts/7766d941-459d-40c4-a818-7fa1582b2c39/members","status":404,"duration_ms":1}
+{"event":"http.request","request_id":"6a29b160-ba16-44ff-aa32-5770702ec448","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"03a0f747-b232-4e4d-a40d-3ea83dbd13ec","method":"POST","path":"/api/v1/auth/accept-invite","status":200,"duration_ms":23}
+{"event":"http.request","request_id":"888aa79d-0e28-47db-9280-5c9067ad2ffa","method":"POST","path":"/api/v1/uploads","status":401,"duration_ms":0}
+✖ 旧图再校验按任务发起者授权，在途撤权不能借原上传者权限落库 (63.16575ms)
+✔ 词区域匹配数值保留万与置信，观看不猜形式，所有OCR行强制待核对 (1.120333ms)
+✔ 等距候选不猜数值，无字段/失败保留补录入口，区域/伪造置信拒绝 (0.596959ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 2
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1597.565167
+
+✖ failing tests:
+
+test at tests/screenshot-imports.test.ts:2:2638
+✖ 空白原图实际沙箱OCR保留原件和补录入口，所有识别行禁止直接确认 (754.544625ms)
+  TypeError: Cannot read properties of undefined (reading 'file_status')
+      at TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/screenshot-imports.test.ts:17:64)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+
+test at tests/screenshot-imports.test.ts:2:4093
+✖ 人工作用区域/单位/时间/账号校验，原识别不改，万保留约数，部分确认和撤销复用 (2.924416ms)
+  TypeError: Cannot read properties of undefined (reading 'id')
+      at TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/screenshot-imports.test.ts:24:44)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7)
+
+test at tests/screenshot-imports.test.ts:2:6413
+✖ 手工补充必须真实引用原图，错用途/跨账号拒绝；只读可预览且不可下载或更正 (9.961041ms)
+  AssertionError [ERR_ASSERTION]: {"code":"OCR_REGION_INVALID","message":"区域超出原图范围","field_errors":{},"retryable":false,"request_id":"b9bef17f-cfa4-40ca-baae-01f71c58f114"}
+  
+  422 !== 202
+  
+      at TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/screenshot-imports.test.ts:36:169)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 422,
+    expected: 202,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/screenshot-imports.test.ts:2:8368
+✖ 旧图再校验按任务发起者授权，在途撤权不能借原上传者权限落库 (63.16575ms)
+  AssertionError [ERR_ASSERTION]: {"code":"SESSION_EXPIRED","message":"登录已过期或成员已停用","field_errors":{},"retryable":false,"request_id":"888aa79d-0e28-47db-9280-5c9067ad2ffa"}
+  
+  401 !== 201
+  
+      at uploadBytes (/Users/junlong/projects/social-mdeida-ops-platform/tests/file-helpers.ts:8:135)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/screenshot-imports.test.ts:48:15)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 401,
+    expected: 201,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+file:///Users/junlong/projects/social-mdeida-ops-platform/tools/s7/ocr-env.mjs:11
+async function run(cmd,args){await new Promise((resolve,reject)=>{const p=spawn(cmd,args,{env,stdio:'inherit'});p.on('error',reject);p.on('exit',code=>code===0?resolve():reject(new Error(cmd+' failed')));});}
+                                                                                                                                                                                 ^
+
+Error: node failed
+    at ChildProcess.<anonymous> (file:///Users/junlong/projects/social-mdeida-ops-platform/tools/s7/ocr-env.mjs:11:178)
+    at ChildProcess.emit (node:events:508:28)
+    at ChildProcess._handle.onexit (node:internal/child_process:294:12)
+
+Node.js v24.14.1

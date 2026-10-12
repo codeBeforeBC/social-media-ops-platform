@@ -1,0 +1,136 @@
+Instance credentials ready; no secrets printed.
+ Image yoyo-import-parser-ocr-local:1.0.0 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 618B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.36kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 177B done
+#4 DONE 0.0s
+
+#5 [build 1/4] FROM docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#5 resolve docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 235B done
+#6 DONE 0.0s
+
+#7 [build 3/4] COPY tools/media/sandbox.c /sandbox.c
+#7 CACHED
+
+#8 [build 4/4] RUN gcc -O2 -Wall /sandbox.c -o /media-sandbox
+#8 CACHED
+
+#9 [stage-1 2/7] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && (apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil ca-certificates tesseract-ocr tesseract-ocr-chi-sim tesseract-ocr-eng || apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil ca-certificates tesseract-ocr tesseract-ocr-chi-sim tesseract-ocr-eng) && rm -rf /var/lib/apt/lists/* && mkdir /scratch && chown node:node /scratch
+#9 CACHED
+
+#10 [stage-1 3/7] COPY --from=build /media-sandbox /usr/local/bin/media-sandbox
+#10 CACHED
+
+#11 [stage-1 4/7] COPY tools/media/server.mjs /app/server.mjs
+#11 CACHED
+
+#12 [stage-1 6/7] COPY tools/media/image-ocr.py /usr/local/lib/yoyo/image-ocr.py
+#12 CACHED
+
+#13 [stage-1 5/7] COPY tools/media/import-validate.py /usr/local/lib/yoyo/import-validate.py
+#13 CACHED
+
+#14 [build 2/4] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && apt-get -o Acquire::Retries=3 install -y --no-install-recommends gcc libc6-dev linux-libc-dev
+#14 CACHED
+
+#15 [stage-1 7/7] WORKDIR /app
+#15 CACHED
+
+#16 exporting to image
+#16 exporting layers done
+#16 exporting manifest sha256:8d06253b0f706d6af0fa1f6b1bceb839659aacd3038ba96ae7796b33cb156e58 done
+#16 exporting config sha256:8bc007247a7734fa6558cedf9adbca12d1ae0ea75fb912c63c77c91e59f1d705 done
+#16 exporting attestation manifest sha256:1c0a82052dcf3d56153d0539a3c74336f4ef610ecc3da05f7f8f2f8631949389 done
+#16 exporting manifest list sha256:8c8bf6c95e47779fe10f3a34f77a540cc3590dc8805433adb2b0720427a181c9 done
+#16 naming to docker.io/library/yoyo-import-parser-ocr-local:1.0.0 done
+#16 unpacking to docker.io/library/yoyo-import-parser-ocr-local:1.0.0 done
+#16 DONE 0.0s
+
+#17 resolving provenance for metadata file
+#17 DONE 0.0s
+ Image yoyo-import-parser-ocr-local:1.0.0 Built 
+ Container yoyo-s7-ocr-tests-storage-1 Running 
+ Container yoyo-s7-ocr-tests-media-executor-1 Recreate 
+ Container yoyo-s7-ocr-tests-media-executor-1 Recreated 
+ Container yoyo-s7-ocr-tests-media-executor-1 Starting 
+ Container yoyo-s7-ocr-tests-media-executor-1 Started 
+ Container yoyo-s7-ocr-tests-storage-1 Waiting 
+ Container yoyo-s7-ocr-tests-media-executor-1 Waiting 
+ Container yoyo-s7-ocr-tests-storage-1 Healthy 
+ Container yoyo-s7-ocr-tests-media-executor-1 Healthy 
+Private storage ready.
+{"event":"http.request","request_id":"8aac7b2c-f835-41ed-ae98-d4a13c0d8138","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":6}
+{"event":"http.request","request_id":"227127db-ff77-43b9-b0ac-61f619b8b2cd","method":"POST","path":"/api/v1/setup","status":201,"duration_ms":39}
+{"event":"http.request","request_id":"20dcb401-e7b0-4192-9949-cfcb9bbd7401","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"182fda64-5be3-40ad-9b0b-0e1aea74725d","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":27}
+{"event":"http.request","request_id":"8df2b28c-ccd7-4a96-939f-6ac06eabb95c","method":"GET","path":"/api/v1/me","status":200,"duration_ms":88}
+{"event":"http.request","request_id":"037043fa-e4c3-4013-8299-d20793a023ae","method":"POST","path":"/api/v1/accounts","status":201,"duration_ms":11}
+{"event":"http.request","request_id":"f8a2c849-03aa-4f90-ab5c-c37a90745ae9","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":20}
+{"event":"http.request","request_id":"b7534e62-d748-4a41-b581-931ae1e5e94e","method":"POST","path":"/api/v1/uploads/29bc7c94-1a31-47c5-921d-79afa81463b6/parts","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"3a06bc92-5c92-4fc6-8f89-4b09258e420d","method":"PUT","path":"/api/v1/uploads/29bc7c94-1a31-47c5-921d-79afa81463b6/parts/1","status":200,"duration_ms":10}
+{"event":"http.request","request_id":"badf1c78-1f02-4d41-a63b-22ad58653b2f","method":"POST","path":"/api/v1/uploads/29bc7c94-1a31-47c5-921d-79afa81463b6/complete","status":200,"duration_ms":12}
+{"event":"http.request","request_id":"81edfaf4-3bad-4de4-b993-2d995dd414d1","method":"GET","path":"/api/v1/files/3874c96f-8489-4d96-bbea-23dabad7eff7","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"6e46347c-4fb3-4a4f-889d-3a2bee383076","method":"POST","path":"/api/v1/imports","status":202,"duration_ms":6}
+{"event":"http.request","request_id":"481912cf-e015-4d33-a596-6649a1f16cf7","method":"GET","path":"/api/v1/imports/f78d2901-adff-4300-bcc7-8da7157543bb","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"a6a68f15-025f-4400-9885-4c70b98197f1","method":"GET","path":"/api/v1/imports/f78d2901-adff-4300-bcc7-8da7157543bb/rows","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"87e6682a-cc1f-46e2-aedf-104546dff6b9","method":"POST","path":"/api/v1/imports/f78d2901-adff-4300-bcc7-8da7157543bb/confirm","status":422,"duration_ms":5}
+✔ 空白原图实际沙箱OCR保留原件和补录入口，所有识别行禁止直接确认 (732.825292ms)
+{"event":"http.request","request_id":"c2d67f1f-ac71-47f3-baf8-e7b5a45a73de","method":"GET","path":"/api/v1/imports/f78d2901-adff-4300-bcc7-8da7157543bb/rows","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"13a2976c-a292-4059-bf55-a25e23dc7f3d","method":"PATCH","path":"/api/v1/import-rows/f5f1a10c-0ef1-4708-8c7d-6cd882c9ee5e","status":422,"duration_ms":4}
+{"event":"http.request","request_id":"09ee1b07-0587-4188-90ee-00bfeeb3c831","method":"PATCH","path":"/api/v1/import-rows/f5f1a10c-0ef1-4708-8c7d-6cd882c9ee5e","status":422,"duration_ms":4}
+{"event":"http.request","request_id":"974e5909-0f2f-466b-9fbf-ec9739693113","method":"PATCH","path":"/api/v1/import-rows/f5f1a10c-0ef1-4708-8c7d-6cd882c9ee5e","status":422,"duration_ms":4}
+{"event":"http.request","request_id":"0e4adea2-d2e6-4788-8d72-91aaabf7c7be","method":"PATCH","path":"/api/v1/import-rows/f5f1a10c-0ef1-4708-8c7d-6cd882c9ee5e","status":422,"duration_ms":4}
+{"event":"http.request","request_id":"cac27e2b-5553-439c-8471-1c09f3652b8c","method":"PATCH","path":"/api/v1/import-rows/f5f1a10c-0ef1-4708-8c7d-6cd882c9ee5e","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"98387f27-1f99-40fc-b77e-0d834ab0d3a0","method":"GET","path":"/api/v1/imports/f78d2901-adff-4300-bcc7-8da7157543bb","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"f23c7167-94af-440c-82e3-d7d0ef8fef72","method":"POST","path":"/api/v1/imports/f78d2901-adff-4300-bcc7-8da7157543bb/confirm","status":200,"duration_ms":7}
+{"event":"http.request","request_id":"23c4a84e-5c3f-4bed-8657-0834a1c28a4e","method":"POST","path":"/api/v1/imports/f78d2901-adff-4300-bcc7-8da7157543bb/revert","status":200,"duration_ms":7}
+✔ 人工作用区域/单位/时间/账号校验，原识别不改，万保留约数，部分确认和撤销复用 (54.02325ms)
+{"event":"http.request","request_id":"003ad444-21c1-4878-93b6-af40a31b5a5b","method":"POST","path":"/api/v1/imports","status":202,"duration_ms":4}
+{"event":"http.request","request_id":"7b73a265-24a4-43f8-90d5-931d07ba9e9c","method":"GET","path":"/api/v1/imports/a75dc61f-26ac-460a-b896-49d15fd05aed/rows","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"ca26467e-76b2-4a34-8f1e-c0f74673c542","method":"POST","path":"/api/v1/imports","status":422,"duration_ms":3}
+{"event":"http.request","request_id":"751dc4c0-cc58-4e38-ae04-e7e478305c95","method":"POST","path":"/api/v1/accounts","status":201,"duration_ms":5}
+{"event":"http.request","request_id":"b68c1965-2132-4572-9042-a8913427b4ec","method":"POST","path":"/api/v1/imports","status":422,"duration_ms":3}
+{"event":"http.request","request_id":"2a9a1960-246d-4b9e-bd73-d298f613c055","method":"POST","path":"/api/v1/members","status":201,"duration_ms":24}
+{"event":"http.request","request_id":"38b92715-d0a8-4976-81e4-969ebc4e43f6","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"c04e0e21-6c14-4c15-9063-a66a5700100d","method":"POST","path":"/api/v1/auth/accept-invite","status":200,"duration_ms":20}
+{"event":"http.request","request_id":"89c6fe56-e72a-4376-a755-5342b02223e2","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"411740cb-8f53-4397-ba14-4d34c0e9def2","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":20}
+{"event":"http.request","request_id":"ff94c634-9c1a-4465-8d6b-600a4b43b2f9","method":"GET","path":"/api/v1/files/3874c96f-8489-4d96-bbea-23dabad7eff7/preview","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"6bf59aa3-cf83-4761-b121-cb8d22b7f937","method":"GET","path":"/api/v1/files/3874c96f-8489-4d96-bbea-23dabad7eff7/download","status":403,"duration_ms":1}
+{"event":"http.request","request_id":"2853b4d3-20f7-49a1-909e-78263eb95986","method":"PATCH","path":"/api/v1/import-rows/9247c20b-623e-410e-a88f-7a0106881f9a","status":403,"duration_ms":2}
+✔ 手工补充必须真实引用原图，错用途/跨账号拒绝；只读可预览且不可下载或更正 (106.651292ms)
+{"event":"http.request","request_id":"b93e7f92-0b1e-4fc0-b505-3a84cc0f5d63","method":"POST","path":"/api/v1/members","status":201,"duration_ms":21}
+{"event":"http.request","request_id":"df5b1499-ee49-4e32-a68d-a88090287249","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"f5f0e0a1-2e2f-44fb-91b0-25f9aa12c1cb","method":"POST","path":"/api/v1/auth/accept-invite","status":200,"duration_ms":18}
+{"event":"http.request","request_id":"de3b98fa-74c4-439c-a228-4651839dc09c","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"09bf7f7f-a338-4d68-9258-d8372241162f","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":19}
+{"event":"http.request","request_id":"02d19db0-a493-4dfc-a89c-ba54a9288b74","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":7}
+{"event":"http.request","request_id":"b4d12acd-f792-457c-9023-f27ab671dadd","method":"POST","path":"/api/v1/uploads/04326a61-0d0a-4559-93e3-169f7aec5c6a/parts","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"ab25fa4b-5c6c-4aab-99ec-cceed95f8d61","method":"PUT","path":"/api/v1/uploads/04326a61-0d0a-4559-93e3-169f7aec5c6a/parts/1","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"118e0c36-ef5b-4dc1-a181-6455d5cd5d5e","method":"POST","path":"/api/v1/uploads/04326a61-0d0a-4559-93e3-169f7aec5c6a/complete","status":200,"duration_ms":9}
+{"event":"http.request","request_id":"73ddd3b4-9771-4c9a-a405-f4de22239e06","method":"PATCH","path":"/api/v1/members/f3deb2a4-d5cf-4b66-ad12-63bb15cee378","status":200,"duration_ms":5}
+✔ 旧图再校验按任务发起者授权，在途撤权不能借原上传者权限落库 (267.959833ms)
+✔ 词区域匹配数值保留万与置信，观看不猜形式，所有OCR行强制待核对 (1.106833ms)
+✔ 等距候选不猜数值，无字段/失败保留补录入口，区域/伪造置信拒绝 (0.626875ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1823.816125

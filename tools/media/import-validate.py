@@ -1,7 +1,7 @@
 """Validate and extract table cells inside the existing isolated parser; never evaluate formulas."""
 import csv,io,json,sys,warnings,zipfile
 from pathlib import PurePosixPath
-from PIL import Image
+from PIL import Image,ImageOps
 warnings.simplefilter('error',Image.DecompressionBombWarning)
 Image.MAX_IMAGE_PIXELS=25000000
 path,output,mime=sys.argv[1:]
@@ -13,6 +13,7 @@ if mime in ('image/png','image/jpeg'):
         image.verify()
     with Image.open(path) as image:
         image.load()
+        image=ImageOps.exif_transpose(image)
         metadata={'width':image.width,'height':image.height,'format':expected}
         image=image.convert('RGBA');image.thumbnail((1600,1600),Image.Resampling.LANCZOS);image.save(output,format='PNG')
 elif mime=='text/csv':

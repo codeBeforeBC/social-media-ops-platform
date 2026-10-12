@@ -120,6 +120,8 @@ class ApiController {
     if(method==='GET'&&path==='/dashboard')return send(await new Dashboard(this.db).get(a,req.query));
     const file=path.match(/^\/files\/([^/]+)\/(download|preview)$/);
     if(file&&method==='GET')return send(await files.link(a,file[1]!,file[2]==='preview'));
+    const fileInfo=path.match(/^\/files\/([^/]+)$/);
+    if(fileInfo&&method==='GET')return send(await files.file(this.db,a,fileInfo[1]!));
     throw new AppError(404,'NOT_FOUND','接口不存在或尚未实现');
   }
 }
@@ -139,6 +141,7 @@ class ApiErrors implements ExceptionFilter {
 export async function createApp(db=new Database()){
   @Module({controllers:[ApiController],providers:[{provide:DB,useValue:db}]})class ApiModule{}
   const app=await NestFactory.create<NestExpressApplication>(ApiModule,{logger:false});
+  app.set('trust proxy',process.env.TRUST_PROXY==='1'?1:false);
   app.use((req:Request,res:Response,next:NextFunction)=>{(req as any).requestId=id();res.setHeader('X-Request-Id',resRequestId(req));res.setHeader('Cache-Control','no-store');const start=Date.now();res.on('finish',()=>console.log(JSON.stringify({event:'http.request',request_id:resRequestId(req),method:req.method,path:req.originalUrl.split('?')[0],status:res.statusCode,duration_ms:Date.now()-start})));next();});
   app.use(helmet({contentSecurityPolicy:{directives:{upgradeInsecureRequests:config.secure?[]:null,imgSrc:["'self'",'data:',new URL(process.env.S3_PUBLIC_ENDPOINT??process.env.S3_ENDPOINT??'http://127.0.0.1:59000').origin]}}}));
   app.use('/api/v1/uploads',raw({type:'application/octet-stream',limit:8388608}));

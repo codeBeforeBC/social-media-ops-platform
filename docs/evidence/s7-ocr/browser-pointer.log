@@ -1,0 +1,94 @@
+Instance credentials ready; no secrets printed.
+ Image yoyo-import-parser-ocr-local:1.0.0 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 618B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.36kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 177B done
+#4 DONE 0.0s
+
+#5 [build 1/4] FROM docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#5 resolve docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 235B done
+#6 DONE 0.0s
+
+#7 [stage-1 5/7] COPY tools/media/import-validate.py /usr/local/lib/yoyo/import-validate.py
+#7 CACHED
+
+#8 [stage-1 4/7] COPY tools/media/server.mjs /app/server.mjs
+#8 CACHED
+
+#9 [stage-1 2/7] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && (apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil ca-certificates tesseract-ocr tesseract-ocr-chi-sim tesseract-ocr-eng || apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil ca-certificates tesseract-ocr tesseract-ocr-chi-sim tesseract-ocr-eng) && rm -rf /var/lib/apt/lists/* && mkdir /scratch && chown node:node /scratch
+#9 CACHED
+
+#10 [build 2/4] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && apt-get -o Acquire::Retries=3 install -y --no-install-recommends gcc libc6-dev linux-libc-dev
+#10 CACHED
+
+#11 [build 3/4] COPY tools/media/sandbox.c /sandbox.c
+#11 CACHED
+
+#12 [stage-1 6/7] COPY tools/media/image-ocr.py /usr/local/lib/yoyo/image-ocr.py
+#12 CACHED
+
+#13 [stage-1 3/7] COPY --from=build /media-sandbox /usr/local/bin/media-sandbox
+#13 CACHED
+
+#14 [build 4/4] RUN gcc -O2 -Wall /sandbox.c -o /media-sandbox
+#14 CACHED
+
+#15 [stage-1 7/7] WORKDIR /app
+#15 CACHED
+
+#16 exporting to image
+#16 exporting layers done
+#16 exporting manifest sha256:8d06253b0f706d6af0fa1f6b1bceb839659aacd3038ba96ae7796b33cb156e58 done
+#16 exporting config sha256:8bc007247a7734fa6558cedf9adbca12d1ae0ea75fb912c63c77c91e59f1d705 done
+#16 exporting attestation manifest sha256:adee7fa6d4f5f4d57e0d02fcd88873a67e10bf691a8c30b2d1ccc94e395c8efc done
+#16 exporting manifest list sha256:7f3a2967c69eb497a9a32c9dd0dbc1a6e6ef36e2095c627fe9eb43f56b3eca85 done
+#16 naming to docker.io/library/yoyo-import-parser-ocr-local:1.0.0 done
+#16 unpacking to docker.io/library/yoyo-import-parser-ocr-local:1.0.0 done
+#16 DONE 0.0s
+
+#17 resolving provenance for metadata file
+#17 DONE 0.0s
+ Image yoyo-import-parser-ocr-local:1.0.0 Built 
+ Container yoyo-s7-ocr-tests-storage-1 Running 
+ Container yoyo-s7-ocr-tests-media-executor-1 Recreate 
+ Container yoyo-s7-ocr-tests-media-executor-1 Recreated 
+ Container yoyo-s7-ocr-tests-media-executor-1 Starting 
+ Container yoyo-s7-ocr-tests-media-executor-1 Started 
+ Container yoyo-s7-ocr-tests-media-executor-1 Waiting 
+ Container yoyo-s7-ocr-tests-storage-1 Waiting 
+ Container yoyo-s7-ocr-tests-media-executor-1 Healthy 
+ Container yoyo-s7-ocr-tests-storage-1 Healthy 
+Private storage ready.
+[2m[WebServer] [22m(node:47458) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:47459) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:47465) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:47465) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+(node:47466) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:47466) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/browser.spec.ts:5:5 › 首次设置、三导航、账号表单、设置保存、键盘抽屉和退出 (2.2s)
+  ✓  2 tests/browser.spec.ts:117:5 › S7 OCR 截图上传、键盘区域、近似值更正、确认、预览及手机无横溢出 (12.5s)
+
+  2 passed (16.2s)

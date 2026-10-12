@@ -74,6 +74,10 @@ export class Files {
     f=(await tx.query("UPDATE file_objects SET file_status='uploading',preview_status='processing',version=version+1,updated_at=now() WHERE id=$1 RETURNING *",[f.id])).rows[0];
     await tx.query("INSERT INTO outbox(workspace_id,account_id,event_key,event_type,payload) VALUES($1,$2,$3,'file.validate',$4) ON CONFLICT DO NOTHING",[a.workspaceId,u.account_id,'file:'+f.id+':table-v1',JSON.stringify({pool:'media',created_by:a.memberId,input:{file_id:f.id},request_id:a.requestId})]);
    }
+   if(f.purpose==='import_screenshot'&&f.file_status==='ready'&&f.metadata?.ocr_parser_version!=='ocr-v1'){
+    f=(await tx.query("UPDATE file_objects SET file_status='uploading',preview_status='processing',version=version+1,updated_at=now() WHERE id=$1 RETURNING *",[f.id])).rows[0];
+    await tx.query("INSERT INTO outbox(workspace_id,account_id,event_key,event_type,payload) VALUES($1,$2,$3,'file.validate',$4) ON CONFLICT DO NOTHING",[a.workspaceId,u.account_id,'file:'+f.id+':ocr-v1',JSON.stringify({pool:'media',created_by:a.memberId,input:{file_id:f.id},request_id:a.requestId})]);
+   }
    await tx.query("UPDATE upload_sessions SET status='completed',file_id=$1,updated_at=now(),version=version+1 WHERE id=$2",[f.id,u.id]);await audit(tx,a,'upload.complete','file',f.id,{size_bytes:size,sha256:checksum});return {status:200,data:safeFile(f)};
   }catch(e){storageError(e);}
  }

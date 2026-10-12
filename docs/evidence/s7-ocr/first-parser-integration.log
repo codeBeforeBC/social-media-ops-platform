@@ -1,0 +1,900 @@
+Instance credentials ready; no secrets printed.
+ Image yoyo-import-parser-ocr-local:1.0.0 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 618B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile:
+#2 transferring dockerfile: 1.36kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 177B done
+#4 DONE 0.0s
+
+#5 [build 1/4] FROM docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#5 resolve docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c done
+#5 CACHED
+
+#6 [internal] load build context
+#6 transferring context: 12.67kB done
+#6 DONE 0.0s
+
+#7 [build 2/4] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && apt-get -o Acquire::Retries=3 install -y --no-install-recommends gcc libc6-dev linux-libc-dev
+#7 CACHED
+
+#8 [build 3/4] COPY tools/media/sandbox.c /sandbox.c
+#8 CACHED
+
+#9 [build 4/4] RUN gcc -O2 -Wall /sandbox.c -o /media-sandbox
+#9 CACHED
+
+#10 [stage-1 2/7] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && (apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil ca-certificates tesseract-ocr tesseract-ocr-chi-sim tesseract-ocr-eng || apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil ca-certificates tesseract-ocr tesseract-ocr-chi-sim tesseract-ocr-eng) && rm -rf /var/lib/apt/lists/* && mkdir /scratch && chown node:node /scratch
+#10 0.620 Get:1 http://deb.debian.org/debian bookworm InRelease [151 kB]
+#10 0.767 Get:2 http://deb.debian.org/debian bookworm-updates InRelease [55.4 kB]
+#10 0.895 Get:3 http://deb.debian.org/debian-security bookworm-security InRelease [34.8 kB]
+#10 1.952 Get:4 http://deb.debian.org/debian bookworm/main arm64 Packages [8689 kB]
+#10 2.183 Get:5 http://deb.debian.org/debian bookworm-updates/main arm64 Packages [6936 B]
+#10 2.401 Get:6 http://deb.debian.org/debian-security bookworm-security/main arm64 Packages [347 kB]
+#10 2.491 Fetched 9285 kB in 2s (3907 kB/s)
+#10 2.491 Reading package lists...
+#10 2.771 Reading package lists...
+#10 2.776 Building dependency tree...
+#10 2.829 Reading state information...
+#10 2.893 The following additional packages will be installed:
+#10 2.893   fontconfig fontconfig-config fonts-dejavu-core libarchive13 libbrotli1
+#10 2.893   libbsd0 libcairo2 libcurl4 libdatrie1 libdeflate0 libexpat1 libfontconfig1
+#10 2.893   libfreetype6 libfribidi0 libgdbm-compat4 libgdbm6 libgif7 libglib2.0-0
+#10 2.893   libgomp1 libgraphite2-3 libgssapi-krb5-2 libharfbuzz0b libicu72
+#10 2.893   libimagequant0 libjbig0 libjpeg62-turbo libk5crypto3 libkeyutils1 libkrb5-3
+#10 2.893   libkrb5support0 liblcms2-2 libldap-2.5-0 liblept5 liblerc4 libncursesw6
+#10 2.893   libnghttp2-14 libnsl2 libopenjp2-7 libpango-1.0-0 libpangocairo-1.0-0
+#10 2.893   libpangoft2-1.0-0 libperl5.36 libpixman-1-0 libpng16-16 libpsl5
+#10 2.893   libpython3-stdlib libpython3.11-minimal libpython3.11-stdlib libraqm0
+#10 2.893   libreadline8 librtmp1 libsasl2-2 libsasl2-modules-db libsqlite3-0 libssh2-1
+#10 2.893   libssl3 libtesseract5 libthai-data libthai0 libtiff6 libtirpc-common
+#10 2.893   libtirpc3 libwebp7 libwebpdemux2 libwebpmux3 libx11-6 libx11-data libxau6
+#10 2.893   libxcb-render0 libxcb-shm0 libxcb1 libxdmcp6 libxext6 libxml2 libxrender1
+#10 2.893   mailcap media-types mime-support openssl perl perl-base perl-modules-5.36
+#10 2.893   python3-minimal python3.11 python3.11-minimal readline-common
+#10 2.894   tesseract-ocr-osd
+#10 2.894 Suggested packages:
+#10 2.894   lrzip gdbm-l10n low-memory-monitor krb5-doc krb5-user liblcms2-utils
+#10 2.894   sensible-utils perl-doc libterm-readline-gnu-perl
+#10 2.894   | libterm-readline-perl-perl make libtap-harness-archive-perl python3-doc
+#10 2.894   python3-tk python3-venv python-pil-doc python3.11-venv python3.11-doc
+#10 2.894   binutils binfmt-support readline-doc
+#10 2.894 Recommended packages:
+#10 2.894   libglib2.0-data shared-mime-info xdg-user-dirs krb5-locales libldap-common
+#10 2.894   libgpm2 publicsuffix libsasl2-modules bzip2 file xz-utils netbase
+#10 2.894   python3-olefile
+#10 3.108 The following NEW packages will be installed:
+#10 3.108   ca-certificates fontconfig fontconfig-config fonts-dejavu-core libarchive13
+#10 3.108   libbrotli1 libbsd0 libcairo2 libcurl4 libdatrie1 libdeflate0 libexpat1
+#10 3.109   libfontconfig1 libfreetype6 libfribidi0 libgdbm-compat4 libgdbm6 libgif7
+#10 3.109   libglib2.0-0 libgomp1 libgraphite2-3 libgssapi-krb5-2 libharfbuzz0b libicu72
+#10 3.109   libimagequant0 libjbig0 libjpeg62-turbo libk5crypto3 libkeyutils1 libkrb5-3
+#10 3.109   libkrb5support0 liblcms2-2 libldap-2.5-0 liblept5 liblerc4 libncursesw6
+#10 3.109   libnghttp2-14 libnsl2 libopenjp2-7 libpango-1.0-0 libpangocairo-1.0-0
+#10 3.109   libpangoft2-1.0-0 libperl5.36 libpixman-1-0 libpng16-16 libpsl5
+#10 3.109   libpython3-stdlib libpython3.11-minimal libpython3.11-stdlib libraqm0
+#10 3.109   libreadline8 librtmp1 libsasl2-2 libsasl2-modules-db libsqlite3-0 libssh2-1
+#10 3.109   libssl3 libtesseract5 libthai-data libthai0 libtiff6 libtirpc-common
+#10 3.109   libtirpc3 libwebp7 libwebpdemux2 libwebpmux3 libx11-6 libx11-data libxau6
+#10 3.109   libxcb-render0 libxcb-shm0 libxcb1 libxdmcp6 libxext6 libxml2 libxrender1
+#10 3.109   mailcap media-types mime-support openssl perl perl-modules-5.36 python3
+#10 3.109   python3-minimal python3-pil python3.11 python3.11-minimal readline-common
+#10 3.109   tesseract-ocr tesseract-ocr-chi-sim tesseract-ocr-eng tesseract-ocr-osd
+#10 3.109 The following packages will be upgraded:
+#10 3.109   perl-base
+#10 3.441 1 upgraded, 92 newly installed, 0 to remove and 14 not upgraded.
+#10 3.441 Need to get 20.8 MB/50.7 MB of archives.
+#10 3.441 After this operation, 188 MB of additional disk space will be used.
+#10 3.441 Get:1 http://deb.debian.org/debian bookworm/main arm64 fontconfig arm64 2.14.1-4 [449 kB]
+#10 4.848 Get:2 http://deb.debian.org/debian bookworm/main arm64 libicu72 arm64 72.1-3+deb12u1 [9202 kB]
+#10 5.121 Get:3 http://deb.debian.org/debian bookworm/main arm64 libxml2 arm64 2.9.14+dfsg-1.3~deb12u6 [620 kB]
+#10 5.437 Get:4 http://deb.debian.org/debian-security bookworm-security/main arm64 libarchive13 arm64 3.6.2-1+deb12u5 [318 kB]
+#10 5.547 Get:5 http://deb.debian.org/debian bookworm/main arm64 libsasl2-modules-db arm64 2.1.28+dfsg-10 [20.8 kB]
+#10 5.770 Get:6 http://deb.debian.org/debian bookworm/main arm64 libsasl2-2 arm64 2.1.28+dfsg-10 [58.0 kB]
+#10 5.975 Get:7 http://deb.debian.org/debian bookworm/main arm64 libldap-2.5-0 arm64 2.5.13+dfsg-5 [171 kB]
+#10 6.113 Get:8 http://deb.debian.org/debian bookworm/main arm64 libnghttp2-14 arm64 1.52.0-1+deb12u3 [69.0 kB]
+#10 6.858 Get:9 http://deb.debian.org/debian bookworm/main arm64 libpsl5 arm64 0.21.2-1 [58.6 kB]
+#10 7.018 Get:10 http://deb.debian.org/debian bookworm/main arm64 librtmp1 arm64 2.4+20151223.gitfa8646d.1-2+b2 [59.4 kB]
+#10 7.231 Get:11 http://deb.debian.org/debian-security bookworm-security/main arm64 libssh2-1 arm64 1.10.0-3+deb12u1 [169 kB]
+#10 7.516 Get:12 http://deb.debian.org/debian bookworm/main arm64 libcurl4 arm64 7.88.1-10+deb12u15 [367 kB]
+#10 7.664 Get:13 http://deb.debian.org/debian bookworm/main arm64 libdatrie1 arm64 0.2.13-2+b1 [42.6 kB]
+#10 7.865 Get:14 http://deb.debian.org/debian bookworm/main arm64 libgif7 arm64 5.2.1-2.5+deb12u1 [42.6 kB]
+#10 8.208 Get:15 http://deb.debian.org/debian bookworm/main arm64 liblept5 arm64 1.82.0-3+b3 [973 kB]
+#10 8.488 Get:16 http://deb.debian.org/debian bookworm/main arm64 libthai-data all 0.1.29-1 [176 kB]
+#10 8.652 Get:17 http://deb.debian.org/debian bookworm/main arm64 libthai0 arm64 0.1.29-1 [56.2 kB]
+#10 8.949 Get:18 http://deb.debian.org/debian bookworm/main arm64 libpango-1.0-0 arm64 1.50.12+ds-1 [200 kB]
+#10 9.091 Get:19 http://deb.debian.org/debian bookworm/main arm64 libpangoft2-1.0-0 arm64 1.50.12+ds-1 [44.5 kB]
+#10 9.260 Get:20 http://deb.debian.org/debian bookworm/main arm64 libpangocairo-1.0-0 arm64 1.50.12+ds-1 [32.0 kB]
+#10 9.692 Get:21 http://deb.debian.org/debian bookworm/main arm64 libtesseract5 arm64 5.3.0-2 [1123 kB]
+#10 10.17 Get:22 http://deb.debian.org/debian bookworm/main arm64 tesseract-ocr-eng all 1:4.1.0-2 [1594 kB]
+#10 10.73 Get:23 http://deb.debian.org/debian bookworm/main arm64 tesseract-ocr-osd all 1:4.1.0-2 [2992 kB]
+#10 11.09 Get:24 http://deb.debian.org/debian bookworm/main arm64 tesseract-ocr arm64 5.3.0-2 [363 kB]
+#10 11.43 Get:25 http://deb.debian.org/debian bookworm/main arm64 tesseract-ocr-chi-sim all 1:4.1.0-2 [1636 kB]
+#10 11.52 debconf: delaying package configuration, since apt-utils is not installed
+#10 11.52 Fetched 20.8 MB in 8s (2503 kB/s)
+#10 11.54 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 6090 files and directories currently installed.)
+#10 11.54 Preparing to unpack .../perl-base_5.36.0-7+deb12u4_arm64.deb ...
+#10 11.54 Unpacking perl-base (5.36.0-7+deb12u4) over (5.36.0-7+deb12u3) ...
+#10 12.14 Setting up perl-base (5.36.0-7+deb12u4) ...
+#10 12.15 Selecting previously unselected package perl-modules-5.36.
+#10 12.15 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 6090 files and directories currently installed.)
+#10 12.16 Preparing to unpack .../0-perl-modules-5.36_5.36.0-7+deb12u4_all.deb ...
+#10 12.16 Unpacking perl-modules-5.36 (5.36.0-7+deb12u4) ...
+#10 12.32 Selecting previously unselected package libgdbm6:arm64.
+#10 12.32 Preparing to unpack .../1-libgdbm6_1.23-3_arm64.deb ...
+#10 12.32 Unpacking libgdbm6:arm64 (1.23-3) ...
+#10 12.34 Selecting previously unselected package libgdbm-compat4:arm64.
+#10 12.34 Preparing to unpack .../2-libgdbm-compat4_1.23-3_arm64.deb ...
+#10 12.34 Unpacking libgdbm-compat4:arm64 (1.23-3) ...
+#10 12.35 Selecting previously unselected package libperl5.36:arm64.
+#10 12.35 Preparing to unpack .../3-libperl5.36_5.36.0-7+deb12u4_arm64.deb ...
+#10 12.35 Unpacking libperl5.36:arm64 (5.36.0-7+deb12u4) ...
+#10 12.54 Selecting previously unselected package perl.
+#10 12.54 Preparing to unpack .../4-perl_5.36.0-7+deb12u4_arm64.deb ...
+#10 12.55 Unpacking perl (5.36.0-7+deb12u4) ...
+#10 12.57 Selecting previously unselected package libssl3:arm64.
+#10 12.57 Preparing to unpack .../5-libssl3_3.0.22-1~deb12u1_arm64.deb ...
+#10 12.57 Unpacking libssl3:arm64 (3.0.22-1~deb12u1) ...
+#10 12.64 Selecting previously unselected package libpython3.11-minimal:arm64.
+#10 12.64 Preparing to unpack .../6-libpython3.11-minimal_3.11.2-6+deb12u9_arm64.deb ...
+#10 12.64 Unpacking libpython3.11-minimal:arm64 (3.11.2-6+deb12u9) ...
+#10 12.68 Selecting previously unselected package libexpat1:arm64.
+#10 12.68 Preparing to unpack .../7-libexpat1_2.5.0-1+deb12u4_arm64.deb ...
+#10 12.69 Unpacking libexpat1:arm64 (2.5.0-1+deb12u4) ...
+#10 12.70 Selecting previously unselected package python3.11-minimal.
+#10 12.70 Preparing to unpack .../8-python3.11-minimal_3.11.2-6+deb12u9_arm64.deb ...
+#10 12.70 Unpacking python3.11-minimal (3.11.2-6+deb12u9) ...
+#10 12.78 Setting up libssl3:arm64 (3.0.22-1~deb12u1) ...
+#10 12.79 Setting up libpython3.11-minimal:arm64 (3.11.2-6+deb12u9) ...
+#10 12.79 Setting up libexpat1:arm64 (2.5.0-1+deb12u4) ...
+#10 12.80 Setting up python3.11-minimal (3.11.2-6+deb12u9) ...
+#10 13.05 Selecting previously unselected package python3-minimal.
+#10 13.05 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 8429 files and directories currently installed.)
+#10 13.05 Preparing to unpack .../00-python3-minimal_3.11.2-1+b1_arm64.deb ...
+#10 13.05 Unpacking python3-minimal (3.11.2-1+b1) ...
+#10 13.06 Selecting previously unselected package media-types.
+#10 13.06 Preparing to unpack .../01-media-types_10.0.0_all.deb ...
+#10 13.06 Unpacking media-types (10.0.0) ...
+#10 13.07 Selecting previously unselected package mailcap.
+#10 13.07 Preparing to unpack .../02-mailcap_3.70+nmu1_all.deb ...
+#10 13.07 Unpacking mailcap (3.70+nmu1) ...
+#10 13.08 Selecting previously unselected package mime-support.
+#10 13.08 Preparing to unpack .../03-mime-support_3.66_all.deb ...
+#10 13.09 Unpacking mime-support (3.66) ...
+#10 13.09 Selecting previously unselected package libncursesw6:arm64.
+#10 13.09 Preparing to unpack .../04-libncursesw6_6.4-4_arm64.deb ...
+#10 13.10 Unpacking libncursesw6:arm64 (6.4-4) ...
+#10 13.11 Selecting previously unselected package libkrb5support0:arm64.
+#10 13.11 Preparing to unpack .../05-libkrb5support0_1.20.1-2+deb12u5_arm64.deb ...
+#10 13.11 Unpacking libkrb5support0:arm64 (1.20.1-2+deb12u5) ...
+#10 13.12 Selecting previously unselected package libk5crypto3:arm64.
+#10 13.12 Preparing to unpack .../06-libk5crypto3_1.20.1-2+deb12u5_arm64.deb ...
+#10 13.12 Unpacking libk5crypto3:arm64 (1.20.1-2+deb12u5) ...
+#10 13.14 Selecting previously unselected package libkeyutils1:arm64.
+#10 13.14 Preparing to unpack .../07-libkeyutils1_1.6.3-2_arm64.deb ...
+#10 13.14 Unpacking libkeyutils1:arm64 (1.6.3-2) ...
+#10 13.15 Selecting previously unselected package libkrb5-3:arm64.
+#10 13.15 Preparing to unpack .../08-libkrb5-3_1.20.1-2+deb12u5_arm64.deb ...
+#10 13.15 Unpacking libkrb5-3:arm64 (1.20.1-2+deb12u5) ...
+#10 13.18 Selecting previously unselected package libgssapi-krb5-2:arm64.
+#10 13.18 Preparing to unpack .../09-libgssapi-krb5-2_1.20.1-2+deb12u5_arm64.deb ...
+#10 13.18 Unpacking libgssapi-krb5-2:arm64 (1.20.1-2+deb12u5) ...
+#10 13.20 Selecting previously unselected package libtirpc-common.
+#10 13.20 Preparing to unpack .../10-libtirpc-common_1.3.3+ds-1_all.deb ...
+#10 13.20 Unpacking libtirpc-common (1.3.3+ds-1) ...
+#10 13.22 Selecting previously unselected package libtirpc3:arm64.
+#10 13.22 Preparing to unpack .../11-libtirpc3_1.3.3+ds-1_arm64.deb ...
+#10 13.22 Unpacking libtirpc3:arm64 (1.3.3+ds-1) ...
+#10 13.24 Selecting previously unselected package libnsl2:arm64.
+#10 13.24 Preparing to unpack .../12-libnsl2_1.3.0-2_arm64.deb ...
+#10 13.24 Unpacking libnsl2:arm64 (1.3.0-2) ...
+#10 13.25 Selecting previously unselected package readline-common.
+#10 13.26 Preparing to unpack .../13-readline-common_8.2-1.3_all.deb ...
+#10 13.26 Unpacking readline-common (8.2-1.3) ...
+#10 13.28 Selecting previously unselected package libreadline8:arm64.
+#10 13.28 Preparing to unpack .../14-libreadline8_8.2-1.3_arm64.deb ...
+#10 13.28 Unpacking libreadline8:arm64 (8.2-1.3) ...
+#10 13.31 Selecting previously unselected package libsqlite3-0:arm64.
+#10 13.31 Preparing to unpack .../15-libsqlite3-0_3.40.1-2+deb12u2_arm64.deb ...
+#10 13.31 Unpacking libsqlite3-0:arm64 (3.40.1-2+deb12u2) ...
+#10 13.34 Selecting previously unselected package libpython3.11-stdlib:arm64.
+#10 13.34 Preparing to unpack .../16-libpython3.11-stdlib_3.11.2-6+deb12u9_arm64.deb ...
+#10 13.35 Unpacking libpython3.11-stdlib:arm64 (3.11.2-6+deb12u9) ...
+#10 13.43 Selecting previously unselected package python3.11.
+#10 13.43 Preparing to unpack .../17-python3.11_3.11.2-6+deb12u9_arm64.deb ...
+#10 13.43 Unpacking python3.11 (3.11.2-6+deb12u9) ...
+#10 13.45 Selecting previously unselected package libpython3-stdlib:arm64.
+#10 13.45 Preparing to unpack .../18-libpython3-stdlib_3.11.2-1+b1_arm64.deb ...
+#10 13.45 Unpacking libpython3-stdlib:arm64 (3.11.2-1+b1) ...
+#10 13.46 Setting up python3-minimal (3.11.2-1+b1) ...
+#10 13.52 Selecting previously unselected package python3.
+#10 13.52 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 8961 files and directories currently installed.)
+#10 13.52 Preparing to unpack .../00-python3_3.11.2-1+b1_arm64.deb ...
+#10 13.52 Unpacking python3 (3.11.2-1+b1) ...
+#10 13.53 Selecting previously unselected package openssl.
+#10 13.53 Preparing to unpack .../01-openssl_3.0.22-1~deb12u1_arm64.deb ...
+#10 13.53 Unpacking openssl (3.0.22-1~deb12u1) ...
+#10 13.59 Selecting previously unselected package ca-certificates.
+#10 13.59 Preparing to unpack .../02-ca-certificates_20250419~deb12u1_all.deb ...
+#10 13.59 Unpacking ca-certificates (20250419~deb12u1) ...
+#10 13.61 Selecting previously unselected package libbrotli1:arm64.
+#10 13.61 Preparing to unpack .../03-libbrotli1_1.0.9-2+b6_arm64.deb ...
+#10 13.61 Unpacking libbrotli1:arm64 (1.0.9-2+b6) ...
+#10 13.63 Selecting previously unselected package libpng16-16:arm64.
+#10 13.63 Preparing to unpack .../04-libpng16-16_1.6.39-2+deb12u6_arm64.deb ...
+#10 13.63 Unpacking libpng16-16:arm64 (1.6.39-2+deb12u6) ...
+#10 13.65 Selecting previously unselected package libfreetype6:arm64.
+#10 13.65 Preparing to unpack .../05-libfreetype6_2.12.1+dfsg-5+deb12u4_arm64.deb ...
+#10 13.65 Unpacking libfreetype6:arm64 (2.12.1+dfsg-5+deb12u4) ...
+#10 13.68 Selecting previously unselected package fonts-dejavu-core.
+#10 13.68 Preparing to unpack .../06-fonts-dejavu-core_2.37-6_all.deb ...
+#10 13.68 Unpacking fonts-dejavu-core (2.37-6) ...
+#10 13.74 Selecting previously unselected package fontconfig-config.
+#10 13.74 Preparing to unpack .../07-fontconfig-config_2.14.1-4_arm64.deb ...
+#10 13.77 Unpacking fontconfig-config (2.14.1-4) ...
+#10 13.79 Selecting previously unselected package libfontconfig1:arm64.
+#10 13.79 Preparing to unpack .../08-libfontconfig1_2.14.1-4_arm64.deb ...
+#10 13.79 Unpacking libfontconfig1:arm64 (2.14.1-4) ...
+#10 13.80 Selecting previously unselected package fontconfig.
+#10 13.80 Preparing to unpack .../09-fontconfig_2.14.1-4_arm64.deb ...
+#10 13.80 Unpacking fontconfig (2.14.1-4) ...
+#10 13.82 Selecting previously unselected package libicu72:arm64.
+#10 13.82 Preparing to unpack .../10-libicu72_72.1-3+deb12u1_arm64.deb ...
+#10 13.82 Unpacking libicu72:arm64 (72.1-3+deb12u1) ...
+#10 14.13 Selecting previously unselected package libxml2:arm64.
+#10 14.13 Preparing to unpack .../11-libxml2_2.9.14+dfsg-1.3~deb12u6_arm64.deb ...
+#10 14.13 Unpacking libxml2:arm64 (2.9.14+dfsg-1.3~deb12u6) ...
+#10 14.16 Selecting previously unselected package libarchive13:arm64.
+#10 14.16 Preparing to unpack .../12-libarchive13_3.6.2-1+deb12u5_arm64.deb ...
+#10 14.17 Unpacking libarchive13:arm64 (3.6.2-1+deb12u5) ...
+#10 14.19 Selecting previously unselected package libbsd0:arm64.
+#10 14.19 Preparing to unpack .../13-libbsd0_0.11.7-2_arm64.deb ...
+#10 14.19 Unpacking libbsd0:arm64 (0.11.7-2) ...
+#10 14.20 Selecting previously unselected package libpixman-1-0:arm64.
+#10 14.20 Preparing to unpack .../14-libpixman-1-0_0.42.2-1_arm64.deb ...
+#10 14.20 Unpacking libpixman-1-0:arm64 (0.42.2-1) ...
+#10 14.22 Selecting previously unselected package libxau6:arm64.
+#10 14.22 Preparing to unpack .../15-libxau6_1%3a1.0.9-1_arm64.deb ...
+#10 14.23 Unpacking libxau6:arm64 (1:1.0.9-1) ...
+#10 14.23 Selecting previously unselected package libxdmcp6:arm64.
+#10 14.24 Preparing to unpack .../16-libxdmcp6_1%3a1.1.2-3_arm64.deb ...
+#10 14.24 Unpacking libxdmcp6:arm64 (1:1.1.2-3) ...
+#10 14.25 Selecting previously unselected package libxcb1:arm64.
+#10 14.25 Preparing to unpack .../17-libxcb1_1.15-1_arm64.deb ...
+#10 14.25 Unpacking libxcb1:arm64 (1.15-1) ...
+#10 14.26 Selecting previously unselected package libx11-data.
+#10 14.26 Preparing to unpack .../18-libx11-data_2%3a1.8.4-2+deb12u2_all.deb ...
+#10 14.26 Unpacking libx11-data (2:1.8.4-2+deb12u2) ...
+#10 14.29 Selecting previously unselected package libx11-6:arm64.
+#10 14.29 Preparing to unpack .../19-libx11-6_2%3a1.8.4-2+deb12u2_arm64.deb ...
+#10 14.29 Unpacking libx11-6:arm64 (2:1.8.4-2+deb12u2) ...
+#10 14.32 Selecting previously unselected package libxcb-render0:arm64.
+#10 14.32 Preparing to unpack .../20-libxcb-render0_1.15-1_arm64.deb ...
+#10 14.32 Unpacking libxcb-render0:arm64 (1.15-1) ...
+#10 14.34 Selecting previously unselected package libxcb-shm0:arm64.
+#10 14.34 Preparing to unpack .../21-libxcb-shm0_1.15-1_arm64.deb ...
+#10 14.34 Unpacking libxcb-shm0:arm64 (1.15-1) ...
+#10 14.35 Selecting previously unselected package libxext6:arm64.
+#10 14.36 Preparing to unpack .../22-libxext6_2%3a1.3.4-1+b1_arm64.deb ...
+#10 14.36 Unpacking libxext6:arm64 (2:1.3.4-1+b1) ...
+#10 14.37 Selecting previously unselected package libxrender1:arm64.
+#10 14.37 Preparing to unpack .../23-libxrender1_1%3a0.9.10-1.1_arm64.deb ...
+#10 14.37 Unpacking libxrender1:arm64 (1:0.9.10-1.1) ...
+#10 14.38 Selecting previously unselected package libcairo2:arm64.
+#10 14.38 Preparing to unpack .../24-libcairo2_1.16.0-7_arm64.deb ...
+#10 14.38 Unpacking libcairo2:arm64 (1.16.0-7) ...
+#10 14.41 Selecting previously unselected package libsasl2-modules-db:arm64.
+#10 14.41 Preparing to unpack .../25-libsasl2-modules-db_2.1.28+dfsg-10_arm64.deb ...
+#10 14.41 Unpacking libsasl2-modules-db:arm64 (2.1.28+dfsg-10) ...
+#10 14.42 Selecting previously unselected package libsasl2-2:arm64.
+#10 14.42 Preparing to unpack .../26-libsasl2-2_2.1.28+dfsg-10_arm64.deb ...
+#10 14.42 Unpacking libsasl2-2:arm64 (2.1.28+dfsg-10) ...
+#10 14.43 Selecting previously unselected package libldap-2.5-0:arm64.
+#10 14.43 Preparing to unpack .../27-libldap-2.5-0_2.5.13+dfsg-5_arm64.deb ...
+#10 14.43 Unpacking libldap-2.5-0:arm64 (2.5.13+dfsg-5) ...
+#10 14.45 Selecting previously unselected package libnghttp2-14:arm64.
+#10 14.45 Preparing to unpack .../28-libnghttp2-14_1.52.0-1+deb12u3_arm64.deb ...
+#10 14.45 Unpacking libnghttp2-14:arm64 (1.52.0-1+deb12u3) ...
+#10 14.46 Selecting previously unselected package libpsl5:arm64.
+#10 14.46 Preparing to unpack .../29-libpsl5_0.21.2-1_arm64.deb ...
+#10 14.46 Unpacking libpsl5:arm64 (0.21.2-1) ...
+#10 14.48 Selecting previously unselected package librtmp1:arm64.
+#10 14.48 Preparing to unpack .../30-librtmp1_2.4+20151223.gitfa8646d.1-2+b2_arm64.deb ...
+#10 14.48 Unpacking librtmp1:arm64 (2.4+20151223.gitfa8646d.1-2+b2) ...
+#10 14.49 Selecting previously unselected package libssh2-1:arm64.
+#10 14.49 Preparing to unpack .../31-libssh2-1_1.10.0-3+deb12u1_arm64.deb ...
+#10 14.49 Unpacking libssh2-1:arm64 (1.10.0-3+deb12u1) ...
+#10 14.51 Selecting previously unselected package libcurl4:arm64.
+#10 14.51 Preparing to unpack .../32-libcurl4_7.88.1-10+deb12u15_arm64.deb ...
+#10 14.51 Unpacking libcurl4:arm64 (7.88.1-10+deb12u15) ...
+#10 14.53 Selecting previously unselected package libdatrie1:arm64.
+#10 14.53 Preparing to unpack .../33-libdatrie1_0.2.13-2+b1_arm64.deb ...
+#10 14.53 Unpacking libdatrie1:arm64 (0.2.13-2+b1) ...
+#10 14.54 Selecting previously unselected package libdeflate0:arm64.
+#10 14.54 Preparing to unpack .../34-libdeflate0_1.14-1_arm64.deb ...
+#10 14.54 Unpacking libdeflate0:arm64 (1.14-1) ...
+#10 14.55 Selecting previously unselected package libfribidi0:arm64.
+#10 14.56 Preparing to unpack .../35-libfribidi0_1.0.8-2.1_arm64.deb ...
+#10 14.56 Unpacking libfribidi0:arm64 (1.0.8-2.1) ...
+#10 14.57 Selecting previously unselected package libgif7:arm64.
+#10 14.57 Preparing to unpack .../36-libgif7_5.2.1-2.5+deb12u1_arm64.deb ...
+#10 14.57 Unpacking libgif7:arm64 (5.2.1-2.5+deb12u1) ...
+#10 14.58 Selecting previously unselected package libglib2.0-0:arm64.
+#10 14.58 Preparing to unpack .../37-libglib2.0-0_2.74.6-2+deb12u9_arm64.deb ...
+#10 14.58 Unpacking libglib2.0-0:arm64 (2.74.6-2+deb12u9) ...
+#10 14.64 Selecting previously unselected package libgomp1:arm64.
+#10 14.64 Preparing to unpack .../38-libgomp1_12.2.0-14+deb12u1_arm64.deb ...
+#10 14.64 Unpacking libgomp1:arm64 (12.2.0-14+deb12u1) ...
+#10 14.65 Selecting previously unselected package libgraphite2-3:arm64.
+#10 14.65 Preparing to unpack .../39-libgraphite2-3_1.3.14-1+deb12u1_arm64.deb ...
+#10 14.65 Unpacking libgraphite2-3:arm64 (1.3.14-1+deb12u1) ...
+#10 14.67 Selecting previously unselected package libharfbuzz0b:arm64.
+#10 14.67 Preparing to unpack .../40-libharfbuzz0b_6.0.0+dfsg-3_arm64.deb ...
+#10 14.67 Unpacking libharfbuzz0b:arm64 (6.0.0+dfsg-3) ...
+#10 14.70 Selecting previously unselected package libimagequant0:arm64.
+#10 14.70 Preparing to unpack .../41-libimagequant0_2.17.0-1_arm64.deb ...
+#10 14.70 Unpacking libimagequant0:arm64 (2.17.0-1) ...
+#10 14.72 Selecting previously unselected package libjbig0:arm64.
+#10 14.72 Preparing to unpack .../42-libjbig0_2.1-6.1_arm64.deb ...
+#10 14.72 Unpacking libjbig0:arm64 (2.1-6.1) ...
+#10 14.73 Selecting previously unselected package libjpeg62-turbo:arm64.
+#10 14.73 Preparing to unpack .../43-libjpeg62-turbo_1%3a2.1.5-2_arm64.deb ...
+#10 14.73 Unpacking libjpeg62-turbo:arm64 (1:2.1.5-2) ...
+#10 14.77 Selecting previously unselected package liblcms2-2:arm64.
+#10 14.77 Preparing to unpack .../44-liblcms2-2_2.14-2+deb12u1_arm64.deb ...
+#10 14.78 Unpacking liblcms2-2:arm64 (2.14-2+deb12u1) ...
+#10 14.79 Selecting previously unselected package libopenjp2-7:arm64.
+#10 14.79 Preparing to unpack .../45-libopenjp2-7_2.5.0-2+deb12u3_arm64.deb ...
+#10 14.79 Unpacking libopenjp2-7:arm64 (2.5.0-2+deb12u3) ...
+#10 14.81 Selecting previously unselected package liblerc4:arm64.
+#10 14.81 Preparing to unpack .../46-liblerc4_4.0.0+ds-2_arm64.deb ...
+#10 14.81 Unpacking liblerc4:arm64 (4.0.0+ds-2) ...
+#10 14.82 Selecting previously unselected package libwebp7:arm64.
+#10 14.82 Preparing to unpack .../47-libwebp7_1.2.4-0.2+deb12u1_arm64.deb ...
+#10 14.82 Unpacking libwebp7:arm64 (1.2.4-0.2+deb12u1) ...
+#10 14.84 Selecting previously unselected package libtiff6:arm64.
+#10 14.84 Preparing to unpack .../48-libtiff6_4.5.0-6+deb12u4_arm64.deb ...
+#10 14.84 Unpacking libtiff6:arm64 (4.5.0-6+deb12u4) ...
+#10 14.86 Selecting previously unselected package libwebpmux3:arm64.
+#10 14.86 Preparing to unpack .../49-libwebpmux3_1.2.4-0.2+deb12u1_arm64.deb ...
+#10 14.86 Unpacking libwebpmux3:arm64 (1.2.4-0.2+deb12u1) ...
+#10 14.87 Selecting previously unselected package liblept5:arm64.
+#10 14.87 Preparing to unpack .../50-liblept5_1.82.0-3+b3_arm64.deb ...
+#10 14.87 Unpacking liblept5:arm64 (1.82.0-3+b3) ...
+#10 14.92 Selecting previously unselected package libthai-data.
+#10 14.92 Preparing to unpack .../51-libthai-data_0.1.29-1_all.deb ...
+#10 14.92 Unpacking libthai-data (0.1.29-1) ...
+#10 14.94 Selecting previously unselected package libthai0:arm64.
+#10 14.94 Preparing to unpack .../52-libthai0_0.1.29-1_arm64.deb ...
+#10 14.94 Unpacking libthai0:arm64 (0.1.29-1) ...
+#10 14.95 Selecting previously unselected package libpango-1.0-0:arm64.
+#10 14.95 Preparing to unpack .../53-libpango-1.0-0_1.50.12+ds-1_arm64.deb ...
+#10 14.95 Unpacking libpango-1.0-0:arm64 (1.50.12+ds-1) ...
+#10 14.97 Selecting previously unselected package libpangoft2-1.0-0:arm64.
+#10 14.97 Preparing to unpack .../54-libpangoft2-1.0-0_1.50.12+ds-1_arm64.deb ...
+#10 14.97 Unpacking libpangoft2-1.0-0:arm64 (1.50.12+ds-1) ...
+#10 14.98 Selecting previously unselected package libpangocairo-1.0-0:arm64.
+#10 14.98 Preparing to unpack .../55-libpangocairo-1.0-0_1.50.12+ds-1_arm64.deb ...
+#10 14.98 Unpacking libpangocairo-1.0-0:arm64 (1.50.12+ds-1) ...
+#10 14.99 Selecting previously unselected package libraqm0:arm64.
+#10 14.99 Preparing to unpack .../56-libraqm0_0.7.0-4.1_arm64.deb ...
+#10 14.99 Unpacking libraqm0:arm64 (0.7.0-4.1) ...
+#10 15.00 Selecting previously unselected package libtesseract5:arm64.
+#10 15.00 Preparing to unpack .../57-libtesseract5_5.3.0-2_arm64.deb ...
+#10 15.00 Unpacking libtesseract5:arm64 (5.3.0-2) ...
+#10 15.06 Selecting previously unselected package libwebpdemux2:arm64.
+#10 15.06 Preparing to unpack .../58-libwebpdemux2_1.2.4-0.2+deb12u1_arm64.deb ...
+#10 15.06 Unpacking libwebpdemux2:arm64 (1.2.4-0.2+deb12u1) ...
+#10 15.07 Selecting previously unselected package python3-pil:arm64.
+#10 15.07 Preparing to unpack .../59-python3-pil_9.4.0-1.1+deb12u1_arm64.deb ...
+#10 15.07 Unpacking python3-pil:arm64 (9.4.0-1.1+deb12u1) ...
+#10 15.10 Selecting previously unselected package tesseract-ocr-eng.
+#10 15.10 Preparing to unpack .../60-tesseract-ocr-eng_1%3a4.1.0-2_all.deb ...
+#10 15.11 Unpacking tesseract-ocr-eng (1:4.1.0-2) ...
+#10 15.17 Selecting previously unselected package tesseract-ocr-osd.
+#10 15.17 Preparing to unpack .../61-tesseract-ocr-osd_1%3a4.1.0-2_all.deb ...
+#10 15.17 Unpacking tesseract-ocr-osd (1:4.1.0-2) ...
+#10 15.31 Selecting previously unselected package tesseract-ocr.
+#10 15.31 Preparing to unpack .../62-tesseract-ocr_5.3.0-2_arm64.deb ...
+#10 15.31 Unpacking tesseract-ocr (5.3.0-2) ...
+#10 15.34 Selecting previously unselected package tesseract-ocr-chi-sim.
+#10 15.34 Preparing to unpack .../63-tesseract-ocr-chi-sim_1%3a4.1.0-2_all.deb ...
+#10 15.34 Unpacking tesseract-ocr-chi-sim (1:4.1.0-2) ...
+#10 15.41 Setting up media-types (10.0.0) ...
+#10 15.41 Setting up libgraphite2-3:arm64 (1.3.14-1+deb12u1) ...
+#10 15.42 Setting up liblcms2-2:arm64 (2.14-2+deb12u1) ...
+#10 15.42 Setting up libpixman-1-0:arm64 (0.42.2-1) ...
+#10 15.42 Setting up libxau6:arm64 (1:1.0.9-1) ...
+#10 15.42 Setting up libkeyutils1:arm64 (1.6.3-2) ...
+#10 15.43 Setting up libpsl5:arm64 (0.21.2-1) ...
+#10 15.43 Setting up libicu72:arm64 (72.1-3+deb12u1) ...
+#10 15.43 Setting up liblerc4:arm64 (4.0.0+ds-2) ...
+#10 15.44 Setting up libdatrie1:arm64 (0.2.13-2+b1) ...
+#10 15.44 Setting up libglib2.0-0:arm64 (2.74.6-2+deb12u9) ...
+#10 15.45 No schema files found: doing nothing.
+#10 15.45 Setting up libtirpc-common (1.3.3+ds-1) ...
+#10 15.45 Setting up libbrotli1:arm64 (1.0.9-2+b6) ...
+#10 15.46 Setting up libsqlite3-0:arm64 (3.40.1-2+deb12u2) ...
+#10 15.46 Setting up libnghttp2-14:arm64 (1.52.0-1+deb12u3) ...
+#10 15.46 Setting up libdeflate0:arm64 (1.14-1) ...
+#10 15.47 Setting up tesseract-ocr-eng (1:4.1.0-2) ...
+#10 15.47 Setting up libgomp1:arm64 (12.2.0-14+deb12u1) ...
+#10 15.47 Setting up libjbig0:arm64 (2.1-6.1) ...
+#10 15.47 Setting up libkrb5support0:arm64 (1.20.1-2+deb12u5) ...
+#10 15.48 Setting up libsasl2-modules-db:arm64 (2.1.28+dfsg-10) ...
+#10 15.48 Setting up perl-modules-5.36 (5.36.0-7+deb12u4) ...
+#10 15.48 Setting up libjpeg62-turbo:arm64 (1:2.1.5-2) ...
+#10 15.49 Setting up libx11-data (2:1.8.4-2+deb12u2) ...
+#10 15.49 Setting up librtmp1:arm64 (2.4+20151223.gitfa8646d.1-2+b2) ...
+#10 15.49 Setting up libfribidi0:arm64 (1.0.8-2.1) ...
+#10 15.49 Setting up libimagequant0:arm64 (2.17.0-1) ...
+#10 15.50 Setting up libpng16-16:arm64 (1.6.39-2+deb12u6) ...
+#10 15.50 Setting up fonts-dejavu-core (2.37-6) ...
+#10 15.51 Setting up libncursesw6:arm64 (6.4-4) ...
+#10 15.52 Setting up libk5crypto3:arm64 (1.20.1-2+deb12u5) ...
+#10 15.52 Setting up libsasl2-2:arm64 (2.1.28+dfsg-10) ...
+#10 15.52 Setting up libwebp7:arm64 (1.2.4-0.2+deb12u1) ...
+#10 15.53 Setting up libgif7:arm64 (5.2.1-2.5+deb12u1) ...
+#10 15.53 Setting up tesseract-ocr-chi-sim (1:4.1.0-2) ...
+#10 15.53 Setting up libtiff6:arm64 (4.5.0-6+deb12u4) ...
+#10 15.54 Setting up libopenjp2-7:arm64 (2.5.0-2+deb12u3) ...
+#10 15.54 Setting up libthai-data (0.1.29-1) ...
+#10 15.54 Setting up libssh2-1:arm64 (1.10.0-3+deb12u1) ...
+#10 15.55 Setting up libkrb5-3:arm64 (1.20.1-2+deb12u5) ...
+#10 15.55 Setting up tesseract-ocr-osd (1:4.1.0-2) ...
+#10 15.55 Setting up openssl (3.0.22-1~deb12u1) ...
+#10 15.56 Setting up libwebpmux3:arm64 (1.2.4-0.2+deb12u1) ...
+#10 15.56 Setting up libbsd0:arm64 (0.11.7-2) ...
+#10 15.56 Setting up readline-common (8.2-1.3) ...
+#10 15.57 Setting up libxml2:arm64 (2.9.14+dfsg-1.3~deb12u6) ...
+#10 15.58 Setting up libgdbm6:arm64 (1.23-3) ...
+#10 15.58 Setting up libxdmcp6:arm64 (1:1.1.2-3) ...
+#10 15.59 Setting up libxcb1:arm64 (1.15-1) ...
+#10 15.59 Setting up libarchive13:arm64 (3.6.2-1+deb12u5) ...
+#10 15.59 Setting up libxcb-render0:arm64 (1.15-1) ...
+#10 15.60 Setting up fontconfig-config (2.14.1-4) ...
+#10 15.62 debconf: unable to initialize frontend: Dialog
+#10 15.62 debconf: (TERM is not set, so the dialog frontend is not usable.)
+#10 15.62 debconf: falling back to frontend: Readline
+#10 15.62 debconf: unable to initialize frontend: Readline
+#10 15.62 debconf: (This frontend requires a controlling tty.)
+#10 15.62 debconf: falling back to frontend: Teletype
+#10 15.67 Setting up libwebpdemux2:arm64 (1.2.4-0.2+deb12u1) ...
+#10 15.67 Setting up libreadline8:arm64 (8.2-1.3) ...
+#10 15.68 Setting up libxcb-shm0:arm64 (1.15-1) ...
+#10 15.68 Setting up libldap-2.5-0:arm64 (2.5.13+dfsg-5) ...
+#10 15.68 Setting up liblept5:arm64 (1.82.0-3+b3) ...
+#10 15.69 Setting up libthai0:arm64 (0.1.29-1) ...
+#10 15.69 Setting up ca-certificates (20250419~deb12u1) ...
+#10 15.71 debconf: unable to initialize frontend: Dialog
+#10 15.71 debconf: (TERM is not set, so the dialog frontend is not usable.)
+#10 15.71 debconf: falling back to frontend: Readline
+#10 15.72 debconf: unable to initialize frontend: Readline
+#10 15.72 debconf: (This frontend requires a controlling tty.)
+#10 15.72 debconf: falling back to frontend: Teletype
+#10 15.84 Updating certificates in /etc/ssl/certs...
+#10 16.01 150 added, 0 removed; done.
+#10 16.02 Setting up libfreetype6:arm64 (2.12.1+dfsg-5+deb12u4) ...
+#10 16.03 Setting up libgssapi-krb5-2:arm64 (1.20.1-2+deb12u5) ...
+#10 16.03 Setting up libgdbm-compat4:arm64 (1.23-3) ...
+#10 16.04 Setting up libcurl4:arm64 (7.88.1-10+deb12u15) ...
+#10 16.04 Setting up libx11-6:arm64 (2:1.8.4-2+deb12u2) ...
+#10 16.04 Setting up libharfbuzz0b:arm64 (6.0.0+dfsg-3) ...
+#10 16.05 Setting up libfontconfig1:arm64 (2.14.1-4) ...
+#10 16.05 Setting up libperl5.36:arm64 (5.36.0-7+deb12u4) ...
+#10 16.05 Setting up libtirpc3:arm64 (1.3.3+ds-1) ...
+#10 16.06 Setting up fontconfig (2.14.1-4) ...
+#10 16.06 Regenerating fonts cache... done.
+#10 18.08 Setting up libxrender1:arm64 (1:0.9.10-1.1) ...
+#10 18.09 Setting up libpango-1.0-0:arm64 (1.50.12+ds-1) ...
+#10 18.10 Setting up libxext6:arm64 (2:1.3.4-1+b1) ...
+#10 18.10 Setting up libcairo2:arm64 (1.16.0-7) ...
+#10 18.11 Setting up perl (5.36.0-7+deb12u4) ...
+#10 18.12 Setting up libraqm0:arm64 (0.7.0-4.1) ...
+#10 18.12 Setting up libtesseract5:arm64 (5.3.0-2) ...
+#10 18.13 Setting up libnsl2:arm64 (1.3.0-2) ...
+#10 18.13 Setting up libpangoft2-1.0-0:arm64 (1.50.12+ds-1) ...
+#10 18.14 Setting up mailcap (3.70+nmu1) ...
+#10 18.15 Setting up libpangocairo-1.0-0:arm64 (1.50.12+ds-1) ...
+#10 18.15 Setting up mime-support (3.66) ...
+#10 18.16 Setting up libpython3.11-stdlib:arm64 (3.11.2-6+deb12u9) ...
+#10 18.16 Setting up tesseract-ocr (5.3.0-2) ...
+#10 18.16 Setting up libpython3-stdlib:arm64 (3.11.2-1+b1) ...
+#10 18.17 Setting up python3.11 (3.11.2-6+deb12u9) ...
+#10 18.43 Setting up python3 (3.11.2-1+b1) ...
+#10 18.43 running python rtupdate hooks for python3.11...
+#10 18.43 running python post-rtupdate hooks for python3.11...
+#10 18.46 Setting up python3-pil:arm64 (9.4.0-1.1+deb12u1) ...
+#10 18.56 Processing triggers for libc-bin (2.36-9+deb12u13) ...
+#10 18.56 Processing triggers for ca-certificates (20250419~deb12u1) ...
+#10 18.57 Updating certificates in /etc/ssl/certs...
+#10 18.69 0 added, 0 removed; done.
+#10 18.69 Running hooks in /etc/ca-certificates/update.d...
+#10 18.70 done.
+#10 DONE 18.9s
+
+#11 [stage-1 3/7] COPY --from=build /media-sandbox /usr/local/bin/media-sandbox
+#11 DONE 0.0s
+
+#12 [stage-1 4/7] COPY tools/media/server.mjs /app/server.mjs
+#12 DONE 0.0s
+
+#13 [stage-1 5/7] COPY tools/media/import-validate.py /usr/local/lib/yoyo/import-validate.py
+#13 DONE 0.0s
+
+#14 [stage-1 6/7] COPY tools/media/image-ocr.py /usr/local/lib/yoyo/image-ocr.py
+#14 DONE 0.0s
+
+#15 [stage-1 7/7] WORKDIR /app
+#15 DONE 0.0s
+
+#16 exporting to image
+#16 exporting layers
+#16 exporting layers 3.4s done
+#16 exporting manifest sha256:8d06253b0f706d6af0fa1f6b1bceb839659aacd3038ba96ae7796b33cb156e58 done
+#16 exporting config sha256:8bc007247a7734fa6558cedf9adbca12d1ae0ea75fb912c63c77c91e59f1d705 done
+#16 exporting attestation manifest sha256:edabff42d05d5413a581e28c5bce8e38432a6d95aac44543955eb99e11d56cef done
+#16 exporting manifest list sha256:e28d625f679d08e1b396dca4c9d2955e44acfff06861941ab54a1d0564bfafd9 done
+#16 naming to docker.io/library/yoyo-import-parser-ocr-local:1.0.0 done
+#16 unpacking to docker.io/library/yoyo-import-parser-ocr-local:1.0.0
+#16 unpacking to docker.io/library/yoyo-import-parser-ocr-local:1.0.0 0.7s done
+#16 DONE 4.2s
+
+#17 resolving provenance for metadata file
+#17 DONE 0.0s
+ Image yoyo-import-parser-ocr-local:1.0.0 Built 
+ Network yoyo-s7-ocr-tests_default Creating 
+ Network yoyo-s7-ocr-tests_default Created 
+ Volume yoyo-s7-ocr-tests_scratch Creating 
+ Volume yoyo-s7-ocr-tests_scratch Created 
+ Volume yoyo-s7-ocr-tests_objects Creating 
+ Volume yoyo-s7-ocr-tests_objects Created 
+ Container yoyo-s7-ocr-tests-media-executor-1 Creating 
+ Container yoyo-s7-ocr-tests-storage-1 Creating 
+ Container yoyo-s7-ocr-tests-media-executor-1 Created 
+ Container yoyo-s7-ocr-tests-storage-1 Created 
+ Container yoyo-s7-ocr-tests-storage-1 Starting 
+ Container yoyo-s7-ocr-tests-media-executor-1 Starting 
+ Container yoyo-s7-ocr-tests-media-executor-1 Started 
+ Container yoyo-s7-ocr-tests-storage-1 Started 
+ Container yoyo-s7-ocr-tests-media-executor-1 Waiting 
+ Container yoyo-s7-ocr-tests-storage-1 Waiting 
+ Container yoyo-s7-ocr-tests-media-executor-1 Healthy 
+ Container yoyo-s7-ocr-tests-storage-1 Healthy 
+Private storage ready.
+Applied 001-foundation.sql
+Applied 002-invitations.sql
+Applied 003-outbox-composite-unique.sql
+Applied 004-files.sql
+Applied 005-assets.sql
+Applied 006-media.sql
+Applied 007-s2-contract-fields.sql
+Applied 008-s2-governance.sql
+Applied 009-collection-runtime.sql
+Applied 010-source-evidence.sql
+Applied 011-ai-gateway.sql
+Applied 012-ai-requests.sql
+Applied 013-topics.sql
+Applied 014-topic-observation-binding.sql
+Applied 015-generated-briefs.sql
+Applied 016-frozen-revision-immutability.sql
+Applied 017-graphic-deliverables.sql
+Applied 018-content-production-metadata.sql
+Applied 019-content-reviews.sql
+Applied 020-content-cancellation.sql
+Applied 021-export-packages.sql
+Applied 022-publications.sql
+Applied 023-published-work-items.sql
+Applied 024-publication-changes.sql
+Applied 025-independent-notes-files.sql
+Applied 026-retire-cancelled-workflows.sql
+Applied 027-import-batches.sql
+Applied 028-metric-confirmation.sql
+Applied 029-metric-revert-provenance.sql
+Applied 030-metric-calculations.sql
+Applied 031-import-derived-invalidation.sql
+Applied 032-derived-metric-dictionary.sql
+Applied 033-current-calculation-fingerprint.sql
+Applied 034-reports-and-strategies.sql
+Applied 035-feedback.sql
+Applied 036-source-organization.sql
+Applied 037-screenshot-imports.sql
+{"event":"http.request","request_id":"8df8e02d-b3b9-4253-8b9e-54a9c7062cfd","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"265d825b-7d12-487d-9860-fc8d7fb95de8","method":"POST","path":"/api/v1/setup","status":201,"duration_ms":28}
+{"event":"http.request","request_id":"4e696079-f108-42ae-8703-8bb74daae799","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"8c3eee94-3075-43a3-94ca-db150ea2bc91","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":20}
+{"event":"http.request","request_id":"5393e83d-7f80-4230-ada8-5a49054e2e89","method":"GET","path":"/api/v1/me","status":200,"duration_ms":83}
+{"event":"http.request","request_id":"0e15f556-c9ea-4abe-8fdf-9bcee6a9a6f5","method":"POST","path":"/api/v1/accounts","status":201,"duration_ms":10}
+{"event":"http.request","request_id":"b74c9b1c-9bf8-4a11-970e-2aaa91a27eac","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":10}
+{"event":"http.request","request_id":"d50f1f5b-639e-487e-bb76-ce835205f9e3","method":"POST","path":"/api/v1/uploads/475a50e0-fe50-47dc-95b3-cc2bd806f2f4/parts","status":200,"duration_ms":6}
+{"event":"http.request","request_id":"fcb26525-e1b1-4025-bf96-ca8c1ed761f9","method":"PUT","path":"/api/v1/uploads/475a50e0-fe50-47dc-95b3-cc2bd806f2f4/parts/1","status":200,"duration_ms":7595}
+{"event":"http.request","request_id":"014735a4-ae2d-4cc6-a113-77dd58731928","method":"POST","path":"/api/v1/uploads/475a50e0-fe50-47dc-95b3-cc2bd806f2f4/complete","status":200,"duration_ms":42}
+{"event":"http.request","request_id":"c500172a-cd15-4b96-9a14-22573ece7d8f","method":"GET","path":"/api/v1/files/23122eb2-8512-4b2f-afd9-bcbf5781e54d/download","status":409,"duration_ms":6}
+{"event":"http.request","request_id":"b2668d72-c3cf-4a9e-9872-790414c55de8","method":"GET","path":"/api/v1/files/23122eb2-8512-4b2f-afd9-bcbf5781e54d/download","status":200,"duration_ms":7}
+{"event":"http.request","request_id":"84abd72d-245b-41b1-9135-2b194e91de47","method":"GET","path":"/api/v1/files/23122eb2-8512-4b2f-afd9-bcbf5781e54d/preview","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"897fb307-2076-4c8d-8b51-f0c2c892ff0f","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":7}
+{"event":"http.request","request_id":"9776811e-d98a-4ac5-a841-050773a8cadf","method":"POST","path":"/api/v1/uploads/a2f067f5-fd3c-4c6d-a226-b949c7b57aa2/parts","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"e71b5cf9-705c-4e09-ba8d-9734fb37e4af","method":"PUT","path":"/api/v1/uploads/a2f067f5-fd3c-4c6d-a226-b949c7b57aa2/parts/1","status":200,"duration_ms":6}
+{"event":"http.request","request_id":"66297633-f24d-48f9-ac79-8b2c9ca6fdb6","method":"POST","path":"/api/v1/uploads/a2f067f5-fd3c-4c6d-a226-b949c7b57aa2/complete","status":200,"duration_ms":9}
+{"event":"http.request","request_id":"635cd00c-8b7d-46b0-8ac6-589fe6cc7746","method":"GET","path":"/api/v1/files/086a1b7c-2e63-4c02-a62f-7e8586dedb6b/download","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"77ae87d9-6e8a-4f0a-a9b8-9f35a5497583","method":"GET","path":"/api/v1/files/086a1b7c-2e63-4c02-a62f-7e8586dedb6b/preview","status":409,"duration_ms":2}
+{"event":"http.request","request_id":"33cbb176-9b1f-42f0-9bfe-f72209a87b9d","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":5}
+{"event":"http.request","request_id":"79f72705-9854-4bec-93b9-dd4cf94f6a46","method":"POST","path":"/api/v1/uploads/5469b80a-2232-4f72-a66c-0a831d12373d/parts","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"8f226e33-44c9-4840-a93f-ffb73fd4f662","method":"PUT","path":"/api/v1/uploads/5469b80a-2232-4f72-a66c-0a831d12373d/parts/1","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"3e9d2053-a8b4-4b40-b30e-1f0520b2ca8c","method":"POST","path":"/api/v1/uploads/5469b80a-2232-4f72-a66c-0a831d12373d/complete","status":200,"duration_ms":8}
+{"event":"http.request","request_id":"9d623a94-1db5-4945-8dc8-c8ad2474bec4","method":"GET","path":"/api/v1/files/b948022c-89cc-4f73-bfb6-95ea5745efe6/download","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"88e28ab4-ba95-4d36-b67f-14dc1b82b291","method":"GET","path":"/api/v1/files/b948022c-89cc-4f73-bfb6-95ea5745efe6/preview","status":409,"duration_ms":3}
+✔ 导入PNG/CSV/XLSX通过真实隔离解析，哈希原件/私有签名与表格禁预览保留 (8644.113291ms)
+{"event":"http.request","request_id":"3fa335ad-6c2f-4da3-90ed-359e79e081c1","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"37a7eed4-a97c-4ace-96af-7483635f6743","method":"POST","path":"/api/v1/setup","status":201,"duration_ms":27}
+{"event":"http.request","request_id":"b819b32c-682e-4cd8-a81a-c848a7d33433","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":0}
+{"event":"http.request","request_id":"152bc7ef-3f56-4dbe-a33f-79da38ef5e01","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":22}
+{"event":"http.request","request_id":"bdee16c9-8dc3-4c38-89e8-dac2e3c49426","method":"GET","path":"/api/v1/me","status":200,"duration_ms":10}
+{"event":"http.request","request_id":"d12dee37-5226-4ef9-977d-b59d018b779b","method":"POST","path":"/api/v1/accounts","status":201,"duration_ms":5}
+{"event":"http.request","request_id":"631b363b-0705-4380-96b5-adad5a39206c","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":7}
+{"event":"http.request","request_id":"266c6e60-ef3b-4d40-a11c-3e8a60ba63f8","method":"POST","path":"/api/v1/uploads/1fde9dd1-0d01-41a8-b478-2a56a4f7cd3f/parts","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"b4ecb46f-81b1-4e51-ae7f-c5525f077fcf","method":"PUT","path":"/api/v1/uploads/1fde9dd1-0d01-41a8-b478-2a56a4f7cd3f/parts/1","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"7f069698-f644-4503-abbf-55e83ca70ccd","method":"POST","path":"/api/v1/uploads/1fde9dd1-0d01-41a8-b478-2a56a4f7cd3f/complete","status":200,"duration_ms":8}
+{"event":"http.request","request_id":"f71e415f-0c01-481e-af32-79b5f52ab70d","method":"POST","path":"/api/v1/accounts","status":201,"duration_ms":7}
+{"event":"http.request","request_id":"297e6965-492a-4bac-82d9-c13bd6f4a685","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":8}
+{"event":"http.request","request_id":"36c58b8a-d883-4e8e-a86c-1096fb8154cd","method":"POST","path":"/api/v1/uploads/6eacdf1f-9b08-4929-aa63-63b2c1bd3a16/parts","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"9639eba2-616a-45eb-b400-68f1515e3a80","method":"PUT","path":"/api/v1/uploads/6eacdf1f-9b08-4929-aa63-63b2c1bd3a16/parts/1","status":200,"duration_ms":6}
+{"event":"http.request","request_id":"0b7066c2-640f-430a-9f77-a294bb8ebcec","method":"POST","path":"/api/v1/uploads/6eacdf1f-9b08-4929-aa63-63b2c1bd3a16/complete","status":200,"duration_ms":9}
+{"event":"http.request","request_id":"0bcc95b9-51f7-401d-a0ba-898d327fe175","method":"POST","path":"/api/v1/uploads","status":422,"duration_ms":4}
+{"event":"http.request","request_id":"c60954f1-1c78-492d-8ce5-2cc86d327c79","method":"POST","path":"/api/v1/uploads","status":422,"duration_ms":3}
+{"event":"http.request","request_id":"9043dbad-97ad-493d-b202-4e4130a62bfd","method":"POST","path":"/api/v1/uploads","status":422,"duration_ms":3}
+{"event":"http.request","request_id":"6b09417a-46fa-4480-9ec5-d5bc4925dc1d","method":"POST","path":"/api/v1/uploads","status":422,"duration_ms":3}
+{"event":"http.request","request_id":"eca6d650-5f53-431b-9af0-4309304b1afd","method":"POST","path":"/api/v1/uploads","status":422,"duration_ms":3}
+{"event":"http.request","request_id":"fca311ca-dce1-403e-82c0-d4dd4ef2c06e","method":"GET","path":"/api/v1/files/48c92c80-c33f-497c-be08-6a7bc66104b4/download","status":403,"duration_ms":1}
+{"event":"http.request","request_id":"e022f01f-672a-448f-b2cb-f2647c71b3d0","method":"GET","path":"/api/v1/files/48c92c80-c33f-497c-be08-6a7bc66104b4/preview","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"9b6093a2-32a5-41f7-be02-91624987e181","method":"POST","path":"/api/v1/uploads","status":403,"duration_ms":2}
+{"event":"http.request","request_id":"7b3bc063-90be-4e60-b0f2-4ee8c9f071bf","method":"GET","path":"/api/v1/files/48c92c80-c33f-497c-be08-6a7bc66104b4/download","status":403,"duration_ms":1}
+{"event":"http.request","request_id":"d95b0788-4e97-4a98-b129-446f91a510b8","method":"GET","path":"/api/v1/files/48c92c80-c33f-497c-be08-6a7bc66104b4/preview","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"0d41a4e3-6deb-43b1-9a3e-af18b588eda6","method":"POST","path":"/api/v1/uploads","status":403,"duration_ms":2}
+{"event":"http.request","request_id":"76151d5e-8bd7-4aff-a27d-11b06f46fd83","method":"GET","path":"/api/v1/files/48c92c80-c33f-497c-be08-6a7bc66104b4/preview","status":404,"duration_ms":1}
+{"event":"http.request","request_id":"6e80f8e2-2405-4328-af61-173eead8a0c5","method":"GET","path":"/api/v1/files/48c92c80-c33f-497c-be08-6a7bc66104b4/download","status":404,"duration_ms":1}
+✔ 账号/目的隔离、角色矩阵、旧用途和旧文件ID拒绝，hash不跨账号复用 (458.940375ms)
+{"event":"http.request","request_id":"d0dc028c-296f-4143-aec0-308232dbc0a1","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"910fe73d-c5d8-4435-bbd1-4b05e5797bcb","method":"POST","path":"/api/v1/setup","status":201,"duration_ms":22}
+{"event":"http.request","request_id":"67ef3acf-9a45-4c4e-9f74-9b3fa45aeb3e","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":0}
+{"event":"http.request","request_id":"39fb43fc-a58c-4679-84d7-251abc765592","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":19}
+{"event":"http.request","request_id":"df49caf3-ec1f-4095-9af9-cd05fdfb0fef","method":"GET","path":"/api/v1/me","status":200,"duration_ms":9}
+{"event":"http.request","request_id":"8fd979d4-621d-4471-9594-6fcb645e6037","method":"POST","path":"/api/v1/accounts","status":201,"duration_ms":5}
+{"event":"http.request","request_id":"31f4951e-59ba-47f5-83e9-4d69fc6467f0","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":12}
+{"event":"http.request","request_id":"23fea6b5-9330-40fc-9054-1bf6d20361a9","method":"POST","path":"/api/v1/uploads/9154f81d-5731-49ba-badf-f98f4b299d5a/parts","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"460e1946-0e90-4ba2-83b1-21ab8d5fe3c4","method":"PUT","path":"/api/v1/uploads/9154f81d-5731-49ba-badf-f98f4b299d5a/parts/1","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"6c645007-08fc-44a4-b6d8-96597dacf5fc","method":"POST","path":"/api/v1/uploads/9154f81d-5731-49ba-badf-f98f4b299d5a/complete","status":200,"duration_ms":8}
+{"event":"http.request","request_id":"5c8d900d-0115-466c-bfa4-fb362499c9c1","method":"GET","path":"/api/v1/files/3990b258-1932-4eac-a481-03f37ca1fc74/download","status":409,"duration_ms":2}
+{"event":"http.request","request_id":"984ea0ef-0852-42ea-ab81-93cec71f4853","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":5}
+{"event":"http.request","request_id":"e8641c29-e6b4-4765-a839-7082d2a19eac","method":"POST","path":"/api/v1/uploads/0abe5dfd-6717-4fc6-8043-4a3ed38c5317/parts","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"07951342-4689-4f85-9928-26ad8dcfaa27","method":"PUT","path":"/api/v1/uploads/0abe5dfd-6717-4fc6-8043-4a3ed38c5317/parts/1","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"d9b81dd1-b00c-4805-b7ad-7ea89389d349","method":"POST","path":"/api/v1/uploads/0abe5dfd-6717-4fc6-8043-4a3ed38c5317/complete","status":200,"duration_ms":8}
+{"event":"http.request","request_id":"7eeb6bc9-b3b0-4176-b0e1-145ffd0b2552","method":"GET","path":"/api/v1/files/91978677-9014-4659-ad4a-82869ae2506f/download","status":409,"duration_ms":1}
+{"event":"http.request","request_id":"495a75a9-ea8c-40de-84f2-c13358cb164b","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":5}
+{"event":"http.request","request_id":"befaf547-7cf0-4e37-a29e-87286c2bb203","method":"POST","path":"/api/v1/uploads/2fa38262-d5af-47e9-8c34-747ea717191f/parts","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"b50621e1-a40c-4989-9ff5-17e0c43c6eaf","method":"PUT","path":"/api/v1/uploads/2fa38262-d5af-47e9-8c34-747ea717191f/parts/1","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"40209537-f777-438a-87d9-5a4715eaf8da","method":"POST","path":"/api/v1/uploads/2fa38262-d5af-47e9-8c34-747ea717191f/complete","status":200,"duration_ms":8}
+{"event":"http.request","request_id":"4aa1caac-c57d-466a-a05a-af112be940a5","method":"GET","path":"/api/v1/files/d8a17f7d-e4f0-4a82-8656-83f4976f0c2a/download","status":409,"duration_ms":1}
+{"event":"http.request","request_id":"5bea307e-e3d7-4a5d-9a13-09e6295f2001","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":5}
+{"event":"http.request","request_id":"96478bdb-bf0d-436d-800f-e12aaad882ba","method":"POST","path":"/api/v1/uploads/6e9a4982-9e7a-479e-bd2d-34014e6d98e7/parts","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"1f30d69b-661a-44a5-bd5e-3df3ba126ef6","method":"PUT","path":"/api/v1/uploads/6e9a4982-9e7a-479e-bd2d-34014e6d98e7/parts/1","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"dc793e39-25df-4393-a10d-5cfefc170244","method":"POST","path":"/api/v1/uploads/6e9a4982-9e7a-479e-bd2d-34014e6d98e7/complete","status":200,"duration_ms":8}
+{"event":"http.request","request_id":"5547b632-f254-48e8-b462-11932339a9b0","method":"GET","path":"/api/v1/files/9156edbf-8f7b-40a8-8b1c-6b8df84adef4/download","status":409,"duration_ms":2}
+{"event":"http.request","request_id":"5aca02b8-7870-4bef-a70b-de47738f359f","method":"POST","path":"/api/v1/uploads","status":422,"duration_ms":3}
+{"event":"http.request","request_id":"3c9ada88-f1a8-4fd2-a294-b13aa7bb2e93","method":"POST","path":"/api/v1/uploads","status":422,"duration_ms":3}
+{"event":"http.request","request_id":"c2f0b297-94aa-4a9d-a198-fedce2f94784","method":"POST","path":"/api/v1/uploads","status":422,"duration_ms":3}
+✔ 恶意PNG/公式CSV/宏或公式XLSX隔离，伪装/大小/MIME失败且不发签名 (355.16875ms)
+{"event":"http.request","request_id":"ea0597fb-b76a-45a3-9c10-09c20a024c56","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"0b5170be-aaad-446f-956b-8b3710c3d3a8","method":"POST","path":"/api/v1/setup","status":201,"duration_ms":27}
+{"event":"http.request","request_id":"27d2110e-8bf1-4fd5-aaa2-76c80e7fd802","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":0}
+{"event":"http.request","request_id":"d12ec907-9189-4d01-b123-af8ee3ea6d3f","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":22}
+{"event":"http.request","request_id":"bbc8f228-c72f-4fbe-814c-265c4b912446","method":"GET","path":"/api/v1/me","status":200,"duration_ms":9}
+{"event":"http.request","request_id":"ebda9dc0-3236-44d3-a764-4a9f6e7a859f","method":"POST","path":"/api/v1/accounts","status":201,"duration_ms":4}
+{"event":"http.request","request_id":"3b18b43a-dd3c-432b-a036-3bde7ff7e231","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":7}
+{"event":"http.request","request_id":"6e97d842-6f05-4796-bafe-0fa18d13328a","method":"POST","path":"/api/v1/uploads/185ae6e7-8353-4db9-8479-14239749b445/parts","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"63fb98fa-8cc7-4632-a20f-88b195ca6c29","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"7e6bc334-c9e8-42a9-b380-bc20cb6d9580","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":20}
+{"event":"http.request","request_id":"39c32b2a-e6ef-470d-93e5-3301b1e7fefe","method":"PUT","path":"/api/v1/uploads/185ae6e7-8353-4db9-8479-14239749b445/parts/1","status":422,"duration_ms":3}
+{"event":"http.request","request_id":"c4f0756c-d828-422a-9480-73ebd87225c4","method":"PUT","path":"/api/v1/uploads/185ae6e7-8353-4db9-8479-14239749b445/parts/1","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"a7aa3649-075f-48a6-92d9-7839013d2f2b","method":"PUT","path":"/api/v1/uploads/185ae6e7-8353-4db9-8479-14239749b445/parts/1","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"bd82b65c-e70c-446c-9490-11f07012e5fd","method":"GET","path":"/api/v1/uploads/185ae6e7-8353-4db9-8479-14239749b445","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"21af37ec-a8dc-40a3-9c9c-41421b2ffc8a","method":"POST","path":"/api/v1/uploads/185ae6e7-8353-4db9-8479-14239749b445/parts","status":409,"duration_ms":3}
+{"event":"http.request","request_id":"2460f766-1938-49d4-a6c9-515d56fd27ff","method":"POST","path":"/api/v1/uploads/185ae6e7-8353-4db9-8479-14239749b445/complete","status":422,"duration_ms":3}
+{"event":"http.request","request_id":"560482ca-5f6e-4b7f-b8b9-923301b3c1bb","method":"POST","path":"/api/v1/uploads/185ae6e7-8353-4db9-8479-14239749b445/complete","status":200,"duration_ms":9}
+{"event":"http.request","request_id":"7144624f-b782-4cd1-9501-86c09556d6ac","method":"POST","path":"/api/v1/uploads/185ae6e7-8353-4db9-8479-14239749b445/complete","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"d624dc9c-56e8-4bab-b57e-359a8ecf4cdf","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":6}
+{"event":"http.request","request_id":"b91ab63e-e725-4ca7-a522-9a6b2654016a","method":"POST","path":"/api/v1/uploads/12109acb-eb44-4c14-97c2-4c676fc95b17/parts","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"f017131a-9dea-4f00-adc4-6359a109c65f","method":"PUT","path":"/api/v1/uploads/12109acb-eb44-4c14-97c2-4c676fc95b17/parts/1","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"3ca4a772-f329-4197-abc7-a4f3aec8ff51","method":"POST","path":"/api/v1/uploads/12109acb-eb44-4c14-97c2-4c676fc95b17/complete","status":422,"duration_ms":6}
+{"event":"http.request","request_id":"43413c70-6e5f-4758-b740-a86345d79f46","method":"POST","path":"/api/v1/uploads/12109acb-eb44-4c14-97c2-4c676fc95b17/abort","status":200,"duration_ms":12}
+{"event":"http.request","request_id":"59871c87-bcdd-4b71-965f-8e4f1041d57e","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":6}
+{"event":"http.request","request_id":"8fc78e05-9d89-475e-b2f5-7f85bf25d0b3","method":"GET","path":"/api/v1/uploads/8668a37a-d3d3-432f-a9cc-39d2952cf3f0","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"cafc0bb2-2456-419e-8d97-a21f51460a38","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":5}
+{"event":"http.request","request_id":"e8442f22-1280-459d-a405-8bd6d852c3bc","method":"POST","path":"/api/v1/uploads/eae6c98c-dc88-4ed8-a1cb-9ed7b628c2a4/abort","status":200,"duration_ms":6}
+✔ 续传分片/登录恢复/幂等/校验/取消/过期保留，未完成文件不能下载 (243.375333ms)
+{"event":"http.request","request_id":"234519a8-ec0d-4020-9b45-7dc0d8f9f663","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"9a3e6f43-932a-4761-85c2-759af66a6585","method":"POST","path":"/api/v1/setup","status":201,"duration_ms":22}
+{"event":"http.request","request_id":"8488e22c-eeaf-4c12-ae89-81e05a339930","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"837ee51b-b48a-4104-876c-7564316eb70f","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":19}
+{"event":"http.request","request_id":"09c11fda-b0e6-49cd-bdcb-4320aacaca40","method":"GET","path":"/api/v1/me","status":200,"duration_ms":9}
+{"event":"http.request","request_id":"cdcd9887-c302-448c-bd80-a923d636b04e","method":"POST","path":"/api/v1/accounts","status":201,"duration_ms":4}
+{"event":"http.request","request_id":"6b92957b-a3d6-4dcd-935b-68a453e036fb","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":7}
+{"event":"http.request","request_id":"d46c296d-4de4-4fdf-a466-738d9c95cd02","method":"POST","path":"/api/v1/uploads/528d8523-bcb2-42b2-86f4-6cc15d70a6b8/parts","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"77b196c2-8e4a-4b28-9279-d4fae36c2eb1","method":"PUT","path":"/api/v1/uploads/528d8523-bcb2-42b2-86f4-6cc15d70a6b8/parts/1","status":200,"duration_ms":93}
+{"event":"http.request","request_id":"5d492f2c-9475-4a4c-bac6-dbf9c929fbcb","method":"POST","path":"/api/v1/uploads/528d8523-bcb2-42b2-86f4-6cc15d70a6b8/parts","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"94125459-bdc1-4a6a-99a3-fb525f878e60","method":"PUT","path":"/api/v1/uploads/528d8523-bcb2-42b2-86f4-6cc15d70a6b8/parts/2","status":200,"duration_ms":15}
+{"event":"http.request","request_id":"7f07a319-4da7-4d25-b700-b2a49d53e99a","method":"POST","path":"/api/v1/uploads/528d8523-bcb2-42b2-86f4-6cc15d70a6b8/complete","status":200,"duration_ms":46}
+{"event":"http.request","request_id":"2f123f48-156a-4982-b5e5-cde039972e15","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":5}
+{"event":"http.request","request_id":"fce3e23b-b511-4e15-94a3-ca8b7541efc0","method":"POST","path":"/api/v1/uploads/df25ea33-909c-4a73-bdc2-594a9ebb210f/parts","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"24ad8bdb-3e28-46d3-b587-4c0e729efb9e","method":"PUT","path":"/api/v1/uploads/df25ea33-909c-4a73-bdc2-594a9ebb210f/parts/1","status":200,"duration_ms":87}
+{"event":"http.request","request_id":"65634e95-837f-48ef-918d-59670e2f73b3","method":"POST","path":"/api/v1/uploads/df25ea33-909c-4a73-bdc2-594a9ebb210f/parts","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"da7faf6a-1af3-478e-bc72-cf1140a74bb2","method":"PUT","path":"/api/v1/uploads/df25ea33-909c-4a73-bdc2-594a9ebb210f/parts/2","status":200,"duration_ms":11}
+{"event":"http.request","request_id":"1141d599-4f65-4f6f-b17c-de109f843716","method":"POST","path":"/api/v1/uploads/df25ea33-909c-4a73-bdc2-594a9ebb210f/complete","status":200,"duration_ms":36}
+{"event":"http.request","request_id":"48559243-6700-477c-9b20-ae8d9e9f37bc","method":"GET","path":"/api/v1/files/0b76c528-2b07-4052-9758-c009dfb1a463/download","status":200,"duration_ms":27}
+{"event":"http.request","request_id":"109ea2e4-ffcf-4a22-82d2-766a8a69f109","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":6}
+{"event":"http.request","request_id":"2570df12-bce7-47b8-bf3c-56b92ab0d279","method":"POST","path":"/api/v1/uploads/401799ce-eca0-46c7-978d-d2998be0b7b9/parts","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"f36973c9-3f0c-428a-8ef8-f5f51bac2dbe","method":"PUT","path":"/api/v1/uploads/401799ce-eca0-46c7-978d-d2998be0b7b9/parts/1","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"7a469985-0283-4d1e-b1c1-05928821ae09","method":"POST","path":"/api/v1/uploads/401799ce-eca0-46c7-978d-d2998be0b7b9/complete","status":200,"duration_ms":7}
+{"event":"http.request","request_id":"fda0709e-b1d1-4847-9b4a-21a3e2c3574c","method":"GET","path":"/api/v1/files/54e9e7dc-2726-4abf-b46a-fd2aeb5436de/preview","status":409,"duration_ms":3}
+✔ 两分片CSV续传与同目的去重、撤销权限阻止解析提交 (841.93ms)
+{"event":"http.request","request_id":"03086c6f-eba3-4bd3-925d-f69794818164","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":9}
+{"event":"http.request","request_id":"32802009-0ae7-4cea-a876-2ab3a1f4de07","method":"POST","path":"/api/v1/setup","status":201,"duration_ms":36}
+{"event":"http.request","request_id":"27f0cafe-1fbc-43b7-9123-93c86938f43c","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"1cecaba9-e33c-4033-97bb-9761dc6fb74d","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":23}
+{"event":"http.request","request_id":"caff9028-ec7e-4f6a-aeed-950b6baebc89","method":"GET","path":"/api/v1/me","status":200,"duration_ms":83}
+{"event":"http.request","request_id":"66931bdf-2f16-4cf5-ac07-01ac815e03c0","method":"POST","path":"/api/v1/accounts","status":201,"duration_ms":11}
+{"event":"http.request","request_id":"86cc7719-e545-44ab-bd30-b501661c5ba1","method":"POST","path":"/api/v1/publications","status":201,"duration_ms":8}
+{"event":"http.request","request_id":"048784e4-83b3-4738-b08a-dadec125eafc","method":"GET","path":"/api/v1/imports/template","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"2e6abe65-5f66-45cb-8097-3bef28eda18d","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":17}
+{"event":"http.request","request_id":"c7010a2d-dccf-4e82-8bff-23ed66b9122d","method":"POST","path":"/api/v1/uploads/10a82ecd-ebc5-47a0-81d0-dbb1af236137/parts","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"52c519be-8ebb-4465-a081-12f0a0d18420","method":"PUT","path":"/api/v1/uploads/10a82ecd-ebc5-47a0-81d0-dbb1af236137/parts/1","status":200,"duration_ms":7}
+{"event":"http.request","request_id":"78838bef-9b24-4ee3-a322-8c497038b833","method":"POST","path":"/api/v1/uploads/10a82ecd-ebc5-47a0-81d0-dbb1af236137/complete","status":200,"duration_ms":10}
+{"event":"http.request","request_id":"6256d3e1-b591-4b29-8cb9-af4ee6e38c1d","method":"POST","path":"/api/v1/imports","status":202,"duration_ms":6}
+{"event":"http.request","request_id":"de88c33f-5e9d-4915-828c-d42f5a239c4d","method":"GET","path":"/api/v1/imports/1aa4890d-ea3b-4161-831e-8c5c0869e1bb/rows","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"7c085a9e-0967-48fd-9f7d-275cb9f7eeed","method":"PATCH","path":"/api/v1/import-rows/43aa3ffd-9ae2-4650-8eda-d88bf04b33f9","status":422,"duration_ms":5}
+{"event":"http.request","request_id":"83801ea7-7243-4f9b-9a01-d4646305af6c","method":"GET","path":"/api/v1/imports/template","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"30a85331-5bec-45a0-a89d-d2755e173c50","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":6}
+{"event":"http.request","request_id":"4a00c7b7-4b3f-4d62-ac54-28c6806b4907","method":"POST","path":"/api/v1/uploads/2b6883c8-952a-4440-9972-790d30e1562c/parts","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"8c2ec267-684a-4fc1-b121-0ce4dfdb492a","method":"PUT","path":"/api/v1/uploads/2b6883c8-952a-4440-9972-790d30e1562c/parts/1","status":200,"duration_ms":6}
+{"event":"http.request","request_id":"a16cdf97-33ec-4af2-829e-94816b33f34d","method":"POST","path":"/api/v1/uploads/2b6883c8-952a-4440-9972-790d30e1562c/complete","status":200,"duration_ms":9}
+{"event":"http.request","request_id":"b75f57e2-6bab-4687-9a29-ebc7a7da649e","method":"POST","path":"/api/v1/imports","status":202,"duration_ms":5}
+{"event":"http.request","request_id":"003bc96c-3299-4955-b940-df5b257ec43c","method":"GET","path":"/api/v1/imports/604d9401-5c64-4009-8aaa-393c14dac42d/rows","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"6bd77e62-241a-4b3f-b4c3-459e3708a264","method":"PATCH","path":"/api/v1/import-rows/fb036012-9fa9-4e7d-9aa8-09ea590105b7","status":422,"duration_ms":4}
+✔ 模板含中文说明，CSV/XLSX在实际隔离解析器提取，示例永久不可确认 (656.504541ms)
+{"event":"http.request","request_id":"ce343854-d706-4ae6-9652-d60be5c2b5bc","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":6}
+{"event":"http.request","request_id":"6b49e690-63b8-467a-a32b-0ef864089938","method":"POST","path":"/api/v1/uploads/870d262f-bd6b-4621-ae19-87075f5bf311/parts","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"8800c7b6-17f5-405d-9974-82678dad0e81","method":"PUT","path":"/api/v1/uploads/870d262f-bd6b-4621-ae19-87075f5bf311/parts/1","status":200,"duration_ms":6}
+{"event":"http.request","request_id":"5fb8b5ef-1580-4f46-b322-46b8666e1f6d","method":"POST","path":"/api/v1/uploads/870d262f-bd6b-4621-ae19-87075f5bf311/complete","status":200,"duration_ms":14}
+{"event":"http.request","request_id":"d0e7760d-6db6-4b77-911a-1dfef2c711c1","method":"POST","path":"/api/v1/imports","status":202,"duration_ms":5}
+{"event":"http.request","request_id":"ee64b6f5-d887-420b-8e37-8c16ffbc869a","method":"GET","path":"/api/v1/imports/36edb2c2-a7ff-4b18-b739-a2e297e3e164/rows","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"71c04c28-b6ce-42b2-b762-869c73decab4","method":"PATCH","path":"/api/v1/import-rows/12829ed9-a178-4cc2-a774-36b4adc54bc5","status":200,"duration_ms":6}
+{"event":"http.request","request_id":"6705e925-7813-401b-bfbc-f52bb7a6c039","method":"PATCH","path":"/api/v1/import-rows/12829ed9-a178-4cc2-a774-36b4adc54bc5","status":409,"duration_ms":4}
+✔ 字段映射异步解析且不猜身份，登记后更正，原值和更正历史保留 (98.856875ms)
+{"event":"http.request","request_id":"9517f291-1999-477e-b1ef-f95205529ab1","method":"POST","path":"/api/v1/imports","status":202,"duration_ms":6}
+{"event":"http.request","request_id":"df2eedcd-a382-4844-905a-66b2f16c65a8","method":"GET","path":"/api/v1/imports/e4d15843-802b-4cbe-89b8-e37b2051baee/rows","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"607fe1d5-be8a-4a03-93ed-da2a88c8a68a","method":"GET","path":"/api/v1/imports/559fcaeb-1c06-4ca8-9d69-cd0bf32a61d1","status":404,"duration_ms":1}
+{"event":"http.request","request_id":"9c706491-8798-4f53-871a-f6bc7c2b6363","method":"POST","path":"/api/v1/imports","status":403,"duration_ms":2}
+{"event":"http.request","request_id":"43063f8a-dec6-473d-91bb-5d39c7fb442a","method":"GET","path":"/api/v1/imports/e4d15843-802b-4cbe-89b8-e37b2051baee/rows","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"08b8ad2f-d25e-4966-ba6e-a2d9d46a8f56","method":"GET","path":"/api/v1/imports/e4d15843-802b-4cbe-89b8-e37b2051baee","status":404,"duration_ms":1}
+✔ 手工复用行模型，缺失不填零，未知单位/窗/主体/账号和示例隔离 (21.186166ms)
+✔ 十进制/约数解析、时间窗口和平台率边界 (0.418042ms)
+{"event":"http.request","request_id":"07979fda-4947-4212-b167-a8a6a5045aae","method":"POST","path":"/api/v1/imports","status":202,"duration_ms":5}
+{"event":"http.request","request_id":"43cc1e70-0dd4-417b-a023-5dcd6d691d6b","method":"GET","path":"/api/v1/imports/ac545737-88f1-42ff-b2e5-faf5fec8a266/rows","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"07bf6643-1afd-4d8a-8aa6-baa14e14b09a","method":"POST","path":"/api/v1/imports/ac545737-88f1-42ff-b2e5-faf5fec8a266/confirm","status":200,"duration_ms":8}
+{"event":"http.request","request_id":"adcaffcd-a6fb-4d96-a4c9-c5197a20665c","method":"POST","path":"/api/v1/imports","status":202,"duration_ms":5}
+{"event":"http.request","request_id":"99244ccf-2471-4e15-a226-e9490f875302","method":"POST","path":"/api/v1/imports","status":202,"duration_ms":9}
+{"event":"http.request","request_id":"37901458-8168-4d7f-90e9-b0d95ec5819b","method":"GET","path":"/api/v1/imports/bb5766ff-534a-4986-9e51-9c9df0f8b987/rows","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"66a878dc-e050-40a8-bce5-c48caeff2a0a","method":"GET","path":"/api/v1/imports/ad8d7063-d38e-4c05-b9a6-0b7aef38314a/rows","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"6f1e173e-7409-4241-9873-7f75c03fe3a8","method":"POST","path":"/api/v1/imports/bb5766ff-534a-4986-9e51-9c9df0f8b987/confirm","status":200,"duration_ms":7}
+{"event":"http.request","request_id":"1ee44c1c-048f-46c4-972b-fc84f61cf447","method":"POST","path":"/api/v1/imports/ad8d7063-d38e-4c05-b9a6-0b7aef38314a/confirm","status":200,"duration_ms":10}
+{"event":"http.request","request_id":"e2f5f9c6-4443-4088-ba1a-9f32e1533266","method":"POST","path":"/api/v1/imports","status":202,"duration_ms":4}
+{"event":"http.request","request_id":"5d3e67df-ab94-42ca-8593-681888c070c4","method":"GET","path":"/api/v1/imports/70eb45fb-771a-436e-b3a0-4363fda87e38/rows","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"cd68fb05-2024-4a15-93db-8a38153ddcf8","method":"POST","path":"/api/v1/imports/70eb45fb-771a-436e-b3a0-4363fda87e38/confirm","status":409,"duration_ms":4}
+{"event":"http.request","request_id":"779caddf-6f83-4a45-96cd-28b1d30e8a38","method":"POST","path":"/api/v1/imports/70eb45fb-771a-436e-b3a0-4363fda87e38/confirm","status":200,"duration_ms":6}
+{"event":"http.request","request_id":"65d5e5d2-6596-4636-805d-36d89fc16260","method":"POST","path":"/api/v1/imports","status":202,"duration_ms":4}
+{"event":"http.request","request_id":"da004b8d-a4a3-4f22-a0fb-655a03557260","method":"GET","path":"/api/v1/imports/f209c168-2347-4d37-bacf-71122514beba/rows","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"52bbc6e0-0aa7-4a80-9a39-b7b2b6f30e71","method":"POST","path":"/api/v1/imports/f209c168-2347-4d37-bacf-71122514beba/confirm","status":200,"duration_ms":8}
+{"event":"http.request","request_id":"07ff9e7e-6f02-460b-8fa4-8721eb42706e","method":"PATCH","path":"/api/v1/import-rows/a653d242-9937-4ed7-84ca-bccd1fa4d377","status":409,"duration_ms":3}
+✔ 所选合法行部分确认，重复同键同值并发复用观察与证据，异值必须显式处理 (79.884083ms)
+{"event":"http.request","request_id":"c0207a2d-779a-4940-a96f-7ec1120b2400","method":"POST","path":"/api/v1/imports","status":202,"duration_ms":5}
+{"event":"http.request","request_id":"6f308f76-7312-401d-9f2a-4d60e2cc1321","method":"GET","path":"/api/v1/imports/ae57dcf9-c988-499d-9c23-c19bf4cee0d0/rows","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"0e0438dd-eb69-4668-b3ba-bec5d601f8e8","method":"POST","path":"/api/v1/imports/ae57dcf9-c988-499d-9c23-c19bf4cee0d0/confirm","status":422,"duration_ms":5}
+{"event":"http.request","request_id":"4e5fb26b-aff6-43f0-ad02-0a1f6591609f","method":"GET","path":"/api/v1/imports/ae57dcf9-c988-499d-9c23-c19bf4cee0d0/rows","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"01835c48-f250-4def-a5a2-17d78a446b14","method":"POST","path":"/api/v1/imports/ae57dcf9-c988-499d-9c23-c19bf4cee0d0/confirm","status":422,"duration_ms":4}
+{"event":"http.request","request_id":"345a4146-4602-451d-a133-407e725db34d","method":"POST","path":"/api/v1/imports/ae57dcf9-c988-499d-9c23-c19bf4cee0d0/confirm","status":422,"duration_ms":3}
+{"event":"http.request","request_id":"d26b1e70-c3ca-484e-befd-d2fd2a577419","method":"POST","path":"/api/v1/imports/ae57dcf9-c988-499d-9c23-c19bf4cee0d0/confirm","status":200,"duration_ms":6}
+{"event":"http.request","request_id":"d8ad69af-0e50-4cf1-937e-b2d6f212567a","method":"POST","path":"/api/v1/imports/ae57dcf9-c988-499d-9c23-c19bf4cee0d0/confirm","status":409,"duration_ms":3}
+✔ 失败整批回滚；同文件不同值不是业务去重，选择必须属于批次和不能重复 (35.142375ms)
+{"event":"http.request","request_id":"2fb32753-ed49-4689-8e18-c72adf9b26d3","method":"POST","path":"/api/v1/imports","status":202,"duration_ms":4}
+{"event":"http.request","request_id":"bca1e5d2-df3f-4037-9f2b-867d060257d9","method":"GET","path":"/api/v1/imports/672782bf-edbc-4921-932c-b9698f6d56ca/rows","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"51ebf30f-f9f5-4244-8e2b-b96eb7cddd05","method":"POST","path":"/api/v1/imports/672782bf-edbc-4921-932c-b9698f6d56ca/confirm","status":200,"duration_ms":7}
+{"event":"http.request","request_id":"25879827-53b0-4767-bef2-f33426b251a5","method":"POST","path":"/api/v1/imports","status":202,"duration_ms":6}
+{"event":"http.request","request_id":"1a5d7bd9-074a-41de-9067-78c11a960e49","method":"GET","path":"/api/v1/imports/1b07a90b-99ba-458e-90e5-32218614d5ba/rows","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"df2c92c3-92ca-445a-b6ce-1569cdcbb378","method":"POST","path":"/api/v1/imports/1b07a90b-99ba-458e-90e5-32218614d5ba/confirm","status":200,"duration_ms":6}
+{"event":"http.request","request_id":"eaf65697-1312-4322-a043-76f644054f15","method":"POST","path":"/api/v1/imports/672782bf-edbc-4921-932c-b9698f6d56ca/revert","status":200,"duration_ms":7}
+{"event":"http.request","request_id":"cd788e4e-1d4b-4c05-af50-e029dd860b9b","method":"POST","path":"/api/v1/imports","status":202,"duration_ms":4}
+{"event":"http.request","request_id":"1fe2e1cf-468b-4710-a462-d6a147de1cf7","method":"GET","path":"/api/v1/imports/91885183-a2f9-4c22-afa0-1bee58bd45c6/rows","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"657310a1-0f25-4848-aa1f-20baaa3dca77","method":"POST","path":"/api/v1/imports/91885183-a2f9-4c22-afa0-1bee58bd45c6/confirm","status":200,"duration_ms":7}
+{"event":"http.request","request_id":"0012954a-c84f-48f3-9b24-52d52ea87ea4","method":"POST","path":"/api/v1/imports","status":202,"duration_ms":4}
+{"event":"http.request","request_id":"86339e37-7833-40e8-a099-8786628f507e","method":"GET","path":"/api/v1/imports/79da87a9-5c96-4071-8119-253387abf5c5/rows","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"77a3b05a-2139-44a6-ac84-5d218d7c1fd7","method":"POST","path":"/api/v1/imports/79da87a9-5c96-4071-8119-253387abf5c5/confirm","status":200,"duration_ms":8}
+{"event":"http.request","request_id":"8585da1d-9bce-41a4-8cb9-00cdb5851715","method":"POST","path":"/api/v1/imports/91885183-a2f9-4c22-afa0-1bee58bd45c6/revert","status":200,"duration_ms":7}
+{"event":"http.request","request_id":"8175b5ce-6812-48f4-b20b-e18bf01af06a","method":"POST","path":"/api/v1/imports/79da87a9-5c96-4071-8119-253387abf5c5/revert","status":200,"duration_ms":7}
+{"event":"http.request","request_id":"4fd4f6c2-7096-4a38-873c-008121db9481","method":"POST","path":"/api/v1/imports/1b07a90b-99ba-458e-90e5-32218614d5ba/revert","status":200,"duration_ms":7}
+{"event":"http.request","request_id":"98b74f58-b954-46bc-93ce-20140b1cabee","method":"POST","path":"/api/v1/imports/91885183-a2f9-4c22-afa0-1bee58bd45c6/revert","status":409,"duration_ms":2}
+✔ 共享证据保留；撤销早期更正不能覆盖后续，后续撤销只恢复仍有证据的祖先 (95.128625ms)
+{"event":"http.request","request_id":"c82f3f97-da6b-403e-a5fb-12e668a4abe0","method":"POST","path":"/api/v1/imports","status":202,"duration_ms":9}
+{"event":"http.request","request_id":"65d32bfc-8b2c-4ae0-bea2-060c4573c0d0","method":"GET","path":"/api/v1/imports/3e19267f-99f9-4c7c-a67e-bc7284aa6e67/rows","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"0d2324c0-cf03-46c6-8e88-9bda200de4f3","method":"POST","path":"/api/v1/imports/3e19267f-99f9-4c7c-a67e-bc7284aa6e67/confirm","status":200,"duration_ms":6}
+{"event":"http.request","request_id":"c6beb356-6dca-454c-9b4c-dd75036832dd","method":"POST","path":"/api/v1/imports","status":202,"duration_ms":4}
+{"event":"http.request","request_id":"ead7eb25-f3af-442c-a5c1-96538b52618b","method":"GET","path":"/api/v1/imports/5e2736ba-ab51-4021-a030-635981f2d987/rows","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"945faedb-6f10-4145-8bfa-affd87bbaec0","method":"POST","path":"/api/v1/imports/5e2736ba-ab51-4021-a030-635981f2d987/confirm","status":200,"duration_ms":7}
+{"event":"http.request","request_id":"1652f81e-29ab-497f-8d5a-1f89c882587b","method":"POST","path":"/api/v1/imports/5e2736ba-ab51-4021-a030-635981f2d987/revert","status":200,"duration_ms":6}
+{"event":"http.request","request_id":"6c0847b5-7a70-4fe7-b984-c16830f40cca","method":"PATCH","path":"/api/v1/publications/9668aec8-5129-488e-8ce0-8b5a20d749ff","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"df135c84-4c35-41c7-bf0a-5f3d5dcbbb93","method":"PATCH","path":"/api/v1/publications/9668aec8-5129-488e-8ce0-8b5a20d749ff","status":200,"duration_ms":5}
+✔ 更正/撤销/发布时间更正使关联报告stale，保留报告事实和无关报告 (55.812375ms)
+{"event":"http.request","request_id":"7649ee06-d1a1-4300-b7d7-d982b7df3bec","method":"POST","path":"/api/v1/imports","status":202,"duration_ms":4}
+{"event":"http.request","request_id":"e06aa994-7fee-4d1f-8b22-3842b186bd7e","method":"GET","path":"/api/v1/imports/e90936ae-3cb3-446e-b51a-dabcfc287b9e/rows","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"5781ae43-653d-4709-a21f-3b2e5875f257","method":"POST","path":"/api/v1/imports/e90936ae-3cb3-446e-b51a-dabcfc287b9e/confirm","status":200,"duration_ms":6}
+{"event":"http.request","request_id":"b9409412-4e09-47f3-a802-a032c2147d37","method":"POST","path":"/api/v1/imports","status":202,"duration_ms":3}
+{"event":"http.request","request_id":"0ab43c63-bce9-4cc4-a581-4cf9bb328cd3","method":"GET","path":"/api/v1/imports/c9291462-1878-487b-b8e6-75dee3f934c6/rows","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"f86bb0c8-4280-44f3-b1c6-2b94ee24eb01","method":"POST","path":"/api/v1/imports/c9291462-1878-487b-b8e6-75dee3f934c6/confirm","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"7861fcdf-3fd1-4c90-a853-4affe9e28057","method":"POST","path":"/api/v1/imports","status":202,"duration_ms":4}
+{"event":"http.request","request_id":"a4403a35-1b4a-4d26-9cf7-c6a5670cf045","method":"GET","path":"/api/v1/metrics","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"d570ddcc-c123-4578-8fc9-187dbc6f1542","method":"GET","path":"/api/v1/metrics/calculations","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"75057f67-9853-47b2-83a5-a05b31dcba6b","method":"GET","path":"/api/v1/metrics/calculations","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"e1c8c2bf-36e9-4c2c-bc2b-ffe338e0a8e3","method":"GET","path":"/api/v1/metrics/f43b1e47-87f1-441c-bd1a-66b55533999e/sources","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"194cb81d-4950-46ca-9f2c-684ded28285c","method":"GET","path":"/api/v1/calculations/509d2266-088b-4b18-91fb-2fd34098bfbe","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"3af61946-726e-4a78-8a35-1cb2d3ee4d4f","method":"POST","path":"/api/v1/imports/c9291462-1878-487b-b8e6-75dee3f934c6/revert","status":200,"duration_ms":7}
+{"event":"http.request","request_id":"deca60dc-a3ca-462e-a7d8-d1a4bd2cdb05","method":"GET","path":"/api/v1/calculations/509d2266-088b-4b18-91fb-2fd34098bfbe","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"8af66cf2-11aa-4b18-a8d3-d116e04794bf","method":"GET","path":"/api/v1/imports/82837896-9ee6-48de-9a55-009054558219/rows","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"7bdc8f1b-1e33-4ea5-a6ff-279f02050623","method":"GET","path":"/api/v1/metrics","status":404,"duration_ms":1}
+{"event":"http.request","request_id":"307ff0ae-bf2d-4073-9333-3aa3ad91a9a5","method":"GET","path":"/api/v1/metrics/calculations","status":422,"duration_ms":2}
+✔ 来源/字典/计算API只读确认数据，保存输入ID/版本/窗口/舍入，撤销后计算及依赖报告失效 (79.125834ms)
+{"event":"http.request","request_id":"96e3bd26-4d91-4ca2-863d-32ef437ad0f8","method":"POST","path":"/api/v1/imports","status":202,"duration_ms":4}
+{"event":"http.request","request_id":"e03b7dbd-79de-4879-87b1-f3c9141226ec","method":"GET","path":"/api/v1/imports/0a1a90c9-f943-46fa-8776-973c63cc31b4/rows","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"a0dbadd1-9dac-4147-aab6-6e433fd44413","method":"POST","path":"/api/v1/imports/0a1a90c9-f943-46fa-8776-973c63cc31b4/confirm","status":403,"duration_ms":2}
+{"event":"http.request","request_id":"5c8feaec-6d96-4046-b3cd-2ba0332314ad","method":"PATCH","path":"/api/v1/import-rows/94f777ca-6c87-432d-9c57-136123ee09cb","status":403,"duration_ms":2}
+{"event":"http.request","request_id":"82900190-8c5a-4059-96f6-d215bbb709bc","method":"GET","path":"/api/v1/metrics/f43b1e47-87f1-441c-bd1a-66b55533999e/sources","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"5efe63a3-7ad1-4524-88fc-570eaab62e3f","method":"GET","path":"/api/v1/metrics/f43b1e47-87f1-441c-bd1a-66b55533999e/sources","status":404,"duration_ms":1}
+{"event":"http.request","request_id":"c7da2f7a-31f2-4707-8ca1-312da94ffff4","method":"GET","path":"/api/v1/metrics/1651bf0c-f33b-473b-a024-66110f743265/sources","status":404,"duration_ms":1}
+✔ 权限变化阻止确认/撤销，跨账号及工作区来源不可见，手工非示例行可确认 (21.617375ms)
+{"event":"http.request","request_id":"f8591ae7-8ced-40dd-ba9c-97459e9e45fb","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":6}
+{"event":"http.request","request_id":"d26a535c-916a-449f-8a91-fa4cb59e6386","method":"POST","path":"/api/v1/uploads/79533e96-2b0f-427d-994c-2001eb20dbfc/parts","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"3636c1eb-0fe5-4f57-9f8b-34379789a14f","method":"PUT","path":"/api/v1/uploads/79533e96-2b0f-427d-994c-2001eb20dbfc/parts/1","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"a31a6b91-0c89-4adb-a098-6d768fe467f0","method":"POST","path":"/api/v1/uploads/79533e96-2b0f-427d-994c-2001eb20dbfc/complete","status":200,"duration_ms":8}
+{"event":"http.request","request_id":"c08ae696-c3cb-4f49-9451-f14f96e80c01","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":5}
+{"event":"http.request","request_id":"e0898011-a7d2-4ed8-ba0d-40c1280e7f57","method":"POST","path":"/api/v1/uploads/e1b2ab78-1dfb-4db5-82d5-7665344f560c/parts","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"52077aaf-318d-4087-abfa-999cb83e0a27","method":"PUT","path":"/api/v1/uploads/e1b2ab78-1dfb-4db5-82d5-7665344f560c/parts/1","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"2964300f-c5b8-459a-b90b-3979b9166f55","method":"POST","path":"/api/v1/uploads/e1b2ab78-1dfb-4db5-82d5-7665344f560c/complete","status":200,"duration_ms":9}
+✔ 原S11安全解析文件复用原ID，经当前解析器补提取而不是另建文件身份 (114.872959ms)
+{"event":"http.request","request_id":"3dd8aee1-d1e2-4a57-afc5-af21743f27f4","method":"POST","path":"/api/v1/imports","status":202,"duration_ms":5}
+{"event":"http.request","request_id":"b52fc487-fa25-469b-9910-e09e427672c8","method":"GET","path":"/api/v1/imports/6321a371-4c65-4c69-9170-70f59b73fe9a/rows","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"12993fe8-7c12-4ed2-b958-479938f542cd","method":"POST","path":"/api/v1/imports/6321a371-4c65-4c69-9170-70f59b73fe9a/confirm","status":200,"duration_ms":10}
+{"event":"http.request","request_id":"1480c0c1-9081-4343-817e-1b396c861a71","method":"GET","path":"/api/v1/metrics/calculations","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"20667acf-9ded-4139-b7b7-a6874c8992d1","method":"POST","path":"/api/v1/imports","status":202,"duration_ms":4}
+{"event":"http.request","request_id":"0cf739eb-9104-44da-8898-d85bebc6c691","method":"GET","path":"/api/v1/imports/3fd63f98-580a-4485-9144-f7ec0f84527f/rows","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"0540120b-dbd3-4bb8-9a87-7273052f3717","method":"POST","path":"/api/v1/imports/3fd63f98-580a-4485-9144-f7ec0f84527f/confirm","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"c5d176e6-e2b4-464e-a4ff-f51ac5e1b994","method":"GET","path":"/api/v1/calculations/b2ce8e76-cbaa-4d5c-bba7-afeab177bd17","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"00fc5dfd-578b-4d53-9a20-2155145d4d44","method":"GET","path":"/api/v1/metrics/calculations","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"218bc218-4ebf-4eea-86c7-d620657dc863","method":"PATCH","path":"/api/v1/publications/9668aec8-5129-488e-8ce0-8b5a20d749ff","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"434571c5-dbee-43c6-8778-3f4bb30588a8","method":"GET","path":"/api/v1/metrics/calculations","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"45c6e3bf-1001-40ec-9d30-110872da2dd5","method":"PATCH","path":"/api/v1/publications/9668aec8-5129-488e-8ce0-8b5a20d749ff","status":200,"duration_ms":4}
+✔ 新输入使缺失计算/依赖报告失效，重新计算生成新ID；更正发布时间后不可静默算过早窗口 (55.756958ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 13177.721666

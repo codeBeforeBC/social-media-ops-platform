@@ -1,0 +1,434 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.90kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 177B done
+#3 DONE 0.0s
+
+#4 [build  1/21] FROM docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#4 resolve docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 1.90MB 0.0s done
+#5 DONE 0.0s
+
+#6 [build  8/21] COPY apps/worker/package.json ./apps/worker/package.json
+#6 CACHED
+
+#7 [build  6/21] COPY apps/api/package.json ./apps/api/package.json
+#7 CACHED
+
+#8 [build  7/21] COPY apps/web/package.json ./apps/web/package.json
+#8 CACHED
+
+#9 [build 13/21] RUN --mount=type=cache,id=yoyo-pnpm,target=/pnpm/store pnpm config set store-dir /pnpm/store && pnpm install --frozen-lockfile
+#9 CACHED
+
+#10 [build 11/21] COPY packages/domain/package.json ./packages/domain/package.json
+#10 CACHED
+
+#11 [build  4/21] WORKDIR /app
+#11 CACHED
+
+#12 [build  3/21] RUN corepack enable && corepack prepare pnpm@10.33.0 --activate
+#12 CACHED
+
+#13 [build  5/21] COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+#13 CACHED
+
+#14 [build 10/21] COPY packages/db/package.json ./packages/db/package.json
+#14 CACHED
+
+#15 [build  2/21] RUN apt-get update && apt-get install -y --no-install-recommends openssl ca-certificates && rm -rf /var/lib/apt/lists/*
+#15 CACHED
+
+#16 [build 14/21] COPY apps ./apps
+#16 CACHED
+
+#17 [build  9/21] COPY apps/scheduler/package.json ./apps/scheduler/package.json
+#17 CACHED
+
+#18 [build 12/21] COPY packages/contracts/package.json ./packages/contracts/package.json
+#18 CACHED
+
+#19 [build 15/21] COPY packages ./packages
+#19 CACHED
+
+#20 [build 16/21] COPY tools ./tools
+#20 DONE 0.0s
+
+#21 [build 17/21] COPY tests ./tests
+#21 DONE 0.0s
+
+#22 [build 18/21] COPY contracts ./contracts
+#22 DONE 0.0s
+
+#23 [build 19/21] COPY docs/templates ./docs/templates
+#23 DONE 0.0s
+
+#24 [build 20/21] COPY tsconfig.json prisma.config.ts ./
+#24 DONE 0.0s
+
+#25 [build 21/21] RUN pnpm build
+#25 0.257 
+#25 0.257 > yoyo-workbench@0.1.0 build /app
+#25 0.257 > pnpm db:generate && tsc -p tsconfig.json && pnpm --filter @yoyo/web build
+#25 0.257 
+#25 0.399 
+#25 0.399 > yoyo-workbench@0.1.0 db:generate /app
+#25 0.399 > prisma generate
+#25 0.399 
+#25 0.815 Loaded Prisma config from prisma.config.ts.
+#25 0.815 
+#25 0.851 Prisma schema loaded from packages/db/prisma/schema.prisma.
+#25 1.397 
+#25 1.397 ✔ Generated Prisma Client (v7.10.0) to ./node_modules/.pnpm/@prisma+client@7.10.0_prisma@7.10.0_@types+react-dom@19.2.2_@types+react@19.2.2__@types_a5f616641512722fa171c0ec0738743a/node_modules/@prisma/client in 358ms
+#25 1.397 
+#25 1.397 Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+#25 1.397 
+#25 1.397 
+#25 4.511 
+#25 4.511 > @yoyo/web@0.1.0 build /app/apps/web
+#25 4.511 > vite build
+#25 4.511 
+#25 4.622 vite v8.3.3 building client environment for production...
+#25 4.628 transforming...
+#25 4.662 ✓ 27 modules transformed.
+#25 4.705 rendering chunks...
+#25 4.741 computing gzip size...
+#25 4.746 dist/index.html                   0.36 kB │ gzip:  0.28 kB
+#25 4.746 dist/assets/index-CfQXgyjo.css    9.06 kB │ gzip:  2.73 kB
+#25 4.746 dist/assets/index-2pND-ipQ.js   328.24 kB │ gzip: 96.93 kB
+#25 4.746 
+#25 4.746 ✓ built in 124ms
+#25 DONE 4.8s
+
+#26 [stage-1  7/10] COPY --from=build --chown=node:node /app/docs/templates ./docs/templates
+#26 CACHED
+
+#27 [stage-1  6/10] COPY --from=build --chown=node:node /app/packages/db/migrations ./packages/db/migrations
+#27 CACHED
+
+#28 [stage-1  3/10] COPY --from=build --chown=node:node /app/node_modules ./node_modules
+#28 CACHED
+
+#29 [stage-1  4/10] COPY --from=build --chown=node:node /app/dist ./dist
+#29 CACHED
+
+#30 [stage-1  5/10] COPY --from=build --chown=node:node /app/apps/web/dist ./apps/web/dist
+#30 CACHED
+
+#31 [stage-1  2/10] WORKDIR /app
+#31 CACHED
+
+#32 [stage-1  8/10] COPY --from=build --chown=node:node /app/tools/s3 ./tools/s3
+#32 CACHED
+
+#33 [stage-1  9/10] COPY --from=build --chown=node:node /app/tools/s0 ./tools/s0
+#33 DONE 0.0s
+
+#34 [stage-1 10/10] COPY --from=build --chown=node:node /app/tools/init-state.mjs ./tools/init-state.mjs
+#34 DONE 0.0s
+
+#35 exporting to image
+#35 exporting layers 0.0s done
+#35 exporting manifest sha256:8bde2ce093a0847d8c553d52cda1713513163010e7ea90c7343717ad8b098b75 done
+#35 exporting config sha256:4789b80ec9e68f30c9bd395c30d44d6e32e747c96333b6a06ea4f7548fccc251 done
+#35 exporting attestation manifest sha256:3b363e6d11034c6fcf7925d0dccf9389e6845ad852f1f643bc05a821a36c9c79 done
+#35 exporting manifest list sha256:c44a83d7003cbdf9eede822a074af18540bfe2408579463785d8cc14bef62856 done
+#35 naming to docker.io/library/yoyo-release:0.1.0-s9rc5-arm64 done
+#35 unpacking to docker.io/library/yoyo-release:0.1.0-s9rc5-arm64 0.0s done
+#35 DONE 0.1s
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.19kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 177B done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 DONE 0.0s
+
+#5 [build 1/4] FROM docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#5 resolve docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#5 resolve docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c done
+#5 DONE 0.2s
+
+#4 [internal] load build context
+#4 transferring context: 191B done
+#4 DONE 0.0s
+
+#6 [stage-1 3/6] COPY --from=build /media-sandbox /usr/local/bin/media-sandbox
+#6 CACHED
+
+#7 [stage-1 4/6] COPY tools/media/server.mjs /app/server.mjs
+#7 CACHED
+
+#8 [stage-1 5/6] COPY tools/media/import-validate.py /usr/local/lib/yoyo/import-validate.py
+#8 CACHED
+
+#9 [build 4/4] RUN gcc -O2 -Wall /sandbox.c -o /media-sandbox
+#9 CACHED
+
+#10 [build 2/4] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && apt-get -o Acquire::Retries=3 install -y --no-install-recommends gcc libc6-dev linux-libc-dev
+#10 CACHED
+
+#11 [stage-1 2/6] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && (apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil ca-certificates || apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil ca-certificates) && rm -rf /var/lib/apt/lists/* && mkdir /scratch && chown node:node /scratch
+#11 CACHED
+
+#12 [build 3/4] COPY tools/media/sandbox.c /sandbox.c
+#12 CACHED
+
+#13 [stage-1 6/6] WORKDIR /app
+#13 CACHED
+
+#14 exporting to image
+#14 exporting layers done
+#14 exporting manifest sha256:066447882d4740e2ed6a315cd0171ea8d0e8b1253c497bc79c5b7fbed44caf65 done
+#14 exporting config sha256:d4c213cc4cdc2b43ee57cbf0c3b536d97180c2cb98872c5da0d145dbba589606 done
+#14 exporting attestation manifest sha256:56987bbe2f865ffd90b2c63c7b48cfacf4c82bb520d6ccb59de56ce73e8eb985 done
+#14 exporting manifest list sha256:0adf87dda37daadef709a745a16be3e9dac81cec111cd144d400a9fe837b2c37 done
+#14 naming to docker.io/library/yoyo-parser-release:0.1.0-s9rc5-arm64 done
+#14 unpacking to docker.io/library/yoyo-parser-release:0.1.0-s9rc5-arm64 done
+#14 DONE 0.0s
+native dependencies and release files ready
+docker.io/library/postgres@sha256:f3bd19c606e442c3d7bdfa8002e03fe260a1023351e0ea4598032022b68dd6e3: Pulling from library/postgres
+Digest: sha256:f3bd19c606e442c3d7bdfa8002e03fe260a1023351e0ea4598032022b68dd6e3
+Status: Image is up to date for postgres@sha256:f3bd19c606e442c3d7bdfa8002e03fe260a1023351e0ea4598032022b68dd6e3
+docker.io/library/postgres:17.6-bookworm@sha256:f3bd19c606e442c3d7bdfa8002e03fe260a1023351e0ea4598032022b68dd6e3
+docker.io/chrislusf/seaweedfs@sha256:1593bd2a98964f5d4df83fa7db2b3d4ee7b20190813cc5bf8c3200e0e70d346e: Pulling from chrislusf/seaweedfs
+Digest: sha256:1593bd2a98964f5d4df83fa7db2b3d4ee7b20190813cc5bf8c3200e0e70d346e
+Status: Image is up to date for chrislusf/seaweedfs@sha256:1593bd2a98964f5d4df83fa7db2b3d4ee7b20190813cc5bf8c3200e0e70d346e
+docker.io/chrislusf/seaweedfs:4.15@sha256:1593bd2a98964f5d4df83fa7db2b3d4ee7b20190813cc5bf8c3200e0e70d346e
+docker.io/library/caddy@sha256:4c6e91c6ed0e2fa03efd5b44747b625fec79bc9cd06ac5235a779726618e530d: Pulling from library/caddy
+Digest: sha256:4c6e91c6ed0e2fa03efd5b44747b625fec79bc9cd06ac5235a779726618e530d
+Status: Image is up to date for caddy@sha256:4c6e91c6ed0e2fa03efd5b44747b625fec79bc9cd06ac5235a779726618e530d
+docker.io/library/caddy:2.10.2-alpine@sha256:4c6e91c6ed0e2fa03efd5b44747b625fec79bc9cd06ac5235a779726618e530d
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.90kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 177B done
+#3 DONE 0.0s
+
+#4 [build  1/21] FROM docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#4 resolve docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 1.89MB 0.0s done
+#5 DONE 0.0s
+
+#6 [build  9/21] COPY apps/scheduler/package.json ./apps/scheduler/package.json
+#6 CACHED
+
+#7 [build  8/21] COPY apps/worker/package.json ./apps/worker/package.json
+#7 CACHED
+
+#8 [build  2/21] RUN apt-get update && apt-get install -y --no-install-recommends openssl ca-certificates && rm -rf /var/lib/apt/lists/*
+#8 CACHED
+
+#9 [build 13/21] RUN --mount=type=cache,id=yoyo-pnpm,target=/pnpm/store pnpm config set store-dir /pnpm/store && pnpm install --frozen-lockfile
+#9 CACHED
+
+#10 [build  4/21] WORKDIR /app
+#10 CACHED
+
+#11 [build 12/21] COPY packages/contracts/package.json ./packages/contracts/package.json
+#11 CACHED
+
+#12 [build  5/21] COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+#12 CACHED
+
+#13 [build  7/21] COPY apps/web/package.json ./apps/web/package.json
+#13 CACHED
+
+#14 [build  3/21] RUN corepack enable && corepack prepare pnpm@10.33.0 --activate
+#14 CACHED
+
+#15 [build 11/21] COPY packages/domain/package.json ./packages/domain/package.json
+#15 CACHED
+
+#16 [build  6/21] COPY apps/api/package.json ./apps/api/package.json
+#16 CACHED
+
+#17 [build 10/21] COPY packages/db/package.json ./packages/db/package.json
+#17 CACHED
+
+#18 [build 14/21] COPY apps ./apps
+#18 CACHED
+
+#19 [build 15/21] COPY packages ./packages
+#19 CACHED
+
+#20 [build 16/21] COPY tools ./tools
+#20 DONE 0.0s
+
+#21 [build 17/21] COPY tests ./tests
+#21 DONE 0.0s
+
+#22 [build 18/21] COPY contracts ./contracts
+#22 DONE 0.0s
+
+#23 [build 19/21] COPY docs/templates ./docs/templates
+#23 DONE 0.0s
+
+#24 [build 20/21] COPY tsconfig.json prisma.config.ts ./
+#24 DONE 0.0s
+
+#25 [build 21/21] RUN pnpm build
+#25 0.738 
+#25 0.738 > yoyo-workbench@0.1.0 build /app
+#25 0.738 > pnpm db:generate && tsc -p tsconfig.json && pnpm --filter @yoyo/web build
+#25 0.738 
+#25 1.365 
+#25 1.365 > yoyo-workbench@0.1.0 db:generate /app
+#25 1.365 > prisma generate
+#25 1.365 
+#25 2.708 Loaded Prisma config from prisma.config.ts.
+#25 2.708 
+#25 3.105 Prisma schema loaded from packages/db/prisma/schema.prisma.
+#25 4.105 
+#25 4.105 ✔ Generated Prisma Client (v7.10.0) to ./node_modules/.pnpm/@prisma+client@7.10.0_prisma@7.10.0_@types+react-dom@19.2.2_@types+react@19.2.2__@types_a5f616641512722fa171c0ec0738743a/node_modules/@prisma/client in 546ms
+#25 4.105 
+#25 4.105 Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+#25 4.105 
+#25 4.105 
+#25 11.76 
+#25 11.76 > @yoyo/web@0.1.0 build /app/apps/web
+#25 11.76 > vite build
+#25 11.76 
+#25 12.71 vite v8.3.3 building client environment for production...
+#25 12.76 transforming...
+#25 12.90 ✓ 27 modules transformed.
+#25 13.03 rendering chunks...
+#25 13.10 computing gzip size...
+#25 13.11 dist/index.html                   0.36 kB │ gzip:  0.28 kB
+#25 13.11 dist/assets/index-CfQXgyjo.css    9.06 kB │ gzip:  2.73 kB
+#25 13.11 dist/assets/index-2pND-ipQ.js   328.24 kB │ gzip: 96.93 kB
+#25 13.11 
+#25 13.11 ✓ built in 399ms
+#25 DONE 13.2s
+
+#26 [stage-1  2/10] WORKDIR /app
+#26 CACHED
+
+#27 [stage-1  6/10] COPY --from=build --chown=node:node /app/packages/db/migrations ./packages/db/migrations
+#27 CACHED
+
+#28 [stage-1  5/10] COPY --from=build --chown=node:node /app/apps/web/dist ./apps/web/dist
+#28 CACHED
+
+#29 [stage-1  7/10] COPY --from=build --chown=node:node /app/docs/templates ./docs/templates
+#29 CACHED
+
+#30 [stage-1  3/10] COPY --from=build --chown=node:node /app/node_modules ./node_modules
+#30 CACHED
+
+#31 [stage-1  4/10] COPY --from=build --chown=node:node /app/dist ./dist
+#31 CACHED
+
+#32 [stage-1  8/10] COPY --from=build --chown=node:node /app/tools/s3 ./tools/s3
+#32 CACHED
+
+#33 [stage-1  9/10] COPY --from=build --chown=node:node /app/tools/s0 ./tools/s0
+#33 DONE 0.0s
+
+#34 [stage-1 10/10] COPY --from=build --chown=node:node /app/tools/init-state.mjs ./tools/init-state.mjs
+#34 DONE 0.0s
+
+#35 exporting to image
+#35 exporting layers 0.0s done
+#35 exporting manifest sha256:2be265309e1c2238abc668f2a9d446cab2b94fc22ee9cb0c194dc41125d17631 done
+#35 exporting config sha256:b45176e984dbcf393152c1e2df4604a3059ebec7fa52dd5a5043728ed1f4d966 done
+#35 exporting attestation manifest sha256:ddd7edef5b123d18d11758935ab24e88b78723f35457fd6297019197f7ac0bbe done
+#35 exporting manifest list sha256:00231b8e3438dd99f10cfe5905fa27c3dd053b689146af9121ff6fcc784be764
+#35 exporting manifest list sha256:00231b8e3438dd99f10cfe5905fa27c3dd053b689146af9121ff6fcc784be764 done
+#35 naming to docker.io/library/yoyo-release:0.1.0-s9rc5-amd64 done
+#35 DONE 0.1s
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.19kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#2 DONE 0.2s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 177B 0.0s done
+#3 DONE 0.0s
+
+#4 [build 1/4] FROM docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#4 resolve docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 191B done
+#5 DONE 0.0s
+
+#6 [build 3/4] COPY tools/media/sandbox.c /sandbox.c
+#6 CACHED
+
+#7 [build 4/4] RUN gcc -O2 -Wall /sandbox.c -o /media-sandbox
+#7 CACHED
+
+#8 [stage-1 3/6] COPY --from=build /media-sandbox /usr/local/bin/media-sandbox
+#8 CACHED
+
+#9 [stage-1 4/6] COPY tools/media/server.mjs /app/server.mjs
+#9 CACHED
+
+#10 [stage-1 5/6] COPY tools/media/import-validate.py /usr/local/lib/yoyo/import-validate.py
+#10 CACHED
+
+#11 [stage-1 2/6] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && (apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil ca-certificates || apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil ca-certificates) && rm -rf /var/lib/apt/lists/* && mkdir /scratch && chown node:node /scratch
+#11 CACHED
+
+#12 [build 2/4] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && apt-get -o Acquire::Retries=3 install -y --no-install-recommends gcc libc6-dev linux-libc-dev
+#12 CACHED
+
+#13 [stage-1 6/6] WORKDIR /app
+#13 CACHED
+
+#14 exporting to image
+#14 exporting layers done
+#14 exporting manifest sha256:27f7c7dc929980952ca18eb7f90a5cb71d7ea8af0a626bf195297087f204b9cd done
+#14 exporting config sha256:847547be7f6874671c2d72c59645e282734cf3130fb61071c05204ddf96cfd3e done
+#14 exporting attestation manifest sha256:9f358449d5accb2d6444f75f27a9c1d45d07692e4c06c82116777ea4e8c3fc57 done
+#14 exporting manifest list sha256:8aa9e135ee1266f9df526075e0fa5ecd3f4b1788bb19c69c67a859b059a72633 done
+#14 naming to docker.io/library/yoyo-parser-release:0.1.0-s9rc5-amd64 done
+#14 DONE 0.0s
+native dependencies and release files ready
+docker.io/library/postgres@sha256:f3bd19c606e442c3d7bdfa8002e03fe260a1023351e0ea4598032022b68dd6e3: Pulling from library/postgres
+Digest: sha256:f3bd19c606e442c3d7bdfa8002e03fe260a1023351e0ea4598032022b68dd6e3
+Status: Image is up to date for postgres@sha256:f3bd19c606e442c3d7bdfa8002e03fe260a1023351e0ea4598032022b68dd6e3
+docker.io/library/postgres:17.6-bookworm@sha256:f3bd19c606e442c3d7bdfa8002e03fe260a1023351e0ea4598032022b68dd6e3
+docker.io/chrislusf/seaweedfs@sha256:1593bd2a98964f5d4df83fa7db2b3d4ee7b20190813cc5bf8c3200e0e70d346e: Pulling from chrislusf/seaweedfs
+Digest: sha256:1593bd2a98964f5d4df83fa7db2b3d4ee7b20190813cc5bf8c3200e0e70d346e
+Status: Image is up to date for chrislusf/seaweedfs@sha256:1593bd2a98964f5d4df83fa7db2b3d4ee7b20190813cc5bf8c3200e0e70d346e
+docker.io/chrislusf/seaweedfs:4.15@sha256:1593bd2a98964f5d4df83fa7db2b3d4ee7b20190813cc5bf8c3200e0e70d346e
+docker.io/library/caddy@sha256:4c6e91c6ed0e2fa03efd5b44747b625fec79bc9cd06ac5235a779726618e530d: Pulling from library/caddy
+Digest: sha256:4c6e91c6ed0e2fa03efd5b44747b625fec79bc9cd06ac5235a779726618e530d
+Status: Image is up to date for caddy@sha256:4c6e91c6ed0e2fa03efd5b44747b625fec79bc9cd06ac5235a779726618e530d
+docker.io/library/caddy:2.10.2-alpine@sha256:4c6e91c6ed0e2fa03efd5b44747b625fec79bc9cd06ac5235a779726618e530d
+{"version":"0.1.0-s9rc5","out":"/Users/junlong/projects/social-mdeida-ops-platform/.local/releases/0.1.0-s9rc5","platforms":["linux/arm64","linux/amd64"],"published":false}

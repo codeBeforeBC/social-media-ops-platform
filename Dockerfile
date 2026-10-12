@@ -29,6 +29,7 @@ COPY --from=build --chown=node:node /app/packages/db/migrations ./packages/db/mi
 COPY --from=build --chown=node:node /app/docs/templates ./docs/templates
 COPY --from=build --chown=node:node /app/tools/s3 ./tools/s3
 COPY --from=build --chown=node:node /app/tools/s0 ./tools/s0
+COPY --from=build --chown=node:node /app/tools/init-state.mjs ./tools/init-state.mjs
 USER node
 ENV PORT=3000
 EXPOSE 3000

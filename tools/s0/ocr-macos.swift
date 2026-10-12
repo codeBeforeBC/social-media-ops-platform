@@ -4,8 +4,8 @@ import Foundation
 import Vision
 import ImageIO
 
-guard CommandLine.arguments.count == 2 else {
-    fputs("Usage: swift tools/s0/ocr-macos.swift IMAGE_PATH\n", stderr)
+guard (2...3).contains(CommandLine.arguments.count) else {
+    fputs("Usage: swift tools/s0/ocr-macos.swift IMAGE_PATH [INPUT_KIND]\n", stderr)
     exit(2)
 }
 let url = URL(fileURLWithPath: CommandLine.arguments[1])
@@ -22,7 +22,7 @@ do {
         return ["text": candidate.string, "confidence": candidate.confidence,
                 "bounding_box": ["x": b.minX, "y": b.minY, "width": b.width, "height": b.height]]
     }
-    let result: [String: Any] = ["backend": "apple_vision_local_probe", "input_kind": "historical_public_profile",
+    let result: [String: Any] = ["backend": "apple_vision_local_probe", "input_kind": CommandLine.arguments.count == 3 ? CommandLine.arguments[2] : "historical_public_profile",
                                "elapsed_ms": Int(Date().timeIntervalSince(start) * 1000), "observations": observations]
     let data = try JSONSerialization.data(withJSONObject: result, options: [.prettyPrinted, .sortedKeys])
     FileHandle.standardOutput.write(data)

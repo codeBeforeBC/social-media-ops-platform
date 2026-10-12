@@ -1,0 +1,105 @@
+Instance credentials ready; no secrets printed.
+ Image yoyo-import-parser-ocr-local:1.0.0 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 618B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.36kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 177B done
+#4 DONE 0.0s
+
+#5 [build 1/4] FROM docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#5 resolve docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 235B done
+#6 DONE 0.0s
+
+#7 [stage-1 2/7] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && (apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil ca-certificates tesseract-ocr tesseract-ocr-chi-sim tesseract-ocr-eng || apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil ca-certificates tesseract-ocr tesseract-ocr-chi-sim tesseract-ocr-eng) && rm -rf /var/lib/apt/lists/* && mkdir /scratch && chown node:node /scratch
+#7 CACHED
+
+#8 [build 4/4] RUN gcc -O2 -Wall /sandbox.c -o /media-sandbox
+#8 CACHED
+
+#9 [stage-1 3/7] COPY --from=build /media-sandbox /usr/local/bin/media-sandbox
+#9 CACHED
+
+#10 [stage-1 5/7] COPY tools/media/import-validate.py /usr/local/lib/yoyo/import-validate.py
+#10 CACHED
+
+#11 [build 2/4] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && apt-get -o Acquire::Retries=3 install -y --no-install-recommends gcc libc6-dev linux-libc-dev
+#11 CACHED
+
+#12 [build 3/4] COPY tools/media/sandbox.c /sandbox.c
+#12 CACHED
+
+#13 [stage-1 4/7] COPY tools/media/server.mjs /app/server.mjs
+#13 CACHED
+
+#14 [stage-1 6/7] COPY tools/media/image-ocr.py /usr/local/lib/yoyo/image-ocr.py
+#14 CACHED
+
+#15 [stage-1 7/7] WORKDIR /app
+#15 CACHED
+
+#16 exporting to image
+#16 exporting layers done
+#16 exporting manifest sha256:8d06253b0f706d6af0fa1f6b1bceb839659aacd3038ba96ae7796b33cb156e58 done
+#16 exporting config sha256:8bc007247a7734fa6558cedf9adbca12d1ae0ea75fb912c63c77c91e59f1d705 done
+#16 exporting attestation manifest sha256:8460870d8491b73a6bc18d1ce586bd8cfe3ec336c72b81262441c014e7353aba done
+#16 exporting manifest list sha256:2ff695aed17155a6449268052b94595d46a3ee99bd885d256c9677a8b5e23d64 done
+#16 naming to docker.io/library/yoyo-import-parser-ocr-local:1.0.0 done
+#16 unpacking to docker.io/library/yoyo-import-parser-ocr-local:1.0.0 done
+#16 DONE 0.0s
+
+#17 resolving provenance for metadata file
+#17 DONE 0.0s
+ Image yoyo-import-parser-ocr-local:1.0.0 Built 
+ Container yoyo-s7-ocr-tests-storage-1 Running 
+ Container yoyo-s7-ocr-tests-media-executor-1 Recreate 
+ Container yoyo-s7-ocr-tests-media-executor-1 Recreated 
+ Container yoyo-s7-ocr-tests-media-executor-1 Starting 
+ Container yoyo-s7-ocr-tests-media-executor-1 Started 
+ Container yoyo-s7-ocr-tests-storage-1 Waiting 
+ Container yoyo-s7-ocr-tests-media-executor-1 Waiting 
+ Container yoyo-s7-ocr-tests-media-executor-1 Healthy 
+ Container yoyo-s7-ocr-tests-storage-1 Healthy 
+Private storage ready.
+{"event":"http.request","request_id":"52e88c6d-0562-4557-90fc-67992c639149","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":6}
+{"event":"http.request","request_id":"3a414750-7a6a-4fcb-bd7a-0cc3c78beb30","method":"POST","path":"/api/v1/setup","status":201,"duration_ms":38}
+{"event":"http.request","request_id":"bbaa4fe4-7c78-4076-a9ef-891e247e9f8b","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"5346ad8e-aa8c-44da-91e8-4aced6f37488","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":23}
+{"event":"http.request","request_id":"9e94cffc-43c1-4db5-91cc-e57d94f43194","method":"GET","path":"/api/v1/me","status":200,"duration_ms":99}
+{"event":"http.request","request_id":"58ed7f25-e6fb-455b-b794-e8357f548747","method":"POST","path":"/api/v1/accounts","status":201,"duration_ms":7}
+{"event":"http.request","request_id":"8410bb7a-a456-4174-8170-5a178608d81e","method":"POST","path":"/api/v1/publications","status":201,"duration_ms":6}
+{"event":"http.request","request_id":"e319b248-65ef-4684-9162-bd909126e0c8","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":16}
+{"event":"http.request","request_id":"5ae8211b-2b8f-4051-8c71-f30c480ca11f","method":"POST","path":"/api/v1/uploads/cabf47a4-943e-436c-8203-6da02627ccc7/parts","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"2208e7cf-4b26-44b4-85bc-61f8a370d019","method":"PUT","path":"/api/v1/uploads/cabf47a4-943e-436c-8203-6da02627ccc7/parts/1","status":200,"duration_ms":15}
+{"event":"http.request","request_id":"141791e5-2963-4c61-bab6-74b74213dc3c","method":"POST","path":"/api/v1/uploads/cabf47a4-943e-436c-8203-6da02627ccc7/complete","status":200,"duration_ms":12}
+{"event":"http.request","request_id":"b64d0b9a-f52b-42ea-963b-765bda63f408","method":"GET","path":"/api/v1/files/f43e92b2-d029-4ca2-a2da-fe45ac808573","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"46776a48-1608-4af0-a33b-36a21688ccf0","method":"POST","path":"/api/v1/imports","status":202,"duration_ms":9}
+{"event":"http.request","request_id":"faa8346b-6304-4593-8a60-b9cdeb085422","method":"GET","path":"/api/v1/imports/d21fe6ac-cdcc-4c27-a132-e1865aca2e0f/rows","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"aee3aad5-b5d9-4973-bf9d-23c4020f3fc0","method":"PATCH","path":"/api/v1/import-rows/e3b70ca5-32d1-4cec-bae0-ed0af6df0528","status":200,"duration_ms":8}
+{"event":"http.request","request_id":"798b804c-87f0-41df-b4bf-a3df9274e8fb","method":"GET","path":"/api/v1/imports/d21fe6ac-cdcc-4c27-a132-e1865aca2e0f","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"67b369f4-a75a-4f0a-97ce-26d60c53cd10","method":"POST","path":"/api/v1/imports/d21fe6ac-cdcc-4c27-a132-e1865aca2e0f/confirm","status":200,"duration_ms":8}
+{"event":"http.request","request_id":"f1a94917-78a6-4b95-adc9-6f4d066f565d","method":"GET","path":"/api/v1/files/f43e92b2-d029-4ca2-a2da-fe45ac808573/download","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"b877f5ab-5e57-4ddc-89e0-2bae0edd115d","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":6}
+{"event":"http.request","request_id":"6e07194d-f91d-44ba-baab-357946c872d0","method":"POST","path":"/api/v1/uploads/d1e1ff79-75ae-412f-af21-2b2df148e109/parts","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"d6e82b47-df69-4aae-b66f-693dec55060b","method":"PUT","path":"/api/v1/uploads/d1e1ff79-75ae-412f-af21-2b2df148e109/parts/1","status":200,"duration_ms":7}
+{"event":"http.request","request_id":"d6dbf5c1-f85f-44d7-ac86-9efcc08838f2","method":"POST","path":"/api/v1/uploads/d1e1ff79-75ae-412f-af21-2b2df148e109/complete","status":200,"duration_ms":14}
+{"event":"http.request","request_id":"888bfed8-4097-427e-8e38-d18033dd3acf","method":"GET","path":"/api/v1/files/2491255e-6934-4086-8087-b32905cd5f05","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"b34aef01-2cca-4cf3-8d89-2e84278fa944","method":"POST","path":"/api/v1/imports","status":202,"duration_ms":7}
+{"event":"http.request","request_id":"bcdcb881-f081-4090-acc7-3d94ff3e71c4","method":"GET","path":"/api/v1/imports/04ceed92-bd39-4234-8fa3-9ceb14d4ae11/rows","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"96b25ff4-d82c-4a12-b01f-58046220af07","method":"PATCH","path":"/api/v1/import-rows/17dc4fc3-d884-426a-a360-0773ac343908","status":200,"duration_ms":7}
+{"event":"http.request","request_id":"bfda734d-420a-4def-a626-426cf9ec0bfc","method":"GET","path":"/api/v1/imports/04ceed92-bd39-4234-8fa3-9ceb14d4ae11","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"a6cdd7b9-b0e5-45da-82d7-60f6a17a7104","method":"POST","path":"/api/v1/imports/04ceed92-bd39-4234-8fa3-9ceb14d4ae11/confirm","status":200,"duration_ms":7}
+{"event":"http.request","request_id":"27b4bdaa-7588-4a04-9ec7-9a30ead13183","method":"GET","path":"/api/v1/files/2491255e-6934-4086-8087-b32905cd5f05/download","status":200,"duration_ms":4}
+{"checks":2,"result":"passed_partial_two_real_screenshots","real_account_integration":false,"video":"missing","credentials_printed":false}

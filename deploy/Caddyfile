@@ -1,0 +1,21 @@
+{
+    admin off
+    log {
+        format filter {
+            wrap json
+            fields {
+                request>uri delete
+                request>headers delete
+            }
+        }
+    }
+}
+https://{$YOYO_DOMAIN:localhost} {
+    tls {$YOYO_TLS:internal}
+    handle /yoyo-private/* {
+        reverse_proxy storage:9000
+    }
+    handle {
+        reverse_proxy api:3000
+    }
+}

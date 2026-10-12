@@ -1,0 +1,308 @@
+Instance credentials ready; no secrets printed.
+ Image yoyo-import-parser-ocr-local:1.0.0 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 618B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.36kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 177B done
+#4 DONE 0.0s
+
+#5 [build 1/4] FROM docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#5 resolve docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 235B done
+#6 DONE 0.0s
+
+#7 [stage-1 6/7] COPY tools/media/image-ocr.py /usr/local/lib/yoyo/image-ocr.py
+#7 CACHED
+
+#8 [build 3/4] COPY tools/media/sandbox.c /sandbox.c
+#8 CACHED
+
+#9 [stage-1 3/7] COPY --from=build /media-sandbox /usr/local/bin/media-sandbox
+#9 CACHED
+
+#10 [build 4/4] RUN gcc -O2 -Wall /sandbox.c -o /media-sandbox
+#10 CACHED
+
+#11 [stage-1 4/7] COPY tools/media/server.mjs /app/server.mjs
+#11 CACHED
+
+#12 [build 2/4] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && apt-get -o Acquire::Retries=3 install -y --no-install-recommends gcc libc6-dev linux-libc-dev
+#12 CACHED
+
+#13 [stage-1 5/7] COPY tools/media/import-validate.py /usr/local/lib/yoyo/import-validate.py
+#13 CACHED
+
+#14 [stage-1 2/7] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && (apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil ca-certificates tesseract-ocr tesseract-ocr-chi-sim tesseract-ocr-eng || apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil ca-certificates tesseract-ocr tesseract-ocr-chi-sim tesseract-ocr-eng) && rm -rf /var/lib/apt/lists/* && mkdir /scratch && chown node:node /scratch
+#14 CACHED
+
+#15 [stage-1 7/7] WORKDIR /app
+#15 CACHED
+
+#16 exporting to image
+#16 exporting layers done
+#16 exporting manifest sha256:8d06253b0f706d6af0fa1f6b1bceb839659aacd3038ba96ae7796b33cb156e58 done
+#16 exporting config sha256:8bc007247a7734fa6558cedf9adbca12d1ae0ea75fb912c63c77c91e59f1d705 done
+#16 exporting attestation manifest sha256:bf2fe7771c6393f1f959ebe12ce91d2ff256966c626d0821d6e6a51179aa0bf8 done
+#16 exporting manifest list sha256:0ed3a50bedb123885d366ba3305f2cb2c6cc9aeefb6a414d3589c3f32ad723fb done
+#16 naming to docker.io/library/yoyo-import-parser-ocr-local:1.0.0 done
+#16 unpacking to docker.io/library/yoyo-import-parser-ocr-local:1.0.0 done
+#16 DONE 0.0s
+
+#17 resolving provenance for metadata file
+#17 DONE 0.0s
+ Image yoyo-import-parser-ocr-local:1.0.0 Built 
+ Container yoyo-s7-ocr-tests-storage-1 Running 
+ Container yoyo-s7-ocr-tests-media-executor-1 Recreate 
+ Container yoyo-s7-ocr-tests-media-executor-1 Recreated 
+ Container yoyo-s7-ocr-tests-media-executor-1 Starting 
+ Container yoyo-s7-ocr-tests-media-executor-1 Started 
+ Container yoyo-s7-ocr-tests-storage-1 Waiting 
+ Container yoyo-s7-ocr-tests-media-executor-1 Waiting 
+ Container yoyo-s7-ocr-tests-media-executor-1 Healthy 
+ Container yoyo-s7-ocr-tests-storage-1 Healthy 
+Private storage ready.
+[2m[WebServer] [22m(node:43876) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:43877) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:43883) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:43883) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 15 tests using 1 worker
+
+(node:43994) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:43994) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 tests/browser.spec.ts:5:5 › 首次设置、三导航、账号表单、设置保存、键盘抽屉和退出 (2.2s)
+  ✓   2 tests/browser.spec.ts:24:5 › 请求失败显示可重试错误，加载状态和登录过期可见 (1.5s)
+  ✓   3 tests/browser.spec.ts:31:5 › 来源连接保存、独立待验证状态、启用和同源运行记录 (1.3s)
+  ✓   4 tests/browser.spec.ts:41:5 › 来源证据详情保留原始观察、采集时间和缺失发布时间 (1.4s)
+  ✓   5 tests/browser.spec.ts:47:5 › 候选理由/评分/证据、默认本人采纳、拒绝留因与显式变体 (1.8s)
+  ✓   6 tests/browser.spec.ts:58:5 › T26 独立笔记登记与更正、旧深链回退、三导航窄屏无溢出 (1.0s)
+  ✓   7 tests/browser.spec.ts:66:5 › S7 手工待确认→部分确认→冲突更正→撤销旧批次，来源及计算可核对 (2.0s)
+  ✓   8 tests/browser.spec.ts:75:5 › S7 模板上传、安全解析状态、字段映射和不可入账示例，键盘可关闭抽屉 (16.8s)
+  ✓   9 tests/browser.spec.ts:80:5 › S8 看板历史值、分析窗口/形式/流量与不可比提示，窄屏和键盘可用 (1.5s)
+  ✓  10 tests/browser.spec.ts:92:5 › S8 周报partial/final/stale、事实计算来源和策略人工激活，合成模型不自动操作 (11.8s)
+  ✘  11 tests/browser.spec.ts:100:5 › S8 反馈录入、未知许可分类、明确用途草案和撤回，键盘及窄屏无自动发送 (341ms)
+(node:44307) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:44307) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  12 tests/browser.spec.ts:105:5 › S8 工作台最多三项真实待办，批次/来源深链和历史指标可溯源，三种宽度与键盘可用 (354ms)
+(node:44327) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:44327) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  13 tests/browser.spec.ts:109:5 › S8 设置产能/预算、真实监控、来源配额、失败重试与通知审计入口可用 (359ms)
+(node:44348) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:44348) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  14 tests/browser.spec.ts:113:5 › S8 来源AI冻结原文、人工采纳不去重，键盘与移动端引用可溯源 (352ms)
+(node:44368) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:44368) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  15 tests/browser.spec.ts:117:5 › S7 OCR 截图上传、键盘区域、近似值更正、确认、预览及手机无横溢出 (30.1s)
+
+
+  1) tests/browser.spec.ts:100:5 › S8 反馈录入、未知许可分类、明确用途草案和撤回，键盘及窄屏无自动发送 ─────────────────────────────
+
+    Error: Command failed: pnpm exec tsx tools/s8/browser-login-reset.ts
+    (node:44292) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+    (Use `node --trace-warnings ...` to show where the warning was created)
+    (node:44295) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+    (Use `node --trace-warnings ...` to show where the warning was created)
+    (node:44301) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+    (Use `node --trace-warnings ...` to show where the warning was created)
+    (node:44301) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+    (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+       99 |
+      100 | test('S8 反馈录入、未知许可分类、明确用途草案和撤回，键盘及窄屏无自动发送',async({page})=>{
+    > 101 |  execFileSync('pnpm',['exec','tsx','tools/s8/browser-login-reset.ts'],{stdio:'pipe'});
+          |              ^
+      102 |  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('/');await page.getByLabel('邮箱').fill('browser@example.test');await page.getByLabel('密码',{exact:false}).fill('Browser-test-password-987');await page.getByRole('button',{name:'登录',exact:true}).click();await expect(page.getByRole('heading',{name:'测试运营，欢迎回来'})).toBeVisible();await page.getByRole('link',{name:'数据复盘',exact:true}).click();await page.getByRole('button',{name:'录入反馈',exact:true}).click();let d=page.getByRole('dialog');await d.getByLabel('反馈原文',{exact:true}).fill('明确合成：想知道怎样观察熟悉场景');await d.getByRole('button',{name:'保存反馈',exact:true}).click();await expect(d.getByRole('button',{name:'AI 分类与草案'})).toBeVisible();await d.getByRole('button',{name:'AI 分类与草案'}).click();await expect(page.getByRole('status').filter({hasText:'AI整理已排队'})).toBeVisible();await expect.poll(async()=>{await d.getByRole('button',{name:'刷新整理结果'}).click();return d.getByRole('combobox',{name:'分类',exact:true}).inputValue();},{timeout:15000}).toBe('question');await expect(d.locator('textarea[name=reply_draft]')).toHaveCount(0);await d.getByLabel('许可状态').selectOption('approved');await d.locator('input[name=public_reply]').check();await d.getByLabel('选题线索引用').check();await d.getByLabel('反馈修改/许可确认原因').fill('明确合成用途确认');await d.getByRole('button',{name:'保存反馈',exact:true}).click();await d.getByRole('button',{name:'AI 分类与草案'}).click();await expect.poll(async()=>{await d.getByRole('button',{name:'刷新整理结果'}).click();return d.locator('textarea[name=reply_draft]').inputValue();},{timeout:15000}).toContain('谢谢分享');await expect(d.getByRole('heading',{name:'许可内选题线索（待人工参考）'})).toBeVisible();await d.getByRole('button',{name:'撤回全部许可'}).click();await expect(d.getByLabel('许可状态')).toHaveValue('revoked');await expect(d.locator('textarea[name=reply_draft]')).toHaveCount(0);await expect(d.getByRole('heading',{name:'许可内选题线索（待人工参考）'})).toHaveCount(0);await expect(d.getByRole('button',{name:'AI 分类与草案'})).toBeDisabled();await page.setViewportSize({width:390,height:1000});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:(process.env.EVIDENCE_DIR??'docs/evidence/s8')+'/screenshots/feedback-revoked-mobile.png',fullPage:true});await page.keyboard.press('Escape');await expect(d).toHaveCount(0);expect(errors).toEqual([]);
+      103 | });
+      104 |
+        at /Users/junlong/projects/social-mdeida-ops-platform/tests/browser.spec.ts:101:14
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser-S8-反馈录入、未知许可分类、明确用途草案和撤回，键盘及窄屏无自动发送/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/browser-S8-反馈录入、未知许可分类、明确用途草案和撤回，键盘及窄屏无自动发送/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/browser-S8-反馈录入、未知许可分类、明确用途草案和撤回，键盘及窄屏无自动发送/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) tests/browser.spec.ts:105:5 › S8 工作台最多三项真实待办，批次/来源深链和历史指标可溯源，三种宽度与键盘可用 ────────────────────────
+
+    Error: Command failed: pnpm exec tsx tools/s8/browser-login-reset.ts
+    (node:44319) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+    (Use `node --trace-warnings ...` to show where the warning was created)
+    (node:44320) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+    (Use `node --trace-warnings ...` to show where the warning was created)
+    (node:44326) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+    (Use `node --trace-warnings ...` to show where the warning was created)
+    (node:44326) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+    (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+      104 |
+      105 | test('S8 工作台最多三项真实待办，批次/来源深链和历史指标可溯源，三种宽度与键盘可用',async({page})=>{
+    > 106 |  execFileSync('pnpm',['exec','tsx','tools/s8/browser-login-reset.ts'],{stdio:'pipe'});const failures:string[]=[];page.on('pageerror',e=>failures.push(e.message));await page.goto('/');await page.getByLabel('邮箱').fill('browser@example.test');await page.getByLabel('密码',{exact:false}).fill('Browser-test-password-987');const login=page.waitForResponse(r=>r.url().endsWith('/api/v1/auth/login')&&r.request().method()==='POST');await page.getByRole('button',{name:'登录',exact:true}).click();const csrf=(await (await login).json()).data.csrf_token;await expect(page.getByRole('heading',{name:'测试运营，欢迎回来'})).toBeVisible();const data=await page.evaluate(async token=>{const call=async(path:string,method='GET',body?:any)=>{const r=await fetch('/api/v1'+path,{method,headers:{'Content-Type':'application/json','X-CSRF-Token':token,'Idempotency-Key':crypto.randomUUID()},...(body?{body:JSON.stringify(body)}:{})});const j=await r.json();if(!r.ok)throw new Error(j.error.code);return j.data;};const a=await call('/accounts','POST',{name:'工作台合成独立账号',platform:'xiaohongshu',platform_user_id:'s8-dashboard-browser'});for(const s of (await call('/source-connections')).items)await call('/source-connections/'+s.id,'PATCH',{enabled:false,expected_version:s.version});const s=await call('/source-connections','POST',{name:'工作台待验证来源',platform:'weibo',source_type:'weibo_hot',provider:'weibo_web',enabled:true,config:{keywords:['旅行']}});await call('/publications','POST',{account_id:a.id,platform_note_id:'dashboard-browser-note',url:'https://www.xiaohongshu.com/explore/dashboard-browser-note',title:'工作台缺数据笔记',media_type:'graphic',published_at:'2026-09-01T00:00:00.000Z',traffic_type:'unknown'});const b=await call('/imports','POST',{account_id:a.id,file_ids:[],source_type:'manual',manual_rows:[{target:{account_id:a.id,publication_id:null},metric_key:'followers',definition_version:'1',aggregation_kind:'snapshot',value:'631',unit:'人',observed_at:'2026-09-01T00:00:00.000Z',traffic_type:'unknown',source_definition:'工作台合成历史观察',time_precision:'day'}]});return {account:a.id,batch:b.id,source:s.id};},csrf);await page.getByRole('button',{name:'刷新工作台'}).click();await page.getByRole('combobox',{name:'工作台账号'}).selectOption(data.account);const tasks=page.locator('ol.notification-list');await expect(tasks.locator('li')).toHaveCount(3);await tasks.getByRole('link',{name:'核对待确认导入'}).click();await expect(page).toHaveURL(new RegExp('batch_id='+data.batch));await expect(page.getByRole('heading',{name:'批次 待确认'})).toBeVisible();await page.getByRole('link',{name:'工作台',exact:true}).click();await page.getByRole('combobox',{name:'工作台账号'}).selectOption(data.account);await tasks.getByRole('link',{name:'检查来源状态：工作台待验证来源'}).click();await expect(page.getByRole('dialog',{name:'工作台待验证来源 · 运行记录'})).toBeVisible();await page.keyboard.press('Escape');await page.getByRole('link',{name:'工作台',exact:true}).click();await page.getByRole('combobox',{name:'工作台账号'}).selectOption(data.account);for(const width of [1440,1280,390]){await page.setViewportSize({width,height:1000});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:`${process.env.EVIDENCE_DIR??'docs/evidence/s8'}/screenshots/dashboard-${width}.png`,fullPage:true});}expect(failures).toEqual([]);
+          |              ^
+      107 | });
+      108 |
+      109 | test('S8 设置产能/预算、真实监控、来源配额、失败重试与通知审计入口可用',async({page})=>{
+        at /Users/junlong/projects/social-mdeida-ops-platform/tests/browser.spec.ts:106:14
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser-S8-工作台最多三项真实待办，批次-来源深链和历史指标可溯源，三种宽度与键盘可用/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/browser-S8-工作台最多三项真实待办，批次-来源深链和历史指标可溯源，三种宽度与键盘可用/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/browser-S8-工作台最多三项真实待办，批次-来源深链和历史指标可溯源，三种宽度与键盘可用/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) tests/browser.spec.ts:109:5 › S8 设置产能/预算、真实监控、来源配额、失败重试与通知审计入口可用 ──────────────────────────────
+
+    Error: Command failed: pnpm exec tsx tools/s8/browser-login-reset.ts
+    (node:44339) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+    (Use `node --trace-warnings ...` to show where the warning was created)
+    (node:44340) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+    (Use `node --trace-warnings ...` to show where the warning was created)
+    (node:44346) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+    (Use `node --trace-warnings ...` to show where the warning was created)
+    (node:44346) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+    (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+      108 |
+      109 | test('S8 设置产能/预算、真实监控、来源配额、失败重试与通知审计入口可用',async({page})=>{
+    > 110 |  execFileSync('pnpm',['exec','tsx','tools/s8/browser-login-reset.ts'],{stdio:'pipe'});const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('/');await page.getByLabel('邮箱').fill('browser@example.test');await page.getByLabel('密码',{exact:false}).fill('Browser-test-password-987');await page.getByRole('button',{name:'登录',exact:true}).click();await expect(page.getByRole('heading',{name:'测试运营，欢迎回来'})).toBeVisible();await page.getByRole('link',{name:'工作区设置'}).click();await page.getByRole('button',{name:'产能与预算',exact:true}).click();await expect(page.getByRole('heading',{name:'产能与 AI 预算'})).toBeVisible();await page.getByLabel('每周可用工时').fill('4.5');await page.getByRole('button',{name:'保存每周产能'}).click();await expect(page.getByRole('status').filter({hasText:'每周产能已保存'})).toBeVisible();await page.getByRole('button',{name:'保存 AI 预算'}).click();await expect(page.getByRole('status').filter({hasText:'AI预算已保存'})).toBeVisible();await page.getByRole('button',{name:'运行状态',exact:true}).click();await expect(page.getByRole('heading',{name:'AI 与实际用量'})).toBeVisible();await expect(page.locator('main')).toContainText('价格 未知');await expect(page.locator('main')).toContainText('not_implemented');await page.setViewportSize({width:390,height:1000});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:(process.env.EVIDENCE_DIR??'docs/evidence/s8')+'/screenshots/operations-monitor-390.png',fullPage:true});await page.setViewportSize({width:1440,height:1000});await page.getByRole('button',{name:'后台任务',exact:true}).click();await page.getByRole('button',{name:'运行检查'}).click();await page.getByRole('button',{name:'刷新',exact:true}).click();await expect(page.getByRole('row').filter({hasText:'system.check'}).first()).toBeVisible();await page.getByRole('button',{name:'详情',exact:true}).first().click();await expect(page.getByRole('dialog',{name:'任务详情'})).toBeVisible();await page.keyboard.press('Escape');await page.getByRole('button',{name:'审计记录',exact:true}).click();await expect(page.getByRole('cell',{name:'settings.update',exact:true}).first()).toBeVisible();await page.getByRole('link',{name:'选题策划',exact:true}).click();await page.getByRole('button',{name:'添加来源'}).click();const d=page.getByRole('dialog');await d.getByLabel('来源名称').fill('S8配额维护来源');await d.getByRole('button',{name:'保存连接'}).click();const row=page.getByRole('row').filter({hasText:'S8配额维护来源'});await row.getByRole('button',{name:'采集配额'}).click();const quota=page.getByRole('dialog',{name:'来源采集配额'});await quota.getByLabel('本地最小采集间隔（秒）').fill('3600');await quota.getByLabel('单次最多来源条目').fill('5');await quota.getByRole('button',{name:'保存来源配额'}).click();await expect(quota).toHaveCount(0);await row.getByRole('button',{name:'采集配额'}).click();await expect(quota.getByLabel('单次最多来源条目')).toHaveValue('5');await page.keyboard.press('Escape');await page.getByRole('button',{name:'通知',exact:true}).click();await expect(page.getByRole('dialog',{name:'我的通知'})).toBeVisible();await page.keyboard.press('Escape');await page.setViewportSize({width:390,height:1000});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:(process.env.EVIDENCE_DIR??'docs/evidence/s8')+'/screenshots/operations-390.png',fullPage:true});expect(errors).toEqual([]);
+          |              ^
+      111 | });
+      112 |
+      113 | test('S8 来源AI冻结原文、人工采纳不去重，键盘与移动端引用可溯源',async({page})=>{
+        at /Users/junlong/projects/social-mdeida-ops-platform/tests/browser.spec.ts:110:14
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser-S8-设置产能-预算、真实监控、来源配额、失败重试与通知审计入口可用/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/browser-S8-设置产能-预算、真实监控、来源配额、失败重试与通知审计入口可用/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/browser-S8-设置产能-预算、真实监控、来源配额、失败重试与通知审计入口可用/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) tests/browser.spec.ts:113:5 › S8 来源AI冻结原文、人工采纳不去重，键盘与移动端引用可溯源 ─────────────────────────────────
+
+    Error: Command failed: pnpm exec tsx tools/s8/browser-login-reset.ts
+    (node:44360) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+    (Use `node --trace-warnings ...` to show where the warning was created)
+    (node:44361) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+    (Use `node --trace-warnings ...` to show where the warning was created)
+    (node:44367) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+    (Use `node --trace-warnings ...` to show where the warning was created)
+    (node:44367) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+    (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+      112 |
+      113 | test('S8 来源AI冻结原文、人工采纳不去重，键盘与移动端引用可溯源',async({page})=>{
+    > 114 |  execFileSync('pnpm',['exec','tsx','tools/s8/browser-login-reset.ts'],{stdio:'pipe'});execFileSync('pnpm',['exec','tsx','tools/s3-browser-seed.ts'],{stdio:'pipe',env:process.env});const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('/');await page.getByLabel('邮箱').fill('browser@example.test');await page.getByLabel('密码',{exact:false}).fill('Browser-test-password-987');await page.getByRole('button',{name:'登录',exact:true}).click();await expect(page.getByRole('heading',{name:'测试运营，欢迎回来'})).toBeVisible();await page.getByRole('link',{name:'选题策划',exact:true}).click();await page.getByPlaceholder('标题、摘要或采集关键词').fill('明确合成的浏览器证据线索');await page.getByRole('button',{name:'筛选',exact:true}).click();await expect(page.getByRole('heading',{name:'明确合成的浏览器证据线索'})).toBeVisible();const before=(await (await page.request.get('/api/v1/source-items')).json()).data.items.map((r:any)=>r.id).sort();await page.getByRole('button',{name:'整理当前线索',exact:true}).click();const detail=page.getByRole('region',{name:'来源整理详情'});await expect(async()=>{await page.getByRole('button',{name:'刷新来源整理'}).click();await expect(detail).toContainText('日常观察主题');}).toPass({timeout:15000});await expect(detail.locator('blockquote')).toContainText(['明确合成的浏览器证据线索']);await expect(detail.getByRole('link',{name:/原文来源/}).first()).toHaveAttribute('href','https://s.weibo.com/weibo?q=controlled');await expect(detail).toContainText('未提供，不能用采集时间代替');await detail.getByRole('checkbox').first().focus();await page.keyboard.press('Space');await detail.getByLabel('采纳来源整理原因').fill('明确合成夹具，人工核验引用');await detail.getByRole('button',{name:'人工采纳整理观点'}).click();await expect(detail).toContainText('已人工采纳主题');expect((await (await page.request.get('/api/v1/source-items')).json()).data.items.map((r:any)=>r.id).sort()).toEqual(before);for(const width of [1440,390]){await page.setViewportSize({width,height:1000});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:`${process.env.EVIDENCE_DIR??'docs/evidence/s8'}/screenshots/source-organization-${width}.png`,fullPage:true});}expect(errors).toEqual([]);
+          |              ^
+      115 | });
+      116 |
+      117 | test('S7 OCR 截图上传、键盘区域、近似值更正、确认、预览及手机无横溢出',async({page})=>{
+        at /Users/junlong/projects/social-mdeida-ops-platform/tests/browser.spec.ts:114:14
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser-S8-来源AI冻结原文、人工采纳不去重，键盘与移动端引用可溯源/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/browser-S8-来源AI冻结原文、人工采纳不去重，键盘与移动端引用可溯源/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/browser-S8-来源AI冻结原文、人工采纳不去重，键盘与移动端引用可溯源/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) tests/browser.spec.ts:117:5 › S7 OCR 截图上传、键盘区域、近似值更正、确认、预览及手机无横溢出 ─────────────────────────────
+
+    [31mTest timeout of 30000ms exceeded.[39m
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+    [2m  - waiting for getByRole('link', { name: '数据复盘', exact: true })[22m
+
+
+      117 | test('S7 OCR 截图上传、键盘区域、近似值更正、确认、预览及手机无横溢出',async({page})=>{
+      118 |  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
+    > 119 |  await page.goto('/');await page.getByLabel('邮箱').fill('browser@example.test');await page.getByLabel('密码',{exact:false}).fill('Browser-test-password-987');await page.getByRole('button',{name:'登录',exact:true}).click();await page.getByRole('link',{name:'数据复盘',exact:true}).click();
+          |                                                                                                                                                                                                                                                                                ^
+      120 |  await page.getByLabel('上传后台截图').setInputFiles('tests/fixtures/transparent.png');const d=page.getByRole('dialog',{name:'截图识别批次'});await expect(d).toBeVisible();
+      121 |  await expect(async()=>{await d.getByRole('button',{name:'读取解析结果'}).click();await expect(page.getByRole('status')).toContainText('原图已保留');}).toPass();
+      122 |  await d.getByRole('button',{name:'创建解析批次'}).click();await expect(d).toHaveCount(0);
+        at /Users/junlong/projects/social-mdeida-ops-platform/tests/browser.spec.ts:119:272
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser-S7-OCR-截图上传、键盘区域、近似值更正、确认、预览及手机无横溢出/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/browser-S7-OCR-截图上传、键盘区域、近似值更正、确认、预览及手机无横溢出/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/browser-S7-OCR-截图上传、键盘区域、近似值更正、确认、预览及手机无横溢出/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/browser-S7-OCR-截图上传、键盘区域、近似值更正、确认、预览及手机无横溢出/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5 failed
+    tests/browser.spec.ts:100:5 › S8 反馈录入、未知许可分类、明确用途草案和撤回，键盘及窄屏无自动发送 ──────────────────────────────
+    tests/browser.spec.ts:105:5 › S8 工作台最多三项真实待办，批次/来源深链和历史指标可溯源，三种宽度与键盘可用 ─────────────────────────
+    tests/browser.spec.ts:109:5 › S8 设置产能/预算、真实监控、来源配额、失败重试与通知审计入口可用 ───────────────────────────────
+    tests/browser.spec.ts:113:5 › S8 来源AI冻结原文、人工采纳不去重，键盘与移动端引用可溯源 ──────────────────────────────────
+    tests/browser.spec.ts:117:5 › S7 OCR 截图上传、键盘区域、近似值更正、确认、预览及手机无横溢出 ──────────────────────────────
+  10 passed (1.3m)
+file:///Users/junlong/projects/social-mdeida-ops-platform/tools/s7/ocr-env.mjs:11
+async function run(cmd,args){await new Promise((resolve,reject)=>{const p=spawn(cmd,args,{env,stdio:'inherit'});p.on('error',reject);p.on('exit',code=>code===0?resolve():reject(new Error(cmd+' failed')));});}
+                                                                                                                                                                                 ^
+
+Error: node failed
+    at ChildProcess.<anonymous> (file:///Users/junlong/projects/social-mdeida-ops-platform/tools/s7/ocr-env.mjs:11:178)
+    at ChildProcess.emit (node:events:508:28)
+    at ChildProcess._handle.onexit (node:internal/child_process:294:12)
+
+Node.js v24.14.1

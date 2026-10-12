@@ -1,0 +1,38 @@
+# Local HTTPS by default; supply a reviewed public domain and bind address for public deployment.
+services:
+  storage:
+    ports: !reset []
+  migrate:
+    environment: &https
+      NODE_ENV: production
+      APP_ORIGIN: ${HTTPS_ORIGIN:-https://localhost:3443}
+      S3_PUBLIC_ENDPOINT: ${HTTPS_ORIGIN:-https://localhost:3443}
+      TRUST_PROXY: '1'
+  api:
+    ports: !reset []
+    environment: *https
+  worker:
+    environment: *https
+  media:
+    environment: *https
+  scheduler:
+    environment: *https
+  proxy:
+    image: caddy:2.10.2-alpine@sha256:4c6e91c6ed0e2fa03efd5b44747b625fec79bc9cd06ac5235a779726618e530d
+    depends_on:
+      api:
+        condition: service_healthy
+    environment:
+      YOYO_DOMAIN: ${YOYO_DOMAIN:-localhost}
+      YOYO_TLS: ${YOYO_TLS:-internal}
+    ports:
+      - '${HTTPS_BIND:-127.0.0.1}:${HTTPS_PORT:-3443}:443'
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - proxy-data:/data
+      - proxy-config:/config
+    restart: unless-stopped
+    security_opt: ['no-new-privileges:true']
+volumes:
+  proxy-data:
+  proxy-config:

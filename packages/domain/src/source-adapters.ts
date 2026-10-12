@@ -32,7 +32,9 @@ export const xhsCollector:Collector=async(c,signal)=>{
  const payload={source_type:c.source_type,config:c.config};let response:any;
  if(process.env.SOURCE_BRIDGE_URL){
   const base=new URL(process.env.SOURCE_BRIDGE_URL);if(!['http:','https:'].includes(base.protocol)||base.username||base.password)throw new SourceFailure('ADAPTER_UNAVAILABLE');
-  const token=process.env.SOURCE_BRIDGE_TOKEN??(process.env.SOURCE_BRIDGE_TOKEN_FILE?readFileSync(process.env.SOURCE_BRIDGE_TOKEN_FILE,'utf8').trim():'');if(!token)throw new SourceFailure('ADAPTER_UNAVAILABLE');
+  let token=process.env.SOURCE_BRIDGE_TOKEN;
+  if(!token&&process.env.SOURCE_BRIDGE_TOKEN_FILE){try{token=readFileSync(process.env.SOURCE_BRIDGE_TOKEN_FILE,'utf8').trim();}catch{throw new SourceFailure('ADAPTER_UNAVAILABLE');}}
+  if(!token)throw new SourceFailure('ADAPTER_UNAVAILABLE');
   try{const r=await fetch(new URL('/collect',base),{method:'POST',redirect:'error',signal:AbortSignal.any([signal,AbortSignal.timeout(90000)]),headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify(payload)});if(!r.ok)throw new SourceFailure(r.status===409?'BROWSER_BUSY':'BROWSER_UNAVAILABLE');response=await boundedJson(r,signal);}catch(e){if(e instanceof SourceFailure)throw e;throw new SourceFailure(signal.aborted?'TIMEOUT':'BROWSER_UNAVAILABLE');}
  }else{
   response=await new Promise((accept,reject)=>{

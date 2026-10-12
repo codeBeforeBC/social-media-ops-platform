@@ -1,0 +1,110 @@
+{
+  "checked_at": "2026-10-11T12:12:57.189Z",
+  "classification": "synthetic_scale_actual_runtime_measurements",
+  "environment": {
+    "api": "native_host_node",
+    "db": "Docker Desktop arm64 PostgreSQL on loopback",
+    "host_platform": "darwin",
+    "host_arch": "arm64",
+    "host_cpus": 10,
+    "host_memory_bytes": 25769803776,
+    "database": "yoyo_s9_performance_test"
+  },
+  "production_environment_acceptance": false,
+  "api": [
+    {
+      "route": "/dashboard?account_id={id}",
+      "requests": 50,
+      "concurrency": 5,
+      "p95_ms": 40.88208399999985,
+      "max_ms": 42.328583000000435,
+      "target_ms": 1000
+    },
+    {
+      "route": "/source-items?limit=20",
+      "requests": 50,
+      "concurrency": 5,
+      "p95_ms": 4.8127919999997175,
+      "max_ms": 5.022667000000183,
+      "target_ms": 1000
+    },
+    {
+      "route": "/source-items/{id}",
+      "requests": 50,
+      "concurrency": 5,
+      "p95_ms": 3.396082999999635,
+      "max_ms": 3.5245420000001104,
+      "target_ms": 1000
+    },
+    {
+      "route": "/publications?account_id={id}&limit=20",
+      "requests": 50,
+      "concurrency": 5,
+      "p95_ms": 7.631791999999223,
+      "max_ms": 8.298625000000357,
+      "target_ms": 1000
+    },
+    {
+      "route": "/publications/{id}",
+      "requests": 50,
+      "concurrency": 5,
+      "p95_ms": 3.8637079999998605,
+      "max_ms": 3.9992920000004233,
+      "target_ms": 1000
+    },
+    {
+      "route": "/metrics?account_id={id}&limit=20",
+      "requests": 50,
+      "concurrency": 5,
+      "p95_ms": 76.9340830000001,
+      "max_ms": 86.66829099999995,
+      "target_ms": 1000
+    },
+    {
+      "route": "/metrics/{id}/sources",
+      "requests": 50,
+      "concurrency": 5,
+      "p95_ms": 4.802749999999833,
+      "max_ms": 5.013582999999926,
+      "target_ms": 1000
+    }
+  ],
+  "ui": [
+    {
+      "page": "工作台",
+      "viewport": 1440,
+      "elapsed_ms": 114.68587500000012,
+      "target_ms": 3000,
+      "condition": "loaded navigation and meaningful enabled control; recap analysis explicitly narrowed to 7 days; one sample, not p95"
+    },
+    {
+      "page": "选题策划",
+      "viewport": 1440,
+      "elapsed_ms": 71.47529200000008,
+      "target_ms": 3000,
+      "condition": "loaded navigation and meaningful enabled control; recap analysis explicitly narrowed to 7 days; one sample, not p95"
+    },
+    {
+      "page": "数据复盘",
+      "viewport": 1440,
+      "elapsed_ms": 658.2012500000001,
+      "target_ms": 3000,
+      "condition": "loaded navigation and meaningful enabled control; recap analysis explicitly narrowed to 7 days; one sample, not p95"
+    }
+  ],
+  "dataset": {
+    "sources": 10000,
+    "publications": 1000,
+    "observations": 100000,
+    "users": 5,
+    "workspaces": 1,
+    "accounts": 1
+  },
+  "async_acceptance": {
+    "requests": 20,
+    "p95_ms": 8.095665999999255,
+    "target_ms": 2000,
+    "execution_not_measured": true
+  },
+  "result": "passed_api_local_scope"
+}

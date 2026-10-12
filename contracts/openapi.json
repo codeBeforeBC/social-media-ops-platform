@@ -13833,6 +13833,134 @@
         "x-implementation-status": "implemented"
       }
     },
+    "/files/{id}": {
+      "get": {
+        "operationId": "get_files_id",
+        "summary": "内部运营工作台接口",
+        "description": "内部运营工作台接口",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/FileObject"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "x-implementation-status": "implemented"
+      }
+    },
     "/metrics/calculations": {
       "get": {
         "operationId": "get_metrics_calculations",
@@ -17209,7 +17337,8 @@
             "enum": [
               "csv",
               "xlsx",
-              "manual"
+              "manual",
+              "screenshot"
             ]
           },
           "status": {
@@ -18744,7 +18873,8 @@
             "enum": [
               "csv",
               "xlsx",
-              "manual"
+              "manual",
+              "screenshot"
             ]
           },
           "manual_rows": {
@@ -18752,6 +18882,9 @@
             "items": {
               "type": "object"
             }
+          },
+          "source_region": {
+            "$ref": "#/components/schemas/SourceRegion"
           },
           "field_mapping": {
             "type": "object",
@@ -18795,6 +18928,9 @@
               "valid",
               "excluded"
             ]
+          },
+          "source_region": {
+            "$ref": "#/components/schemas/SourceRegion"
           },
           "reason": {
             "type": "string",
@@ -20310,6 +20446,34 @@
           "etag",
           "upload_url",
           "method"
+        ],
+        "additionalProperties": false
+      },
+      "SourceRegion": {
+        "type": "object",
+        "properties": {
+          "x": {
+            "type": "number",
+            "minimum": 0
+          },
+          "y": {
+            "type": "number",
+            "minimum": 0
+          },
+          "width": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "height": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          }
+        },
+        "required": [
+          "x",
+          "y",
+          "width",
+          "height"
         ],
         "additionalProperties": false
       },

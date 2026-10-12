@@ -1,0 +1,120 @@
+Instance credentials ready; no secrets printed.
+ Image yoyo-import-parser-ocr-local:1.0.0 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 618B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.36kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 177B done
+#4 DONE 0.0s
+
+#5 [build 1/4] FROM docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#5 resolve docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 235B done
+#6 DONE 0.0s
+
+#7 [stage-1 6/7] COPY tools/media/image-ocr.py /usr/local/lib/yoyo/image-ocr.py
+#7 CACHED
+
+#8 [build 4/4] RUN gcc -O2 -Wall /sandbox.c -o /media-sandbox
+#8 CACHED
+
+#9 [stage-1 4/7] COPY tools/media/server.mjs /app/server.mjs
+#9 CACHED
+
+#10 [build 2/4] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && apt-get -o Acquire::Retries=3 install -y --no-install-recommends gcc libc6-dev linux-libc-dev
+#10 CACHED
+
+#11 [stage-1 3/7] COPY --from=build /media-sandbox /usr/local/bin/media-sandbox
+#11 CACHED
+
+#12 [stage-1 2/7] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && (apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil ca-certificates tesseract-ocr tesseract-ocr-chi-sim tesseract-ocr-eng || apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil ca-certificates tesseract-ocr tesseract-ocr-chi-sim tesseract-ocr-eng) && rm -rf /var/lib/apt/lists/* && mkdir /scratch && chown node:node /scratch
+#12 CACHED
+
+#13 [stage-1 5/7] COPY tools/media/import-validate.py /usr/local/lib/yoyo/import-validate.py
+#13 CACHED
+
+#14 [build 3/4] COPY tools/media/sandbox.c /sandbox.c
+#14 CACHED
+
+#15 [stage-1 7/7] WORKDIR /app
+#15 CACHED
+
+#16 exporting to image
+#16 exporting layers done
+#16 exporting manifest sha256:8d06253b0f706d6af0fa1f6b1bceb839659aacd3038ba96ae7796b33cb156e58 done
+#16 exporting config sha256:8bc007247a7734fa6558cedf9adbca12d1ae0ea75fb912c63c77c91e59f1d705 done
+#16 exporting attestation manifest sha256:b415f012bbe10a4b394f5ff30424237e7a448728fc6a2c3d73624d84733b7459 done
+#16 exporting manifest list sha256:d48c15fbe95493c14ad68123cad75c735d818d01a1705c58dbdbdbe31ba27bd0 done
+#16 naming to docker.io/library/yoyo-import-parser-ocr-local:1.0.0 done
+#16 unpacking to docker.io/library/yoyo-import-parser-ocr-local:1.0.0 done
+#16 DONE 0.0s
+
+#17 resolving provenance for metadata file
+#17 DONE 0.0s
+ Image yoyo-import-parser-ocr-local:1.0.0 Built 
+ Container yoyo-s7-ocr-tests-media-executor-1 Recreate 
+ Container yoyo-s7-ocr-tests-media-executor-1 Recreated 
+ Container yoyo-s7-ocr-tests-storage-1 Starting 
+ Container yoyo-s7-ocr-tests-media-executor-1 Starting 
+ Container yoyo-s7-ocr-tests-storage-1 Started 
+ Container yoyo-s7-ocr-tests-media-executor-1 Started 
+ Container yoyo-s7-ocr-tests-storage-1 Waiting 
+ Container yoyo-s7-ocr-tests-media-executor-1 Waiting 
+ Container yoyo-s7-ocr-tests-media-executor-1 Healthy 
+ Container yoyo-s7-ocr-tests-storage-1 Healthy 
+Private storage ready.
+{"event":"http.request","request_id":"e986d5e3-2344-4309-aa0a-948cf0edbbdc","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":6}
+{"event":"http.request","request_id":"681b296d-b2d4-4ed7-b336-f6934915b4d4","method":"POST","path":"/api/v1/setup","status":201,"duration_ms":36}
+{"event":"http.request","request_id":"d71007bd-2d58-4f45-957b-5bf4e110e5d4","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"bbe152ba-1b38-4765-90e2-a209adcd879f","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":24}
+{"event":"http.request","request_id":"cc3af5ca-fb4c-40ab-acdc-bd662842a1f6","method":"GET","path":"/api/v1/me","status":200,"duration_ms":89}
+{"event":"http.request","request_id":"3c181859-0e8e-49ff-ba34-18d8781cd391","method":"POST","path":"/api/v1/accounts","status":201,"duration_ms":8}
+{"event":"http.request","request_id":"4db7dcf9-aee5-41a6-8a00-730363af3108","method":"POST","path":"/api/v1/publications","status":201,"duration_ms":9}
+{"event":"http.request","request_id":"ca57d906-2aee-4ffd-b0dd-74a19b34436c","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":22}
+{"event":"http.request","request_id":"72c42769-7c98-4d24-a555-3a18b464e658","method":"POST","path":"/api/v1/uploads/544f1eb9-eb48-420a-a564-c550a83a72e6/parts","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"abf76a50-9c86-47c8-a15f-0c7bdd1dba8f","method":"PUT","path":"/api/v1/uploads/544f1eb9-eb48-420a-a564-c550a83a72e6/parts/1","status":200,"duration_ms":15}
+{"event":"http.request","request_id":"e1e5abda-4daf-48cb-836a-4bfaf0e91201","method":"POST","path":"/api/v1/uploads/544f1eb9-eb48-420a-a564-c550a83a72e6/complete","status":200,"duration_ms":14}
+{"event":"http.request","request_id":"1b3c79b1-8783-443f-8c7b-6e81b8cdb2f6","method":"GET","path":"/api/v1/files/c0855d5b-e1a3-4815-8c51-5e9341762e00","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"32dc5e06-78e8-409a-987d-e53dccdd0629","method":"POST","path":"/api/v1/imports","status":202,"duration_ms":9}
+{"event":"http.request","request_id":"c870169f-0783-4607-87d3-13f9fb8669ff","method":"GET","path":"/api/v1/imports/e8cb7ba3-f31e-46d5-8fbd-0b3f11d735e4/rows","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"b9d68980-5386-4dc5-a8c4-b54b0a7ef5c2","method":"PATCH","path":"/api/v1/import-rows/ff2f56ae-38b8-4ca4-93d0-d2787705cbc8","status":200,"duration_ms":15}
+{"event":"http.request","request_id":"f4b26bb3-5778-42d0-86e8-e55091316ffd","method":"GET","path":"/api/v1/imports/e8cb7ba3-f31e-46d5-8fbd-0b3f11d735e4","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"1700efca-bc98-45ff-a68b-43803a575924","method":"POST","path":"/api/v1/imports/e8cb7ba3-f31e-46d5-8fbd-0b3f11d735e4/confirm","status":200,"duration_ms":8}
+{"event":"http.request","request_id":"47e9a7cc-f335-4dd8-a9a9-8ebb572dbaa6","method":"GET","path":"/api/v1/files/c0855d5b-e1a3-4815-8c51-5e9341762e00/download","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"06b7b478-7a3f-415d-b625-eb854e3f34ef","method":"POST","path":"/api/v1/imports","status":202,"duration_ms":5}
+{"event":"http.request","request_id":"dd573819-6836-4a95-8bee-7a8b5fc68a7e","method":"GET","path":"/api/v1/imports/ccddbe51-9052-4400-8b59-0ad28d145cc2/rows","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"93417ef7-5271-423c-84f5-15cd97c139ea","method":"POST","path":"/api/v1/imports/ccddbe51-9052-4400-8b59-0ad28d145cc2/confirm","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"449cf1ff-5e2d-4a78-b3ff-b94bd7044457","method":"GET","path":"/api/v1/imports/e8cb7ba3-f31e-46d5-8fbd-0b3f11d735e4","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"6698bf8a-eb78-42b9-964e-4ee50492f5d6","method":"POST","path":"/api/v1/imports/e8cb7ba3-f31e-46d5-8fbd-0b3f11d735e4/revert","status":200,"duration_ms":6}
+{"event":"http.request","request_id":"b0158aef-9471-4b21-b2f4-25c53ecede01","method":"POST","path":"/api/v1/imports/ccddbe51-9052-4400-8b59-0ad28d145cc2/revert","status":200,"duration_ms":7}
+{"event":"http.request","request_id":"7ca0947f-1519-4206-9bbf-716ba2fbdc64","method":"GET","path":"/api/v1/metrics/bfa13581-318e-4028-b054-eb0b30d47d25/sources","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"29a794cf-fe5e-494b-aacb-b9a0480cb984","method":"POST","path":"/api/v1/uploads","status":201,"duration_ms":7}
+{"event":"http.request","request_id":"2c74fbd2-71b5-411c-a778-b88aa50d124f","method":"POST","path":"/api/v1/uploads/e1659571-6c2d-4af0-b1c8-4e2ffa072e9d/parts","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"a8c4ebe0-d3cd-415a-bc71-36d258fd85ef","method":"PUT","path":"/api/v1/uploads/e1659571-6c2d-4af0-b1c8-4e2ffa072e9d/parts/1","status":200,"duration_ms":6}
+{"event":"http.request","request_id":"9ea755a4-7b46-4b31-a23f-aa5bde36cfb4","method":"POST","path":"/api/v1/uploads/e1659571-6c2d-4af0-b1c8-4e2ffa072e9d/complete","status":200,"duration_ms":8}
+{"event":"http.request","request_id":"e89c4586-2d93-439b-b586-c9819a5fd751","method":"GET","path":"/api/v1/files/f087fd61-7c6b-47ae-b08d-94aabcbb9ab7","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"1751dc2e-250f-430a-81a2-3fb08f04e15a","method":"POST","path":"/api/v1/imports","status":202,"duration_ms":5}
+{"event":"http.request","request_id":"7d4392b3-e0e9-49c0-b50c-ec37e42c3001","method":"GET","path":"/api/v1/imports/fabb2f30-5923-4714-ad24-d3eaa77dcecf/rows","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"57590d66-4889-4f7d-937a-e8d3620d9275","method":"PATCH","path":"/api/v1/import-rows/453be776-46a1-4347-bc3c-f3418dfb33a8","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"c2c6f448-159a-443f-af6d-3763e0dc13c0","method":"GET","path":"/api/v1/imports/fabb2f30-5923-4714-ad24-d3eaa77dcecf","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"9b7bd7b0-fe79-46f3-8c99-c38ad86865b0","method":"POST","path":"/api/v1/imports/fabb2f30-5923-4714-ad24-d3eaa77dcecf/confirm","status":200,"duration_ms":6}
+{"event":"http.request","request_id":"36592ee7-0ae5-4f9d-b870-6c532b3d3e7f","method":"GET","path":"/api/v1/files/f087fd61-7c6b-47ae-b08d-94aabcbb9ab7/download","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"bbacf4b1-50db-4498-8652-4ec7ece00a23","method":"POST","path":"/api/v1/imports","status":202,"duration_ms":5}
+{"event":"http.request","request_id":"21f98585-f6c6-48c0-b05d-a5683d2175c6","method":"GET","path":"/api/v1/imports/d430c035-b2b7-4620-a5da-7b9e4145560f/rows","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"c097e82b-9aab-4a21-8ba0-4025fd899c4b","method":"POST","path":"/api/v1/imports/d430c035-b2b7-4620-a5da-7b9e4145560f/confirm","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"4de0f110-3dbb-4434-bc4a-393877e4be45","method":"GET","path":"/api/v1/imports/fabb2f30-5923-4714-ad24-d3eaa77dcecf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"4cca2b95-52b4-4da5-8082-7d21a3ae70fe","method":"POST","path":"/api/v1/imports/fabb2f30-5923-4714-ad24-d3eaa77dcecf/revert","status":200,"duration_ms":6}
+{"event":"http.request","request_id":"2253cfdf-c300-40ae-805c-adf3abcdeea9","method":"POST","path":"/api/v1/imports/d430c035-b2b7-4620-a5da-7b9e4145560f/revert","status":200,"duration_ms":6}
+{"event":"http.request","request_id":"2df2b5ad-ec75-4a32-9413-f938c1b05169","method":"GET","path":"/api/v1/metrics/bd9e7c4d-21a8-4730-b98b-360abbc1f21c/sources","status":200,"duration_ms":2}
+{"checks":2,"result":"passed_partial_two_real_screenshots","real_account_integration":false,"video":"missing","credentials_printed":false}

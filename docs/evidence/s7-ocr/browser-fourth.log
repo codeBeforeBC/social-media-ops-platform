@@ -1,0 +1,152 @@
+Instance credentials ready; no secrets printed.
+ Image yoyo-import-parser-ocr-local:1.0.0 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 618B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.36kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 177B done
+#4 DONE 0.0s
+
+#5 [build 1/4] FROM docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#5 resolve docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 235B done
+#6 DONE 0.0s
+
+#7 [stage-1 6/7] COPY tools/media/image-ocr.py /usr/local/lib/yoyo/image-ocr.py
+#7 CACHED
+
+#8 [build 3/4] COPY tools/media/sandbox.c /sandbox.c
+#8 CACHED
+
+#9 [build 4/4] RUN gcc -O2 -Wall /sandbox.c -o /media-sandbox
+#9 CACHED
+
+#10 [stage-1 3/7] COPY --from=build /media-sandbox /usr/local/bin/media-sandbox
+#10 CACHED
+
+#11 [stage-1 5/7] COPY tools/media/import-validate.py /usr/local/lib/yoyo/import-validate.py
+#11 CACHED
+
+#12 [build 2/4] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && apt-get -o Acquire::Retries=3 install -y --no-install-recommends gcc libc6-dev linux-libc-dev
+#12 CACHED
+
+#13 [stage-1 2/7] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && (apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil ca-certificates tesseract-ocr tesseract-ocr-chi-sim tesseract-ocr-eng || apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil ca-certificates tesseract-ocr tesseract-ocr-chi-sim tesseract-ocr-eng) && rm -rf /var/lib/apt/lists/* && mkdir /scratch && chown node:node /scratch
+#13 CACHED
+
+#14 [stage-1 4/7] COPY tools/media/server.mjs /app/server.mjs
+#14 CACHED
+
+#15 [stage-1 7/7] WORKDIR /app
+#15 CACHED
+
+#16 exporting to image
+#16 exporting layers done
+#16 exporting manifest sha256:8d06253b0f706d6af0fa1f6b1bceb839659aacd3038ba96ae7796b33cb156e58 done
+#16 exporting config sha256:8bc007247a7734fa6558cedf9adbca12d1ae0ea75fb912c63c77c91e59f1d705 done
+#16 exporting attestation manifest sha256:fb017eb96c51862bcbb145c018cd08d07d1b8df738ae5d94fca911a6843e9e57 done
+#16 exporting manifest list sha256:de23add58232be4f40723e188b8b3488bd13c6b5f764863765def04c970c7919 done
+#16 naming to docker.io/library/yoyo-import-parser-ocr-local:1.0.0 done
+#16 unpacking to docker.io/library/yoyo-import-parser-ocr-local:1.0.0 done
+#16 DONE 0.0s
+
+#17 resolving provenance for metadata file
+#17 DONE 0.0s
+ Image yoyo-import-parser-ocr-local:1.0.0 Built 
+ Container yoyo-s7-ocr-tests-storage-1 Running 
+ Container yoyo-s7-ocr-tests-media-executor-1 Recreate 
+ Container yoyo-s7-ocr-tests-media-executor-1 Recreated 
+ Container yoyo-s7-ocr-tests-media-executor-1 Starting 
+ Container yoyo-s7-ocr-tests-media-executor-1 Started 
+ Container yoyo-s7-ocr-tests-media-executor-1 Waiting 
+ Container yoyo-s7-ocr-tests-storage-1 Waiting 
+ Container yoyo-s7-ocr-tests-media-executor-1 Healthy 
+ Container yoyo-s7-ocr-tests-storage-1 Healthy 
+Private storage ready.
+[2m[WebServer] [22m(node:45002) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:45003) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:45009) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:45009) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 15 tests using 1 worker
+
+(node:45127) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:45127) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 tests/browser.spec.ts:5:5 › 首次设置、三导航、账号表单、设置保存、键盘抽屉和退出 (2.3s)
+  ✓   2 tests/browser.spec.ts:24:5 › 请求失败显示可重试错误，加载状态和登录过期可见 (1.6s)
+  ✓   3 tests/browser.spec.ts:31:5 › 来源连接保存、独立待验证状态、启用和同源运行记录 (1.3s)
+  ✓   4 tests/browser.spec.ts:41:5 › 来源证据详情保留原始观察、采集时间和缺失发布时间 (1.3s)
+  ✓   5 tests/browser.spec.ts:47:5 › 候选理由/评分/证据、默认本人采纳、拒绝留因与显式变体 (1.9s)
+  ✓   6 tests/browser.spec.ts:58:5 › T26 独立笔记登记与更正、旧深链回退、三导航窄屏无溢出 (996ms)
+  ✓   7 tests/browser.spec.ts:66:5 › S7 手工待确认→部分确认→冲突更正→撤销旧批次，来源及计算可核对 (2.0s)
+  ✓   8 tests/browser.spec.ts:75:5 › S7 模板上传、安全解析状态、字段映射和不可入账示例，键盘可关闭抽屉 (22.0s)
+  ✓   9 tests/browser.spec.ts:80:5 › S8 看板历史值、分析窗口/形式/流量与不可比提示，窄屏和键盘可用 (1.5s)
+  ✓  10 tests/browser.spec.ts:92:5 › S8 周报partial/final/stale、事实计算来源和策略人工激活，合成模型不自动操作 (11.8s)
+  ✓  11 tests/browser.spec.ts:100:5 › S8 反馈录入、未知许可分类、明确用途草案和撤回，键盘及窄屏无自动发送 (2.9s)
+  ✓  12 tests/browser.spec.ts:105:5 › S8 工作台最多三项真实待办，批次/来源深链和历史指标可溯源，三种宽度与键盘可用 (1.4s)
+  ✓  13 tests/browser.spec.ts:109:5 › S8 设置产能/预算、真实监控、来源配额、失败重试与通知审计入口可用 (1.9s)
+  ✓  14 tests/browser.spec.ts:113:5 › S8 来源AI冻结原文、人工采纳不去重，键盘与移动端引用可溯源 (7.2s)
+  ✘  15 tests/browser.spec.ts:117:5 › S7 OCR 截图上传、键盘区域、近似值更正、确认、预览及手机无横溢出 (30.1s)
+
+
+  1) tests/browser.spec.ts:117:5 › S7 OCR 截图上传、键盘区域、近似值更正、确认、预览及手机无横溢出 ─────────────────────────────
+
+    [31mTest timeout of 30000ms exceeded.[39m
+
+    Error: locator.selectOption: Test timeout of 30000ms exceeded.
+    Call log:
+    [2m  - waiting for getByRole('dialog', { name: '更正导入行' }).getByLabel('指标', { exact: true })[22m
+
+
+      126 |  await expect(edit.getByAltText('私有导入原图预览')).toBeVisible();await expect(edit.getByRole('button',{name:'保存更正，仍需确认'})).toBeDisabled();
+      127 |  for(const [label,value] of [['原图区域 X','0'],['原图区域 Y','0'],['原图区域宽度','1'],['原图区域高度','1']] as const)await edit.getByLabel(label,{exact:true}).fill(value);
+    > 128 |  await edit.getByLabel('指标',{exact:true}).selectOption('followers');await edit.getByLabel('原值（缺失留空，1.2 万为约数）').fill('1.2 万');await edit.getByLabel('观察时间（带时区 ISO8601）').fill('2026-10-05T00:00:00+08:00');await edit.getByLabel('平台实际指标定义').fill('明确合成OCR浏览器口径');await edit.getByLabel('更正原因').fill('合成原图键盘选区核对');await edit.getByRole('button',{name:'保存更正，仍需确认'}).click();await expect(edit).toHaveCount(0);
+          |                                           ^
+      129 |  const fixed=page.getByRole('row').filter({hasText:'明确合成OCR浏览器口径'});await expect(fixed).toContainText('12000');await expect(fixed).toContainText('约数');await fixed.getByRole('checkbox').check();await page.getByLabel('确认 / 更正原因').fill('确认合成OCR行');await page.getByRole('button',{name:'确认所选合法行'}).click();await expect(page.getByRole('heading',{name:'批次 已确认',exact:true})).toBeVisible();
+      130 |  await fixed.getByRole('button',{name:'核对原图区域'}).click();await expect(page.getByRole('dialog',{name:'原图与来源区域'}).getByAltText('私有导入原图预览')).toBeVisible();await page.keyboard.press('Escape');await expect(page.getByRole('dialog')).toHaveCount(0);
+      131 |  mkdirSync((process.env.EVIDENCE_DIR??'docs/evidence/s7-ocr')+'/screenshots',{recursive:true});for(const width of [1440,1280,390]){await page.setViewportSize({width,height:1000});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:`${process.env.EVIDENCE_DIR??'docs/evidence/s7-ocr'}/screenshots/ocr-${width}.png`,fullPage:true});}expect(errors).toEqual([]);
+        at /Users/junlong/projects/social-mdeida-ops-platform/tests/browser.spec.ts:128:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser-S7-OCR-截图上传、键盘区域、近似值更正、确认、预览及手机无横溢出/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/browser-S7-OCR-截图上传、键盘区域、近似值更正、确认、预览及手机无横溢出/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/browser-S7-OCR-截图上传、键盘区域、近似值更正、确认、预览及手机无横溢出/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/browser-S7-OCR-截图上传、键盘区域、近似值更正、确认、预览及手机无横溢出/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/browser.spec.ts:117:5 › S7 OCR 截图上传、键盘区域、近似值更正、确认、预览及手机无横溢出 ──────────────────────────────
+  14 passed (1.5m)
+file:///Users/junlong/projects/social-mdeida-ops-platform/tools/s7/ocr-env.mjs:11
+async function run(cmd,args){await new Promise((resolve,reject)=>{const p=spawn(cmd,args,{env,stdio:'inherit'});p.on('error',reject);p.on('exit',code=>code===0?resolve():reject(new Error(cmd+' failed')));});}
+                                                                                                                                                                                 ^
+
+Error: node failed
+    at ChildProcess.<anonymous> (file:///Users/junlong/projects/social-mdeida-ops-platform/tools/s7/ocr-env.mjs:11:178)
+    at ChildProcess.emit (node:events:508:28)
+    at ChildProcess._handle.onexit (node:internal/child_process:294:12)
+
+Node.js v24.14.1

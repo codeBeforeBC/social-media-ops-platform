@@ -1603,7 +1603,8 @@
           "enum": [
             "csv",
             "xlsx",
-            "manual"
+            "manual",
+            "screenshot"
           ]
         },
         "status": {
@@ -3138,7 +3139,8 @@
           "enum": [
             "csv",
             "xlsx",
-            "manual"
+            "manual",
+            "screenshot"
           ]
         },
         "manual_rows": {
@@ -3146,6 +3148,9 @@
           "items": {
             "type": "object"
           }
+        },
+        "source_region": {
+          "$ref": "#/$defs/SourceRegion"
         },
         "field_mapping": {
           "type": "object",
@@ -3189,6 +3194,9 @@
             "valid",
             "excluded"
           ]
+        },
+        "source_region": {
+          "$ref": "#/$defs/SourceRegion"
         },
         "reason": {
           "type": "string",
@@ -4704,6 +4712,34 @@
         "etag",
         "upload_url",
         "method"
+      ],
+      "additionalProperties": false
+    },
+    "SourceRegion": {
+      "type": "object",
+      "properties": {
+        "x": {
+          "type": "number",
+          "minimum": 0
+        },
+        "y": {
+          "type": "number",
+          "minimum": 0
+        },
+        "width": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "height": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      },
+      "required": [
+        "x",
+        "y",
+        "width",
+        "height"
       ],
       "additionalProperties": false
     },

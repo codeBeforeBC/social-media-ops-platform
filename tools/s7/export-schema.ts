@@ -1,3 +1,4 @@
 import {z} from 'zod';
 import {metricSchema,templateFields,metricDefinitions} from '../../packages/domain/src/imports';
-console.log(JSON.stringify({metric:z.toJSONSchema(metricSchema),fields:templateFields,definitions:metricDefinitions}));
+import {sourceRegionSchema} from '../../packages/domain/src/screenshot-imports';
+console.log(JSON.stringify({metric:z.toJSONSchema(metricSchema),source_region:z.toJSONSchema(sourceRegionSchema),fields:templateFields,definitions:metricDefinitions}));

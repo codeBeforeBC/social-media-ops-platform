@@ -16,10 +16,15 @@ async function run(dir,command,args,signal){
   child.on('error',e=>{clearTimeout(timeout);signal?.removeEventListener('abort',kill);reject(e);});child.on('close',code=>{clearTimeout(timeout);signal?.removeEventListener('abort',kill);try{process.kill(-child.pid,'SIGKILL');}catch{}code===0?resolve(output):reject(Object.assign(new Error('MEDIA_PARSE_FAILED'),{exitCode:code}));});
  });
 }
-async function parse(dir,mime,signal){
+async function parse(dir,mime,purpose,signal){
  const execute=(command,args)=>run(dir,command,args,signal);
  const input=join(dir,'input'),output=[];let metadata={};
  metadata=JSON.parse(await execute('python3',['/usr/local/lib/yoyo/import-validate.py',input,join(dir,'preview.png'),mime]));
+ if(purpose==='import_screenshot'&&['image/png','image/jpeg'].includes(mime)){
+  metadata.ocr_parser_version='ocr-v1';
+  try{metadata.ocr=JSON.parse(await execute('python3',['/usr/local/lib/yoyo/image-ocr.py',input]));}
+  catch{metadata.ocr={state:'failed',error_code:'OCR_FAILED',blocks:[],width:metadata.width,height:metadata.height};}
+ }
  if(mime==='image/png'||mime==='image/jpeg')output.push({name:'preview.png',mime:'image/png'});
 
  return {status:output.length?'ready':'unsupported',metadata,outputs:output};
@@ -30,7 +35,7 @@ const server=http.createServer(async(req,res)=>{
  try{
   if(req.method==='POST'&&req.url==='/process'){
    if(busy){res.writeHead(429);res.end();return;}busy=true;const controller=new AbortController();res.on('close',()=>{if(!res.writableEnded)controller.abort();});const id=randomUUID(),dir=join(root,id);await import('node:fs/promises').then(f=>f.mkdir(dir,{mode:0o700}));active.add(id);
-   try{let size=0;await pipeline(req,new Transform({transform(b,e,cb){size+=b.length;cb(size>52428800?new Error('FILE_TOO_LARGE'):null,b);}}),createWriteStream(join(dir,'input'),{flags:'wx'}));const result=await parse(dir,String(req.headers['x-media-mime']),controller.signal);res.setHeader('Content-Type','application/json');res.end(JSON.stringify({id,...result}));}
+   try{let size=0;await pipeline(req,new Transform({transform(b,e,cb){size+=b.length;cb(size>52428800?new Error('FILE_TOO_LARGE'):null,b);}}),createWriteStream(join(dir,'input'),{flags:'wx'}));const result=await parse(dir,String(req.headers['x-media-mime']),String(req.headers['x-media-purpose']),controller.signal);res.setHeader('Content-Type','application/json');res.end(JSON.stringify({id,...result}));}
    catch(e){await rm(dir,{recursive:true,force:true});active.delete(id);res.writeHead(422);res.end(JSON.stringify({code:e.exitCode===1?'INVALID_IMPORT':'MEDIA_PARSE_FAILED'}));}
    finally{busy=false;}return;
   }

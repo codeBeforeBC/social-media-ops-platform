@@ -1,0 +1,12 @@
+metric_observations|100000||2026-10-12 00:39:07.062614+00
+publications|1000||2026-10-12 00:39:07.162157+00
+Limit  (cost=11194.51..11194.51 rows=1 width=24)
+  ->  Sort  (cost=11194.51..11194.51 rows=1 width=24)
+        Sort Key: p.published_at, p.id
+        ->  Hash Anti Join  (cost=11127.75..11194.50 rows=1 width=24)
+              Hash Cond: (p.id = o.publication_id)
+              ->  Seq Scan on publications p  (cost=0.00..60.50 rows=1000 width=24)
+                    Filter: (lifecycle = 'active'::text)
+              ->  Hash  (cost=9884.00..9884.00 rows=99500 width=16)
+                    ->  Seq Scan on metric_observations o  (cost=0.00..9884.00 rows=99500 width=16)
+                          Filter: (((metric ->> 'value'::text) IS NOT NULL) AND (validity = 'confirmed'::text))

@@ -1,0 +1,24 @@
+/** Verify restricted real captures; emit only hashes, metric fields and OCR limitations. */
+import {readFileSync,writeFileSync,statSync} from 'node:fs';
+import {resolve} from 'node:path';
+import {createHash} from 'node:crypto';
+import assert from 'node:assert/strict';
+const dir=resolve(process.argv[2]??'.local/s9-creator-probe');
+const read=name=>readFileSync(resolve(dir,name));
+const json=name=>JSON.parse(read(name));
+const sha=value=>createHash('sha256').update(value).digest('hex');
+const envelope=json('graphic-base.json'),body=typeof envelope.body==='string'?JSON.parse(envelope.body):envelope.body;
+assert.equal(envelope.status,200);assert.equal(body.success,true);assert.equal(body.data.note_info.type,'NORMAL');
+assert.equal(body.data.note_info.id,json('note-ids.json')[0].noteId);
+const expected={view_count:25052,like_count:385,comment_count:262,collect_count:334,share_count:93};
+for(const [key,value] of Object.entries(expected))assert.equal(body.data[key],value,'Manual original-image comparison: '+key);
+const publicNumber=json('account-dom.json').text.match(/小红书账号[：:]\s*(\d+)/)?.[1];assert.ok(publicNumber);
+const vision=name=>json(name+'-vision.json').observations;
+assert.ok(vision('account').some(o=>o.text.includes('545')));assert.ok(vision('graphic').some(o=>o.text==='25052'));
+const words=name=>{const lines=read(name).toString().trimEnd().split('\n'),header=lines.shift().split('\t');return lines.map(line=>Object.fromEntries(line.split('\t').map((value,i)=>[header[i],value]))).filter(row=>row.text);};
+const followers=words('account-tesseract.tsv').filter(w=>w.text==='545');assert.equal(followers.length,2);
+const graphic=words('graphic-tesseract.tsv'),fallback=words('graphic-tesseract-psm6.tsv');
+const files=['account.png','graphic.png','graphic-metrics.png','graphic-base.json','account-vision.json','graphic-vision.json','account-tesseract.tsv','graphic-tesseract.tsv','graphic-tesseract-psm6.tsv','graphic-tesseract-sauvola.tsv'];
+const report={checked_at:new Date().toISOString(),classification:'real_authorized_creator_backend_partial_samples',authorization:'User explicitly authorized the currently logged-in account on 2026-10-11',identity_namespace:'platform_display_number_not_internal_user_id',account_identity_sha256:sha(publicNumber),graphic_note_identity_sha256:sha(body.data.note_info.id),sources:files.map(name=>({private_path:'.local/s9-creator-probe/'+name,sha256:sha(read(name)),captured_at:statSync(resolve(dir,name)).mtime.toISOString()})),manual_mapping:{account:{followers:'545',likes_saves_combined:{raw:'8.3万',value:'83000',is_approximate:true},interval:{start:'2026-10-04T00:00:00+08:00',end_exclusive:'2026-10-11T00:00:00+08:00',new_followers:'0',unfollows:'1',displayed_net_growth:'-1'},traffic_type:'unknown'},graphic:{media_type:'graphic',backend_type:'NORMAL',published_at:'2023-12-25T10:30:00+08:00',metric_kind:'cumulative_snapshot_at_capture_time',values:expected,missing:['impressions','average_watch_seconds','attributed_follows'],missing_reason:'not_provided',traffic_type:'unknown'}},ocr:{apple_vision:{account_followers_found:true,graphic_25052_found:true,requires_manual_correction:true},linux_tesseract:{version:'5.3.0',languages:['chi_sim','eng'],sandbox:'Landlock/seccomp,network_none,read_only,cap_drop_all,resource_limits',account_followers_occurrences:followers.map(w=>({text:w.text,confidence:Number(w.conf),region:{x:Number(w.left),y:Number(w.top),width:Number(w.width),height:Number(w.height)}})),graphic_25052_found_psm11:graphic.some(w=>w.text==='25052'),graphic_25052_found_psm6:fallback.some(w=>w.text==='25052'),result:'account_field_recognized_graphic_low_contrast_missed_requires_manual_review'}},video_sample:'missing',export_download:'not_verified',product_ocr_implemented:false,metrics_committed:false,all_three_samples_accepted:false};
+writeFileSync('docs/evidence/s0/backend-ocr-probe.json',JSON.stringify(report,null,2)+'\n');
+console.log(JSON.stringify({account_verified:true,graphic_identity_and_fields_verified:true,linux_graphic_ocr:report.ocr.linux_tesseract.result,video:'missing',all_three_samples_accepted:false,credentials_printed:false}));

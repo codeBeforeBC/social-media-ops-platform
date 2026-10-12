@@ -1,0 +1,162 @@
+Instance credentials ready; no secrets printed.
+ Image yoyo-import-parser-ocr-local:1.0.0 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 618B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.36kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 177B done
+#4 DONE 0.0s
+
+#5 [build 1/4] FROM docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#5 resolve docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 235B done
+#6 DONE 0.0s
+
+#7 [stage-1 5/7] COPY tools/media/import-validate.py /usr/local/lib/yoyo/import-validate.py
+#7 CACHED
+
+#8 [stage-1 4/7] COPY tools/media/server.mjs /app/server.mjs
+#8 CACHED
+
+#9 [stage-1 3/7] COPY --from=build /media-sandbox /usr/local/bin/media-sandbox
+#9 CACHED
+
+#10 [build 3/4] COPY tools/media/sandbox.c /sandbox.c
+#10 CACHED
+
+#11 [stage-1 6/7] COPY tools/media/image-ocr.py /usr/local/lib/yoyo/image-ocr.py
+#11 CACHED
+
+#12 [build 4/4] RUN gcc -O2 -Wall /sandbox.c -o /media-sandbox
+#12 CACHED
+
+#13 [build 2/4] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && apt-get -o Acquire::Retries=3 install -y --no-install-recommends gcc libc6-dev linux-libc-dev
+#13 CACHED
+
+#14 [stage-1 2/7] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && (apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil ca-certificates tesseract-ocr tesseract-ocr-chi-sim tesseract-ocr-eng || apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil ca-certificates tesseract-ocr tesseract-ocr-chi-sim tesseract-ocr-eng) && rm -rf /var/lib/apt/lists/* && mkdir /scratch && chown node:node /scratch
+#14 CACHED
+
+#15 [stage-1 7/7] WORKDIR /app
+#15 CACHED
+
+#16 exporting to image
+#16 exporting layers done
+#16 exporting manifest sha256:8d06253b0f706d6af0fa1f6b1bceb839659aacd3038ba96ae7796b33cb156e58 done
+#16 exporting config sha256:8bc007247a7734fa6558cedf9adbca12d1ae0ea75fb912c63c77c91e59f1d705 done
+#16 exporting attestation manifest sha256:cdeb53116309b6fc0a3d5c76b210e3c5311a473c654560fe72339a92dcea0ad9 done
+#16 exporting manifest list sha256:05ab0bbadee07979f661a0e913ebc79335549a8b9fca58ebe81ee862f796c48f done
+#16 naming to docker.io/library/yoyo-import-parser-ocr-local:1.0.0 done
+#16 unpacking to docker.io/library/yoyo-import-parser-ocr-local:1.0.0 done
+#16 DONE 0.0s
+
+#17 resolving provenance for metadata file
+#17 DONE 0.0s
+ Image yoyo-import-parser-ocr-local:1.0.0 Built 
+ Container yoyo-s7-ocr-tests-storage-1 Running 
+ Container yoyo-s7-ocr-tests-media-executor-1 Recreate 
+ Container yoyo-s7-ocr-tests-media-executor-1 Recreated 
+ Container yoyo-s7-ocr-tests-media-executor-1 Starting 
+ Container yoyo-s7-ocr-tests-media-executor-1 Started 
+ Container yoyo-s7-ocr-tests-storage-1 Waiting 
+ Container yoyo-s7-ocr-tests-media-executor-1 Waiting 
+ Container yoyo-s7-ocr-tests-storage-1 Healthy 
+ Container yoyo-s7-ocr-tests-media-executor-1 Healthy 
+Private storage ready.
+{"event":"http.request","request_id":"f879dcf8-09c0-4cc9-9d73-ed17524b959a","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"ac1a8f1a-6b97-4040-adb9-07fdbb1c5344","method":"POST","path":"/api/v1/setup","status":201,"duration_ms":37}
+{"event":"http.request","request_id":"f98af38b-6c0b-4503-93d4-dc5683481b94","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"07bacdbe-07ce-4478-bba3-4626f36e6acc","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":25}
+{"event":"http.request","request_id":"99f5c214-853a-43bc-8133-fecdfa38a1e6","method":"GET","path":"/api/v1/me","status":200,"duration_ms":86}
+{"event":"http.request","request_id":"cca5bafc-9618-40e7-b3f9-093a209c52f4","method":"POST","path":"/api/v1/accounts","status":201,"duration_ms":13}
+{"event":"http.request","request_id":"7b98b608-b881-423a-a2d2-fa9d21d23bb8","method":"GET","path":"/api/v1/dashboard","status":200,"duration_ms":11}
+{"event":"http.request","request_id":"c1cb1bbc-5ee1-476e-b3a5-5bf63460cc98","method":"GET","path":"/api/v1/dashboard","status":422,"duration_ms":3}
+✔ 工作台真空态没有指标趋势或假任务，未知/禁用能力来自实际配置 (455.843667ms)
+{"event":"http.request","request_id":"e04787e5-d8ad-4bbd-ad4b-3f717b2910b6","method":"POST","path":"/api/v1/publications","status":201,"duration_ms":7}
+{"event":"http.request","request_id":"94977854-a642-4530-b520-6a7b3845a64e","method":"POST","path":"/api/v1/imports","status":202,"duration_ms":8}
+{"event":"http.request","request_id":"aa00ad1e-ead3-4cb1-833e-9ce33f4e9b0c","method":"POST","path":"/api/v1/source-connections","status":201,"duration_ms":5}
+{"event":"http.request","request_id":"3424e0dc-b21e-43af-9e1b-d23b1ee085fc","method":"POST","path":"/api/v1/feedback","status":201,"duration_ms":6}
+{"event":"http.request","request_id":"857b7aef-b532-455e-86ed-4f95a613edad","method":"GET","path":"/api/v1/dashboard","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"0aa52245-a851-4a17-8465-169ca065abb9","method":"GET","path":"/api/v1/imports/40584ca8-d4f4-42d4-aa14-f86297298c4a/rows","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"293e68a9-0907-4ccf-b964-76673fa95d66","method":"POST","path":"/api/v1/imports/40584ca8-d4f4-42d4-aa14-f86297298c4a/confirm","status":200,"duration_ms":10}
+{"event":"http.request","request_id":"0ea4374d-48f1-4022-acf9-4788a8b54d57","method":"GET","path":"/api/v1/dashboard","status":200,"duration_ms":3}
+✔ 真实待确认/来源异常/缺数据最多三项可直达，已确认历史值溯源不冒充实时 (76.257ms)
+{"event":"http.request","request_id":"0c8f9bd6-34de-4828-b5b8-48f3562498bc","method":"POST","path":"/api/v1/members","status":201,"duration_ms":23}
+{"event":"http.request","request_id":"7db000fe-4df8-47ae-8b65-c552e1b2675b","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"50dbb77d-dafb-419e-a195-7baab20e609a","method":"POST","path":"/api/v1/auth/accept-invite","status":200,"duration_ms":19}
+{"event":"http.request","request_id":"b367a810-6ca5-4ae5-860a-e50781cf102e","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":0}
+{"event":"http.request","request_id":"27141d93-eaa2-4031-b5b7-5350e9dd0770","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":18}
+{"event":"http.request","request_id":"a9be1d41-7c46-4113-bcfb-2ce77e55cad5","method":"GET","path":"/api/v1/dashboard","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"9d632941-bf24-4e2b-9e35-197ebbb00d38","method":"GET","path":"/api/v1/dashboard","status":404,"duration_ms":3}
+{"event":"http.request","request_id":"df2162a6-bbb0-49ad-8075-802ddc44f15b","method":"GET","path":"/api/v1/dashboard","status":422,"duration_ms":1}
+✔ 跨账号工作台不泄漏指标与反馈/导入任务，非法或不可见深链拒绝 (76.802958ms)
+{"event":"http.request","request_id":"6e67f26b-7c96-464d-8fec-1f3a65f78806","method":"GET","path":"/api/v1/dashboard","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"7d3f2d54-becd-46b3-8469-ebcaf8b03f16","method":"PATCH","path":"/api/v1/import-rows/1637326e-1e22-4b33-b7e0-eb138a100f9e","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"37e59d8d-ed9b-4807-a88c-f3d110977fc8","method":"GET","path":"/api/v1/dashboard","status":200,"duration_ms":4}
+✔ OCR未核对候选聚合到工作台，明确排除后退出，原图能力不冒充运行健康 (16.9935ms)
+{"event":"http.request","request_id":"c98092b2-8f6c-4b69-a593-c67ef6c5fd81","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"c66507de-ba26-4360-8418-596d38e3a24c","method":"POST","path":"/api/v1/setup","status":201,"duration_ms":35}
+{"event":"http.request","request_id":"346cdc27-9f94-495b-9df8-1c09c5a18549","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"4bd1a971-f206-4e86-94e4-a326ce5aa935","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":24}
+{"event":"http.request","request_id":"025e9574-6124-43d4-9e04-ea0a75b2569f","method":"GET","path":"/api/v1/me","status":200,"duration_ms":72}
+{"event":"http.request","request_id":"c3ed0a07-5084-4c73-bc9a-e78fafce2c13","method":"POST","path":"/api/v1/accounts","status":201,"duration_ms":10}
+{"event":"http.request","request_id":"930eb59f-f643-4644-ba43-e936daabe31a","method":"POST","path":"/api/v1/members","status":201,"duration_ms":24}
+{"event":"http.request","request_id":"62ec8aaf-5476-4ef4-8d4a-f2d30135b787","method":"POST","path":"/api/v1/members","status":201,"duration_ms":23}
+{"event":"http.request","request_id":"8db2afc7-33c3-4fb9-a391-4a7d3f51f6d4","method":"POST","path":"/api/v1/members","status":201,"duration_ms":20}
+{"event":"http.request","request_id":"c7089117-52e8-4a5a-b23c-41f49db0059e","method":"POST","path":"/api/v1/source-connections","status":201,"duration_ms":5}
+{"event":"http.request","request_id":"be995ae5-f6eb-4d00-8984-b0979440e020","method":"PATCH","path":"/api/v1/members/c52768cd-d278-4e18-b422-5b81db413333","status":422,"duration_ms":4}
+{"event":"http.request","request_id":"b3bbb8e1-6e33-4074-8776-4df8edd55c5e","method":"PATCH","path":"/api/v1/members/c52768cd-d278-4e18-b422-5b81db413333","status":422,"duration_ms":5}
+{"event":"http.request","request_id":"21f79a02-e99c-49ad-86f1-ac3fdb65a203","method":"PATCH","path":"/api/v1/members/c52768cd-d278-4e18-b422-5b81db413333","status":200,"duration_ms":7}
+{"event":"http.request","request_id":"505b372f-873e-49cc-b767-04608f373768","method":"GET","path":"/api/v1/accounts/33c9f07a-bc9a-41cb-8ace-836e9d0432cd","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"76188ce9-43dd-4ae5-90c0-97de5a8003e4","method":"GET","path":"/api/v1/source-connections/087ffa3b-4249-43ce-8bea-b756386b14da","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"2953f252-5626-4485-93fd-92e99eeaa602","method":"GET","path":"/api/v1/notifications","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"42e0e2e9-8ef4-40ab-b8ec-604b7d221d20","method":"GET","path":"/api/v1/accounts/33c9f07a-bc9a-41cb-8ace-836e9d0432cd","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"939864c2-6201-4312-995f-7c7efc62d893","method":"PATCH","path":"/api/v1/accounts/33c9f07a-bc9a-41cb-8ace-836e9d0432cd","status":422,"duration_ms":4}
+{"event":"http.request","request_id":"2e5cc093-0630-4511-9d6f-eeab69610176","method":"PATCH","path":"/api/v1/members/0dcc088d-7d85-4e82-a23d-71b5859067c4","status":200,"duration_ms":6}
+{"event":"http.request","request_id":"5260dc12-ce77-48fc-bf77-6ea3a1042426","method":"PATCH","path":"/api/v1/members/eb76fa1d-83a2-42f5-a801-2f95b33d0b5f","status":422,"duration_ms":4}
+✔ 运营角色降级/停用须移交账号/选题/来源，接替人须有能力，审计和通知同事务 (515.298875ms)
+{"event":"http.request","request_id":"3bbaffd7-93e1-4d38-a17e-6047bba14cc9","method":"GET","path":"/api/v1/settings","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"08e389e9-84f0-433d-a0f4-c9cc3f389572","method":"PATCH","path":"/api/v1/settings","status":422,"duration_ms":3}
+{"event":"http.request","request_id":"8503b3bf-41ed-4e97-a4ac-155eb3051864","method":"GET","path":"/api/v1/settings","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"43138181-cd7c-4ed3-8324-b48d1ad0666e","method":"PATCH","path":"/api/v1/settings","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"a8fcceb6-07e3-4a0b-b120-f9f6c3af19ac","method":"POST","path":"/api/v1/reports","status":202,"duration_ms":9}
+{"event":"http.request","request_id":"6ca161bf-8b34-44f4-90a4-edb4ecab62a9","method":"GET","path":"/api/v1/reports/48c327e0-4819-4089-b937-9db8f8d7d79a","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"b635b59a-6d71-4050-8b42-75a42f41eb9f","method":"GET","path":"/api/v1/monitor","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"36d81eeb-ff90-4f6c-9512-4f16e6a00038","method":"GET","path":"/api/v1/settings","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"37e5deeb-b29d-4be4-a1ce-f1a47998299a","method":"PATCH","path":"/api/v1/settings","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"c81aeec9-073a-4556-bd3b-d1b819eb5791","method":"POST","path":"/api/v1/reports","status":202,"duration_ms":6}
+{"event":"http.request","request_id":"ad5e6d2a-a798-4ef1-be75-63b0861b4a04","method":"GET","path":"/api/v1/reports/52ab8f07-a563-4555-bd1b-4e40a5046ad4","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"453a8e29-4318-4fb5-9e81-029f92550939","method":"GET","path":"/api/v1/monitor","status":200,"duration_ms":2}
+✔ 有限预算必须有单价币种，工作区配置在AI运行前真实拒绝超额且不触发提供方 (82.718ms)
+{"event":"http.request","request_id":"f3c02d62-dfcf-4df3-afd0-5f22166b61a6","method":"POST","path":"/api/v1/diagnostics","status":202,"duration_ms":4}
+{"event":"http.request","request_id":"5a48ab9b-91bd-4778-80db-84cdfb94db4a","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"17cb2930-309c-4bf0-89b1-d4e7d6bb1696","method":"POST","path":"/api/v1/auth/accept-invite","status":200,"duration_ms":19}
+{"event":"http.request","request_id":"14ed1876-ffad-40be-ba59-214eddd97380","method":"GET","path":"/api/v1/auth/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"ee1278a5-ffc8-4a54-a79e-f4602ce50664","method":"POST","path":"/api/v1/auth/login","status":200,"duration_ms":19}
+{"event":"http.request","request_id":"0723e396-6a1c-48d5-9283-3249f70afee0","method":"GET","path":"/api/v1/monitor","status":403,"duration_ms":1}
+{"event":"http.request","request_id":"67343e51-eb06-4449-a77f-1ee99f9695e4","method":"POST","path":"/api/v1/jobs/f861a285-7728-4984-8816-b3695381ced4/retry","status":403,"duration_ms":2}
+{"event":"http.request","request_id":"db543e0f-8a8d-4e0d-81b6-24c61ad9f36a","method":"POST","path":"/api/v1/jobs/f861a285-7728-4984-8816-b3695381ced4/retry","status":202,"duration_ms":4}
+{"event":"http.request","request_id":"72827043-57d5-454b-a19e-dde9423adea2","method":"GET","path":"/api/v1/jobs/f861a285-7728-4984-8816-b3695381ced4","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"1d0ea157-97fb-49d4-ab3c-de3e67da5296","method":"GET","path":"/api/v1/notifications","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"a3d4ee3e-c4b9-4ede-802a-0ffa74459a03","method":"POST","path":"/api/v1/notifications/7b9d4d18-daba-49b4-a04a-51ea5e574d3e/read","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"da3a9be6-1b53-4c55-9a6f-68a0dc47ce70","method":"GET","path":"/api/v1/jobs/f861a285-7728-4984-8816-b3695381ced4","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"320a20cf-d2be-4d05-a731-93926bfb1340","method":"GET","path":"/api/v1/audit-logs","status":200,"duration_ms":1}
+✔ 失败任务管理员重试可运行，通知已读独立、运行入口与审计分页可用；只读不能操作 (84.567167ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2392.014916
