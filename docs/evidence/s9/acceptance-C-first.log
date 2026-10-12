@@ -1,0 +1,76 @@
+ Container yoyo-s9-clean-clone-init-1 Starting
+ Container yoyo-s9-clean-clone-init-1 Started
+ Container yoyo-s9-clean-clone-init-1 Waiting
+ Container yoyo-s9-clean-clone-init-1 Waiting
+ Container yoyo-s9-clean-clone-init-1 Exited
+ Container yoyo-s9-clean-clone-init-1 Exited
+ Container yoyo-s9-clean-clone-db-1 Starting
+ Container yoyo-s9-clean-clone-storage-1 Starting
+ Container yoyo-s9-clean-clone-db-1 Started
+ Container yoyo-s9-clean-clone-storage-1 Started
+ Container yoyo-s9-clean-clone-storage-1 Waiting
+ Container yoyo-s9-clean-clone-db-1 Waiting
+ Container yoyo-s9-clean-clone-storage-1 Healthy
+ Container yoyo-s9-clean-clone-db-1 Healthy
+ Container yoyo-s9-clean-clone-migrate-1 Starting
+ Container yoyo-s9-clean-clone-migrate-1 Started
+ Container yoyo-s9-clean-clone-migrate-1 Waiting
+ Container yoyo-s9-clean-clone-migrate-1 Exited
+ Container yoyo-s9-clean-clone-api-1 Starting
+ Container yoyo-s9-clean-clone-api-1 Started
+ Container yoyo-s9-clean-clone-storage-1 Waiting
+ Container yoyo-s9-clean-clone-init-1 Waiting
+ Container yoyo-s9-clean-clone-migrate-1 Waiting
+ Container yoyo-s9-clean-clone-db-1 Waiting
+ Container yoyo-s9-clean-clone-api-1 Waiting
+ Container yoyo-s9-clean-clone-migrate-1 Exited
+ Container yoyo-s9-clean-clone-init-1 Exited
+ Container yoyo-s9-clean-clone-storage-1 Healthy
+ Container yoyo-s9-clean-clone-db-1 Healthy
+ Container yoyo-s9-clean-clone-api-1 Healthy
+Applied 027-import-batches.sql
+Applied 028-metric-confirmation.sql
+Applied 029-metric-revert-provenance.sql
+Applied 030-metric-calculations.sql
+Applied 031-import-derived-invalidation.sql
+Applied 032-derived-metric-dictionary.sql
+Applied 033-current-calculation-fingerprint.sql
+Applied 034-reports-and-strategies.sql
+Applied 035-feedback.sql
+Applied 036-source-organization.sql
+Applied 037-screenshot-imports.sql
+COMPILED_C_FAILED ERR_ASSERTION Expected values to be strictly equal:
++ actual - expected
+
++ 'BROWSER_UNAVAILABLE'
+- 'ADAPTER_UNAVAILABLE'
+
+S9_C_FAILED CHECK_FAILED Command failed: docker compose --project-directory /Users/junlong/projects/social-mdeida-ops-platform/.local/s9-clean-clone/.local/clean-use -p yoyo-s9-clean-clone -f /Users/junlong/projects/social-mdeida-ops-platform/.local/s9-clean-clone/.local/clean-use/compose.yaml -f /Users/junlong/projects/social-mdeida-ops-platform/.local/s9-clean-clone/.local/clean-use/compose.release.yaml -f /Users/junlong/projects/social-mdeida-ops-platform/.local/s9-clean-clone/.local/clean-use/compose.https.yaml -f /Users/junlong/projects/social-mdeida-ops-platform/.local/s9-clean-clone/.local/clean-use/compose.release-https.yaml exec -T api node -e (async()=>{let name='';for await(const c of process.stdin)name+=c;if(!/^yoyo_s9_c_\d+_test$/.test(name))throw Error('NEW_TEST_DB_REQUIRED');const assert=require('node:assert/strict'),{randomUUID}=require('node:crypto'),{databaseUrl}=require('./dist/packages/domain/src/config.js'),{Database}=require('./dist/packages/db/src/db.js'),{Collection}=require('./dist/packages/domain/src/collection.js'),{Jobs}=require('./dist/packages/domain/src/jobs.js'),{scheduler}=require('./dist/apps/scheduler/src/main.js'),{xhsCollector}=require('./dist/packages/domain/src/source-adapters.js');const url=new URL(databaseUrl());url.pathname='/'+name;const db=new Database(url.toString());let loop;try{const member=(await db.query("SELECT * FROM memberships WHERE active AND 'admin'=ANY(roles) LIMIT 1")).rows[0];assert.ok(member);const actor={workspaceId:member.workspace_id,memberId:member.id,roles:member.roles,requestId:randomUUID()};for(const type of ['content.generate','asset.preview','calendar.schedule','campaign.remind','reminder.dispatch','publication.recorded']){assert.equal((await db.query("SELECT yoyo_job_supported($1,'general','{}') supported",[type])).rows[0].supported,false);await assert.rejects(db.query("INSERT INTO jobs(workspace_id,created_by,type,pool,request_id) VALUES($1,$2,$3,'general',$4)",[actor.workspaceId,actor.memberId,type,randomUUID()]),e=>e.code==='23514');}const now=new Date(),next=new Date(now.getTime()+60000),connection=(await db.transaction(tx=>new Collection(db).create(tx,actor,{name:'明确合成C调度连接，Bridge未配置',platform:'xiaohongshu',provider:'opencli',source_type:'xhs_topic_signal',enabled:true,schedule:[now.toISOString().slice(11,16),next.toISOString().slice(11,16)],timezone:'UTC',min_interval_seconds:60,config:{keywords:['明确合成C'],profile:'no-bridge-test',max_items:1}}))).data;const itemsBefore=(await db.query('SELECT count(*)::int n FROM source_items')).rows[0].n;loop=scheduler(db);let run;for(let i=0;i<30;i++){run=(await db.query('SELECT * FROM collection_runs WHERE connection_id=$1',[connection.id])).rows[0];if(run)break;await new Promise(r=>setTimeout(r,1000));}assert.ok(run);assert.equal(run.trigger,'scheduled');assert.equal((await db.query('SELECT count(*)::int n FROM collection_runs WHERE connection_id=$1',[connection.id])).rows[0].n,1);const collector=new Collection(db,{xhs_topic_signal:xhsCollector}),jobs=new Jobs(db,{'source.collect':collector.handler});await jobs.dispatch();const job=await jobs.claim('general');assert.equal(job.input.run_id,run.id);await jobs.process(job);const final=(await db.query('SELECT state,error_code FROM collection_runs WHERE id=$1',[run.id])).rows[0];assert.equal(final.error_code,'ADAPTER_UNAVAILABLE');assert.equal((await db.query('SELECT count(*)::int n FROM source_items')).rows[0].n,itemsBefore);assert.equal((await db.query("SELECT count(*)::int n FROM jobs WHERE state IN ('queued','running') AND NOT yoyo_job_supported(type,pool,input)")).rows[0].n,0);console.log('S9_C_RESULT:'+JSON.stringify({compiled_scheduler_created_one_scheduled_run:true,retired_job_types_refused:6,unavailable_source_preserves_existing_items:true,source_result:final}));}finally{if(loop){process.emit('SIGTERM');await loop;}await db.close();}})().catch(e=>{console.error('COMPILED_C_FAILED',e.code||'CHECK_FAILED',e.message);process.exitCode=1;});
+COMPILED_C_FAILED ERR_ASSERTION Expected values to be strictly equal:
++ actual - expected
+
++ 'BROWSER_UNAVAILABLE'
+- 'ADAPTER_UNAVAILABLE'
+
+
+ Container yoyo-s9-clean-clone-media-executor-1 Stopping
+ Container yoyo-s9-clean-clone-media-1 Stopping
+ Container yoyo-s9-clean-clone-scheduler-1 Stopping
+ Container yoyo-s9-clean-clone-proxy-1 Stopping
+ Container yoyo-s9-clean-clone-worker-1 Stopping
+ Container yoyo-s9-clean-clone-media-1 Stopped
+ Container yoyo-s9-clean-clone-worker-1 Stopped
+ Container yoyo-s9-clean-clone-scheduler-1 Stopped
+ Container yoyo-s9-clean-clone-proxy-1 Stopped
+ Container yoyo-s9-clean-clone-api-1 Stopping
+ Container yoyo-s9-clean-clone-media-executor-1 Stopped
+ Container yoyo-s9-clean-clone-api-1 Stopped
+ Container yoyo-s9-clean-clone-migrate-1 Stopping
+ Container yoyo-s9-clean-clone-migrate-1 Stopped
+ Container yoyo-s9-clean-clone-db-1 Stopping
+ Container yoyo-s9-clean-clone-storage-1 Stopping
+ Container yoyo-s9-clean-clone-db-1 Stopped
+ Container yoyo-s9-clean-clone-storage-1 Stopped
+ Container yoyo-s9-clean-clone-init-1 Stopping
+ Container yoyo-s9-clean-clone-init-1 Stopped
+{"result":"failed","checks":1,"original_source_preserved":false}

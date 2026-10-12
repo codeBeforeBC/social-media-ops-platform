@@ -48,3 +48,30 @@ amd64在arm64 Docker Desktop/QEMU运行时，导入文件校验任务三次失�
 [报告](clean-clone-runtime.json)及[日志](clean-clone-runtime.log)：实际git clone --no-hardlinks取得候选同一提交3251929，初始无.local/node_modules且工作树干净，逐文件SHA与319文件冻结清单一致。固定rc11/arm64，Compose新项目/空卷37迁移，11.752秒至服务健康，浏览器首次管理员设置387ms及三导航/1440、1280、390真空态无页面错误/宽度溢出。产品服务没有宿主Node/pnpm或应用源码挂载；证书校验忽略仅属于浏览器测试上下文，未修改产品TLS/宿主信任。使用现有Docker缓存和本地Git来源，不称干净宿主、远端镜像下载或原生amd64验收。
 
 [第三次网络释放记录](test-network-cleanup-third.json)仅3个已停止旧失败性能项目网络，所有容器/卷保留；clone测试项目停止。最新[盘点](environment.json)记录各库与私有配置脱敏实态，原库/AI不改，原dev三依赖继续。当前本地交付不是完整S9发布；真实视频、原生amd64和全门禁/运行责任仍待补。
+
+## 2026-10-12：实际来源、模型与A/B/C演练
+
+- [三类真实来源](real-sources.json)、[日志](real-sources-first.log)：rc11 HTTPS/API/worker实际采集微博热点、小红书热点信号和优质笔记各1条，优质笔记详情正文可读。Bridge使用600文件token，公开原文和完整响应只在受限.local，仓库留范围/时间/哈希；小红书信号为搜索非官方榜。临时Bridge停止。T03 PASS只覆盖该单项。
+- [真实A](acceptance-real-A.json)、[只读恢复用量日志](acceptance-real-A-recovery.log)：真实提供方选题/人工幂等采纳，已核验账号及既有2023图文登记、授权账号和图文原件经rc11本地OCR/人工选区/确认、真实提供方partial报告通过。不是新平台发帖，也不宣称老帖由本次选题生成。两次DeepSeek-flash成功、总21472 token，费用未知而非零，分别yoyo-v1.2.4/ai-topics-v1.2与yoyo-report-v1.0.3/ai-report-v1；仍缺视频，complete_S9_02_acceptance=false。
+- 首次[A日志](acceptance-real-A-first.log)在已完成业务后用量查询误用列，清理被中断。立即停worker并核对hash删除本次临时配置；BUG-029改usage列及嵌套清理，[3项异常自检](evidence-cleanup-tests.log)通过。只读实际状态/私有捕获重建证据，恢复没有付费请求。配置删除和服务停止有实际复核，原产品/评估配置保持。模型只收到文本/程序计算，没有原图。
+- [B报告](acceptance-B.json)、[通过日志](acceptance-B-fourth.log)：合成9行数据的部分确认/去重、程序31、报告stale/策略人工激活与退役、更正后撤销旧批次/缺期初重算partial、许可撤回缓存/无发送及取消端点8项。编译处理器用模拟模型传输，一般worker暂停，临时虚构key配置删除；无真实模型请求。字段名/AI默认未配置/缺派生输入的失败报告日志保留。
+- [C报告](acceptance-C.json)、[日志](acceptance-C-second.log)：原yoyo_test26只读备份还原到新数据库，rc11编译迁移37两次、所有原表数量与笔记/文件身份保持，原库前后同快照；编译scheduler真实循环排队一次、6种退出任务拒绝、缺浏览器BROWSER_UNAVAILABLE不清来源历史。没有恢复原5份旧对象，不称完整C。首次错误码期望失败保留。
+- [真实XLSX导出/首表映射](../s0/backend-export.json)、[日志](real-export-second.log)：现有授权账号实际下载7787字节/7表，当前HTTP/沙箱首表12行，人工确认账号曝光1行/11行未确认；6趋势页未导入，原件SHA保持。账号混合观看/平均时长及完播率不硬套某视频，页面暂无数据和原值0.0差异保留；仍缺视频。数据字典不扩展来假装全部字段已支持。
+
+## 安全技术验收
+
+[10项报告](acceptance-security.json)及[日志](acceptance-security-second.log)：实际rc11 HTTPS角色/跨空间账号/私有签名、内网/元数据/脚本/带凭据URL、大小/MIME/旧purpose，实际原生Landlock沙箱隔离伪造PNG/公式CSV/XLSX/宏；反馈指令保留为数据，无发送。编译网关零预算/未知费用币种/预取消与模拟伪造输出两次修复拒绝，HTTP取消在处理器返回后提交前，无通知/结果副作用。无真实模型调用，原S9-02硬依赖未关闭。
+
+首次重用未知费用工作区时正确触发币种守卫，夹具拆分后分别验证预算与币种，失败保留。登录配额只在已核验项目标签/自有卷的合成实例重置，不动原库。类型检查及语法通过；原有整套128不因诊断工具增加而无理由重跑。
+
+## 实际旧版与真实A恢复
+
+- [旧版镜像](rollback-baseline-build.log)、[实际回滚](baseline-rollback.json)、[日志](baseline-rollback-first.log)：从27016b1 Git archive构建实际旧arm64应用，在新项目36迁移建立合成笔记/600指标/原件/完成任务并一致备份；rc11升级37新增650修订；新项目恢复旧36备份点，15556ms到健康，业务/凭据/CA同点，旧API登录/笔记/指标/原件SHA与旧worker新诊断成功。650→600是明确丢失的备份后合成变更，不恢复使用实例。此前相同代码构建切换证据只保留其局部范围。
+- [实际A恢复](restore-real-state.json)、[日志](restore-real-state-third.log)：当前实际3来源、2真实模型输出、授权身份/图文原件/指标，加其他明确合成测试行，在新项目37恢复15422ms至健康，25表关系hash/凭据/CA同点，真实两原件SHA和指标/登录保持，无新增模型调用、无临时AI配置。日常RPO仍未实测。
+- 复合主键排序/地址池耗尽失败报告和日志保留；[第四次](test-network-cleanup-fourth.json)/[第五次](test-network-cleanup-fifth.json)各只释放4个已停止旧S9网络，所有容器/卷保留。全部临时服务停止，原dev三依赖继续。
+
+## 门禁和交接
+
+[派生门禁](release-gates.json)、[检查日志](release-gate-scan.log)从唯一台账读取8P0/17T/必要任务/重要缺陷与链接，当前8T PASS/9未闭、8前置未DONE、重要缺陷0，结果not_ready。它不是业务重测，不增加S9-06自身依赖。操作及解除条件见[验收与交接](../../operations/验收与交接.md)。真实视频、必需沙箱可运行的amd64环境、完整目标桌面键盘/来源失败恢复及最低环境/每日RPO仍未齐备，所有S9项VERIFY，未公开发布。
+
+本段新增工具测试的是不变rc11包；业务源码没有再次改动，诊断源码及证据的后续提交不改写3251929/319文件冻结清单。

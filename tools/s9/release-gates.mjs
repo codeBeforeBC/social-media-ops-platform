@@ -1,0 +1,15 @@
+/** Read-only ledger/evidence consistency gate; this does not replace business acceptance. */
+import {readFileSync,writeFileSync,existsSync} from 'node:fs';
+import {resolve,dirname} from 'node:path';
+import assert from 'node:assert/strict';
+const ledger='docs/tracking/开发进度.md',text=readFileSync(ledger,'utf8'),rows=text.split('\n').filter(l=>l.startsWith('| ')).map(l=>l.split('|').slice(1,-1).map(c=>c.trim()));
+const tasks=new Map(rows.filter(r=>/^S\d+-\d+$/.test(r[0])).map(r=>[r[0],{state:r[4],deps:r[3].match(/S\d+-\d+/g)??[]}])) ,gates=new Map(rows.filter(r=>/^T\d{2}$/.test(r[0])).map(r=>[r[0],{state:r[3],evidence:r[4]}]));
+assert.equal(tasks.size,69);assert.equal(gates.size,26);for(const [id,t] of tasks){for(const dep of t.deps){assert.ok(tasks.has(dep));if(t.state==='DONE')assert.equal(tasks.get(dep).state,'DONE',id+' '+dep);}}
+const requirements=readFileSync('docs/yoyo-workbench-v1.0/01-产品需求PRD.md','utf8').split('\n').filter(l=>/^\| R\d{2} \| P0/.test(l)).map(l=>l.split('|')[1].trim());assert.deepEqual(requirements,['R01','R02','R03','R04','R12','R13','R14','R15']);
+const applicable=[...Array.from({length:5},(_,i)=>'T'+String(i+1).padStart(2,'0')),...Array.from({length:12},(_,i)=>'T'+String(i+15))];assert.equal(applicable.length,17);for(let i=6;i<=14;i++)assert.equal(gates.get('T'+String(i).padStart(2,'0')).state,'CANCELLED');
+const prerequisites=['S0-05','S7-02','S7-06',...Array.from({length:5},(_,i)=>'S9-0'+(i+1))];
+const unmet_tasks=prerequisites.filter(id=>tasks.get(id).state!=='DONE').map(id=>({id,state:tasks.get(id).state})),unmet_gates=applicable.filter(id=>gates.get(id).state!=='PASS').map(id=>({id,state:gates.get(id).state})),open_important_defects=rows.filter(r=>/^BUG-\d+$/.test(r[0])&&/P[01]/.test(r[1])&&!['DONE','CANCELLED'].includes(r[4])).map(r=>r[0]);
+let links=0;for(const link of text.matchAll(/\]\(([^)]+)\)/g)){if(/^(?:https?:|app:|codex:|#)/.test(link[1]))continue;assert.ok(existsSync(resolve(dirname(ledger),link[1].split('#')[0])),link[1]);links++;}
+const ready=unmet_tasks.length===0&&unmet_gates.length===0&&open_important_defects.length===0;
+const report={checked_at:new Date().toISOString(),verification:'ledger_prerequisites_P0_T_counts_and_existing_evidence_links_not_business_retest',ledger,p0_requirements:requirements,applicable_gate_count:17,passed_applicable_gate_count:applicable.length-unmet_gates.length,cancelled_gate_count:9,unmet_tasks,unmet_gates,open_important_defects,ledger_links_checked:links,release_gates_satisfied:ready,handoff_state:tasks.get('S9-06').state,note:'S9-06 itself is not a prerequisite for its own completion; handoff acceptance is recorded separately',result:ready?'ledger_ready_for_handoff_acceptance':'not_ready'};
+writeFileSync('docs/evidence/s9/release-gates.json',JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({result:report.result,passed_gates:report.passed_applicable_gate_count,unmet_tasks:unmet_tasks.length,unmet_gates:unmet_gates.length,open_important_defects:open_important_defects.length}));if(!ready)process.exitCode=2;
