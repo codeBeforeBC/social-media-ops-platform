@@ -1,10 +1,10 @@
 # S9候选交付证据
 
-2026-10-11，执行者Codex；工作目录本项目，main/27016b1，修改未提交、未推送、未发布。状态事实以[台账](../../tracking/开发进度.md)为准。
+2026-10-12，执行者Codex；工作目录本项目，当前codex/s9-acceptance，实现6d08fab、候选冻结3251929；main/origin/main仍27016b1，未推送、未发布。下述历史候选对应当时main上的未提交工作，状态事实以[台账](../../tracking/开发进度.md)为准。
 
 ## 已执行
 
-- 当前候选0.1.0-s9rc10：[构建](release-build-rc10.log)、[316文件冻结校验](release-bundle-check-rc10.json)、[arm64加载](load-arm64-rc10.log)、[amd64加载](load-amd64-rc10.log)通过，包含037、本地OCR及已修复恢复入口。含037的rc9[原生arm64十项运行](runtime-arm64-rc9.log)通过，报告[runtime-arm64.json](runtime-arm64.json)明确对应rc9；rc10完成下述兼容切换，不称重复完整十项演练。
+- 当前候选0.1.0-s9rc11：[构建](release-build-rc11.log)、[319文件冻结校验](release-bundle-check-rc11.json)、[arm64加载](load-arm64-rc11.log)、[amd64加载](load-amd64-rc11.log)通过，包含037、本地OCR、恢复ANALYZE及无标签同名卷保护。历史rc10：[构建](release-build-rc10.log)、[316文件冻结校验](release-bundle-check-rc10.json)、[arm64加载](load-arm64-rc10.log)、[amd64加载](load-amd64-rc10.log)保留。含037的rc9[原生arm64十项运行](runtime-arm64-rc9.log)通过，报告[runtime-arm64.json](runtime-arm64.json)明确对应rc9；rc10完成下述兼容切换，不称重复完整十项演练。
 - 历史rc8：[构建](release-build-rc8.log)、[300文件冻结校验](release-bundle-check-rc8.json)、[arm64加载](load-arm64-rc8.log)、[amd64加载](load-amd64-rc8.log)、[arm64十项运行](runtime-arm64-rc8.log)通过。源码包含BUG-023文件鉴权修复，模板禁止将真实token写.env；固定digest缓存按平台/RepoDigest核对后复用。旧rc5报告保留于[runtime-arm64-rc5.json](runtime-arm64-rc5.json)。
 - [Bridge实际集成](bridge-integration.json)：当前rc8容器读取0600凭据文件（环境TOKEN为空）、连到宿主loopback Bridge，匿名健康401/鉴权200且取得一条真实公开搜索结果。原始公开结果只在受限.local，不提供账号后台指标。[文件鉴权回归](bridge-auth-regression.log)及[来源14项观察日志](source-regression-observed.log)通过，后者只包含终端后段结果，RPC/状态用合成夹具；不称14类真实来源验收。首次失败见[bridge-auth-first-failure.log](bridge-auth-first-failure.log)。
 
@@ -41,4 +41,10 @@ amd64在arm64 Docker Desktop/QEMU运行时，导入文件校验任务三次失�
 
 首次地址池耗尽日志performance-compose-first保留；只额外释放6个已停止旧S9项目网络，[清理记录](test-network-cleanup-second.json)，全部容器/卷保留。第二次恢复后缺统计，工作台查询8–15秒、并发57014超时，[失败报告](performance-compose-before-analyze.json)及performance-compose-second日志保留。精确同查询ANALYZE前后由错误估算的Nested Loop Anti Join变为Hash Anti Join，计划和空统计在成功报告内。BUG-027修复restore.sh：pg_restore后先ANALYZE再启动应用；[新项目实际恢复验证](restore-analyze-validation.json)两业务表统计确认通过。BUG-028拒绝无项目标签的同名已有空卷，[保护检验](restore-volume-collision.json)没有创建目标容器/其他卷，原空卷保持。脚本语法及[类型检查](identity-typecheck.log)通过。
 
-稳定真实账号身份已在[S0](../s0/backend-identity.json)核验，原两类截图当前产品复验通过；视频仍缺，完整S9硬依赖不改。新项目全部停止，原开发服务与库不改；新恢复脚本需下一固定候选，rc10历史包未重写。
+稳定真实账号身份已在[S0](../s0/backend-identity.json)核验，原两类截图当前产品复验通过；视频仍缺，完整S9硬依赖不改。新项目全部停止，原开发服务与库不改；新恢复脚本已固定在rc11，rc10历史包未重写。
+
+## 干净本地clone与浏览器首次设置
+
+[报告](clean-clone-runtime.json)及[日志](clean-clone-runtime.log)：实际git clone --no-hardlinks取得候选同一提交3251929，初始无.local/node_modules且工作树干净，逐文件SHA与319文件冻结清单一致。固定rc11/arm64，Compose新项目/空卷37迁移，11.752秒至服务健康，浏览器首次管理员设置387ms及三导航/1440、1280、390真空态无页面错误/宽度溢出。产品服务没有宿主Node/pnpm或应用源码挂载；证书校验忽略仅属于浏览器测试上下文，未修改产品TLS/宿主信任。使用现有Docker缓存和本地Git来源，不称干净宿主、远端镜像下载或原生amd64验收。
+
+[第三次网络释放记录](test-network-cleanup-third.json)仅3个已停止旧失败性能项目网络，所有容器/卷保留；clone测试项目停止。最新[盘点](environment.json)记录各库与私有配置脱敏实态，原库/AI不改，原dev三依赖继续。当前本地交付不是完整S9发布；真实视频、原生amd64和全门禁/运行责任仍待补。
