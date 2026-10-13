@@ -9,6 +9,7 @@ const [version,arch]=process.argv.slice(2);assert.match(version??'',/^\d+\.\d+\.
 const attempt=process.argv[4]??'1';assert.match(attempt,/^\d+$/);
 const project='yoyo-s9-'+arch+'-'+attempt,dir=resolve('.local/s9-runtime-'+arch+'-'+attempt),base='https://localhost:3443';
 const files=['compose.yaml','compose.release.yaml','compose.https.yaml','compose.release-https.yaml'];
+mkdirSync(resolve('.local'),{recursive:true,mode:0o700});
 mkdirSync(dir,{recursive:false,mode:0o700});mkdirSync(dir+'/deploy');copyFileSync('deploy/Caddyfile',dir+'/deploy/Caddyfile');for(const file of files)copyFileSync(file,dir+'/'+file);
 const env={...process.env,YOYO_VERSION:version,YOYO_ARCH:arch,HTTPS_ORIGIN:base,HTTPS_PORT:new URL(base).port,SOURCE_BRIDGE_URL:'',SOURCE_BRIDGE_TOKEN:''};
 const args=['compose','--project-directory',dir,'-p',project,...files.flatMap(file=>['-f',dir+'/'+file])];
