@@ -50,6 +50,8 @@ docker compose exec -T db pg_dump -U yoyo -Fc yoyo > yoyo-db.dump
 
 实例凭据的state卷也需要受限备份，不能通过重新生成密钥替代恢复；邀请幂等响应使用实例密钥加密保存。最低内存/磁盘、受支持arm64宿主兼容性与首次启动耗时在S9测量；当前提供S1/S2/S3实测环境记录，不承诺未经验证的资源要求。
 
+当前S9实际运行验收目标由用户确认（CHANGE-010）为本机Apple Silicon Mac/Docker Desktop；已测资源、规模、限制见[运行说明](docs/operations/发布与运行.md)。不将容器4 CPU/4.5GiB上限解释为最小宿主硬件或其他平台兼容承诺。
+
 ## 开发者原生入口
 
 使用 Node 24、pnpm 10.33.0。开发前后端可以原生运行，数据库可使用Compose或独立兼容实例：

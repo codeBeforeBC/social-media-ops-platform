@@ -8,7 +8,7 @@ import {performance} from 'node:perf_hooks';
 import assert from 'node:assert/strict';
 import {chromium,expect} from '@playwright/test';
 const attempt=process.argv[2]??'1';assert.match(attempt,/^\d+$/);
-const version='0.1.0-s9rc10',project='yoyo-s9-capped-arm64-'+attempt,dir=resolve('.local/s9-capped-arm64-'+attempt),base='https://localhost:3445';
+const version=process.argv[3]??'0.1.0-s9rc15';assert.match(version,/^\d+\.\d+\.\d+-[a-z0-9.-]+$/);const project='yoyo-s9-capped-arm64-'+attempt,dir=resolve('.local/s9-capped-arm64-'+attempt),base='https://localhost:3445';
 const bundle=resolve('.local/releases/'+version),files=['compose.yaml','compose.release.yaml','compose.https.yaml','compose.release-https.yaml'];
 assert.equal(execFileSync('docker',['ps','-aq','--filter','label=com.docker.compose.project='+project],{encoding:'utf8'}).trim(),'');
 assert.equal(execFileSync('docker',['volume','ls','-q','--filter','label=com.docker.compose.project='+project],{encoding:'utf8'}).trim(),'');

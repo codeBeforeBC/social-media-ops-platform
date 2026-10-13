@@ -1,8 +1,8 @@
 # S9候选交付证据
 
-> 2026-10-13 · [CHANGE-009 / ADR-009](../../decisions/ADR-009-仅支持arm64容器交付.md)：当前支持范围仅linux/arm64。下文历史双架构构建/加载及amd64失败记录保留，不定义当前支持承诺或复验待办；构建/加载/发布Compose/冒烟入口已收口为arm64，当前实现与检查见下方rc13证据；完整任务状态仍只见台账。
+> 2026-10-13 · [CHANGE-009 / ADR-009](../../decisions/ADR-009-仅支持arm64容器交付.md)：当前支持范围仅linux/arm64。下文历史双架构构建/加载及amd64失败记录保留，不定义当前支持承诺或复验待办；构建/加载/发布Compose/冒烟入口已收口为arm64，当前候选rc15与检查见下方证据；完整任务状态仍只见台账。
 
-当前候选rc12：[333文件冻结校验](release-bundle-check-rc12.json)、[arm64加载](load-arm64-rc12.log)及[页面演练](release-ui.json)。rc12既有双架构包不改写；rc13已完成仅arm64新构建；rc12保留历史。
+历史候选rc12：[333文件冻结校验](release-bundle-check-rc12.json)、[arm64加载](load-arm64-rc12.log)及[页面演练](release-ui.json)。rc12既有双架构包不改写；rc13已完成仅arm64新构建；rc12保留历史。
 
 2026-10-12，执行者Codex；工作目录本项目，当前codex/s9-acceptance，实现6d08fab、候选冻结3251929；main/origin/main仍27016b1，未推送、未发布。下述历史候选对应当时main上的未提交工作，状态事实以[台账](../../tracking/开发进度.md)为准。
 
@@ -76,7 +76,7 @@ amd64在arm64 Docker Desktop/QEMU运行时，导入文件校验任务三次失�
 
 ## 门禁和交接
 
-[派生门禁](release-gates.json)、[检查日志](release-gate-scan.log)从唯一台账读取8P0/17T/必要任务/重要缺陷与链接，当前10T PASS/7未闭、8前置未DONE、重要缺陷0，结果not_ready。它不是业务重测，不增加S9-06自身依赖。操作及解除条件见[验收与交接](../../operations/验收与交接.md)。真实视频、受支持arm64目标环境/脚本收口及最低环境/每日RPO和完整原依赖仍需验收；amd64环境已取消，不再阻塞。当前任务状态只见唯一台账，未公开发布。
+[派生门禁](release-gates.json)、[检查日志](release-gate-scan.log)从唯一台账读取8P0/17T/必要任务/重要缺陷与链接，当前13T PASS/4未闭、8前置未DONE、重要缺陷0，结果not_ready。它不是业务重测，不增加S9-06自身依赖。操作及解除条件见[验收与交接](../../operations/验收与交接.md)。真实视频、受支持arm64目标环境/脚本收口及最低环境/每日RPO和完整原依赖仍需验收；amd64环境已取消，不再阻塞。当前任务状态只见唯一台账，未公开发布。
 
 本段新增工具测试的是不变rc11包；业务源码没有再次改动，诊断源码及证据的后续提交不改写3251929/319文件冻结清单。
 
@@ -85,3 +85,19 @@ amd64在arm64 Docker Desktop/QEMU运行时，导入文件校验任务三次失�
 - rc13：[构建](release-build-rc13.log)、[335文件冻结及唯一平台清单](release-bundle-check-rc13.json)、[arm64加载](load-arm64-rc13.log)、[3项交付回归](arm64-release-check.log)通过；无amd64归档。Compose固定arm64镜像/platform，加载/冒烟拒绝非arm64，既有YOYO_ARCH环境不能使Compose选回amd64。
 - [原生arm64运行](runtime-arm64-rc13.json)及[日志](runtime-arm64-rc13.log)：新项目/空卷37迁移、可信CA HTTPS/Secure会话/Origin、多人移交、私有原件SHA/签名/实际沙箱、任务/通知、停启重建保留会话/幂等/凭据、一致备份与服务恢复、备份拒绝覆盖及日志无Cookie/签名共10检查点通过。合成输入，不代替真实视频或S9-02。
 - 原runtime-arm64报告已归档[此前候选报告](runtime-arm64-before-rc13.json)，未改写历史失败。新候选实例停止/卷与私有备份保留，原dev三依赖继续。
+
+## 当前仅arm64候选rc15与干净clone（2026-10-13）
+
+- [构建](release-build-rc15.log)、[335文件冻结/单平台校验](release-bundle-check-rc15.json)、[加载](load-arm64-rc15.log)：91798c2冻结源码，linux/arm64唯一平台，没有amd64归档。rc14的[首次干净clone失败](clean-clone-runtime-rc14.log)是诊断脚本未创建.local父目录；已在91798c2修复，不改使用入口。
+- [新干净本地clone](clean-clone-rc15.json)初始无.local/node_modules/工作树差异，源码全hash与冻结清单一致；实际[十项运行](runtime-arm64-rc15.json)与[日志](clean-clone-runtime-rc15-second.log)、[三宽度/键盘浏览器](clean-clone-ui-rc15.json)通过。非全新宿主/远端下载，原生Node只用于测试工具，产品无需宿主Node/pnpm或应用源码挂载。
+- 首次rc15[地址池失败](clean-clone-runtime-rc15.log)保留；仅释放本轮[rc13](rc13-network-release.json)/[rc15](rc15-network-release.json)已停止且无endpoint的各两个测试网络，容器/持久卷/备份保留，dev网络不动。
+- [S9-01逐项判据](s9-01-acceptance.json)：固定包、HTTPS/角色移交/私有原件/原生安全解析/服务/重建/备份和本地责任交接有证据。原生amd64已取消，公网/专用最低宿主/日常RPO/真实视频仍未由这些结果证明；任务状态只见台账。
+- [任务失败恢复](job-recovery-rc15.json)：实际编译事务内通知插入后故障，结果/通知/成功审计回滚，真实worker自然退避重试后各一次；导入领取后操作者降为viewer，提交守卫拒绝，无新行或结果。全合成，不新请求模型；前两次漏workspace_id的合成夹具23502失败[首轮](job-recovery-rc15-first.json)/[第二轮](job-recovery-rc15-second.json)保留，修正测试输入后通过。
+
+## rc15安全/本机规模/当前真实状态与跨日观测（2026-10-13）
+
+- [T01/T19/T21证据审查](security-gate-audit-rc15.json)、[当前HTTPS安全](acceptance-security-rc15.json)、[检查日志](acceptance-security-rc15-second.log)与[69个未变API/领域/SQL源码hash](shared-guards-rc15.json)。攻击/预算模型传输为Mock，不称真实模型攻击测试；原自然租约/旧角色/来源/沙箱证据仅在未改变范围复用。
+- [首轮预算失败](acceptance-security-rc15-first.json)保留；夹具依赖昨日未知费用，跨UTC日后产品正确触发预算超限。改用本次Mock调用的当日未知费用，再核对币种守卫后通过，未改变预算规则或发付费请求。
+- [当前本机目标](runtime-target-rc15.json)由用户CHANGE-010确认；[rc15规模](performance-compose-rc15.json)/[日志](performance-compose-rc15.log)：VM10CPU/约7.75GiB，实际容器合计4 CPU/4.5GiB，5用户/1万线索/1千笔记/10万观察，API p95≤785.25ms、页面≤966.81ms、异步9.28ms。旧[rc10](performance-compose-rc10.json)保留；不称其他/更低宿主或远端下载已测。
+- [当前实际状态恢复](restore-real-state-rc15.json)/[日志](restore-real-state-rc15-second.log)：25表关系、3真实原件/3确认指标、凭据/CA同点，16880ms到健康，零模型调用；新XLSX包含在核验范围。原[rc11恢复](restore-real-state-rc11.json)与首轮脚本引号语法失败保留；数据恢复不证明日常RPO。
+- 一次跨日备份/RPO验收进程：[等待实态](daily-rpo-probe.json)、[日志](daily-rpo-probe.log)、[脚本](../../../tools/s9/daily-rpo-probe.mjs)。目标2026-10-14 19:14:45+08真实23h后执行，当前waiting，不改时钟、不提前证明T23/生产SLA。仅新恢复项目，拒绝变更的产品源码，无模型请求或使用卷覆盖；本机停机/睡眠/环境变化导致失败则保留事实。

@@ -1,0 +1,17 @@
+file:///Users/junlong/projects/social-mdeida-ops-platform/tools/s9/restore-real-state.mjs:14
+try{from.run(['up','-d','--pull','never','--wait','api','proxy']);assert.equal(from.run(['exec','-T','api','node','-e',"process.stdout.write(String(require('node:fs').existsSync('/state/ai.json')))"]).trim(),'false');const before=snapshot(from),count=Number(sql(from,'SELECT count(*) FROM ai_attempts')),backup=source+'/actual-A-backup-'+attempt;const identityBefore=JSON.parse(readFileSync('docs/evidence/s0/backend-identity.json'));const accountBefore=JSON.parse(sql(from,'SELECT json_agg(json_build_object('id',id,'platform_user_id',platform_user_id))::text FROM accounts')).find(a=>sha(a.platform_user_id)===identityBefore.account_identity_sha256);assert.ok(accountBefore);assert.match(accountBefore.id,/^[a-f0-9-]{36}$/);const expectedMetrics=Number(sql(from,`SELECT count(*) FROM metric_observations WHERE account_id='${accountBefore.id}' AND validity='confirmed'`)),expectedOriginals=Number(sql(from,`SELECT count(*) FROM file_objects WHERE account_id='${accountBefore.id}' AND NOT is_preview`));ca=from.run(['exec','-T','proxy','cat','/data/caddy/pki/authorities/local/root.crt']);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+SyntaxError: missing ) after argument list
+    at compileSourceTextModule (node:internal/modules/esm/utils:318:16)
+    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:99:18)
+    at #translate (node:internal/modules/esm/loader:473:20)
+    at afterLoad (node:internal/modules/esm/loader:529:29)
+    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:534:12)
+    at #getOrCreateModuleJobAfterResolve (node:internal/modules/esm/loader:577:36)
+    at afterResolve (node:internal/modules/esm/loader:625:52)
+    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:631:12)
+    at onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:650:32)
+    at TracingChannel.tracePromise (node:diagnostics_channel:350:14)
+
+Node.js v24.14.1
