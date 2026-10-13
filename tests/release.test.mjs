@@ -6,7 +6,7 @@ import {readFileSync} from 'node:fs';
 test('release config needs no source builds, exports only HTTPS and keeps parsing isolated',()=>{
  for(const arch of ['arm64','amd64']){
   const c=JSON.parse(execFileSync('docker',['compose','--env-file','.env.example','-f','compose.yaml','-f','compose.release.yaml','-f','compose.https.yaml','-f','compose.release-https.yaml','config','--format','json'],{encoding:'utf8',env:{...process.env,YOYO_VERSION:'0.1.0-test',YOYO_ARCH:arch,SOURCE_BRIDGE_TOKEN:'untrusted-env-token'}}));
-  for(const s of Object.values(c.services)){assert.equal(s.build,undefined);assert.equal(s.platform,'linux/'+arch);}
+  for(const s of Object.values(c.services)){assert.equal(s.build,undefined);assert.equal(s.platform,'linux/arm64');assert.ok(s.image.endsWith('-arm64'));}
   assert.deepEqual(c.services.init.command,['node','tools/init-state.mjs']);
   assert.ok(c.services.init.volumes.every(v=>v.type==='volume'));
   for(const s of ['api','worker','media','scheduler']){assert.equal(c.services[s].environment.NODE_ENV,'production');assert.equal(c.services[s].environment.SOURCE_BRIDGE_TOKEN,'');assert.equal(c.services[s].environment.TRUST_PROXY,'1');}
@@ -15,6 +15,14 @@ test('release config needs no source builds, exports only HTTPS and keeps parsin
   assert.equal(c.services.proxy.ports[0].host_ip,'127.0.0.1');assert.equal(c.services.proxy.ports[0].target,443);
   assert.equal(c.services['media-executor'].read_only,true);assert.equal(c.networks.media.internal,true);
   assert.ok(c.services['media-executor'].volumes.every(v=>v.target!=='/state'));
+ }
+});
+test('unsupported architectures are refused before loading or starting containers',()=>{
+ assert.match(readFileSync('tools/s9/release.mjs','utf8'),/for\(const arch of \['arm64'\]\)/);
+ for(const arch of ['amd64','x86','invalid']){
+  const load=spawnSync('sh',['tools/s9/load-release.sh',arch],{encoding:'utf8'});
+  assert.notEqual(load.status,0);assert.match(load.stderr,/Only arm64 containers are supported/);
+  assert.notEqual(spawnSync('node',['tools/s9/smoke-release.mjs','0.1.0-test',arch],{encoding:'utf8'}).status,0);
  }
 });
 test('bundle builder refuses floating tags before any Docker operation',()=>{

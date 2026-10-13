@@ -1,8 +1,8 @@
 # Compose >=2.24.4; combine with compose.yaml. Images are loaded from the verified release bundle.
 services:
   init:
-    image: &app yoyo-release:${YOYO_VERSION:?load a release first}-${YOYO_ARCH:?select arm64 or amd64}
-    platform: &platform linux/${YOYO_ARCH}
+    image: &app yoyo-release:${YOYO_VERSION:?load a release first}-arm64
+    platform: &platform linux/arm64
     volumes: !override
       - state:/state
     command: ['node', 'tools/init-state.mjs']
@@ -31,12 +31,12 @@ services:
     platform: *platform
     environment: *bridge
   media-executor:
-    image: yoyo-parser-release:${YOYO_VERSION:?load a release first}-${YOYO_ARCH:?select arm64 or amd64}
+    image: yoyo-parser-release:${YOYO_VERSION:?load a release first}-arm64
     platform: *platform
     build: !reset null
   db:
-    image: yoyo-dependency-0:${YOYO_VERSION}-${YOYO_ARCH}
+    image: yoyo-dependency-0:${YOYO_VERSION}-arm64
     platform: *platform
   storage:
-    image: yoyo-dependency-1:${YOYO_VERSION}-${YOYO_ARCH}
+    image: yoyo-dependency-1:${YOYO_VERSION}-arm64
     platform: *platform

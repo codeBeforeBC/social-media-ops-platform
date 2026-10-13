@@ -30,8 +30,8 @@ for file in state.tar objects.tar proxy-data.tar; do
   tar -tvf "$backup/$file" | awk 'substr($0,1,1)!="d" && substr($0,1,1)!="-" {exit 1}' || { echo 'Archive links or special files forbidden' >&2; exit 1; }
  }
 done
-app="yoyo-release:${YOYO_VERSION:?explicit release version required}-${YOYO_ARCH:?explicit architecture required}"
-platform="linux/$YOYO_ARCH"
+app="yoyo-release:${YOYO_VERSION:?explicit release version required}-arm64"
+platform="linux/arm64"
 # Validate effective volume ownership before Compose can create or attach anything.
 compose config --format json | docker run --rm --network none --read-only --cap-drop ALL -i "$app" node -e 'let value="";process.stdin.on("data",c=>value+=c);process.stdin.on("end",()=>{const cfg=JSON.parse(value),project=process.argv[1];for(const [key,v] of Object.entries(cfg.volumes??{})){if(v.external||v.name!==project+"_"+key){console.error("Only new project-owned volumes may be restored");process.exitCode=1;}}});' "$project"
 for key in $(compose config --volumes); do

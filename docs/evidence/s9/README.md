@@ -1,10 +1,14 @@
 # S9候选交付证据
 
+> 2026-10-13 · [CHANGE-009 / ADR-009](../../decisions/ADR-009-仅支持arm64容器交付.md)：当前支持范围仅linux/arm64。下文历史双架构构建/加载及amd64失败记录保留，不定义当前支持承诺或复验待办；构建/加载/发布Compose/冒烟入口已收口为arm64，当前实现与检查见下方rc13证据；完整任务状态仍只见台账。
+
+当前候选rc12：[333文件冻结校验](release-bundle-check-rc12.json)、[arm64加载](load-arm64-rc12.log)及[页面演练](release-ui.json)。rc12既有双架构包不改写；rc13已完成仅arm64新构建；rc12保留历史。
+
 2026-10-12，执行者Codex；工作目录本项目，当前codex/s9-acceptance，实现6d08fab、候选冻结3251929；main/origin/main仍27016b1，未推送、未发布。下述历史候选对应当时main上的未提交工作，状态事实以[台账](../../tracking/开发进度.md)为准。
 
 ## 已执行
 
-- 当前候选0.1.0-s9rc11：[构建](release-build-rc11.log)、[319文件冻结校验](release-bundle-check-rc11.json)、[arm64加载](load-arm64-rc11.log)、[amd64加载](load-amd64-rc11.log)通过，包含037、本地OCR、恢复ANALYZE及无标签同名卷保护。历史rc10：[构建](release-build-rc10.log)、[316文件冻结校验](release-bundle-check-rc10.json)、[arm64加载](load-arm64-rc10.log)、[amd64加载](load-amd64-rc10.log)保留。含037的rc9[原生arm64十项运行](runtime-arm64-rc9.log)通过，报告[runtime-arm64.json](runtime-arm64.json)明确对应rc9；rc10完成下述兼容切换，不称重复完整十项演练。
+- 历史候选0.1.0-s9rc11：[构建](release-build-rc11.log)、[319文件冻结校验](release-bundle-check-rc11.json)、[arm64加载](load-arm64-rc11.log)、[amd64加载](load-amd64-rc11.log)通过，包含037、本地OCR、恢复ANALYZE及无标签同名卷保护。历史rc10：[构建](release-build-rc10.log)、[316文件冻结校验](release-bundle-check-rc10.json)、[arm64加载](load-arm64-rc10.log)、[amd64加载](load-amd64-rc10.log)保留。含037的rc9[原生arm64十项运行](runtime-arm64-rc9.log)通过，报告[runtime-arm64.json](runtime-arm64.json)明确对应rc9；rc10完成下述兼容切换，不称重复完整十项演练。
 - 历史rc8：[构建](release-build-rc8.log)、[300文件冻结校验](release-bundle-check-rc8.json)、[arm64加载](load-arm64-rc8.log)、[amd64加载](load-amd64-rc8.log)、[arm64十项运行](runtime-arm64-rc8.log)通过。源码包含BUG-023文件鉴权修复，模板禁止将真实token写.env；固定digest缓存按平台/RepoDigest核对后复用。旧rc5报告保留于[runtime-arm64-rc5.json](runtime-arm64-rc5.json)。
 - [Bridge实际集成](bridge-integration.json)：当前rc8容器读取0600凭据文件（环境TOKEN为空）、连到宿主loopback Bridge，匿名健康401/鉴权200且取得一条真实公开搜索结果。原始公开结果只在受限.local，不提供账号后台指标。[文件鉴权回归](bridge-auth-regression.log)及[来源14项观察日志](source-regression-observed.log)通过，后者只包含终端后段结果，RPC/状态用合成夹具；不称14类真实来源验收。首次失败见[bridge-auth-first-failure.log](bridge-auth-first-failure.log)。
 
@@ -16,13 +20,13 @@
 - CI保护守卫修正为专用yoyo_ci_test并显式ALLOW_TEST_RESET；通过实际保护入口运行API/权限/文件17项回归。[观察日志](ci-regression-observed.log)只保存本次终端返回的后段输出及通过结果，不称托管CI或完整初始构建日志。配置自检2项及类型检查通过，见相关日志。
 - 环境盘点见[environment.json](environment.json)：数据库只读查询、配置只记录权限/启用模式，原历史数据未迁移/清除。临时Bridge实际测试后停止，恢复初始未监听状态；不能称全部来源已健康。
 
-## 未通过与待补
+## 历史未通过与当前待补
 
-amd64在arm64 Docker Desktop/QEMU运行时，导入文件校验任务三次失败，演练超时；[实际失败日志](runtime-amd64.log)保留。进一步直接调用安全沙箱复现`landlock required: Function not implemented`、退出125，说明模拟器不支持必需的Landlock。[rc5沙箱复现](amd64-sandbox-rc5.json)与[原日志](amd64-sandbox-rc5.log)结果相同。解析器安全拒绝运行；没有关闭沙箱或把模拟运行写成原生x86验收。仍需原生amd64、支持Landlock/seccomp的Linux内核完整复验。固定版本多架构包可加载不代表两个架构完整业务都通过。
+amd64在arm64 Docker Desktop/QEMU运行时，导入文件校验任务三次失败，演练超时；[实际失败日志](runtime-amd64.log)保留。进一步直接调用安全沙箱复现`landlock required: Function not implemented`、退出125，说明模拟器不支持必需的Landlock。[rc5沙箱复现](amd64-sandbox-rc5.json)与[原日志](amd64-sandbox-rc5.log)结果相同。解析器安全拒绝运行；没有关闭沙箱或把模拟运行写成原生x86验收。该amd64复验要求已由CHANGE-009取消，不再是当前待办；arm64目标仍须支持Landlock/seccomp。固定版本多架构包可加载不代表两个架构完整业务都通过。
 
 首次候选缺init脚本、第二次候选拉取远端镜像EOF、首次arm64演练HTTPS重连socket hangup及rc4拉取Caddy认证EOF等失败保留；rc4构建期间增加S0工具，也不作为最终源码一致的验收候选。rc5冻结源码解决构建过程中工作文件变化的问题。rc6在固定PostgreSQL拉取等待期间主动终止（137），已有相同digest两架构缓存核对通过后改从缓存打包；不是验收通过的包。rc7仍含旧模板注释，当前模板由rc8起冻结。真实完整恢复/回滚、业务全链路、目标环境性能、浏览器发布验收和17项门禁尚未完成，下面的技术探索不替代这些条件。
 
-操作入口见[发布与运行](../../operations/发布与运行.md)。原生x86目标环境、公网域名/证书、外部告警和值守人尚未提供；不得把本地测试写成公网上线。
+操作入口见[发布与运行](../../operations/发布与运行.md)。amd64/x86目标环境已取消；公网域名/证书、外部告警和值守人尚未提供；不得把本地测试写成公网上线。
 
 ## 本地性能技术探索
 
@@ -33,7 +37,7 @@ amd64在arm64 Docker Desktop/QEMU运行时，导入文件校验任务三次失�
 - [恢复报告](recovery-verification.json)、[实际耗时](restore-timing.json)及[日志](restore-timed.log)：合成独立笔记/100与101两次指标修订/更正链/文件证据及system.check任务，真实Compose一致备份恢复到全新项目。37迁移、业务快照、凭据及TLS CA保持，登录后私有原件SHA通过；恢复到全部服务健康15035ms。没有备份后写入，未测日常备份RPO，不称真实业务恢复验收。
 - [已有目标拒绝](restore-protection.json)及[损坏备份拒绝](restore-corruption-protection.json)通过；恢复入口检查校验和、归档路径/链接、项目所属空卷，失败停止新项目并保留现场。首次[网络耗尽](recovery-first.log)、[缺stdin](restore-second.log)、[存储空目录](restore-third.log)失败留存；修正后恢复成功。[网络清理](test-network-cleanup.json)仅释放8个已停止旧S9项目网络，全部容器/卷/备份保留。
 - [兼容切换报告](compatible-rollback.json)及[日志](compatible-rollback.log)：先核对rc9与rc10应用编译内容逐字相同，再rc10→rc9→rc10重建，业务快照/37迁移不变。只是兼容构建切换，未降级数据库，不证明不兼容旧版本回滚。[类型检查](recovery-typecheck.log)通过。新恢复项目和源测试项目均已停止，持久卷保留。
-- S9-01/S9-02原完成依赖、真实视频/账号身份、原生amd64、日常RPO及完整发布门禁仍缺；不能将这些技术证据设为S9-05 DONE或T23 PASS。
+- S9-01/S9-02原完成依赖、真实视频/账号身份、日常RPO及完整发布门禁仍缺；不能将这些技术证据设为S9-05 DONE或T23 PASS。
 
 ## 2026-10-12：目标Compose资源上限及恢复统计修复
 
@@ -47,7 +51,7 @@ amd64在arm64 Docker Desktop/QEMU运行时，导入文件校验任务三次失�
 
 [报告](clean-clone-runtime.json)及[日志](clean-clone-runtime.log)：实际git clone --no-hardlinks取得候选同一提交3251929，初始无.local/node_modules且工作树干净，逐文件SHA与319文件冻结清单一致。固定rc11/arm64，Compose新项目/空卷37迁移，11.752秒至服务健康，浏览器首次管理员设置387ms及三导航/1440、1280、390真空态无页面错误/宽度溢出。产品服务没有宿主Node/pnpm或应用源码挂载；证书校验忽略仅属于浏览器测试上下文，未修改产品TLS/宿主信任。使用现有Docker缓存和本地Git来源，不称干净宿主、远端镜像下载或原生amd64验收。
 
-[第三次网络释放记录](test-network-cleanup-third.json)仅3个已停止旧失败性能项目网络，所有容器/卷保留；clone测试项目停止。最新[盘点](environment.json)记录各库与私有配置脱敏实态，原库/AI不改，原dev三依赖继续。当前本地交付不是完整S9发布；真实视频、原生amd64和全门禁/运行责任仍待补。
+[第三次网络释放记录](test-network-cleanup-third.json)仅3个已停止旧失败性能项目网络，所有容器/卷保留；clone测试项目停止。最新[盘点](environment.json)记录各库与私有配置脱敏实态，原库/AI不改，原dev三依赖继续。当前本地交付不是完整S9发布；真实视频和全门禁/运行责任仍待补。
 
 ## 2026-10-12：实际来源、模型与A/B/C演练
 
@@ -72,6 +76,12 @@ amd64在arm64 Docker Desktop/QEMU运行时，导入文件校验任务三次失�
 
 ## 门禁和交接
 
-[派生门禁](release-gates.json)、[检查日志](release-gate-scan.log)从唯一台账读取8P0/17T/必要任务/重要缺陷与链接，当前8T PASS/9未闭、8前置未DONE、重要缺陷0，结果not_ready。它不是业务重测，不增加S9-06自身依赖。操作及解除条件见[验收与交接](../../operations/验收与交接.md)。真实视频、必需沙箱可运行的amd64环境、完整目标桌面键盘/来源失败恢复及最低环境/每日RPO仍未齐备，所有S9项VERIFY，未公开发布。
+[派生门禁](release-gates.json)、[检查日志](release-gate-scan.log)从唯一台账读取8P0/17T/必要任务/重要缺陷与链接，当前10T PASS/7未闭、8前置未DONE、重要缺陷0，结果not_ready。它不是业务重测，不增加S9-06自身依赖。操作及解除条件见[验收与交接](../../operations/验收与交接.md)。真实视频、受支持arm64目标环境/脚本收口及最低环境/每日RPO和完整原依赖仍需验收；amd64环境已取消，不再阻塞。当前任务状态只见唯一台账，未公开发布。
 
 本段新增工具测试的是不变rc11包；业务源码没有再次改动，诊断源码及证据的后续提交不改写3251929/319文件冻结清单。
+
+## CHANGE-009仅arm64交付实现（2026-10-13）
+
+- rc13：[构建](release-build-rc13.log)、[335文件冻结及唯一平台清单](release-bundle-check-rc13.json)、[arm64加载](load-arm64-rc13.log)、[3项交付回归](arm64-release-check.log)通过；无amd64归档。Compose固定arm64镜像/platform，加载/冒烟拒绝非arm64，既有YOYO_ARCH环境不能使Compose选回amd64。
+- [原生arm64运行](runtime-arm64-rc13.json)及[日志](runtime-arm64-rc13.log)：新项目/空卷37迁移、可信CA HTTPS/Secure会话/Origin、多人移交、私有原件SHA/签名/实际沙箱、任务/通知、停启重建保留会话/幂等/凭据、一致备份与服务恢复、备份拒绝覆盖及日志无Cookie/签名共10检查点通过。合成输入，不代替真实视频或S9-02。
+- 原runtime-arm64报告已归档[此前候选报告](runtime-arm64-before-rc13.json)，未改写历史失败。新候选实例停止/卷与私有备份保留，原dev三依赖继续。

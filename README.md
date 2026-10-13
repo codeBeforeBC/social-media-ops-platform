@@ -8,7 +8,7 @@
 
 ## 本地启动
 
-安装 Git 和支持 Compose 的 Docker 运行环境（Mac/Windows 默认 Docker Desktop；Linux 使用 Engine 和 Compose 插件），启动 Docker。基础工作台使用者无需安装Node、pnpm或PostgreSQL；小红书浏览器采集另需宿主Node及登录Bridge，见S3运行说明。
+安装 Git 和支持 linux/arm64、Compose 的 Docker 运行环境（Apple Silicon Mac 使用 Docker Desktop；Linux arm64 使用 Engine 和 Compose 插件），启动 Docker。当前容器交付仅支持 arm64，amd64/Intel/AMD 宿主不在支持范围，见[CHANGE-009 / ADR-009](docs/decisions/ADR-009-仅支持arm64容器交付.md)。基础工作台使用者无需安装Node、pnpm或PostgreSQL；小红书浏览器采集另需宿主Node及登录Bridge，见S3运行说明。
 
 ```sh
 git clone <本项目仓库地址>
@@ -48,7 +48,7 @@ PostgreSQL、对象文件和内部凭据分别在持久卷保存，普通停止/
 docker compose exec -T db pg_dump -U yoyo -Fc yoyo > yoyo-db.dump
 ```
 
-实例凭据的state卷也需要受限备份，不能通过重新生成密钥替代恢复；邀请幂等响应使用实例密钥加密保存。最低内存/磁盘、Mac/Windows/Linux兼容性与首次启动耗时在S9测量；当前提供S1/S2/S3实测环境记录，不承诺未经验证的资源要求。
+实例凭据的state卷也需要受限备份，不能通过重新生成密钥替代恢复；邀请幂等响应使用实例密钥加密保存。最低内存/磁盘、受支持arm64宿主兼容性与首次启动耗时在S9测量；当前提供S1/S2/S3实测环境记录，不承诺未经验证的资源要求。
 
 ## 开发者原生入口
 

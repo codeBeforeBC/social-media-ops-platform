@@ -5,9 +5,9 @@ import {resolve} from 'node:path';
 import {request} from 'node:https';
 import {randomUUID,createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
-const [version,arch]=process.argv.slice(2);assert.match(version??'',/^\d+\.\d+\.\d+-[a-z0-9.-]+$/);assert.ok(['arm64','amd64'].includes(arch));
+const [version,arch]=process.argv.slice(2);assert.match(version??'',/^\d+\.\d+\.\d+-[a-z0-9.-]+$/);assert.equal(arch,'arm64');
 const attempt=process.argv[4]??'1';assert.match(attempt,/^\d+$/);
-const project='yoyo-s9-'+arch+'-'+attempt,dir=resolve('.local/s9-runtime-'+arch+'-'+attempt),base='https://localhost:'+(arch==='arm64'?3443:3444);
+const project='yoyo-s9-'+arch+'-'+attempt,dir=resolve('.local/s9-runtime-'+arch+'-'+attempt),base='https://localhost:3443';
 const files=['compose.yaml','compose.release.yaml','compose.https.yaml','compose.release-https.yaml'];
 mkdirSync(dir,{recursive:false,mode:0o700});mkdirSync(dir+'/deploy');copyFileSync('deploy/Caddyfile',dir+'/deploy/Caddyfile');for(const file of files)copyFileSync(file,dir+'/'+file);
 const env={...process.env,YOYO_VERSION:version,YOYO_ARCH:arch,HTTPS_ORIGIN:base,HTTPS_PORT:new URL(base).port,SOURCE_BRIDGE_URL:'',SOURCE_BRIDGE_TOKEN:''};
@@ -60,7 +60,7 @@ try{
  assert.equal(secretHash(),credentials);assert.equal(counts(),before);const monitor=await until(async()=>{const m=await call('/monitor');return m.processes.filter(p=>p.healthy).length>=3?m:null;});assert.ok(monitor.processes.some(p=>p.pool==='scheduler'));checks.push('consistent_backup_and_running_services_restored');
  const running=compose(['ps','--services','--status','running']).trim();assert.notEqual(spawnSync('sh',[resolve('tools/s9/backup.sh'),project,backup,...files.map(f=>dir+'/'+f)],{env,encoding:'utf8'}).status,0);assert.equal(compose(['ps','--services','--status','running']).trim(),running);checks.push('existing_backup_refused_without_service_change');
  const parsed=compose(['logs','--no-color','proxy']);assert.ok(!parsed.includes('X-Amz-Signature'));assert.ok(!parsed.includes(cookie));checks.push('proxy_logs_no_cookie_or_signed_url');
- const report={checked_at:new Date().toISOString(),version,platform:'linux/'+arch,execution:arch==='arm64'?'native_arm64':'emulated_amd64_on_arm64',project,input_classification:'synthetic_only_not_real_backend',checks,migrations:expectedMigrations,backup_hashes:readFileSync(backup+'/SHA256SUMS','utf8').trim().split('\n'),original_instances_changed:false,published:false,result:'passed'};
+ const report={checked_at:new Date().toISOString(),version,platform:'linux/'+arch,execution:'native_arm64',project,input_classification:'synthetic_only_not_real_backend',checks,migrations:expectedMigrations,backup_hashes:readFileSync(backup+'/SHA256SUMS','utf8').trim().split('\n'),original_instances_changed:false,published:false,result:'passed'};
  writeFileSync('docs/evidence/s9/runtime-'+arch+'.json',JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({result:'passed',platform:report.platform,checks:checks.length}));
 }catch(e){console.error('S9_RUNTIME_FAILED',e.message);process.exitCode=1;}
 finally{try{compose(['stop']);}catch{process.exitCode=1;}}
