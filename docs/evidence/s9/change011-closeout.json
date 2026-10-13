@@ -1,0 +1,59 @@
+{
+  "change": "CHANGE-011",
+  "date": "2026-10-13 Asia/Shanghai",
+  "user_instruction": "先跳过数据验收",
+  "artifact": "0.1.0-s9rc15",
+  "product_source_commit": "91798c2",
+  "deferred_tasks": [
+    "S0-05",
+    "S7-02",
+    "S7-06",
+    "S9-02_data_loop"
+  ],
+  "deferred_gates": [
+    "T15",
+    "T16",
+    "T17"
+  ],
+  "not_cancelled_or_passed": true,
+  "independent_closeout": {
+    "S9-03": {
+      "criteria": [
+        "workspace_account_file_purpose_roles",
+        "malicious_URL_file_document_instructions",
+        "budget_permission_and_cancel_races"
+      ],
+      "evidence": [
+        "security-gate-audit-rc15.json",
+        "acceptance-security-rc15.json",
+        "job-recovery-rc15.json",
+        "shared-guards-rc15.json"
+      ],
+      "dependency_change": "S9-02 -> S9-01,S11-05,S8-06 per latest user scope",
+      "result": "passed_technical_criteria"
+    },
+    "S9-04": {
+      "criteria": [
+        "1440_1280_390_keyboard_empty_error_loading",
+        "accepted_current_machine_scale_API_UI_async_targets",
+        "clean_local_clone_configuration_startup_setup"
+      ],
+      "evidence": [
+        "runtime-target-rc15.json",
+        "performance-compose-rc15.json",
+        "clean-clone-rc15.json",
+        "clean-clone-ui-rc15.json",
+        "release-ui.json"
+      ],
+      "dependency_change": "S9-02 -> S9-01,S8-06 per latest user scope",
+      "result": "passed_technical_criteria"
+    }
+  },
+  "pending_technical_acceptance": [
+    "S9-05_cross_day_RPO_T23"
+  ],
+  "full_release_gate_count": 17,
+  "current_execution_gate_count": 14,
+  "full_release_ready": false,
+  "published": false
+}

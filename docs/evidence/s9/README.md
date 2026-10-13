@@ -101,3 +101,9 @@ amd64在arm64 Docker Desktop/QEMU运行时，导入文件校验任务三次失�
 - [当前本机目标](runtime-target-rc15.json)由用户CHANGE-010确认；[rc15规模](performance-compose-rc15.json)/[日志](performance-compose-rc15.log)：VM10CPU/约7.75GiB，实际容器合计4 CPU/4.5GiB，5用户/1万线索/1千笔记/10万观察，API p95≤785.25ms、页面≤966.81ms、异步9.28ms。旧[rc10](performance-compose-rc10.json)保留；不称其他/更低宿主或远端下载已测。
 - [当前实际状态恢复](restore-real-state-rc15.json)/[日志](restore-real-state-rc15-second.log)：25表关系、3真实原件/3确认指标、凭据/CA同点，16880ms到健康，零模型调用；新XLSX包含在核验范围。原[rc11恢复](restore-real-state-rc11.json)与首轮脚本引号语法失败保留；数据恢复不证明日常RPO。
 - 一次跨日备份/RPO验收进程：[等待实态](daily-rpo-probe.json)、[日志](daily-rpo-probe.log)、[脚本](../../../tools/s9/daily-rpo-probe.mjs)。目标2026-10-14 19:14:45+08真实23h后执行，当前waiting，不改时钟、不提前证明T23/生产SLA。仅新恢复项目，拒绝变更的产品源码，无模型请求或使用卷覆盖；本机停机/睡眠/环境变化导致失败则保留事实。
+
+## CHANGE-011先跳过数据验收（2026-10-13）
+
+用户要求本轮暂缓T15–T17、S0-05/S7-02/06与S9-02真实数据部分；没有取消这些需求或转换为PASS。已验安全/性能独立技术判据和新前置见[收口记录](change011-closeout.json)，历史原S9-02依赖及未DONE原因保留，任务状态只维护在台账。
+
+[派生门禁](release-gates.json)新增execution_scope：本轮14项非数据门禁与暂缓原状态单列；完整17项release_gates_satisfied/result不变。三个[回归场景](change011-scope-check.log)检查完整模式、暂缓数据时仍受RPO阻塞、技术就绪仍不能使完整发布就绪。产品代码未改变，不重复已通过的产品测试或重建候选；真实跨日RPO仍使用原进程19125/PID36127。

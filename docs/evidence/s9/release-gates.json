@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-13T12:32:33.695Z",
+  "checked_at": "2026-10-13T13:53:12.298Z",
   "verification": "ledger_prerequisites_P0_T_counts_and_existing_evidence_links_not_business_retest",
   "ledger": "docs/tracking/开发进度.md",
   "p0_requirements": [
@@ -33,14 +33,6 @@
       "state": "VERIFY"
     },
     {
-      "id": "S9-03",
-      "state": "VERIFY"
-    },
-    {
-      "id": "S9-04",
-      "state": "VERIFY"
-    },
-    {
       "id": "S9-05",
       "state": "DOING"
     }
@@ -64,9 +56,61 @@
     }
   ],
   "open_important_defects": [],
-  "ledger_links_checked": 163,
+  "ledger_links_checked": 174,
   "release_gates_satisfied": false,
   "handoff_state": "VERIFY",
   "note": "S9-06 itself is not a prerequisite for its own completion; handoff acceptance is recorded separately",
-  "result": "not_ready"
+  "result": "not_ready",
+  "execution_scope": {
+    "kind": "non_data_acceptance_CHANGE_011",
+    "deferred_tasks": [
+      {
+        "id": "S0-05",
+        "state": "BLOCKED"
+      },
+      {
+        "id": "S7-02",
+        "state": "VERIFY"
+      },
+      {
+        "id": "S7-06",
+        "state": "VERIFY"
+      },
+      {
+        "id": "S9-02",
+        "state": "VERIFY"
+      }
+    ],
+    "deferred_gates": [
+      {
+        "id": "T15",
+        "state": "BLOCKED"
+      },
+      {
+        "id": "T16",
+        "state": "NOT_RUN"
+      },
+      {
+        "id": "T17",
+        "state": "NOT_RUN"
+      }
+    ],
+    "applicable_gate_count": 14,
+    "passed_gate_count": 13,
+    "unmet_tasks": [
+      {
+        "id": "S9-05",
+        "state": "DOING"
+      }
+    ],
+    "unmet_gates": [
+      {
+        "id": "T23",
+        "state": "NOT_RUN"
+      }
+    ],
+    "ready": false,
+    "result": "pending_scoped_acceptance",
+    "note": "Deferred data acceptance is neither cancelled nor passed; this view never grants full release readiness"
+  }
 }
