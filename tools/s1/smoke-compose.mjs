@@ -14,7 +14,7 @@ compose(['up','-d','--wait']);
 const secretHash=()=>createHash('sha256').update(compose(['exec','-T','api','node','-e',"process.stdout.write(require('node:fs').readFileSync('/state/instance.json'))"])).digest('hex');
 const beforeSecret=secretHash();const input={email:'compose@example.test',password:'Compose-test-password-987',display_name:'容器测试管理员',workspace_name:'合成容器工作区'};
 if(!(await call('/setup/status')).initialized){
-  const token=compose(['exec','-T','api','node','dist/tools/setup-token.js']).trim();await call('/auth/csrf');await call('/setup','POST',{...input,setup_token:token});
+  await call('/auth/csrf');await call('/setup','POST',input);
 }
 await call('/auth/csrf');await call('/auth/login','POST',{email:input.email,password:input.password});checkpoints.push('first_setup_and_login');
 const current=await call('/accounts');let account=current.items[0];if(!account)account=await call('/accounts','POST',{platform:'xiaohongshu',platform_user_id:'compose-platform-id',name:'合成容器账号'});

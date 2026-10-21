@@ -5,10 +5,12 @@ const dir=process.env.STATE_DIR??'.local/state';
 mkdirSync(dir,{recursive:true,mode:0o700});
 const path=join(dir,'instance.json');
 if(!existsSync(path)){
-  const data={database_password:randomBytes(32).toString('hex'),setup_token:randomBytes(32).toString('base64url')};
+  const data={database_password:randomBytes(32).toString('hex'),idempotency_secret:randomBytes(32).toString('base64url')};
   writeFileSync(path,JSON.stringify(data),{flag:'wx',mode:0o600});
 }
 const data=JSON.parse(readFileSync(path,'utf8'));
+// Preserve the old setup secret as the invitation-response key on existing instances.
+if(!data.idempotency_secret){data.idempotency_secret=data.setup_token??randomBytes(32).toString('base64url');writeFileSync(path,JSON.stringify(data),{mode:0o600});}
 if(!data.media_token){data.media_token=randomBytes(32).toString('hex');writeFileSync(path,JSON.stringify(data),{mode:0o600});}
 mkdirSync(join(dir,'media'),{recursive:true,mode:0o700});writeFileSync(join(dir,'media','media-token'),data.media_token,{mode:0o600});
 if(!data.storage_access_key||!data.storage_secret_key){data.storage_access_key='yoyo-'+randomBytes(8).toString('hex');data.storage_secret_key=randomBytes(32).toString('hex');writeFileSync(path,JSON.stringify(data),{mode:0o600});}

@@ -50,7 +50,7 @@ test('常青原创不能把来源窗口结束填成到期；明确来源的时�
  const base={schema_version:'ai-v1.2',input_version:'controlled',summary:'',evidence_refs:[],assumptions:[],missing_inputs:[],warnings:[],task_payload:{candidates:[candidate({expires_at:new Date().toISOString()})]}};assert.ok(spec.validate!(base).includes('candidates/0:EVERGREEN_MUST_NOT_EXPIRE'));assert.deepEqual(spec.validate!({...base,task_payload:{candidates:[candidate()]}}),[]);
 });
 test('停用选题负责人必须移交，历史决策不改写，新负责人有授权和待办；编辑不能驳回他人题',async()=>{
- const t=await seed(),c=await client.call('/members','POST',{email:'handoff@example.test',roles:['editor']}),member=c.data.id;
+ const t=await seed(),c=await client.call('/members','POST',{email:'handoff@example.test',roles:['admin']}),member=c.data.id;
 
  await client.call('/topics/'+t.id+'/accept','POST',{expected_version:1,owner_id:member});
  assert.equal((await client.call('/members/'+member,'PATCH',{active:false,expected_version:1})).error.code,'SUCCESSOR_REQUIRED');

@@ -1,7 +1,7 @@
 import {randomUUID} from 'node:crypto';
 import {AddressInfo} from 'node:net';
 import {Database} from '../packages/db/src/db';
-import {databaseUrl,setupToken} from '../packages/domain/src/config';
+import {databaseUrl} from '../packages/domain/src/config';
 import {migrate} from '../packages/db/src/migrate';
 import {createApp} from '../apps/api/src/main';
 import Ajv2020 from 'ajv/dist/2020';
@@ -34,5 +34,5 @@ export class Client {
   async login(email:string,password='A-safe-test-password-987'){await this.init();return this.call('/auth/login','POST',{email,password});}
 }
 export async function server(){const db=await database();await reset(db);const app=await createApp(db);await app.listen(0,'127.0.0.1');const address=app.getHttpServer().address() as AddressInfo;return {db,app,url:`http://127.0.0.1:${address.port}`,close:async()=>{await app.close();await db.close();}};}
-export const adminInput={setup_token:()=>setupToken(),email:'admin@example.test',password:'A-safe-test-password-987',display_name:'测试管理员',workspace_name:'独立测试工作区'};
-export async function initialize(c:Client){await c.init();const r=await c.call('/setup','POST',{...adminInput,setup_token:setupToken()});if(r.status!==201)throw new Error('Setup failed: '+r.error?.code);await c.login(adminInput.email);return (await c.call('/me')).data;}
+export const adminInput={email:'admin@example.test',password:'A-safe-test-password-987',display_name:'测试管理员',workspace_name:'独立测试工作区'};
+export async function initialize(c:Client){await c.init();const r=await c.call('/setup','POST',adminInput);if(r.status!==201)throw new Error('Setup failed: '+r.error?.code);await c.login(adminInput.email);return (await c.call('/me')).data;}

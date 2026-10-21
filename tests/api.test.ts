@@ -2,15 +2,14 @@ import {test,before,after} from 'node:test';
 import assert from 'node:assert/strict';
 import {randomUUID} from 'node:crypto';
 import {server,Client,initialize,adminInput} from './helpers';
-import {setupToken,config} from '../packages/domain/src/config';
+import {config} from '../packages/domain/src/config';
 import {passwordHash} from '../apps/api/src/auth';
 let s:Awaited<ReturnType<typeof server>>,admin:Client,me:any,account:any;
 before(async()=>{s=await server();admin=new Client(s.url);});after(async()=>{await s.close();});
-test('首次设置必须验证Origin、CSRF、实例凭据；并发只创建一个管理员',async()=>{
-  await admin.init();const body={...adminInput,setup_token:setupToken()};
+test('首次设置无需实例凭据，仍验证Origin和CSRF；并发只创建一个管理员',async()=>{
+  await admin.init();const body=adminInput;
   assert.equal((await admin.call('/setup','POST',body,{Origin:'https://evil.test'})).error.code,'ORIGIN_REJECTED');
   assert.equal((await admin.call('/setup','POST',body,{'X-CSRF-Token':'wrong'})).error.code,'CSRF_INVALID');
-  assert.equal((await admin.call('/setup','POST',{...body,setup_token:'wrong'})).error.code,'SETUP_TOKEN_INVALID');
   const r=await Promise.all([admin.call('/setup','POST',body),admin.call('/setup','POST',body)]);assert.deepEqual(r.map(x=>x.status).sort(),[201,409]);
   assert.equal((await s.db.query('SELECT count(*)::int n FROM users')).rows[0].n,1);
   assert.equal((await admin.call('/setup/status')).data.initialized,true);
@@ -41,28 +40,28 @@ test('expected_version竞争只允许一个写入，错误和分页协议统一'
   assert.equal((await admin.call('/audit-logs?cursor=bad')).status,422);
 });
 let viewer:Client,operator:Client,editor:Client,editorMember:any;
-test('邀请、组合角色及只读权限；重复使用邀请被拒绝',async()=>{
-  for(const [name,assigned] of [['viewer',['viewer']],['operator',['operator']],['editor',['editor']]] as const){
-    const email=name+'@example.test';const invite=await admin.call('/members','POST',{email,roles:assigned,display_name:name});assert.equal(invite.status,201);
+test('个人邀请均创建管理员，重复邀请被拒绝，管理员共享工作区且幂等结果加密',async()=>{
+  for(const name of ['viewer','operator','editor']){
+    const email=name+'@example.test';const key=randomUUID();
+    const invite=await admin.call('/members','POST',{email,display_name:name},{'Idempotency-Key':key});assert.equal(invite.status,201);assert.deepEqual(invite.data.roles,['admin']);
+    if(name==='viewer')assert.equal((await admin.call('/members/'+me.membership.id,'PATCH',{active:false,expected_version:1})).error.code,'LAST_ADMIN');
+    const repeat=await admin.call('/members','POST',{email,display_name:name},{'Idempotency-Key':key});assert.equal(repeat.data.invitation_token,invite.data.invitation_token);
     const client=new Client(s.url);await client.init();assert.equal((await client.call('/auth/accept-invite','POST',{invitation_token:invite.data.invitation_token,password:adminInput.password})).status,200);
     assert.equal((await client.call('/auth/accept-invite','POST',{invitation_token:invite.data.invitation_token,password:adminInput.password})).status,422);
-    await client.login(email);
+    await client.login(email);const session=(await client.call('/me')).data;assert.deepEqual(session.membership.roles,['admin']);assert.equal(session.workspace.id,me.workspace.id);assert.notEqual(session.user.id,me.user.id);assert.ok(session.permissions.includes('admin')&&session.permissions.includes('download.original'));
     if(name==='viewer')viewer=client;if(name==='operator')operator=client;if(name==='editor'){editor=client;editorMember=invite.data;}
   }
-  const m=await editor.call('/me');assert.ok(m.data.permissions.includes('topic.edit')&&!m.data.permissions.includes('download.original'));
-  assert.equal((await viewer.call('/accounts/'+account.id)).status,200);
-  assert.equal((await viewer.call('/accounts/'+account.id,'PATCH',{name:'越权',expected_version:account.version})).status,403);
-  assert.equal((await viewer.call('/members')).status,403);
-  assert.equal((await operator.call('/accounts/'+account.id,'PATCH',{owner_id:me.membership.id,expected_version:account.version})).error.code,'FIELD_FORBIDDEN');
-  assert.equal((await viewer.call('/files/'+randomUUID()+'/download')).status,403);
-  assert.equal((await viewer.call('/files/'+randomUUID()+'/preview')).status,404);
-  assert.equal((await viewer.call('/jobs/'+randomUUID()+'/cancel','POST',{reason:'只读越权'})).status,403);
+  assert.equal((await viewer.call('/members')).status,200);
+  const update=await viewer.call('/accounts/'+account.id,'PATCH',{name:'其他管理员可编辑',expected_version:account.version});assert.equal(update.status,200);account=update.data;
+  assert.equal((await viewer.call('/files/'+randomUUID()+'/download')).status,404);
+  assert.equal((await viewer.call('/jobs/'+randomUUID()+'/cancel','POST',{reason:'管理员取消不存在的任务'})).status,404);
+  assert.equal((await admin.call('/members','POST',{email:'denied@example.test',roles:['viewer']})).status,422);
   const stored=JSON.stringify((await s.db.query("SELECT response FROM idempotency_records WHERE route='/members@v1.2'")).rows);
   assert.ok(!stored.includes('invitation_token'));assert.ok(stored.includes('encrypted'));
 });
-test('诊断202立即可查询Job；其他用户/账号不可见，生产Cookie为Secure',async()=>{
+test('诊断202立即可查询Job；同工作区管理员可见，生产Cookie为Secure',async()=>{
   const diagnostic=await admin.call('/diagnostics','POST',{pool:'general',account_id:account.id});assert.equal(diagnostic.status,202);assert.match(diagnostic.data.status_url,/\/jobs\//);
-  assert.equal((await admin.call('/jobs/'+diagnostic.data.job_id)).data.state,'queued');assert.equal((await viewer.call('/jobs/'+diagnostic.data.job_id)).status,404);
+  assert.equal((await admin.call('/jobs/'+diagnostic.data.job_id)).data.state,'queued');assert.equal((await viewer.call('/jobs/'+diagnostic.data.job_id)).status,200);
   const old=config.secure;config.secure=true;try{const client=new Client(s.url);await client.init();assert.match((await client.login('operator@example.test')).headers.get('set-cookie')!,/Secure/);}finally{config.secure=old;}
 });
 test('工作区、账号与负责人归属不能跨界；数据库复合外键生效',async()=>{
@@ -75,15 +74,16 @@ test('工作区、账号与负责人归属不能跨界；数据库复合外键�
   assert.equal((await admin.call('/accounts/'+account.id,'PATCH',{owner_id:member.rows[0].id,expected_version:account.version})).status,422);
   await assert.rejects(s.db.query('INSERT INTO account_memberships VALUES($1,$2,$3)',[w.rows[0].id,account.id,member.rows[0].id]),(e:any)=>e.code==='23503');
   await s.db.query('DELETE FROM account_memberships WHERE account_id=$1 AND membership_id=$2',[account.id,editorMember.id]);
-  assert.equal((await editor.call('/accounts/'+account.id)).status,404);
+  assert.equal((await editor.call('/accounts/'+account.id)).status,200);
 });
-test('即时角色检查、最后管理员保护、成员停用与会话失效',async()=>{
-  assert.equal((await admin.call('/members/'+me.membership.id,'PATCH',{roles:['viewer'],expected_version:1})).error.code,'LAST_ADMIN');
-  const update=await admin.call('/members/'+editorMember.id,'PATCH',{roles:['viewer'],expected_version:1});assert.equal(update.status,200);
-  assert.deepEqual((await editor.call('/me')).data.membership.roles,['viewer']);
-  assert.equal((await editor.call('/settings','PATCH',{category:'workspace',settings:{name:'越权'},expected_version:1})).status,403);
-  assert.equal((await admin.call('/members/'+editorMember.id,'PATCH',{active:false,expected_version:2})).status,200);
+test('后端拒绝降级，全员管理员仍支持停用与会话失效，最后管理员不可停用',async()=>{
+  assert.equal((await admin.call('/members/'+me.membership.id,'PATCH',{roles:['viewer'],expected_version:1})).status,422);
+  assert.equal((await admin.call('/members/'+editorMember.id,'PATCH',{roles:['viewer'],expected_version:1})).status,422);
+  assert.deepEqual((await editor.call('/me')).data.membership.roles,['admin']);
+  assert.equal((await admin.call('/members/'+editorMember.id,'PATCH',{active:false,expected_version:1})).status,200);
   assert.equal((await editor.call('/me')).status,401);
+  const last=new Client(s.url);await last.login('foreign@example.test');const lastMe=(await last.call('/me')).data;
+  assert.equal((await last.call('/members/'+lastMe.membership.id,'PATCH',{active:false,expected_version:1})).error.code,'LAST_ADMIN');
 });
 test('通知按人隔离；已读只修改通知；审计追加且不记录密码',async()=>{
   const other=(await operator.call('/me')).data;

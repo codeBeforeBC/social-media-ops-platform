@@ -18199,13 +18199,14 @@
           "roles": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Role"
-            }
+              "const": "admin"
+            },
+            "minItems": 1,
+            "maxItems": 1
           }
         },
         "required": [
-          "email",
-          "roles"
+          "email"
         ],
         "additionalProperties": false
       },
@@ -18215,8 +18216,10 @@
           "roles": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Role"
-            }
+              "const": "admin"
+            },
+            "minItems": 1,
+            "maxItems": 1
           },
           "active": {
             "type": "boolean"
@@ -19150,19 +19153,13 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 200
-          },
-          "setup_token": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 200
           }
         },
         "required": [
           "email",
           "password",
           "display_name",
-          "workspace_name",
-          "setup_token"
+          "workspace_name"
         ],
         "additionalProperties": false
       },

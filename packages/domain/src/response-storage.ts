@@ -1,6 +1,6 @@
 import {createCipheriv,createDecipheriv,randomBytes,createHash} from 'node:crypto';
-import {setupToken} from './config';
-function key(){return createHash('sha256').update('yoyo:idempotency:'+setupToken()).digest();}
+import {idempotencySecret} from './config';
+function key(){return createHash('sha256').update('yoyo:idempotency:'+idempotencySecret()).digest();}
 export function storeResponse(data:any):unknown{
   if(!data?.invitation_token)return data;
   const iv=randomBytes(12),cipher=createCipheriv('aes-256-gcm',key(),iv);

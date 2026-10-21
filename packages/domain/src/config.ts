@@ -1,8 +1,8 @@
-import {readFileSync,existsSync} from 'node:fs';
+import {readFileSync} from 'node:fs';
 import {resolve} from 'node:path';
 try {process.loadEnvFile('.env');} catch(e) {if((e as NodeJS.ErrnoException).code!=='ENOENT')throw e;}
 const stateDir=resolve(process.env.STATE_DIR??'.local/state');
-export function credentials(): {database_password:string;setup_token:string} {
+export function credentials(): {database_password:string;idempotency_secret?:string;setup_token?:string} {
   return JSON.parse(readFileSync(resolve(stateDir,'instance.json'),'utf8'));
 }
 export function databaseUrl(test=false):string {
@@ -21,4 +21,9 @@ export const config={
   pollMs:Number(process.env.JOB_POLL_MS??1000),workerPool:process.env.WORKER_POOL??'general'
 };
 if(!Number.isFinite(config.leaseSeconds)||config.leaseSeconds<1||config.heartbeatMs>=config.leaseSeconds*1000)throw new Error('Invalid job lease / heartbeat configuration');
-export function setupToken(){if(!existsSync(resolve(stateDir,'instance.json')))throw new Error('Run instance initialization first');return credentials().setup_token;}
+// Existing invitation responses must keep the same encryption key after upgrade.
+export function idempotencySecret(){
+  const state=credentials(),value=state.idempotency_secret??state.setup_token;
+  if(!value)throw new Error('Instance idempotency secret is missing');
+  return value;
+}

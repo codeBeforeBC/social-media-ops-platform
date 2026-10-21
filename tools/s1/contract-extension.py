@@ -1,7 +1,11 @@
 """Loaded by the contract generator after baseline construction. S0 evidence remains historical."""
 S['ErrorEnvelope']['properties']['error']['properties']['field_errors']={'type':'object','additionalProperties':True}
 S['Login']=obj({'email':{'type':'string','format':'email','maxLength':254},'password':{'type':'string','minLength':1,'maxLength':128},'workspace_id':ref('Id')},['email','password'])
-S['SetupInput']=obj({'email':{'type':'string','format':'email'},'password':{'type':'string','minLength':12,'maxLength':128},'display_name':title,'workspace_name':title,'setup_token':title},['email','password','display_name','workspace_name','setup_token'])
+S['SetupInput']=obj({'email':{'type':'string','format':'email'},'password':{'type':'string','minLength':12,'maxLength':128},'display_name':title,'workspace_name':title},['email','password','display_name','workspace_name'])
+admin_roles={'type':'array','items':{'const':'admin'},'minItems':1,'maxItems':1}
+S['MemberCreate']['properties']['roles']=admin_roles
+S['MemberCreate']['required']=['email']
+S['MemberPatch']['properties']['roles']=admin_roles
 S['AcceptInvite']=obj({'invitation_token':title,'password':{'type':'string','minLength':12,'maxLength':128}},['invitation_token','password'])
 S['AccountCreate']=obj({'platform':enum('weibo','xiaohongshu'),'platform_user_id':title,'display_handle':title,'name':title,'timezone':ref('Timezone')},['platform','platform_user_id','name'])
 S['DiagnosticInput']=obj({'pool':enum('general'),'account_id':ref('Id')},['pool'])

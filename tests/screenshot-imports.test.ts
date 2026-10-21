@@ -33,22 +33,22 @@ test('人工作用区域/单位/时间/账号校验，原识别不改，万保�
  assert.equal((await c.call('/imports/'+batch.id+'/revert','POST',{reason:'合成撤销复查',expected_version:confirmed.data.version})).status,200);
  assert.equal((await env.db.query("SELECT count(*)::int n FROM metric_observations WHERE validity='confirmed'")).rows[0].n,0);
 });
-test('手工补充必须真实引用原图，错用途/跨账号拒绝；只读可预览且不可下载或更正',async()=>{
+test('手工补充必须真实引用原图，错用途/跨账号拒绝；同工作区管理员可预览下载及更正',async()=>{
  const region={x:0,y:0,width:1,height:1};
  const made=await c.call('/imports','POST',{account_id:account.id,file_ids:[file.id],source_type:'screenshot',manual_rows:[metric('545')],source_region:region});assert.equal(made.status,202,JSON.stringify(made.error));
  const row=(await c.call('/imports/'+made.data.id+'/rows')).data.items[0];assert.equal(row.raw.ocr.mode,'manual_supplement');assert.equal(row.file_id,file.id);assert.equal(row.status,'valid');
  assert.equal((await c.call('/imports','POST',{account_id:account.id,file_ids:[file.id],source_type:'csv'})).status,422);
  const other=(await c.call('/accounts','POST',{name:'合成另账号',platform:'xiaohongshu',platform_user_id:'synthetic-ocr-other'})).data;assert.equal((await c.call('/imports','POST',{account_id:other.id,file_ids:[file.id],source_type:'screenshot'})).status,422);
- const viewer=await c.call('/members','POST',{email:'ocr-viewer@example.test',display_name:'合成只读',roles:['viewer']});const v=new Client(env.url);await v.init();await v.call('/auth/accept-invite','POST',{invitation_token:viewer.data.invitation_token,password:'A-safe-test-password-987'});await v.login('ocr-viewer@example.test');
- assert.equal((await v.call('/files/'+file.id+'/preview')).status,200);assert.equal((await v.call('/files/'+file.id+'/download')).status,403);
- assert.equal((await v.call('/import-rows/'+row.id,'PATCH',{metric:metric('546'),reason:'只读不准更正',expected_version:row.version})).status,403);
+ const viewer=await c.call('/members','POST',{email:'ocr-viewer@example.test',display_name:'合成只读',roles:['admin']});const v=new Client(env.url);await v.init();await v.call('/auth/accept-invite','POST',{invitation_token:viewer.data.invitation_token,password:'A-safe-test-password-987'});await v.login('ocr-viewer@example.test');
+ assert.equal((await v.call('/files/'+file.id+'/preview')).status,200);assert.equal((await v.call('/files/'+file.id+'/download')).status,200);
+ assert.equal((await v.call('/import-rows/'+row.id,'PATCH',{metric:metric('546'),reason:'其他管理员更正',expected_version:row.version})).status,200);
 });
 test('旧图再校验按任务发起者授权，在途撤权不能借原上传者权限落库',async()=>{
- const member=await c.call('/members','POST',{email:'ocr-operator@example.test',display_name:'合成运营',roles:['operator']});
+ const member=await c.call('/members','POST',{email:'ocr-operator@example.test',display_name:'合成运营',roles:['admin']});
  const operator=new Client(env.url);await operator.init();await operator.call('/auth/accept-invite','POST',{invitation_token:member.data.invitation_token,password:'A-safe-test-password-987'});await operator.login('ocr-operator@example.test');
  await env.db.query("UPDATE file_objects SET metadata=metadata-'ocr'-'ocr_parser_version' WHERE id=$1",[file.id]);
  const reused=await uploadBytes(operator,env.url,account.id,png(),'合成旧图再识别.png');assert.equal(reused.id,file.id);await jobs.dispatch();const job=await jobs.claim('media');assert.ok(job);assert.equal(job.created_by,member.data.id);
  const handled=await fileValidationHandler(env.db,store)(job,new AbortController().signal);await env.db.query("UPDATE memberships SET roles=ARRAY['viewer'] WHERE id=$1",[me.membership.id]);assert.equal(await env.db.transaction(tx=>handled.guard!(tx)),null);await env.db.query("UPDATE memberships SET roles=ARRAY['admin'] WHERE id=$1",[me.membership.id]);
- await c.call('/members/'+member.data.id,'PATCH',{roles:['viewer'],expected_version:member.data.version});assert.equal(await env.db.transaction(tx=>handled.guard!(tx)),'FILE_SCOPE_CHANGED');await handled.cleanup?.(false);
+ await c.call('/members/'+member.data.id,'PATCH',{active:false,expected_version:member.data.version});assert.equal(await env.db.transaction(tx=>handled.guard!(tx)),'FILE_SCOPE_CHANGED');await handled.cleanup?.(false);
  assert.equal((await env.db.query('SELECT file_status FROM file_objects WHERE id=$1',[file.id])).rows[0].file_status,'uploading');assert.equal((await env.db.query('SELECT created_by FROM file_objects WHERE id=$1',[file.id])).rows[0].created_by,me.membership.id);
 });

@@ -179,7 +179,7 @@ model memberships {
   id                                                                         String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   workspace_id                                                               String                @db.Uuid
   user_id                                                                    String                @db.Uuid
-  roles                                                                      String[]
+  roles                                                                      String[] @default(["admin"])
   active                                                                     Boolean               @default(true)
   version                                                                    Int                   @default(1)
   created_at                                                                 DateTime              @default(now()) @db.Timestamptz(6)

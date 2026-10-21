@@ -2,8 +2,8 @@ import {hash,verify,argon2id} from 'argon2';
 import {Request,Response} from 'express';
 import {z} from 'zod';
 import {Database,Tx} from '../../../packages/db/src/db';
-import {config,setupToken} from '../../../packages/domain/src/config';
-import {AppError,Actor,parse,text,roles,sha,secret,equalSecret,permissions} from '../../../packages/domain/src/protocol';
+import {config} from '../../../packages/domain/src/config';
+import {AppError,Actor,parse,text,sha,secret,equalSecret,permissions} from '../../../packages/domain/src/protocol';
 export const cookieName='yoyo_session';
 const password=z.string().min(12).max(128);
 const email=z.email().max(254).transform(s=>s.toLowerCase());
@@ -41,8 +41,7 @@ export class Auth {
   }
   async setup(req:Request){
     await this.checkCsrf(req);await this.limit('setup',req.ip??'local');
-    const input=parse(z.object({setup_token:text(200),email,password,display_name:text(),workspace_name:text()}).strict(),req.body);
-    if(!equalSecret(input.setup_token,setupToken()))throw new AppError(403,'SETUP_TOKEN_INVALID','实例初始化凭据无效');
+    const input=parse(z.object({email,password,display_name:text(),workspace_name:text()}).strict(),req.body);
     const pw=await passwordHash(input.password);
     return this.db.transaction(async tx=>{
       const lock=await tx.query('SELECT initialized_at FROM instance_state WHERE id=1 FOR UPDATE');

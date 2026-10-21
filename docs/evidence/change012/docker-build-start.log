@@ -1,0 +1,417 @@
+ Image yoyo-change012:0.1.0 Pulling 
+ Image yoyo-change012:0.1.0 Pulling 
+ Image yoyo-change012:0.1.0 Pulling 
+ Image yoyo-change012:0.1.0 Error pull access denied for yoyo-change012, repository does not exist or may require 'docker login'
+ Image yoyo-change012:0.1.0 Error pull access denied for yoyo-change012, repository does not exist or may require 'docker login'
+ Image yoyo-change012:0.1.0 Error pull access denied for yoyo-change012, repository does not exist or may require 'docker login'
+ Image yoyo-change012:0.1.0 Building 
+ Image yoyo-media-local:0.1.0 Building 
+ Image yoyo-change012:0.1.0 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.55kB done
+#1 DONE 0.0s
+
+#2 [media-executor internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.36kB done
+#2 DONE 0.0s
+
+#3 [migrate internal] load build definition from Dockerfile
+#3 transferring dockerfile: 1.90kB done
+#3 DONE 0.0s
+
+#4 [api internal] load metadata for docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#4 DONE 0.1s
+
+#5 [api internal] load .dockerignore
+#5 transferring context: 177B done
+#5 DONE 0.0s
+
+#6 [media-executor internal] load build context
+#6 DONE 0.0s
+
+#7 [api internal] load build context
+#7 DONE 0.0s
+
+#8 [api build 1/4] FROM docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#8 resolve docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c done
+#8 resolve docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c done
+#8 DONE 0.0s
+
+#6 [media-executor internal] load build context
+#6 transferring context: 15.86kB done
+#6 DONE 0.0s
+
+#7 [api internal] load build context
+#7 transferring context: 2.16MB 0.1s done
+#7 DONE 0.1s
+
+#9 [media-executor build 4/4] RUN gcc -O2 -Wall /sandbox.c -o /media-sandbox
+#9 CACHED
+
+#10 [media-executor stage-1 4/7] COPY tools/media/server.mjs /app/server.mjs
+#10 CACHED
+
+#11 [media-executor stage-1 6/7] COPY tools/media/image-ocr.py /usr/local/lib/yoyo/image-ocr.py
+#11 CACHED
+
+#12 [media-executor stage-1 2/7] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && (apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil ca-certificates tesseract-ocr tesseract-ocr-chi-sim tesseract-ocr-eng || apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil ca-certificates tesseract-ocr tesseract-ocr-chi-sim tesseract-ocr-eng) && rm -rf /var/lib/apt/lists/* && mkdir /scratch && chown node:node /scratch
+#12 CACHED
+
+#13 [media-executor build 3/4] COPY tools/media/sandbox.c /sandbox.c
+#13 CACHED
+
+#14 [media-executor stage-1 3/7] COPY --from=build /media-sandbox /usr/local/bin/media-sandbox
+#14 CACHED
+
+#15 [media-executor build 2/4] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && apt-get -o Acquire::Retries=3 install -y --no-install-recommends gcc libc6-dev linux-libc-dev
+#15 CACHED
+
+#16 [media-executor stage-1 5/7] COPY tools/media/import-validate.py /usr/local/lib/yoyo/import-validate.py
+#16 CACHED
+
+#17 [media-executor stage-1 7/7] WORKDIR /app
+#17 CACHED
+
+#18 [api build  2/21] RUN apt-get update && apt-get install -y --no-install-recommends openssl ca-certificates && rm -rf /var/lib/apt/lists/*
+#18 CACHED
+
+#19 [api build  3/21] RUN corepack enable && corepack prepare pnpm@10.33.0 --activate
+#19 CACHED
+
+#20 [migrate build  4/21] WORKDIR /app
+#20 CACHED
+
+#21 [api build  5/21] COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+#21 DONE 0.1s
+
+#22 [migrate build  6/21] COPY apps/api/package.json ./apps/api/package.json
+#22 DONE 0.0s
+
+#23 [migrate build  7/21] COPY apps/web/package.json ./apps/web/package.json
+#23 DONE 0.0s
+
+#24 [media-executor] exporting to image
+#24 exporting layers done
+#24 exporting manifest sha256:dff40c87bb2c1c73eaac9b3308a6656512ca1ff7f41dc0ea0130b04bdc439df7 0.0s done
+#24 exporting config sha256:7ebd53767dc9df0cbba003dd6860c799d135811c038def642ea0b94ca87ae809 0.0s done
+#24 exporting attestation manifest sha256:3e95a6b98232e5f6cd6e8cf0fba671933a02fc5dca03a201eb0264c222f4efdd 0.0s done
+#24 exporting manifest list sha256:eb7a4d3ebe4039146d8744e06d43c3a1953b39fedf9b53cddd9299b73f11c26a done
+#24 naming to docker.io/library/yoyo-media-local:0.1.0 done
+#24 unpacking to docker.io/library/yoyo-media-local:0.1.0 0.0s done
+#24 DONE 0.1s
+
+#25 [api build  8/21] COPY apps/worker/package.json ./apps/worker/package.json
+#25 DONE 0.0s
+
+#26 [migrate build  9/21] COPY apps/scheduler/package.json ./apps/scheduler/package.json
+#26 DONE 0.0s
+
+#27 [api build 10/21] COPY packages/db/package.json ./packages/db/package.json
+#27 DONE 0.1s
+
+#28 [api build 11/21] COPY packages/domain/package.json ./packages/domain/package.json
+#28 DONE 0.0s
+
+#29 [migrate build 12/21] COPY packages/contracts/package.json ./packages/contracts/package.json
+#29 DONE 0.0s
+
+#30 [media-executor] resolving provenance for metadata file
+#30 DONE 0.0s
+
+#31 [migrate build 13/21] RUN --mount=type=cache,id=yoyo-pnpm,target=/pnpm/store pnpm config set store-dir /pnpm/store && pnpm install --frozen-lockfile
+#31 0.685 Scope: all 8 workspace projects
+#31 0.729 Lockfile is up to date, resolution step is skipped
+#31 0.750 Progress: resolved 1, reused 0, downloaded 0, added 0
+#31 0.824 Packages: +323
+#31 0.824 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#31 1.751 Progress: resolved 323, reused 0, downloaded 17, added 17
+#31 2.752 Progress: resolved 323, reused 0, downloaded 88, added 88
+#31 2.796 
+#31 2.796    ╭───────────────────────────────────────────────╮
+#31 2.796    │                                               │
+#31 2.796    │     Update available! 10.33.0 → 12.14.0.      │
+#31 2.796    │     Changelog: https://pnpm.io/v/12.14.0      │
+#31 2.796    │   To update, run: corepack use pnpm@12.14.0   │
+#31 2.796    │                                               │
+#31 2.796    ╰───────────────────────────────────────────────╯
+#31 2.796 
+#31 3.753 Progress: resolved 323, reused 0, downloaded 155, added 154
+#31 4.756 Progress: resolved 323, reused 0, downloaded 189, added 189
+#31 5.438  WARN  Tarball download average speed 7 KiB/s (size 8 KiB) is below 50 KiB/s: https://registry.npmjs.org/@aws-sdk/credential-provider-web-identity/-/credential-provider-web-identity-3.972.78.tgz (GET)
+#31 5.571  WARN  Tarball download average speed 21 KiB/s (size 45 KiB) is below 50 KiB/s: https://registry.npmjs.org/@prisma/client-runtime-utils/-/client-runtime-utils-7.10.0.tgz (GET)
+#31 5.761 Progress: resolved 323, reused 0, downloaded 206, added 206
+#31 6.626  WARN  Tarball download average speed 4 KiB/s (size 10 KiB) is below 50 KiB/s: https://registry.npmjs.org/retry/-/retry-0.12.0.tgz (GET)
+#31 6.763 Progress: resolved 323, reused 0, downloaded 235, added 235
+#31 7.768 Progress: resolved 323, reused 0, downloaded 250, added 250
+#31 8.769 Progress: resolved 323, reused 0, downloaded 253, added 253
+#31 9.192  WARN  Tarball download average speed 11 KiB/s (size 32 KiB) is below 50 KiB/s: https://registry.npmjs.org/d3-scale/-/d3-scale-4.0.2.tgz (GET)
+#31 9.710  WARN  Tarball download average speed 7 KiB/s (size 43 KiB) is below 50 KiB/s: https://registry.npmjs.org/fast-uri/-/fast-uri-3.1.8.tgz (GET)
+#31 9.780 Progress: resolved 323, reused 0, downloaded 271, added 271
+#31 10.78 Progress: resolved 323, reused 0, downloaded 287, added 287
+#31 11.78 Progress: resolved 323, reused 0, downloaded 301, added 301
+#31 12.16  WARN  Tarball download average speed 20 KiB/s (size 135 KiB) is below 50 KiB/s: https://registry.npmjs.org/csstype/-/csstype-3.2.3.tgz (GET)
+#31 12.78 Progress: resolved 323, reused 0, downloaded 305, added 305
+#31 13.79 Progress: resolved 323, reused 0, downloaded 307, added 307
+#31 14.79 Progress: resolved 323, reused 0, downloaded 310, added 310
+#31 15.07  WARN  Tarball download average speed 22 KiB/s (size 250 KiB) is below 50 KiB/s: https://registry.npmjs.org/@prisma/get-platform/-/get-platform-7.2.0.tgz (GET)
+#31 15.79 Progress: resolved 323, reused 0, downloaded 311, added 311
+#31 16.79 Progress: resolved 323, reused 0, downloaded 312, added 312
+#31 18.13 Progress: resolved 323, reused 0, downloaded 313, added 312
+#31 19.14 Progress: resolved 323, reused 0, downloaded 313, added 313
+#31 20.07  WARN  Tarball download average speed 22 KiB/s (size 308 KiB) is below 50 KiB/s: https://registry.npmjs.org/lodash/-/lodash-4.18.1.tgz (GET)
+#31 20.18 Progress: resolved 323, reused 0, downloaded 314, added 313
+#31 21.18 Progress: resolved 323, reused 0, downloaded 314, added 314
+#31 24.25 Progress: resolved 323, reused 0, downloaded 315, added 314
+#31 25.25 Progress: resolved 323, reused 0, downloaded 317, added 317
+#31 26.26 Progress: resolved 323, reused 0, downloaded 318, added 318
+#31 27.83 Progress: resolved 323, reused 0, downloaded 319, added 318
+#31 28.84 Progress: resolved 323, reused 0, downloaded 319, added 319
+#31 32.60  WARN  Tarball download average speed 8 KiB/s (size 251 KiB) is below 50 KiB/s: https://registry.npmjs.org/@prisma/streams-local/-/streams-local-0.1.11.tgz (GET)
+#31 32.61 Progress: resolved 323, reused 0, downloaded 320, added 319
+#31 33.61 Progress: resolved 323, reused 0, downloaded 320, added 320
+#31 39.19 Progress: resolved 323, reused 0, downloaded 321, added 320
+#31 40.20 Progress: resolved 323, reused 0, downloaded 321, added 321
+#31 77.00 Progress: resolved 323, reused 0, downloaded 322, added 321
+#31 78.01 Progress: resolved 323, reused 0, downloaded 322, added 322
+#31 111.3 Progress: resolved 323, reused 0, downloaded 323, added 322
+#31 111.3 Progress: resolved 323, reused 0, downloaded 323, added 323, done
+#31 111.4 .../node_modules/@prisma/engines postinstall$ node scripts/postinstall.js
+#31 111.4 .../argon2@0.44.0/node_modules/argon2 install$ cross-env ZERO_AR_DATE=1 node-gyp-build
+#31 111.4 .../esbuild@0.25.12/node_modules/esbuild postinstall$ node install.js
+#31 111.5 .../esbuild@0.25.12/node_modules/esbuild postinstall: Done
+#31 111.5 .../argon2@0.44.0/node_modules/argon2 install: Done
+#31 119.2 .../node_modules/@prisma/engines postinstall: Done
+#31 119.2 .../node_modules/prisma preinstall$ node scripts/preinstall-entry.js
+#31 119.3 .../node_modules/prisma preinstall: Done
+#31 119.4 
+#31 119.4 dependencies:
+#31 119.4 + @aws-sdk/client-s3 3.1147.0
+#31 119.4 + @aws-sdk/s3-request-presigner 3.1147.0
+#31 119.4 + @nestjs/common 12.1.2
+#31 119.4 + @nestjs/core 12.1.2
+#31 119.4 + @nestjs/platform-express 12.1.2
+#31 119.4 + @prisma/adapter-pg 7.10.0
+#31 119.4 + @prisma/client 7.10.0
+#31 119.4 + argon2 0.44.0
+#31 119.4 + cookie-parser 1.4.7
+#31 119.4 + express 5.2.1
+#31 119.4 + helmet 8.1.0
+#31 119.4 + pg 8.16.3
+#31 119.4 + reflect-metadata 0.2.2
+#31 119.4 + rxjs 7.8.2
+#31 119.4 + zod 4.1.12
+#31 119.4 
+#31 119.4 devDependencies:
+#31 119.4 + @playwright/test 1.56.1
+#31 119.4 + @types/cookie-parser 1.4.9
+#31 119.4 + @types/express 5.0.3
+#31 119.4 + @types/node 24.7.2
+#31 119.4 + @types/pg 8.15.5
+#31 119.4 + ajv 8.20.0
+#31 119.4 + ajv-formats 3.0.1
+#31 119.4 + prisma 7.10.0
+#31 119.4 + tsx 4.20.6
+#31 119.4 + typescript 5.9.3
+#31 119.4 
+#31 119.4 Done in 1m 58.9s using pnpm v10.33.0
+#31 DONE 119.7s
+
+#32 [api build 14/21] COPY apps ./apps
+#32 DONE 0.1s
+
+#33 [api build 15/21] COPY packages ./packages
+#33 DONE 0.0s
+
+#34 [migrate build 16/21] COPY tools ./tools
+#34 DONE 0.0s
+
+#35 [api build 17/21] COPY tests ./tests
+#35 DONE 0.0s
+
+#36 [migrate build 18/21] COPY contracts ./contracts
+#36 DONE 0.0s
+
+#37 [migrate build 19/21] COPY docs/templates ./docs/templates
+#37 DONE 0.0s
+
+#38 [migrate build 20/21] COPY tsconfig.json prisma.config.ts ./
+#38 DONE 0.0s
+
+#39 [migrate build 21/21] RUN pnpm build
+#39 0.285 
+#39 0.285 > yoyo-workbench@0.1.0 build /app
+#39 0.285 > pnpm db:generate && tsc -p tsconfig.json && pnpm --filter @yoyo/web build
+#39 0.285 
+#39 0.463 
+#39 0.463 > yoyo-workbench@0.1.0 db:generate /app
+#39 0.463 > prisma generate
+#39 0.463 
+#39 0.870 Loaded Prisma config from prisma.config.ts.
+#39 0.870 
+#39 0.950 Prisma schema loaded from packages/db/prisma/schema.prisma.
+#39 1.382 
+#39 1.382 ✔ Generated Prisma Client (v7.10.0) to ./node_modules/.pnpm/@prisma+client@7.10.0_prisma@7.10.0_@types+react-dom@19.2.2_@types+react@19.2.2__@types_a5f616641512722fa171c0ec0738743a/node_modules/@prisma/client in 286ms
+#39 1.382 
+#39 1.382 Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+#39 1.382 
+#39 1.382 
+#39 4.913 
+#39 4.913 > @yoyo/web@0.1.0 build /app/apps/web
+#39 4.913 > vite build
+#39 4.913 
+#39 5.041 vite v8.3.3 building client environment for production...
+#39 5.053 transforming...
+#39 5.119 ✓ 28 modules transformed.
+#39 5.159 rendering chunks...
+#39 5.196 computing gzip size...
+#39 5.199 dist/index.html                   0.36 kB │ gzip:  0.29 kB
+#39 5.199 dist/assets/index-D45Q9xoD.css    9.08 kB │ gzip:  2.74 kB
+#39 5.199 dist/assets/index-BiwEBMhh.js   333.42 kB │ gzip: 98.81 kB
+#39 5.199 
+#39 5.200 ✓ built in 158ms
+#39 DONE 5.3s
+
+#40 [migrate stage-1  2/10] WORKDIR /app
+#40 CACHED
+
+#41 [migrate stage-1  3/10] COPY --from=build --chown=node:node /app/node_modules ./node_modules
+#41 DONE 1.4s
+
+#42 [api stage-1  4/10] COPY --from=build --chown=node:node /app/dist ./dist
+#42 DONE 0.1s
+
+#43 [migrate stage-1  5/10] COPY --from=build --chown=node:node /app/apps/web/dist ./apps/web/dist
+#43 DONE 0.0s
+
+#44 [migrate stage-1  6/10] COPY --from=build --chown=node:node /app/packages/db/migrations ./packages/db/migrations
+#44 DONE 0.0s
+
+#45 [migrate stage-1  7/10] COPY --from=build --chown=node:node /app/docs/templates ./docs/templates
+#45 DONE 0.0s
+
+#46 [migrate stage-1  8/10] COPY --from=build --chown=node:node /app/tools/s3 ./tools/s3
+#46 DONE 0.0s
+
+#47 [migrate stage-1  9/10] COPY --from=build --chown=node:node /app/tools/s0 ./tools/s0
+#47 DONE 0.0s
+
+#48 [migrate stage-1 10/10] COPY --from=build --chown=node:node /app/tools/init-state.mjs ./tools/init-state.mjs
+#48 DONE 0.0s
+
+#49 [api] exporting to image
+#49 exporting layers
+#49 exporting layers 8.3s done
+#49 exporting manifest sha256:2b0477f5b38b074e9c901c2fb1d010b23fd3495c64580d63a850b95a75498b44 0.0s done
+#49 exporting config sha256:c45af301fff59be6fbd166ad93f7643b08613adad65fdffa8e2a4861eb5d7621 done
+#49 exporting attestation manifest sha256:98d08387b10d08ef62b9b80a31498d87288ebaef38f233091349704cdb93cc3c 0.0s done
+#49 exporting manifest list sha256:57c423c4c2335396104f3dc7c0d00a4667293c9a15d3a19e2e262c78facf16b8 0.0s done
+#49 naming to docker.io/library/yoyo-change012:0.1.0 done
+#49 unpacking to docker.io/library/yoyo-change012:0.1.0
+#49 ...
+
+#50 [migrate] exporting to image
+#50 exporting layers 8.3s done
+#50 exporting manifest sha256:9c46d44e88e519094c9d76bd11a66d4e7dcd962504d4fa3dc3b02f8ef224f305 0.0s done
+#50 exporting config sha256:6a1a9e947a2810b75532cdec44d784ecb0023091238a858c88d4dc3a978c84dd done
+#50 exporting attestation manifest sha256:fe5403747152712837ac61aeb359484223042c4808f59f84707487a92e8be833 0.0s done
+#50 exporting manifest list sha256:044c1fad2faa70daf899dfafb40b4d02c18c7807fc073f08d9e1482d3388095e done
+#50 naming to docker.io/library/yoyo-change012:0.1.0 done
+#50 unpacking to docker.io/library/yoyo-change012:0.1.0 3.2s done
+#50 DONE 11.6s
+
+#49 [api] exporting to image
+#49 unpacking to docker.io/library/yoyo-change012:0.1.0 3.2s done
+#49 DONE 11.7s
+
+#51 [migrate] resolving provenance for metadata file
+#51 DONE 0.0s
+
+#52 [api] resolving provenance for metadata file
+#52 DONE 0.0s
+ Image yoyo-change012:0.1.0 Built 
+ Image yoyo-change012:0.1.0 Built 
+ Image yoyo-media-local:0.1.0 Built 
+ Network yoyo-change012_media Creating 
+ Network yoyo-change012_media Created 
+ Network yoyo-change012_default Creating 
+ Network yoyo-change012_default Created 
+ Volume yoyo-change012_state Creating 
+ Volume yoyo-change012_state Created 
+ Volume yoyo-change012_media-scratch Creating 
+ Volume yoyo-change012_media-scratch Created 
+ Volume yoyo-change012_database Creating 
+ Volume yoyo-change012_database Created 
+ Volume yoyo-change012_objects Creating 
+ Volume yoyo-change012_objects Created 
+ Container yoyo-change012-init-1 Creating 
+ Container yoyo-change012-init-1 Created 
+ Container yoyo-change012-db-1 Creating 
+ Container yoyo-change012-media-executor-1 Creating 
+ Container yoyo-change012-storage-1 Creating 
+ Container yoyo-change012-db-1 Created 
+ Container yoyo-change012-media-executor-1 Created 
+ Container yoyo-change012-storage-1 Created 
+ Container yoyo-change012-migrate-1 Creating 
+ Container yoyo-change012-migrate-1 Created 
+ Container yoyo-change012-worker-1 Creating 
+ Container yoyo-change012-media-1 Creating 
+ Container yoyo-change012-scheduler-1 Creating 
+ Container yoyo-change012-api-1 Creating 
+ Container yoyo-change012-media-1 Created 
+ Container yoyo-change012-worker-1 Created 
+ Container yoyo-change012-scheduler-1 Created 
+ Container yoyo-change012-api-1 Created 
+ Container yoyo-change012-init-1 Starting 
+ Container yoyo-change012-init-1 Started 
+ Container yoyo-change012-init-1 Waiting 
+ Container yoyo-change012-init-1 Waiting 
+ Container yoyo-change012-init-1 Waiting 
+ Container yoyo-change012-init-1 Exited 
+ Container yoyo-change012-db-1 Starting 
+ Container yoyo-change012-init-1 Exited 
+ Container yoyo-change012-media-executor-1 Starting 
+ Container yoyo-change012-init-1 Exited 
+ Container yoyo-change012-storage-1 Starting 
+ Container yoyo-change012-db-1 Started 
+ Container yoyo-change012-storage-1 Started 
+ Container yoyo-change012-db-1 Waiting 
+ Container yoyo-change012-storage-1 Waiting 
+ Container yoyo-change012-media-executor-1 Started 
+ Container yoyo-change012-db-1 Healthy 
+ Container yoyo-change012-storage-1 Healthy 
+ Container yoyo-change012-migrate-1 Starting 
+ Container yoyo-change012-migrate-1 Started 
+ Container yoyo-change012-migrate-1 Waiting 
+ Container yoyo-change012-migrate-1 Waiting 
+ Container yoyo-change012-migrate-1 Waiting 
+ Container yoyo-change012-migrate-1 Waiting 
+ Container yoyo-change012-migrate-1 Exited 
+ Container yoyo-change012-migrate-1 Exited 
+ Container yoyo-change012-media-1 Starting 
+ Container yoyo-change012-scheduler-1 Starting 
+ Container yoyo-change012-migrate-1 Exited 
+ Container yoyo-change012-api-1 Starting 
+ Container yoyo-change012-migrate-1 Exited 
+ Container yoyo-change012-worker-1 Starting 
+ Container yoyo-change012-api-1 Started 
+ Container yoyo-change012-scheduler-1 Started 
+ Container yoyo-change012-media-1 Started 
+ Container yoyo-change012-worker-1 Started 
+ Container yoyo-change012-scheduler-1 Waiting 
+ Container yoyo-change012-storage-1 Waiting 
+ Container yoyo-change012-init-1 Waiting 
+ Container yoyo-change012-api-1 Waiting 
+ Container yoyo-change012-worker-1 Waiting 
+ Container yoyo-change012-media-executor-1 Waiting 
+ Container yoyo-change012-media-1 Waiting 
+ Container yoyo-change012-db-1 Waiting 
+ Container yoyo-change012-migrate-1 Waiting 
+ Container yoyo-change012-worker-1 Healthy 
+ Container yoyo-change012-scheduler-1 Healthy 
+ Container yoyo-change012-init-1 Exited 
+ Container yoyo-change012-media-executor-1 Healthy 
+ Container yoyo-change012-db-1 Healthy 
+ Container yoyo-change012-migrate-1 Exited 
+ Container yoyo-change012-media-1 Healthy 
+ Container yoyo-change012-storage-1 Healthy 
+ Container yoyo-change012-api-1 Healthy 
