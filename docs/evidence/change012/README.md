@@ -21,3 +21,12 @@
 首轮失败保留：[集成首轮](integration-first.log)是旧升级断言仍期待editor/viewer；[定向复验](retirement-recheck.log)通过。[浏览器首轮](browser-first.log)包含新增流程保留hash导致用例误等首页、限流和新测试库白名单缺失；[第二轮](browser-second.log)包含OCR已实现但仍期待not_implemented、多个待办链接未按批次定位。仅修正测试夹具/断言，未关闭产品限流或降低权限边界；BUG-033记录测试漂移。
 
 测试依赖使用隔离S8测试存储/解析器，结束后停止；Docker验证实例停止且卷保留，原dev数据库54329/存储59000/解析器59010不变。使用实例迁移、旧rc15更新、新离线发布包/干净clone/HTTPS与规模发布复验、跨日RPO及暂缓真实数据验收未在本轮执行。
+
+
+## 已推送源码与实际使用实例
+
+2026-10-21 LOG-102：产品源码提交32928b1已推送origin/codex/s9-acceptance，main保持。按前述约定首次建立yoyo-local使用实例（此前配置/容器/卷均不存在），网页http://localhost:3000、私有对象端口59001；未复用合成测试数据，未创建用户密码，等待使用者首次设置。忽略文件.env.local-run仅含端口/Origin，不入仓。
+
+[实际部署报告](local-instance.json)、[构建](local-instance-build.log)、[成功启动](local-instance-start-retry.log)记录38迁移、空用户/成员/账号/笔记、首次设置待完成、未登录401、页面/健康200、三后台心跳及9编译产物一致性。第一次启动因Docker地址池满失败：[保留日志](local-instance-start.log)；仅释放本轮先前停止的yoyo-change012两个零endpoint网络后成功：[释放日志](local-network-release.log)，卷/容器/dev网络保持。
+
+yoyo-local七服务及原dev三依赖继续运行。无需旧实例备份（无旧使用实例），未迁移原dev数据；本次首次部署不代表旧rc15离线包更新或全部S9发布门禁通过。
