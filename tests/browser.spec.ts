@@ -46,20 +46,20 @@ test('请求失败显示可重试错误，加载状态和登录过期可见',asy
 
 test('来源连接保存、独立待验证状态、启用和同源运行记录',async({page})=>{
  await page.goto('/');await page.getByLabel('邮箱').fill('browser@example.test');await page.getByLabel('密码',{exact:false}).fill('Browser-test-password-987');await page.getByRole('button',{name:'登录',exact:true}).click();await page.getByRole('link',{name:'选题策划'}).click();await expect(page.getByRole('heading',{name:'还没有来源连接'})).toBeVisible();
- await page.getByRole('button',{name:'添加来源',exact:true}).click();await page.getByLabel('来源名称').fill('浏览器采集连接');await page.getByRole('button',{name:'保存连接'}).click();const row=page.getByRole('row').filter({hasText:'浏览器采集连接'});await expect(row).toContainText('待验证');await expect(row.getByRole('button',{name:'立即采集'})).toBeDisabled();
- await row.getByRole('button',{name:'启用定时'}).click();await expect(row.getByRole('button',{name:'立即采集'})).toBeEnabled();await row.getByRole('button',{name:'立即采集'}).click();await expect(page.getByRole('status')).toContainText('已排队');await row.getByRole('button',{name:'立即采集'}).click();await expect(page.getByRole('status')).toContainText('现有采集任务');
+ await page.getByRole('button',{name:'添加来源',exact:true}).click();await page.getByLabel('来源名称').fill('浏览器采集连接');await page.getByRole('button',{name:'保存连接'}).click();const row=page.getByRole('row').filter({hasText:'浏览器采集连接'});await expect(row).toContainText('待验证');await expect(row.getByRole('button',{name:'立即采集'})).toBeEnabled();await expect(row).toContainText('定时已关闭');
+ await row.getByRole('button',{name:'立即采集'}).click();await expect(page.getByRole('status')).toContainText('已排队');await row.getByRole('button',{name:'立即采集'}).click();await expect(page.getByRole('status')).toContainText('现有采集任务');
  await row.getByRole('button',{name:'运行记录'}).click();const dialog=page.getByRole('dialog');await expect(dialog).toContainText('等待执行');await expect(dialog.getByText('等待处理',{exact:true})).toBeVisible();await page.keyboard.press('Escape');await expect(dialog).toHaveCount(0);
  await page.getByRole('button',{name:'添加来源',exact:true}).click();await page.getByLabel('来源名称').fill('参考账号配置');await page.getByLabel('来源类型').selectOption('xhs_quality_note');await page.getByLabel('浏览器档案 ID（小红书）').fill('controlled-profile');await page.getByLabel('参考账号 ID（仅优质笔记，最多2个，逗号分隔）').fill('abcdefabcdefabcdefabcdef');await page.getByRole('button',{name:'保存连接'}).click();await expect(page.getByRole('row').filter({hasText:'参考账号配置'})).toContainText('待验证');
  mkdirSync((process.env.EVIDENCE_DIR??'docs/evidence/s11')+'/screenshots',{recursive:true});await page.screenshot({path:(process.env.EVIDENCE_DIR??'docs/evidence/s11')+'/screenshots/collection-runtime.png',fullPage:true});
 });
 
 
-test('已验证但未启用的来源明确提示禁用原因，不显示等待光标',async({page})=>{
+test('定时关闭仍可手动采集，暂停独立禁用并显示恢复提示',async({page})=>{
  let paused=false;await page.route('**/api/v1/source-connections',async route=>{const response=await route.fetch();const json=await response.json();json.data.items=json.data.items.slice(0,1).map((c:any)=>({...c,health:'healthy',enabled:paused,paused,error_code:null}));await route.fulfill({response,json});});
  await page.goto('/');await page.getByLabel('邮箱').fill('browser@example.test');await page.getByLabel('密码',{exact:false}).fill('Browser-test-password-987');await page.getByRole('button',{name:'登录',exact:true}).click();await page.getByRole('link',{name:'选题策划',exact:true}).click();
  const row=page.getByRole('row').filter({hasText:'浏览器采集连接'}),collect=row.getByRole('button',{name:'立即采集',exact:true});
- await expect(row).toContainText('正常');await expect(collect).toBeDisabled();await expect(collect).not.toHaveCSS('cursor','wait');
- await expect(row).toContainText('来源未启用');await expect(collect).toHaveAccessibleDescription(/启用定时/);await expect(row.getByRole('button',{name:'启用定时',exact:true})).toBeEnabled();
+ await expect(row).toContainText('正常');await expect(collect).toBeEnabled();await expect(collect).not.toHaveCSS('cursor','wait');
+ await expect(row).toContainText('定时已关闭');await expect(collect).toHaveAccessibleDescription(/可立即采集/);await expect(row.getByRole('button',{name:'启用定时',exact:true})).toBeEnabled();
  paused=true;await page.getByRole('button',{name:'刷新状态',exact:true}).click();await expect(collect).toBeDisabled();await expect(collect).not.toHaveCSS('cursor','wait');await expect(collect).toHaveAccessibleDescription(/已暂停.*验证恢复/);await expect(row.getByRole('button',{name:'验证恢复',exact:true})).toBeEnabled();
 });
 

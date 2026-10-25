@@ -1,6 +1,6 @@
 import {z} from 'zod';
 import {Database,Tx} from '../../db/src/db';
-import {Actor,AppError,id,parse,text,timezone,uuid,version} from './protocol';
+import {Actor,AppError,canonical,sha,id,parse,text,timezone,uuid,version} from './protocol';
 import {JobHandler} from './jobs';
 
 export type Connection=Record<string,any>;
@@ -12,6 +12,8 @@ export class SourceFailure extends Error {
 const time=z.string().regex(/^(?:[01]\d|2[0-3]):[0-5]\d$/);
 const settings=z.object({keywords:z.array(text(100)).min(1).max(10).optional(),profile:text(100).optional(),reference_accounts:z.array(z.string().regex(/^[a-f0-9]{24}$/i)).max(2).refine(v=>new Set(v.map(id=>id.toLowerCase())).size===v.length).optional(),max_items:z.number().int().min(1).max(50).optional()}).strict();
 const editable={name:text(),schedule:z.array(time).max(4).refine(v=>new Set(v).size===v.length).optional(),timezone:timezone.optional(),enabled:z.boolean().optional(),min_interval_seconds:z.number().int().min(60).max(86400).optional(),config:settings.optional()};
+// Scheduling preferences do not change the input of an explicitly requested collection.
+const connectionInputHash=(c:Connection)=>sha(canonical({platform:c.platform,provider:c.provider,source_type:c.source_type,name:c.name,owner_id:c.owner_id,config:c.config,min_interval_seconds:c.min_interval_seconds,paused:c.paused}));
 export class Collection {
  constructor(readonly db:Database,readonly adapters:Record<string,Collector>={},readonly saveItems?:(tx:Tx,c:Connection,runId:string,result:CollectionResult)=>Promise<void>){}
  async scope(query:Pick<Database,'query'>|Tx,a:Actor,cid:string,lock=false){
@@ -30,17 +32,18 @@ export class Collection {
   const b=parse(z.object({...editable,name:text().optional(),expected_version:version}).strict(),input);const c=await this.scope(tx,a,cid,true);
   if(c.version!==b.expected_version)throw new AppError(409,'VERSION_CONFLICT','来源配置已更新');
   if(c.source_type!=='xhs_quality_note'&&b.config?.reference_accounts?.length)throw new AppError(422,'REFERENCE_ACCOUNT_SOURCE_INVALID','参考账号仅用于优质笔记来源');
-  const r=await tx.query(`UPDATE source_connections SET name=COALESCE($1,name),schedule=COALESCE($2,schedule),timezone=COALESCE($3,timezone),enabled=COALESCE($4,enabled),min_interval_seconds=COALESCE($5,min_interval_seconds),config=COALESCE($6,config),health=CASE WHEN $4=false THEN 'disabled' WHEN $6::jsonb IS NOT NULL OR ($4=true AND health='disabled') THEN 'unverified' ELSE health END,version=version+1,updated_at=now() WHERE id=$7 RETURNING *`,[b.name??null,b.schedule??null,b.timezone??null,b.enabled??null,b.min_interval_seconds??null,b.config===undefined?null:JSON.stringify(b.config),cid]);
+  const r=await tx.query(`UPDATE source_connections SET name=COALESCE($1,name),schedule=COALESCE($2,schedule),timezone=COALESCE($3,timezone),enabled=COALESCE($4,enabled),min_interval_seconds=COALESCE($5,min_interval_seconds),config=COALESCE($6,config),health=CASE WHEN $6::jsonb IS NOT NULL OR ($4::boolean IS NOT NULL AND health='disabled') THEN 'unverified' ELSE health END,version=version+1,updated_at=now() WHERE id=$7 RETURNING *`,[b.name??null,b.schedule??null,b.timezone??null,b.enabled??null,b.min_interval_seconds??null,b.config===undefined?null:JSON.stringify(b.config),cid]);
   await this.audit(tx,a,'source.update',cid);return {status:200,data:r.rows[0]};
  }
  async enqueue(tx:Tx,c:Connection,actorId:string,requestId:string,trigger:'manual'|'scheduled'|'verify',slot:string|null=null){
-  if(trigger!=='verify'&&(!c.enabled||c.paused))throw new AppError(409,'SOURCE_PAUSED','来源未启用或已暂停，请先验证恢复');
+  if(trigger!=='verify'&&c.paused)throw new AppError(409,'SOURCE_PAUSED','来源已暂停，请先验证恢复');
+  if(trigger==='scheduled'&&!c.enabled)throw new AppError(409,'SOURCE_PAUSED','定时采集未启用');
   const active=await tx.query("SELECT * FROM collection_runs WHERE connection_id=$1 AND state IN ('queued','running')",[c.id]);
   if(active.rowCount)return {run:active.rows[0],reused:true};
   if(c.last_attempt_at&&Date.now()-new Date(c.last_attempt_at).getTime()<c.min_interval_seconds*1000)throw new AppError(429,'SOURCE_RATE_LIMIT','刷新间隔未到，请稍后重试');
   if(slot){const old=await tx.query('SELECT * FROM collection_runs WHERE connection_id=$1 AND scheduled_slot=$2',[c.id,slot]);if(old.rowCount)return {run:old.rows[0],reused:true};}
   const run=(await tx.query(`INSERT INTO collection_runs(workspace_id,connection_id,created_by,connection_version,trigger,scheduled_slot) VALUES($1,$2,$3,$4,$5,$6) RETURNING *`,[c.workspace_id,c.id,actorId,c.version,trigger,slot])).rows[0];
-  await tx.query(`INSERT INTO outbox(workspace_id,event_key,event_type,payload) VALUES($1,$2,'source.collect',$3)`,[c.workspace_id,'collection:'+run.id,JSON.stringify({created_by:actorId,request_id:requestId,input:{run_id:run.id},pool:'general'})]);
+  await tx.query(`INSERT INTO outbox(workspace_id,event_key,event_type,payload) VALUES($1,$2,'source.collect',$3)`,[c.workspace_id,'collection:'+run.id,JSON.stringify({created_by:actorId,request_id:requestId,input:{run_id:run.id,connection_input_hash:connectionInputHash(c)},pool:'general'})]);
   await tx.query('UPDATE source_connections SET last_attempt_at=now() WHERE id=$1',[c.id]);return {run,reused:false};
  }
  async refresh(tx:Tx,a:Actor,cid:string,verify=false){const c=await this.scope(tx,a,cid,true);const r=await this.enqueue(tx,c,a.memberId,a.requestId,verify?'verify':'manual');await this.audit(tx,a,verify?'source.verify':'source.refresh',cid,{run_id:r.run.id});return {status:202,data:r};}
@@ -60,17 +63,19 @@ export class Collection {
  readonly handler:JobHandler=async(job,signal)=>{
   const run=(await this.db.query('SELECT * FROM collection_runs WHERE workspace_id=$1 AND id=$2',[job.workspace_id,job.input.run_id])).rows[0];
   if(!run)throw new Error('COLLECTION_RUN_MISSING');
+  // Jobs queued by older builds retain their conservative version check.
+  const inputChanged=(current:Connection)=>run.trigger!=='scheduled'&&typeof job.input.connection_input_hash==='string'?connectionInputHash(current)!==job.input.connection_input_hash:current.version!==run.connection_version;
   const c=(await this.db.query('SELECT * FROM source_connections WHERE id=$1',[run.connection_id])).rows[0];
   await this.db.query("UPDATE collection_runs SET state='running',job_id=$1,started_at=COALESCE(started_at,now()) WHERE id=$2 AND state IN ('queued','running')",[job.id,run.id]);
   let result:CollectionResult|undefined,error:string|null=null,diagnostics:Record<string,unknown>={};
   try{
-   if(c.version!==run.connection_version||(run.trigger!=='verify'&&(!c.enabled||c.paused)))throw new SourceFailure('CONNECTION_CHANGED');
+   if(inputChanged(c)||(run.trigger==='scheduled'&&!c.enabled)||(run.trigger!=='verify'&&c.paused))throw new SourceFailure('CONNECTION_CHANGED');
    const adapter=this.adapters[c.source_type];if(!adapter)throw new SourceFailure('ADAPTER_UNAVAILABLE');result=await adapter(c,signal);
   }catch(e){if(signal.aborted)throw new Error('JOB_TIMEOUT');error=e instanceof SourceFailure?e.code:'SOURCE_UNAVAILABLE';diagnostics=e instanceof SourceFailure?e.diagnostics:{};}
   const failure=error;const output=result;
   return {result:{run_id:run.id,item_count:output?.items.length??0,error_code:failure},completionState:failure?'failed':output?.warnings?.length?'partial':'succeeded',effects:async tx=>{
    const current=(await tx.query('SELECT * FROM source_connections WHERE id=$1 FOR UPDATE',[c.id])).rows[0];
-   if(current.version!==run.connection_version){await tx.query("UPDATE collection_runs SET state='cancelled',error_code='CONNECTION_CHANGED',finished_at=now() WHERE id=$1",[run.id]);return;}
+   if(inputChanged(current)||(run.trigger==='scheduled'&&!current.enabled)||(run.trigger!=='verify'&&current.paused)){await tx.query("UPDATE collection_runs SET state='cancelled',error_code='CONNECTION_CHANGED',finished_at=now() WHERE id=$1",[run.id]);return;}
    if(output&&this.saveItems)await this.saveItems(tx,current,run.id,output);
    await tx.query(`UPDATE collection_runs SET state=$1,item_count=$2,error_code=$3,coverage=$4,warnings=$5,adapter_version=$6,finished_at=now() WHERE id=$7`,[failure?'failed':output?.warnings?.length?'partial':'succeeded',output?.items.length??0,failure,JSON.stringify(output?{...output.coverage,batch_captured_at:output.captured_at??null,next_cursor:output.next_cursor??null,quota_state:output.quota_state??null}:{failure_diagnostics:diagnostics}),output?.warnings??[],output?.adapter_version??null,run.id]);
    if(failure){

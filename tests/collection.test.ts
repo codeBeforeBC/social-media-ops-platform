@@ -16,11 +16,49 @@ test('同源并发刷新复用一个运行，事务Outbox持久化，能力来�
  const job=await process();assert.equal(job.state,'succeeded');const latest=(await client.call(`/source-connections/${c.id}`)).data;assert.equal(latest.health,'healthy');assert.equal(latest.capabilities.list_items,true);
  assert.equal((await client.call(`/source-connections/${c.id}/refresh`,'POST')).status,429);
 });
-test('配置版本冲突拒绝覆盖；禁用时手动刷新受守卫，验证入口可用',async()=>{
- const c=await create({enabled:false});assert.equal((await client.call(`/source-connections/${c.id}/refresh`,'POST')).error.code,'SOURCE_PAUSED');
+test('关闭定时允许手动采集和验证，共用频率限制，版本冲突仍拒绝',async()=>{
+ const c=await create({enabled:false,schedule:['09:00']});
+ await new Collection(env.db).tick(new Date('2026-10-09T01:00:00Z'));
+ assert.equal((await env.db.query('SELECT count(*)::int n FROM collection_runs WHERE connection_id=$1',[c.id])).rows[0].n,0);
+ assert.equal((await client.call(`/source-connections/${c.id}/refresh`,'POST')).status,202);await process();
+ let latest=(await client.call(`/source-connections/${c.id}`)).data;assert.equal(latest.enabled,false);assert.equal(latest.health,'healthy');
+ assert.equal((await client.call(`/source-connections/${c.id}/refresh`,'POST')).error.code,'SOURCE_RATE_LIMIT');
+ assert.equal((await client.call(`/source-connections/${c.id}/verify`,'POST')).error.code,'SOURCE_RATE_LIMIT');
  assert.equal((await client.call(`/source-connections/${c.id}`,'PATCH',{expected_version:99,name:'覆盖'})).status,409);
+ await env.db.query('UPDATE source_connections SET last_attempt_at=NULL WHERE id=$1',[c.id]);
  assert.equal((await client.call(`/source-connections/${c.id}/verify`,'POST')).status,202);await process();
- const latest=(await client.call(`/source-connections/${c.id}`)).data;assert.equal(latest.enabled,false);assert.equal(latest.health,'healthy');
+ latest=(await client.call(`/source-connections/${c.id}`)).data;assert.equal(latest.enabled,false);assert.equal(latest.health,'healthy');
+});
+test('定时切换不影响排队或执行中的手动采集/验证，也不改写来源健康',async()=>{
+ for(const stage of ['queued','running'])for(const endpoint of ['refresh','verify']){
+  const c=await create(),request=await client.call(`/source-connections/${c.id}/${endpoint}`,'POST');assert.equal(request.status,202);
+  const collection=new Collection(env.db,{weibo_hot:success}),jobs=new Jobs(env.db,{'source.collect':collection.handler});await jobs.dispatch();const job=(await jobs.claim('general'))!;assert.equal(job.input.run_id,request.data.run.id);
+  if(stage==='queued'){await client.call(`/source-connections/${c.id}`,'PATCH',{enabled:false,expected_version:c.version});await jobs.process(job);}
+  else{const result=await collection.handler(job,new AbortController().signal);await client.call(`/source-connections/${c.id}`,'PATCH',{enabled:false,expected_version:c.version});assert.equal(await jobs.complete(job,result.result,result.effects,undefined,result.completionState,result.guard),true);}
+  assert.equal((await env.db.query('SELECT state FROM collection_runs WHERE id=$1',[request.data.run.id])).rows[0].state,'succeeded');
+  const latest=(await client.call(`/source-connections/${c.id}`)).data;assert.equal(latest.enabled,false);assert.equal(latest.health,'healthy');
+  const on=(await client.call(`/source-connections/${c.id}`,'PATCH',{enabled:true,expected_version:latest.version})).data;assert.equal(on.health,'healthy');assert.equal((await client.call(`/source-connections/${c.id}`,'PATCH',{enabled:false,expected_version:on.version})).data.health,'healthy');
+ }
+});
+test('定时关闭仍取消待执行的定时任务，暂停或配置变化仍拒绝手动旧结果',async()=>{
+ const scheduled=await create(),scheduledRun=await env.db.transaction(tx=>new Collection(env.db).enqueue(tx,scheduled,me.membership.id,crypto.randomUUID(),'scheduled','controlled-slot'));
+ await client.call(`/source-connections/${scheduled.id}`,'PATCH',{enabled:false,expected_version:scheduled.version});let calls=0;await process(async()=>{calls++;return success(scheduled,new AbortController().signal);});assert.equal(calls,0);assert.equal((await env.db.query('SELECT state FROM collection_runs WHERE id=$1',[scheduledRun.run.id])).rows[0].state,'cancelled');
+ for(const change of ['config','pause']){
+  const c=await create({enabled:false}),request=await client.call(`/source-connections/${c.id}/refresh`,'POST');assert.equal(request.status,202);
+  let saved=0;const collection=new Collection(env.db,{weibo_hot:success},async()=>{saved++;}),jobs=new Jobs(env.db,{'source.collect':collection.handler});await jobs.dispatch();const job=(await jobs.claim('general'))!,result=await collection.handler(job,new AbortController().signal);
+  if(change==='config')await client.call(`/source-connections/${c.id}`,'PATCH',{config:{keywords:['新输入']},expected_version:c.version});else await client.call(`/source-connections/${c.id}/pause`,'POST',{expected_version:c.version,reason:'人工暂停'});
+  await jobs.complete(job,result.result,result.effects,undefined,result.completionState,result.guard);assert.equal(saved,0);assert.equal((await env.db.query('SELECT state FROM collection_runs WHERE id=$1',[request.data.run.id])).rows[0].state,'cancelled');
+  if(change==='pause')assert.equal((await client.call(`/source-connections/${c.id}/refresh`,'POST')).error.code,'SOURCE_PAUSED');
+ }
+});
+test('旧版无输入摘要的任务仍可执行，变更后继续按版本拒绝旧结果',async()=>{
+ for(const changed of [false,true]){
+  const c=await create(),request=await client.call(`/source-connections/${c.id}/refresh`,'POST');
+  await env.db.query("UPDATE outbox SET payload=payload #- '{input,connection_input_hash}' WHERE event_key=$1",['collection:'+request.data.run.id]);
+  if(changed)await client.call(`/source-connections/${c.id}`,'PATCH',{enabled:false,expected_version:c.version});
+  const job=await process();assert.equal(job.state,changed?'failed':'succeeded');
+  assert.equal((await env.db.query('SELECT state FROM collection_runs WHERE id=$1',[request.data.run.id])).rows[0].state,changed?'cancelled':'succeeded');
+ }
 });
 test('登录失效立即暂停且通知负责人；成功验证恢复，其他来源不受影响',async()=>{
  const bad=await create(),good=await create();await client.call(`/source-connections/${bad.id}/refresh`,'POST');const job=await process(async()=>{throw new SourceFailure('AUTH_REQUIRED');});assert.equal(job.state,'failed');assert.equal(job.error_code,'AUTH_REQUIRED');
