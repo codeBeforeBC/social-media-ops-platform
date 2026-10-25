@@ -54,6 +54,15 @@ test('来源连接保存、独立待验证状态、启用和同源运行记录',
 });
 
 
+test('已验证但未启用的来源明确提示禁用原因，不显示等待光标',async({page})=>{
+ let paused=false;await page.route('**/api/v1/source-connections',async route=>{const response=await route.fetch();const json=await response.json();json.data.items=json.data.items.slice(0,1).map((c:any)=>({...c,health:'healthy',enabled:paused,paused,error_code:null}));await route.fulfill({response,json});});
+ await page.goto('/');await page.getByLabel('邮箱').fill('browser@example.test');await page.getByLabel('密码',{exact:false}).fill('Browser-test-password-987');await page.getByRole('button',{name:'登录',exact:true}).click();await page.getByRole('link',{name:'选题策划',exact:true}).click();
+ const row=page.getByRole('row').filter({hasText:'浏览器采集连接'}),collect=row.getByRole('button',{name:'立即采集',exact:true});
+ await expect(row).toContainText('正常');await expect(collect).toBeDisabled();await expect(collect).not.toHaveCSS('cursor','wait');
+ await expect(row).toContainText('来源未启用');await expect(collect).toHaveAccessibleDescription(/启用定时/);await expect(row.getByRole('button',{name:'启用定时',exact:true})).toBeEnabled();
+ paused=true;await page.getByRole('button',{name:'刷新状态',exact:true}).click();await expect(collect).toBeDisabled();await expect(collect).not.toHaveCSS('cursor','wait');await expect(collect).toHaveAccessibleDescription(/已暂停.*验证恢复/);await expect(row.getByRole('button',{name:'验证恢复',exact:true})).toBeEnabled();
+});
+
 test('来源证据详情保留原始观察、采集时间和缺失发布时间',async({page})=>{
  execFileSync('pnpm',['exec','tsx','tools/s3-browser-seed.ts'],{stdio:'pipe',env:process.env});
  await page.goto('/');await page.getByLabel('邮箱').fill('browser@example.test');await page.getByLabel('密码',{exact:false}).fill('Browser-test-password-987');await page.getByRole('button',{name:'登录',exact:true}).click();await page.getByRole('link',{name:'选题策划'}).click();await expect(page.getByRole('heading',{name:'明确合成的浏览器证据线索'})).toBeVisible();await page.getByRole('button',{name:'查看来源与观察记录'}).click();const dialog=page.getByRole('dialog');await expect(dialog).toContainText('未提供，不以采集时间代替');await expect(dialog.getByRole('heading',{name:'观察记录'})).toBeVisible();await expect(dialog).toContainText('heat：123');await expect(dialog.getByRole('link',{name:'打开原始来源'})).toHaveAttribute('href','https://s.weibo.com/weibo?q=controlled');await page.keyboard.press('Escape');
