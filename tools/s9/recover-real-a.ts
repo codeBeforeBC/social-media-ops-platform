@@ -4,7 +4,7 @@ import {execFileSync} from 'node:child_process';
 import {resolve} from 'node:path';
 import {createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
-import {Client} from '../../tests/helpers';
+import {Client} from './legacy-client';
 const privateDir=resolve(process.argv[2]??'');assert.ok(privateDir.startsWith(resolve('.local/s9-real-A-')));
 const topic=JSON.parse(readFileSync(privateDir+'/topic.json','utf8')),recap=JSON.parse(readFileSync(privateDir+'/recap.json','utf8')),identity=JSON.parse(readFileSync('docs/evidence/s0/backend-identity.json','utf8')),source=JSON.parse(readFileSync('docs/evidence/s0/backend-ocr-probe.json','utf8'));
 const dir=resolve('.local/s9-clean-clone/.local/clean-use'),project='yoyo-s9-clean-clone',base='https://localhost:3446',files=['compose.yaml','compose.release.yaml','compose.https.yaml','compose.release-https.yaml'],env={...process.env,YOYO_VERSION:'0.1.0-s9rc11',YOYO_ARCH:'arm64',HTTPS_ORIGIN:base,HTTPS_PORT:'3446'},args=['compose','--project-directory',dir,'-p',project,...files.flatMap(f=>['-f',dir+'/'+f])],compose=(a:string[])=>execFileSync('docker',[...args,...a],{env,encoding:'utf8',maxBuffer:10000000}),sql=(q:string)=>compose(['exec','-T','db','psql','-U','yoyo','-d','yoyo','-Atc',q]).trim(),sha=(b:string|Buffer)=>createHash('sha256').update(b).digest('hex');

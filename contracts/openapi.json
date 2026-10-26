@@ -3,7 +3,7 @@
   "info": {
     "title": "YOYO 内部运营工作台",
     "version": "1.2.0",
-    "description": "v1.2 三导航；implemented为实际接口，planned仅表示S7/S8等后续契约。"
+    "description": "YOYO本地单实例API；默认身份由实例持久映射提供，无登录/成员功能。写请求保留Origin/CSRF及资源边界；旧身份接口返回410。"
   },
   "servers": [
     {
@@ -17,23 +17,9 @@
         "operationId": "get_accounts",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [],
         "responses": {
-          "401": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "权限、会话、输入或并发错误",
             "content": {
@@ -146,11 +132,7 @@
         "operationId": "post_accounts",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "Idempotency-Key",
@@ -174,16 +156,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "权限、会话、输入或并发错误",
             "content": {
@@ -276,6 +248,16 @@
                 }
               }
             }
+          },
+          "415": {
+            "description": "请求格式不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -296,11 +278,7 @@
         "operationId": "get_accounts_id",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -312,16 +290,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "权限、会话、输入或并发错误",
             "content": {
@@ -422,11 +390,7 @@
         "operationId": "patch_accounts_id",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -458,16 +422,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "权限、会话、输入或并发错误",
             "content": {
@@ -560,6 +514,16 @@
                 }
               }
             }
+          },
+          "415": {
+            "description": "请求格式不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -580,23 +544,9 @@
         "operationId": "get_source_connections",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [],
         "responses": {
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -716,11 +666,7 @@
         "operationId": "post_source_connections",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "Idempotency-Key",
@@ -744,16 +690,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -846,6 +782,16 @@
                 }
               }
             }
+          },
+          "415": {
+            "description": "请求格式不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -866,11 +812,7 @@
         "operationId": "get_source_connections_id",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -882,16 +824,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -992,11 +924,7 @@
         "operationId": "patch_source_connections_id",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -1028,16 +956,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -1130,6 +1048,16 @@
                 }
               }
             }
+          },
+          "415": {
+            "description": "请求格式不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -1145,842 +1073,12 @@
         "x-implementation-status": "implemented"
       }
     },
-    "/members": {
-      "get": {
-        "operationId": "get_members",
-        "summary": "内部运营工作台接口",
-        "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "cursor",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "maxLength": 10000
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 100,
-              "default": 20
-            }
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          }
-        ],
-        "responses": {
-          "401": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "内部错误（脱敏）",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "S1实现；验收范围见docs/evidence/s1/README.md",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "items": {
-                          "type": "array",
-                          "items": {
-                            "$ref": "#/components/schemas/Membership"
-                          }
-                        },
-                        "next_cursor": {
-                          "anyOf": [
-                            {
-                              "type": "string",
-                              "maxLength": 10000
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
-                        }
-                      },
-                      "required": [
-                        "items",
-                        "next_cursor"
-                      ],
-                      "additionalProperties": false
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "meta"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          }
-        },
-        "x-implementation-status": "implemented"
-      },
-      "post": {
-        "operationId": "post_members",
-        "summary": "内部运营工作台接口",
-        "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "Idempotency-Key",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "X-CSRF-Token",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          }
-        ],
-        "responses": {
-          "401": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "内部错误（脱敏）",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "201": {
-            "description": "S1实现；验收范围见docs/evidence/s1/README.md",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/Membership"
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "meta"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/MemberCreate"
-              }
-            }
-          }
-        },
-        "x-implementation-status": "implemented"
-      }
-    },
-    "/members/{id}": {
-      "get": {
-        "operationId": "get_members_id",
-        "summary": "内部运营工作台接口",
-        "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "workspace_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "account_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "cursor",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "maxLength": 10000
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 100,
-              "default": 20
-            }
-          },
-          {
-            "name": "start",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "end",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "status",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "owner_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "media_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/MediaType"
-            }
-          },
-          {
-            "name": "traffic_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/TrafficType"
-            }
-          },
-          {
-            "name": "kind",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "revision_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "purpose",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "import_screenshot",
-                "import_table",
-                "source_evidence"
-              ]
-            }
-          },
-          {
-            "name": "unread",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "problem_only",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "keys",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 200
-              }
-            }
-          },
-          {
-            "name": "publication_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "source_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/SourceType"
-            }
-          },
-          {
-            "name": "freshness",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "keyword",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "date",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date"
-            }
-          },
-          {
-            "name": "timezone",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Timezone"
-            }
-          },
-          {
-            "name": "captured_after",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "成功",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/Membership"
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "meta"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          }
-        },
-        "x-implementation-status": "planned"
-      },
-      "patch": {
-        "operationId": "patch_members_id",
-        "summary": "内部运营工作台接口",
-        "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          },
-          {
-            "name": "Idempotency-Key",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "X-CSRF-Token",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          }
-        ],
-        "responses": {
-          "401": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "内部错误（脱敏）",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "S1实现；验收范围见docs/evidence/s1/README.md",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/Membership"
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "meta"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/MemberPatch"
-              }
-            }
-          }
-        },
-        "x-implementation-status": "implemented"
-      }
-    },
     "/topics": {
       "get": {
         "operationId": "get__topics",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "in": "query",
@@ -2038,16 +1136,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -2169,11 +1257,7 @@
         "operationId": "get__topics_id",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -2185,16 +1269,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -2297,11 +1371,7 @@
         "operationId": "get_publications",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "workspace_id",
@@ -2572,16 +1642,6 @@
               }
             }
           },
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -2659,11 +1719,7 @@
         "operationId": "post_publications",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "Idempotency-Key",
@@ -2706,16 +1762,6 @@
                     "meta"
                   ],
                   "additionalProperties": false
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
                 }
               }
             }
@@ -2789,6 +1835,16 @@
                 }
               }
             }
+          },
+          "415": {
+            "description": "请求格式不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -2809,11 +1865,7 @@
         "operationId": "get_publications_id",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -3068,16 +2120,6 @@
               }
             }
           },
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -3155,11 +2197,7 @@
         "operationId": "patch_publications_id",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -3210,16 +2248,6 @@
                     "meta"
                   ],
                   "additionalProperties": false
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
                 }
               }
             }
@@ -3293,6 +2321,16 @@
                 }
               }
             }
+          },
+          "415": {
+            "description": "请求格式不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -3313,11 +2351,7 @@
         "operationId": "get_feedback",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "account_id",
@@ -3365,16 +2399,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -3498,11 +2522,7 @@
         "operationId": "post_feedback",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "Idempotency-Key",
@@ -3526,16 +2546,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -3628,6 +2638,16 @@
                 }
               }
             }
+          },
+          "415": {
+            "description": "请求格式不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -3648,11 +2668,7 @@
         "operationId": "get_feedback_id",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -3664,16 +2680,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -3774,11 +2780,7 @@
         "operationId": "patch_feedback_id",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -3810,16 +2812,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -3912,6 +2904,16 @@
                 }
               }
             }
+          },
+          "415": {
+            "description": "请求格式不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -3932,11 +2934,7 @@
         "operationId": "get_imports",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "account_id",
@@ -4009,16 +3007,6 @@
                     "meta"
                   ],
                   "additionalProperties": false
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
                 }
               }
             }
@@ -4100,11 +3088,7 @@
         "operationId": "post_imports",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "Idempotency-Key",
@@ -4147,16 +3131,6 @@
                     "meta"
                   ],
                   "additionalProperties": false
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
                 }
               }
             }
@@ -4230,6 +3204,16 @@
                 }
               }
             }
+          },
+          "415": {
+            "description": "请求格式不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -4250,11 +3234,7 @@
         "operationId": "get_imports_id",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -4509,16 +3489,6 @@
               }
             }
           },
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -4598,11 +3568,7 @@
         "operationId": "get_reports",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "account_id",
@@ -4632,16 +3598,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -4765,11 +3721,7 @@
         "operationId": "post_reports",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "Idempotency-Key",
@@ -4793,16 +3745,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -4895,6 +3837,16 @@
                 }
               }
             }
+          },
+          "415": {
+            "description": "请求格式不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -4915,11 +3867,7 @@
         "operationId": "get_reports_id",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -4931,16 +3879,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -5043,11 +3981,7 @@
         "operationId": "get_jobs",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "cursor",
@@ -5095,16 +4029,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "权限、会话、输入或并发错误",
             "content": {
@@ -5231,11 +4155,7 @@
         "operationId": "get_jobs_id",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -5247,16 +4167,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "权限、会话、输入或并发错误",
             "content": {
@@ -5359,11 +4269,7 @@
         "operationId": "get_source_items",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "cursor",
@@ -5457,16 +4363,6 @@
               }
             }
           },
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -5546,11 +4442,7 @@
         "operationId": "get_source_items_id",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -5621,16 +4513,6 @@
                     "meta"
                   ],
                   "additionalProperties": false
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
                 }
               }
             }
@@ -5714,11 +4596,7 @@
         "operationId": "get_notifications",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "cursor",
@@ -5760,16 +4638,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "权限、会话、输入或并发错误",
             "content": {
@@ -5896,11 +4764,7 @@
         "operationId": "get_notifications_id",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -6155,16 +5019,6 @@
               }
             }
           },
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -6244,11 +5098,7 @@
         "operationId": "get_audit_logs",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "cursor",
@@ -6300,16 +5150,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "权限、会话、输入或并发错误",
             "content": {
@@ -6436,11 +5276,7 @@
         "operationId": "get_uploads",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "workspace_id",
@@ -6711,16 +5547,6 @@
               }
             }
           },
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -6798,11 +5624,7 @@
         "operationId": "post_uploads",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "Idempotency-Key",
@@ -6845,16 +5667,6 @@
                     "meta"
                   ],
                   "additionalProperties": false
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
                 }
               }
             }
@@ -6928,6 +5740,16 @@
                 }
               }
             }
+          },
+          "415": {
+            "description": "请求格式不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -6948,11 +5770,7 @@
         "operationId": "get_uploads_id",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -7207,16 +6025,6 @@
               }
             }
           },
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -7296,11 +6104,7 @@
         "operationId": "post_topic_generations",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "Idempotency-Key",
@@ -7343,16 +6147,6 @@
                     "meta"
                   ],
                   "additionalProperties": false
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
                 }
               }
             }
@@ -7426,6 +6220,16 @@
                 }
               }
             }
+          },
+          "415": {
+            "description": "请求格式不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -7446,11 +6250,7 @@
         "operationId": "post__topics_id_accept",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -7482,16 +6282,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -7584,6 +6374,16 @@
                 }
               }
             }
+          },
+          "415": {
+            "description": "请求格式不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -7604,11 +6404,7 @@
         "operationId": "post__topics_id_reject",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -7640,16 +6436,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -7742,6 +6528,16 @@
                 }
               }
             }
+          },
+          "415": {
+            "description": "请求格式不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -7762,11 +6558,7 @@
         "operationId": "post__topics_id_variants",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -7798,16 +6590,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -7900,6 +6682,16 @@
                 }
               }
             }
+          },
+          "415": {
+            "description": "请求格式不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -7920,23 +6712,9 @@
         "operationId": "get_settings",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [],
         "responses": {
-          "401": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "权限、会话、输入或并发错误",
             "content": {
@@ -8037,11 +6815,7 @@
         "operationId": "patch_settings",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "Idempotency-Key",
@@ -8065,16 +6839,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "权限、会话、输入或并发错误",
             "content": {
@@ -8167,6 +6931,16 @@
                 }
               }
             }
+          },
+          "415": {
+            "description": "请求格式不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -8182,144 +6956,12 @@
         "x-implementation-status": "implemented"
       }
     },
-    "/me": {
-      "get": {
-        "operationId": "get_me",
-        "summary": "内部运营工作台接口",
-        "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "workspace_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          }
-        ],
-        "responses": {
-          "401": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "内部错误（脱敏）",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "S1实现；验收范围见docs/evidence/s1/README.md",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/Session"
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "meta"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          }
-        },
-        "x-implementation-status": "implemented"
-      }
-    },
     "/dashboard": {
       "get": {
         "operationId": "get_dashboard",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "account_id",
@@ -8331,16 +6973,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -8443,23 +7075,9 @@
         "operationId": "get_monitor",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [],
         "responses": {
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -8562,11 +7180,7 @@
         "operationId": "post_notifications_id_read",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -8598,16 +7212,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "权限、会话、输入或并发错误",
             "content": {
@@ -8700,6 +7304,16 @@
                 }
               }
             }
+          },
+          "415": {
+            "description": "请求格式不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
           }
         },
         "x-implementation-status": "implemented"
@@ -8710,11 +7324,7 @@
         "operationId": "get_files_id_download",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -8965,16 +7575,6 @@
                     "meta"
                   ],
                   "additionalProperties": false
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
                 }
               }
             }
@@ -9058,11 +7658,7 @@
         "operationId": "get_files_id_preview",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -9317,16 +7913,6 @@
               }
             }
           },
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -9406,11 +7992,7 @@
         "operationId": "post_uploads_id_parts",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -9461,16 +8043,6 @@
                     "meta"
                   ],
                   "additionalProperties": false
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
                 }
               }
             }
@@ -9544,6 +8116,16 @@
                 }
               }
             }
+          },
+          "415": {
+            "description": "请求格式不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -9564,11 +8146,7 @@
         "operationId": "put_uploads_id_parts_part_number",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -9625,16 +8203,6 @@
               }
             }
           },
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -9704,6 +8272,16 @@
                 }
               }
             }
+          },
+          "415": {
+            "description": "请求格式不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
           }
         },
         "x-implementation-status": "implemented",
@@ -9725,11 +8303,7 @@
         "operationId": "post_uploads_id_complete",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -9784,16 +8358,6 @@
               }
             }
           },
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -9863,6 +8427,16 @@
                 }
               }
             }
+          },
+          "415": {
+            "description": "请求格式不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -9883,11 +8457,7 @@
         "operationId": "post_uploads_id_abort",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -9942,16 +8512,6 @@
               }
             }
           },
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -10021,6 +8581,16 @@
                 }
               }
             }
+          },
+          "415": {
+            "description": "请求格式不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -10041,11 +8611,7 @@
         "operationId": "get_imports_id_rows",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -10324,16 +8890,6 @@
               }
             }
           },
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -10413,11 +8969,7 @@
         "operationId": "get_imports_template",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "format",
@@ -10448,16 +9000,6 @@
                     "meta"
                   ],
                   "additionalProperties": false
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
                 }
               }
             }
@@ -10541,11 +9083,7 @@
         "operationId": "patch_import_rows_id",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -10600,16 +9138,6 @@
               }
             }
           },
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -10672,6 +9200,16 @@
           },
           "500": {
             "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "请求格式不受支持",
             "content": {
               "application/json": {
                 "schema": {
@@ -10699,11 +9237,7 @@
         "operationId": "post_imports_id_confirm",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -10754,16 +9288,6 @@
                     "meta"
                   ],
                   "additionalProperties": false
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
                 }
               }
             }
@@ -10830,6 +9354,16 @@
           },
           "500": {
             "description": "错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "请求格式不受支持",
             "content": {
               "application/json": {
                 "schema": {
@@ -10857,11 +9391,7 @@
         "operationId": "post_imports_id_revert",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -10912,16 +9442,6 @@
                     "meta"
                   ],
                   "additionalProperties": false
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
                 }
               }
             }
@@ -10995,6 +9515,16 @@
                 }
               }
             }
+          },
+          "415": {
+            "description": "请求格式不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -11015,11 +9545,7 @@
         "operationId": "get_metrics",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "account_id",
@@ -11139,16 +9665,6 @@
               }
             }
           },
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -11228,11 +9744,7 @@
         "operationId": "post_reports_id_accept-actions",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -11264,16 +9776,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -11366,6 +9868,16 @@
                 }
               }
             }
+          },
+          "415": {
+            "description": "请求格式不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -11386,11 +9898,7 @@
         "operationId": "post_strategy-memories_id_activate",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -11422,16 +9930,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -11524,6 +10022,16 @@
                 }
               }
             }
+          },
+          "415": {
+            "description": "请求格式不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -11581,958 +10089,6 @@
           },
           "500": {
             "description": "内部错误（脱敏）",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          }
-        },
-        "x-implementation-status": "implemented"
-      }
-    },
-    "/setup/status": {
-      "get": {
-        "operationId": "get_setup_status",
-        "summary": "S1基础系统接口",
-        "description": "S1基础系统接口",
-        "security": [],
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "S1实现；验收范围见docs/evidence/s1/README.md",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "initialized": {
-                          "type": "boolean"
-                        }
-                      },
-                      "required": [
-                        "initialized"
-                      ],
-                      "additionalProperties": false
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "meta"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "内部错误（脱敏）",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          }
-        },
-        "x-implementation-status": "implemented"
-      }
-    },
-    "/setup": {
-      "post": {
-        "operationId": "post_setup",
-        "summary": "S1基础系统接口",
-        "description": "S1基础系统接口",
-        "security": [],
-        "parameters": [
-          {
-            "name": "X-CSRF-Token",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "S1实现；验收范围见docs/evidence/s1/README.md",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "initialized": {
-                          "const": true
-                        }
-                      },
-                      "required": [
-                        "initialized"
-                      ],
-                      "additionalProperties": false
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "meta"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "内部错误（脱敏）",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SetupInput"
-              }
-            }
-          }
-        },
-        "x-implementation-status": "implemented"
-      }
-    },
-    "/auth/csrf": {
-      "get": {
-        "operationId": "get_auth_csrf",
-        "summary": "S1基础系统接口",
-        "description": "S1基础系统接口",
-        "security": [],
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "S1实现；验收范围见docs/evidence/s1/README.md",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/Csrf"
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "meta"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "内部错误（脱敏）",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          }
-        },
-        "x-implementation-status": "implemented"
-      }
-    },
-    "/auth/login": {
-      "post": {
-        "operationId": "post_auth_login",
-        "summary": "S1基础系统接口",
-        "description": "S1基础系统接口",
-        "security": [],
-        "parameters": [
-          {
-            "name": "X-CSRF-Token",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "S1实现；验收范围见docs/evidence/s1/README.md",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/LoginSession"
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "meta"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "内部错误（脱敏）",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Login"
-              }
-            }
-          }
-        },
-        "x-implementation-status": "implemented"
-      }
-    },
-    "/auth/accept-invite": {
-      "post": {
-        "operationId": "post_auth_accept_invite",
-        "summary": "S1基础系统接口",
-        "description": "S1基础系统接口",
-        "security": [],
-        "parameters": [
-          {
-            "name": "X-CSRF-Token",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "S1实现；验收范围见docs/evidence/s1/README.md",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "accepted": {
-                          "const": true
-                        }
-                      },
-                      "required": [
-                        "accepted"
-                      ],
-                      "additionalProperties": false
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "meta"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "内部错误（脱敏）",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AcceptInvite"
-              }
-            }
-          }
-        },
-        "x-implementation-status": "implemented"
-      }
-    },
-    "/auth/logout": {
-      "post": {
-        "operationId": "post_auth_logout",
-        "summary": "S1基础系统接口",
-        "description": "S1基础系统接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "Idempotency-Key",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          {
-            "name": "X-CSRF-Token",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "S1实现；验收范围见docs/evidence/s1/README.md",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "success": {
-                          "const": true
-                        }
-                      },
-                      "required": [
-                        "success"
-                      ],
-                      "additionalProperties": false
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "meta"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "内部错误（脱敏）",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          }
-        },
-        "x-implementation-status": "implemented"
-      }
-    },
-    "/auth/session": {
-      "get": {
-        "operationId": "get_auth_session",
-        "summary": "S1基础系统接口",
-        "description": "S1基础系统接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "workspace_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Id"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "S1实现；验收范围见docs/evidence/s1/README.md",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/Session"
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "meta"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "内部错误（脱敏）",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "权限、会话、输入或并发错误",
             "content": {
               "application/json": {
                 "schema": {
@@ -12610,11 +10166,7 @@
         "operationId": "post_jobs_id_cancel",
         "summary": "S1基础系统接口",
         "description": "S1基础系统接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -12679,16 +10231,6 @@
               }
             }
           },
-          "401": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "权限、会话、输入或并发错误",
             "content": {
@@ -12748,6 +10290,16 @@
                 }
               }
             }
+          },
+          "415": {
+            "description": "请求格式不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -12768,11 +10320,7 @@
         "operationId": "post_jobs_id_retry",
         "summary": "S1基础系统接口",
         "description": "S1基础系统接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -12837,16 +10385,6 @@
               }
             }
           },
-          "401": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "权限、会话、输入或并发错误",
             "content": {
@@ -12906,6 +10444,16 @@
                 }
               }
             }
+          },
+          "415": {
+            "description": "请求格式不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -12926,11 +10474,7 @@
         "operationId": "post_diagnostics",
         "summary": "S1基础系统接口",
         "description": "S1基础系统接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "Idempotency-Key",
@@ -12987,16 +10531,6 @@
               }
             }
           },
-          "401": {
-            "description": "权限、会话、输入或并发错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "权限、会话、输入或并发错误",
             "content": {
@@ -13049,6 +10583,16 @@
           },
           "503": {
             "description": "权限、会话、输入或并发错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "请求格式不受支持",
             "content": {
               "application/json": {
                 "schema": {
@@ -13076,11 +10620,7 @@
         "operationId": "post__source-connections_id_refresh",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -13112,16 +10652,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -13211,6 +10741,16 @@
                     "meta"
                   ],
                   "additionalProperties": false
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "请求格式不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
                 }
               }
             }
@@ -13224,11 +10764,7 @@
         "operationId": "post__source-connections_id_verify",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -13260,16 +10796,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -13362,6 +10888,16 @@
                 }
               }
             }
+          },
+          "415": {
+            "description": "请求格式不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
           }
         },
         "x-implementation-status": "implemented"
@@ -13372,11 +10908,7 @@
         "operationId": "get__source-connections_id_runs",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -13388,16 +10920,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -13512,11 +11034,7 @@
         "operationId": "post__source-connections_id_pause",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -13548,16 +11066,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -13650,6 +11158,16 @@
                 }
               }
             }
+          },
+          "415": {
+            "description": "请求格式不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -13670,11 +11188,7 @@
         "operationId": "get_ai_requests_id",
         "summary": "Get persisted AI request",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -13745,16 +11259,6 @@
                     "meta"
                   ],
                   "additionalProperties": false
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
                 }
               }
             }
@@ -13838,11 +11342,7 @@
         "operationId": "get_files_id",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "in": "path",
@@ -13873,16 +11373,6 @@
                     "meta"
                   ],
                   "additionalProperties": false
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
                 }
               }
             }
@@ -13966,11 +11456,7 @@
         "operationId": "get_metrics_calculations",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "account_id",
@@ -14072,16 +11558,6 @@
               }
             }
           },
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -14161,11 +11637,7 @@
         "operationId": "get_metrics_id_sources",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "in": "path",
@@ -14213,16 +11685,6 @@
                     "meta"
                   ],
                   "additionalProperties": false
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
                 }
               }
             }
@@ -14306,11 +11768,7 @@
         "operationId": "get_calculations_id",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "in": "path",
@@ -14354,16 +11812,6 @@
                     "meta"
                   ],
                   "additionalProperties": false
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
                 }
               }
             }
@@ -14447,11 +11895,7 @@
         "operationId": "get_metrics_analysis",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "account_id",
@@ -14554,16 +11998,6 @@
               }
             }
           },
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -14643,11 +12077,7 @@
         "operationId": "get_strategy-memories",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "account_id",
@@ -14677,16 +12107,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -14812,11 +12232,7 @@
         "operationId": "post_strategy-memories_id_retire",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -14848,16 +12264,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -14950,6 +12356,16 @@
                 }
               }
             }
+          },
+          "415": {
+            "description": "请求格式不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -14970,11 +12386,7 @@
         "operationId": "post_feedback_id_organize",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -15006,16 +12418,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -15108,6 +12510,16 @@
                 }
               }
             }
+          },
+          "415": {
+            "description": "请求格式不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -15128,11 +12540,7 @@
         "operationId": "get_source-organizations",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "account_id",
@@ -15162,16 +12570,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -15295,11 +12693,7 @@
         "operationId": "post_source-organizations",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "Idempotency-Key",
@@ -15323,16 +12717,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -15425,6 +12809,16 @@
                 }
               }
             }
+          },
+          "415": {
+            "description": "请求格式不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -15445,11 +12839,7 @@
         "operationId": "get_source-organizations_id",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -15461,16 +12851,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -15573,11 +12953,7 @@
         "operationId": "post_source-organizations_id_accept",
         "summary": "内部运营工作台接口",
         "description": "内部运营工作台接口",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -15609,16 +12985,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "403": {
             "description": "错误",
             "content": {
@@ -15711,6 +13077,16 @@
                 }
               }
             }
+          },
+          "415": {
+            "description": "请求格式不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -15725,16 +13101,176 @@
         },
         "x-implementation-status": "implemented"
       }
+    },
+    "/instance": {
+      "get": {
+        "operationId": "get_instance",
+        "summary": "本机默认实例上下文",
+        "security": [],
+        "parameters": [],
+        "x-implementation-status": "implemented",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/LocalInstance"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "请求或实例上下文无效",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "请求或实例上下文无效",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "请求或实例上下文无效",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "请求或实例上下文无效",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "请求或实例上下文无效",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/request/csrf": {
+      "get": {
+        "operationId": "get_request_csrf",
+        "summary": "本机浏览器请求令牌（不是登录）",
+        "security": [],
+        "parameters": [],
+        "x-implementation-status": "implemented",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Csrf"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "请求或实例上下文无效",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "请求或实例上下文无效",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "请求或实例上下文无效",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "请求或实例上下文无效",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "请求或实例上下文无效",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
-    "securitySchemes": {
-      "sessionCookie": {
-        "type": "apiKey",
-        "in": "cookie",
-        "name": "yoyo_session"
-      }
-    },
+    "securitySchemes": {},
     "schemas": {
       "Id": {
         "type": "string",
@@ -16548,10 +14084,6 @@
           {
             "type": "object",
             "properties": {
-              "active": {
-                "type": "string",
-                "maxLength": 10000
-              },
               "workspace": {
                 "type": "string",
                 "maxLength": 10000
@@ -16574,10 +14106,6 @@
           {
             "type": "object",
             "properties": {
-              "active": {
-                "type": "string",
-                "maxLength": 10000
-              },
               "workspace": {
                 "type": "string",
                 "maxLength": 10000
@@ -16585,37 +14113,6 @@
               "user": {
                 "type": "string",
                 "maxLength": 10000
-              }
-            },
-            "required": [],
-            "additionalProperties": true
-          }
-        ]
-      },
-      "Membership": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/BaseEntity"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "active": {
-                "type": "boolean"
-              },
-              "workspace": {
-                "type": "string",
-                "maxLength": 10000
-              },
-              "user": {
-                "type": "string",
-                "maxLength": 10000
-              },
-              "roles": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Role"
-                }
               }
             },
             "required": [],
@@ -18112,29 +15609,6 @@
         ],
         "additionalProperties": false
       },
-      "Login": {
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string",
-            "format": "email",
-            "maxLength": 254
-          },
-          "password": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 128
-          },
-          "workspace_id": {
-            "$ref": "#/components/schemas/Id"
-          }
-        },
-        "required": [
-          "email",
-          "password"
-        ],
-        "additionalProperties": false
-      },
       "AccountPatch": {
         "type": "object",
         "properties": {
@@ -18142,9 +15616,6 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 200
-          },
-          "owner_id": {
-            "$ref": "#/components/schemas/Id"
           },
           "timezone": {
             "$ref": "#/components/schemas/Timezone"
@@ -18180,59 +15651,6 @@
         "required": [
           "category",
           "settings",
-          "expected_version"
-        ],
-        "additionalProperties": false
-      },
-      "MemberCreate": {
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string",
-            "format": "email"
-          },
-          "display_name": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 200
-          },
-          "roles": {
-            "type": "array",
-            "items": {
-              "const": "admin"
-            },
-            "minItems": 1,
-            "maxItems": 1
-          }
-        },
-        "required": [
-          "email"
-        ],
-        "additionalProperties": false
-      },
-      "MemberPatch": {
-        "type": "object",
-        "properties": {
-          "roles": {
-            "type": "array",
-            "items": {
-              "const": "admin"
-            },
-            "minItems": 1,
-            "maxItems": 1
-          },
-          "active": {
-            "type": "boolean"
-          },
-          "successor_id": {
-            "$ref": "#/components/schemas/Id"
-          },
-          "expected_version": {
-            "type": "integer",
-            "minimum": 1
-          }
-        },
-        "required": [
           "expected_version"
         ],
         "additionalProperties": false
@@ -18393,9 +15811,6 @@
       "AcceptTopic": {
         "type": "object",
         "properties": {
-          "owner_id": {
-            "$ref": "#/components/schemas/Id"
-          },
           "expected_version": {
             "type": "integer",
             "minimum": 1
@@ -19132,57 +16547,6 @@
         ],
         "additionalProperties": false
       },
-      "SetupInput": {
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string",
-            "format": "email"
-          },
-          "password": {
-            "type": "string",
-            "minLength": 12,
-            "maxLength": 128
-          },
-          "display_name": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 200
-          },
-          "workspace_name": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 200
-          }
-        },
-        "required": [
-          "email",
-          "password",
-          "display_name",
-          "workspace_name"
-        ],
-        "additionalProperties": false
-      },
-      "AcceptInvite": {
-        "type": "object",
-        "properties": {
-          "invitation_token": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 200
-          },
-          "password": {
-            "type": "string",
-            "minLength": 12,
-            "maxLength": 128
-          }
-        },
-        "required": [
-          "invitation_token",
-          "password"
-        ],
-        "additionalProperties": false
-      },
       "AccountCreate": {
         "type": "object",
         "properties": {
@@ -19248,141 +16612,6 @@
         },
         "required": [
           "reason"
-        ],
-        "additionalProperties": false
-      },
-      "LoginSession": {
-        "type": "object",
-        "properties": {
-          "authenticated": {
-            "const": true
-          },
-          "csrf_token": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 200
-          },
-          "expires_at": {
-            "type": "string",
-            "format": "date-time"
-          }
-        },
-        "required": [
-          "authenticated",
-          "csrf_token",
-          "expires_at"
-        ],
-        "additionalProperties": false
-      },
-      "Session": {
-        "type": "object",
-        "properties": {
-          "user": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "$ref": "#/components/schemas/Id"
-              },
-              "email": {
-                "type": "string",
-                "format": "email"
-              },
-              "display_name": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 200
-              }
-            },
-            "required": [
-              "id",
-              "email",
-              "display_name"
-            ],
-            "additionalProperties": false
-          },
-          "membership": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "$ref": "#/components/schemas/Id"
-              },
-              "roles": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Role"
-                }
-              },
-              "workspace_id": {
-                "$ref": "#/components/schemas/Id"
-              }
-            },
-            "required": [
-              "id",
-              "roles",
-              "workspace_id"
-            ],
-            "additionalProperties": false
-          },
-          "workspace": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "$ref": "#/components/schemas/Id"
-              },
-              "name": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 200
-              },
-              "timezone": {
-                "$ref": "#/components/schemas/Timezone"
-              },
-              "settings": {
-                "type": "object"
-              },
-              "version": {
-                "type": "integer",
-                "minimum": 1
-              },
-              "created_at": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "updated_at": {
-                "type": "string",
-                "format": "date-time"
-              }
-            },
-            "required": [
-              "id",
-              "name",
-              "timezone",
-              "settings",
-              "version",
-              "created_at",
-              "updated_at"
-            ],
-            "additionalProperties": false
-          },
-          "permissions": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          "expires_at": {
-            "type": "string",
-            "format": "date-time"
-          }
-        },
-        "required": [
-          "user",
-          "membership",
-          "workspace",
-          "permissions",
-          "expires_at"
         ],
         "additionalProperties": false
       },
@@ -21611,6 +18840,60 @@
           "job_id",
           "state",
           "status_url"
+        ],
+        "additionalProperties": false
+      },
+      "LocalInstance": {
+        "type": "object",
+        "properties": {
+          "mode": {
+            "const": "local"
+          },
+          "workspace": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "$ref": "#/components/schemas/Id"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "timezone": {
+                "$ref": "#/components/schemas/Timezone"
+              },
+              "settings": {
+                "type": "object"
+              },
+              "version": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "created_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "updated_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "timezone",
+              "settings",
+              "version",
+              "created_at",
+              "updated_at"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "mode",
+          "workspace"
         ],
         "additionalProperties": false
       }

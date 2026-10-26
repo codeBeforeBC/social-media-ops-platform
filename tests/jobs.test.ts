@@ -1,3 +1,4 @@
+import {ensureInstance} from '../packages/domain/src/instance';
 import {test,before,after} from 'node:test';
 import assert from 'node:assert/strict';
 import {fork} from 'node:child_process';
@@ -7,7 +8,7 @@ import {Jobs} from '../packages/domain/src/jobs';
 import {Commands} from '../apps/api/src/commands';
 import {Actor} from '../packages/domain/src/protocol';
 let db:Awaited<ReturnType<typeof database>>,jobs:Jobs,actor:Actor;
-before(async()=>{db=await database();await reset(db);jobs=new Jobs(db);const w=await db.query("INSERT INTO workspaces(name) VALUES('任务测试') RETURNING id");const u=await db.query("INSERT INTO users(email,display_name,password_hash) VALUES('jobs@example.test','任务测试','not-loginable') RETURNING id");const m=await db.query("INSERT INTO memberships(workspace_id,user_id,roles) VALUES($1,$2,ARRAY['admin']) RETURNING id",[w.rows[0].id,u.rows[0].id]);actor={workspaceId:w.rows[0].id,userId:u.rows[0].id,memberId:m.rows[0].id,roles:['admin'],sessionHash:'',requestId:randomUUID()};});
+before(async()=>{db=await database();await reset(db);jobs=new Jobs(db);const w=await db.query("INSERT INTO workspaces(name) VALUES('任务测试') RETURNING id");const u=await db.query("INSERT INTO users(email,display_name,password_hash) VALUES('jobs@example.test','任务测试','not-loginable') RETURNING id");const m=await db.query("INSERT INTO memberships(workspace_id,user_id,roles) VALUES($1,$2,ARRAY['admin']) RETURNING id",[w.rows[0].id,u.rows[0].id]);actor={workspaceId:w.rows[0].id,userId:u.rows[0].id,memberId:m.rows[0].id,roles:['admin'],sessionHash:'',requestId:randomUUID()};await ensureInstance(db);});
 after(()=>db.close());
 async function enqueue(type='system.check',pool='general',inputVersion:number|null=null){const r=await db.query('INSERT INTO jobs(workspace_id,created_by,type,pool,input_version,request_id) VALUES($1,$2,$3,$4,$5,$6) RETURNING *',[actor.workspaceId,actor.memberId,type,pool,inputVersion,randomUUID()]);return r.rows[0];}
 test('业务事件回滚不产生任务，Outbox并发分发只创建一个Job',async()=>{

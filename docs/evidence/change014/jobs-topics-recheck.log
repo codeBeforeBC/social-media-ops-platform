@@ -1,0 +1,47 @@
+✔ 业务事件回滚不产生任务，Outbox并发分发只创建一个Job (98.508834ms)
+✔ 租约保证单领取；心跳延长租约；已完成不会重复通知 (6.887583ms)
+✔ 真实领取进程被SIGKILL后，重启领取恢复；旧租约结果被拒绝 (2484.511708ms)
+✔ 取消与过期版本阻止结果及副作用提交 (22.738125ms)
+✔ 失败退避重试有上限，管理员可重试；独立解析池不受一般池积压影响 (38.769875ms)
+✔ 超过最大尝试的失联任务进入失败；未来调度事件暂不分发 (4.773375ms)
+✔ 长任务心跳跨越初始租约，超时拒绝迟到结果和副作用 (4841.824334ms)
+{"event":"http.request","request_id":"0051a10b-3956-4e5f-865a-e798c6c00bf8","method":"GET","path":"/api/v1/request/csrf","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"7fb256a5-8c2b-4cc5-a85a-1d9293d4c243","method":"GET","path":"/api/v1/instance","status":200,"duration_ms":85}
+{"event":"http.request","request_id":"a6fe318e-2a58-41b5-8e8d-6e13c02ae324","method":"POST","path":"/api/v1/accounts","status":201,"duration_ms":15}
+{"event":"http.request","request_id":"57ec0d1a-c6b1-4e75-81f4-e3e006684a74","method":"GET","path":"/api/v1/topics","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"e19073a7-14f9-46a7-979c-5656222aca1e","method":"GET","path":"/api/v1/topics/a461b713-b0a2-4820-9dba-21e66fec3f41","status":200,"duration_ms":8}
+✔ 六项权重由服务端计分，保留缺项与生成批次，重复保存不新增 (406.515709ms)
+{"event":"http.request","request_id":"e982815a-9cf1-4756-a6d1-890fe14edd50","method":"POST","path":"/api/v1/topics/81d244a0-34ba-40ba-a646-a1adce78d7f1/accept","status":200,"duration_ms":9}
+{"event":"http.request","request_id":"191cfe9a-e154-422f-82c3-21cd1fa17ab4","method":"POST","path":"/api/v1/topics/81d244a0-34ba-40ba-a646-a1adce78d7f1/accept","status":200,"duration_ms":13}
+{"event":"http.request","request_id":"3905a4ca-f48a-4305-8d4e-ebf941d686df","method":"POST","path":"/api/v1/topics/81d244a0-34ba-40ba-a646-a1adce78d7f1/accept","status":422,"duration_ms":3}
+✔ 不同请求键并发采纳只保存一个决策，重复采纳返回原结果且没有Job/生产关系 (26.905667ms)
+{"event":"http.request","request_id":"4ac6b2dd-c47e-4094-a232-1fab33699024","method":"POST","path":"/api/v1/topics/2d804716-3a8c-4684-8ccb-52c43d168e34/accept","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"25d1917f-2c16-4f49-838b-a5442ffa52bd","method":"POST","path":"/api/v1/topics/2d804716-3a8c-4684-8ccb-52c43d168e34/reject","status":409,"duration_ms":6}
+{"event":"http.request","request_id":"4ed8813d-3c7d-4ac3-852f-824988e4319a","method":"GET","path":"/api/v1/topics/2d804716-3a8c-4684-8ccb-52c43d168e34","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"995fbd76-5d34-4e24-a1e0-8f3fd5ea87bd","method":"POST","path":"/api/v1/topics/215cb513-63ff-427c-ab20-80a059bd378e/accept","status":409,"duration_ms":3}
+{"event":"http.request","request_id":"8b382ad2-3f03-467d-984e-ba6f340d7a9f","method":"GET","path":"/api/v1/topics","status":200,"duration_ms":1}
+✔ 拒绝原因不可丢失；与采纳竞争只有一条最终决策，过期不得采纳 (26.0585ms)
+{"event":"http.request","request_id":"98afdb7c-5e16-43a9-8ce1-b2a3dc04262a","method":"POST","path":"/api/v1/topics/17bec74e-a001-4f09-aeab-e51e5ff14d04/variants","status":201,"duration_ms":5}
+{"event":"http.request","request_id":"874f7172-be76-4cf3-bd76-7b3132b39bae","method":"POST","path":"/api/v1/topics/17bec74e-a001-4f09-aeab-e51e5ff14d04/variants","status":201,"duration_ms":13}
+{"event":"http.request","request_id":"164fdb93-e23e-4225-a73f-c4149ec34e0a","method":"POST","path":"/api/v1/topics/17bec74e-a001-4f09-aeab-e51e5ff14d04/accept","status":422,"duration_ms":2}
+✔ 显式变体保留父题/理由/证据并独立采纳；越权负责人和空间拒绝 (19.300875ms)
+✔ 事实缺观察/伪造来源使整个候选事务回滚，不用高分掩盖错误 (3.924791ms)
+{"event":"http.request","request_id":"9a620466-0eb4-4da0-a2c0-6bad344d9b01","method":"POST","path":"/api/v1/topics/d57d6c27-b680-4889-8c7f-0fe5f74771fd/reject","status":422,"duration_ms":2}
+{"event":"http.request","request_id":"171ed20e-40e5-454c-84fa-3c729e437676","method":"POST","path":"/api/v1/topics/d57d6c27-b680-4889-8c7f-0fe5f74771fd/reject","status":409,"duration_ms":3}
+✔ 编辑只能采纳本人的任务；缺拒绝理由与陈旧版本不能改变选题 (17.505583ms)
+{"event":"http.request","request_id":"584f29fe-0295-4c50-bc59-d299c8fc6337","method":"POST","path":"/api/v1/source-connections","status":201,"duration_ms":4}
+{"event":"http.request","request_id":"5402f78d-6a24-4ee0-80ef-3ac94c2de7f2","method":"GET","path":"/api/v1/topics/bc2694bc-e35f-4a40-8ce2-443c319c29aa","status":200,"duration_ms":2}
+✔ 证据显示采纳建议生成时的不可变观察，不随着来源更新改写标题；观察必须匹配来源 (26.964042ms)
+✔ 常青原创不能把来源窗口结束填成到期；明确来源的时效由服务端保留 (1.025417ms)
+{"event":"http.request","request_id":"dc9c0a46-913b-4deb-855e-67e00da4d539","method":"POST","path":"/api/v1/topics/4f703d0e-6692-4b0d-ac83-50e8b0b04e37/accept","status":422,"duration_ms":2}
+{"event":"http.request","request_id":"da820961-ce39-426e-b4ae-00549214756f","method":"POST","path":"/api/v1/topics/4f703d0e-6692-4b0d-ac83-50e8b0b04e37/accept","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"44b36fe9-5f5e-4119-8b52-52fbb95688b2","method":"GET","path":"/api/v1/topics/4f703d0e-6692-4b0d-ac83-50e8b0b04e37","status":200,"duration_ms":1}
+✔ 新采纳自动归属默认身份，历史负责人和决策不被重复请求覆盖 (12.978834ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 9185.755541

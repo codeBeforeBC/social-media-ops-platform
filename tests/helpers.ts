@@ -30,9 +30,16 @@ export class Client {
     const set=r.headers.get('set-cookie');if(set)this.cookie=set.split(';')[0]!;
     const json=await r.json();checkContract(path,method,r.status,json);if(json.data?.csrf_token)this.csrf=json.data.csrf_token;return {status:r.status,data:json.data,error:json.error,headers:r.headers,meta:json.meta};
   }
-  async init(){return this.call('/auth/csrf');}
-  async login(email:string,password='A-safe-test-password-987'){await this.init();return this.call('/auth/login','POST',{email,password});}
+  async init(){return this.call('/request/csrf');}
+
 }
-export async function server(){const db=await database();await reset(db);const app=await createApp(db);await app.listen(0,'127.0.0.1');const address=app.getHttpServer().address() as AddressInfo;return {db,app,url:`http://127.0.0.1:${address.port}`,close:async()=>{await app.close();await db.close();}};}
-export const adminInput={email:'admin@example.test',password:'A-safe-test-password-987',display_name:'测试管理员',workspace_name:'独立测试工作区'};
-export async function initialize(c:Client){await c.init();const r=await c.call('/setup','POST',adminInput);if(r.status!==201)throw new Error('Setup failed: '+r.error?.code);await c.login(adminInput.email);return (await c.call('/me')).data;}
+export async function server(){const db=new Database(databaseUrl(true));const table=(await db.query("SELECT to_regclass('public.schema_migrations') id")).rows[0].id;const prepared=table&&(await db.query("SELECT 1 FROM schema_migrations WHERE name='039-local-instance.sql'")).rowCount;if(prepared)await reset(db);await migrate(db);if(!prepared)await reset(db);const app=await createApp(db);await app.listen(0,'127.0.0.1');const address=app.getHttpServer().address() as AddressInfo;return {db,app,url:`http://127.0.0.1:${address.port}`,close:async()=>{await app.close();await db.close();}};}
+export async function initialize(c:Client){
+  await c.init();const data=(await c.call('/instance')).data;
+  const db=new Database(databaseUrl(true));try{const row=(await db.query('SELECT m.id,m.user_id,m.workspace_id,m.roles,u.display_name FROM instance_state s JOIN memberships m ON m.id=s.default_member_id JOIN users u ON u.id=m.user_id WHERE s.id=1')).rows[0];return {workspace:data.workspace,user:{id:row.user_id,display_name:row.display_name},membership:{id:row.id,workspace_id:row.workspace_id,roles:row.roles}};}finally{await db.close();}
+}
+export async function legacyMember(db:Database,email:string,assigned=['admin'],active=true){
+  const w=(await db.query('SELECT default_workspace_id id FROM instance_state WHERE id=1')).rows[0].id;
+  const u=(await db.query('INSERT INTO users(email,display_name,password_hash) VALUES($1,$2,NULL) RETURNING id',[email,email])).rows[0];
+  return (await db.query('INSERT INTO memberships(workspace_id,user_id,roles,active) VALUES($1,$2,$3,$4) RETURNING *',[w,u.id,assigned,active])).rows[0];
+}

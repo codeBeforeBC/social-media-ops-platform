@@ -111,6 +111,8 @@ model idempotency_records {
 model instance_state {
   id             Int       @id
   initialized_at DateTime? @db.Timestamptz(6)
+  default_workspace_id String? @db.Uuid
+  default_member_id String? @db.Uuid
 }
 
 model invitations {
@@ -291,7 +293,7 @@ model users {
   id            String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   email         String        @unique
   display_name  String        @db.VarChar(200)
-  password_hash String
+  password_hash String?
   created_at    DateTime      @default(now()) @db.Timestamptz(6)
   invitations   invitations[]
   memberships   memberships[]

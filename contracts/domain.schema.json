@@ -814,10 +814,6 @@
         {
           "type": "object",
           "properties": {
-            "active": {
-              "type": "string",
-              "maxLength": 10000
-            },
             "workspace": {
               "type": "string",
               "maxLength": 10000
@@ -840,10 +836,6 @@
         {
           "type": "object",
           "properties": {
-            "active": {
-              "type": "string",
-              "maxLength": 10000
-            },
             "workspace": {
               "type": "string",
               "maxLength": 10000
@@ -851,37 +843,6 @@
             "user": {
               "type": "string",
               "maxLength": 10000
-            }
-          },
-          "required": [],
-          "additionalProperties": true
-        }
-      ]
-    },
-    "Membership": {
-      "allOf": [
-        {
-          "$ref": "#/$defs/BaseEntity"
-        },
-        {
-          "type": "object",
-          "properties": {
-            "active": {
-              "type": "boolean"
-            },
-            "workspace": {
-              "type": "string",
-              "maxLength": 10000
-            },
-            "user": {
-              "type": "string",
-              "maxLength": 10000
-            },
-            "roles": {
-              "type": "array",
-              "items": {
-                "$ref": "#/$defs/Role"
-              }
             }
           },
           "required": [],
@@ -2378,29 +2339,6 @@
       ],
       "additionalProperties": false
     },
-    "Login": {
-      "type": "object",
-      "properties": {
-        "email": {
-          "type": "string",
-          "format": "email",
-          "maxLength": 254
-        },
-        "password": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 128
-        },
-        "workspace_id": {
-          "$ref": "#/$defs/Id"
-        }
-      },
-      "required": [
-        "email",
-        "password"
-      ],
-      "additionalProperties": false
-    },
     "AccountPatch": {
       "type": "object",
       "properties": {
@@ -2408,9 +2346,6 @@
           "type": "string",
           "minLength": 1,
           "maxLength": 200
-        },
-        "owner_id": {
-          "$ref": "#/$defs/Id"
         },
         "timezone": {
           "$ref": "#/$defs/Timezone"
@@ -2446,59 +2381,6 @@
       "required": [
         "category",
         "settings",
-        "expected_version"
-      ],
-      "additionalProperties": false
-    },
-    "MemberCreate": {
-      "type": "object",
-      "properties": {
-        "email": {
-          "type": "string",
-          "format": "email"
-        },
-        "display_name": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 200
-        },
-        "roles": {
-          "type": "array",
-          "items": {
-            "const": "admin"
-          },
-          "minItems": 1,
-          "maxItems": 1
-        }
-      },
-      "required": [
-        "email"
-      ],
-      "additionalProperties": false
-    },
-    "MemberPatch": {
-      "type": "object",
-      "properties": {
-        "roles": {
-          "type": "array",
-          "items": {
-            "const": "admin"
-          },
-          "minItems": 1,
-          "maxItems": 1
-        },
-        "active": {
-          "type": "boolean"
-        },
-        "successor_id": {
-          "$ref": "#/$defs/Id"
-        },
-        "expected_version": {
-          "type": "integer",
-          "minimum": 1
-        }
-      },
-      "required": [
         "expected_version"
       ],
       "additionalProperties": false
@@ -2659,9 +2541,6 @@
     "AcceptTopic": {
       "type": "object",
       "properties": {
-        "owner_id": {
-          "$ref": "#/$defs/Id"
-        },
         "expected_version": {
           "type": "integer",
           "minimum": 1
@@ -3398,57 +3277,6 @@
       ],
       "additionalProperties": false
     },
-    "SetupInput": {
-      "type": "object",
-      "properties": {
-        "email": {
-          "type": "string",
-          "format": "email"
-        },
-        "password": {
-          "type": "string",
-          "minLength": 12,
-          "maxLength": 128
-        },
-        "display_name": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 200
-        },
-        "workspace_name": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 200
-        }
-      },
-      "required": [
-        "email",
-        "password",
-        "display_name",
-        "workspace_name"
-      ],
-      "additionalProperties": false
-    },
-    "AcceptInvite": {
-      "type": "object",
-      "properties": {
-        "invitation_token": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 200
-        },
-        "password": {
-          "type": "string",
-          "minLength": 12,
-          "maxLength": 128
-        }
-      },
-      "required": [
-        "invitation_token",
-        "password"
-      ],
-      "additionalProperties": false
-    },
     "AccountCreate": {
       "type": "object",
       "properties": {
@@ -3514,141 +3342,6 @@
       },
       "required": [
         "reason"
-      ],
-      "additionalProperties": false
-    },
-    "LoginSession": {
-      "type": "object",
-      "properties": {
-        "authenticated": {
-          "const": true
-        },
-        "csrf_token": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 200
-        },
-        "expires_at": {
-          "type": "string",
-          "format": "date-time"
-        }
-      },
-      "required": [
-        "authenticated",
-        "csrf_token",
-        "expires_at"
-      ],
-      "additionalProperties": false
-    },
-    "Session": {
-      "type": "object",
-      "properties": {
-        "user": {
-          "type": "object",
-          "properties": {
-            "id": {
-              "$ref": "#/$defs/Id"
-            },
-            "email": {
-              "type": "string",
-              "format": "email"
-            },
-            "display_name": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            }
-          },
-          "required": [
-            "id",
-            "email",
-            "display_name"
-          ],
-          "additionalProperties": false
-        },
-        "membership": {
-          "type": "object",
-          "properties": {
-            "id": {
-              "$ref": "#/$defs/Id"
-            },
-            "roles": {
-              "type": "array",
-              "items": {
-                "$ref": "#/$defs/Role"
-              }
-            },
-            "workspace_id": {
-              "$ref": "#/$defs/Id"
-            }
-          },
-          "required": [
-            "id",
-            "roles",
-            "workspace_id"
-          ],
-          "additionalProperties": false
-        },
-        "workspace": {
-          "type": "object",
-          "properties": {
-            "id": {
-              "$ref": "#/$defs/Id"
-            },
-            "name": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200
-            },
-            "timezone": {
-              "$ref": "#/$defs/Timezone"
-            },
-            "settings": {
-              "type": "object"
-            },
-            "version": {
-              "type": "integer",
-              "minimum": 1
-            },
-            "created_at": {
-              "type": "string",
-              "format": "date-time"
-            },
-            "updated_at": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          "required": [
-            "id",
-            "name",
-            "timezone",
-            "settings",
-            "version",
-            "created_at",
-            "updated_at"
-          ],
-          "additionalProperties": false
-        },
-        "permissions": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 200
-          }
-        },
-        "expires_at": {
-          "type": "string",
-          "format": "date-time"
-        }
-      },
-      "required": [
-        "user",
-        "membership",
-        "workspace",
-        "permissions",
-        "expires_at"
       ],
       "additionalProperties": false
     },
@@ -5877,6 +5570,60 @@
         "job_id",
         "state",
         "status_url"
+      ],
+      "additionalProperties": false
+    },
+    "LocalInstance": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "const": "local"
+        },
+        "workspace": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "$ref": "#/$defs/Id"
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "timezone": {
+              "$ref": "#/$defs/Timezone"
+            },
+            "settings": {
+              "type": "object"
+            },
+            "version": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "updated_at": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "id",
+            "name",
+            "timezone",
+            "settings",
+            "version",
+            "created_at",
+            "updated_at"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "mode",
+        "workspace"
       ],
       "additionalProperties": false
     }

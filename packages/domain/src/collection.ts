@@ -1,3 +1,4 @@
+import {defaultActor} from './instance';
 import {z} from 'zod';
 import {Database,Tx} from '../../db/src/db';
 import {Actor,AppError,canonical,sha,id,parse,text,timezone,uuid,version} from './protocol';
@@ -51,13 +52,13 @@ export class Collection {
  async pause(tx:Tx,a:Actor,cid:string,input:unknown){const b=parse(z.object({expected_version:version,reason:text(1000)}).strict(),input);const c=await this.scope(tx,a,cid,true);if(c.version!==b.expected_version)throw new AppError(409,'VERSION_CONFLICT','来源配置已更新');const r=await tx.query("UPDATE source_connections SET paused=true,version=version+1,updated_at=now() WHERE id=$1 RETURNING *",[cid]);await this.audit(tx,a,'source.pause',cid,{reason:b.reason});return {status:200,data:r.rows[0]};}
  async tick(now=new Date()){
   await this.db.query(`UPDATE collection_runs r SET state=j.state,error_code=j.error_code,finished_at=now() FROM jobs j WHERE j.type='source.collect' AND j.input->>'run_id'=r.id::text AND r.state IN ('queued','running') AND j.state IN ('failed','cancelled')`);
-  const connections=await this.db.query('SELECT * FROM source_connections WHERE enabled AND NOT paused ORDER BY id');
+  const connections=await this.db.query('SELECT * FROM source_connections WHERE workspace_id=(SELECT default_workspace_id FROM instance_state WHERE id=1) AND enabled AND NOT paused ORDER BY id');
   for(const c of connections.rows){
    const parts=new Intl.DateTimeFormat('en-CA',{timeZone:c.timezone,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(now);
    const p=Object.fromEntries(parts.map(x=>[x.type,x.value]));const hm=`${p.hour}:${p.minute}`;
    // Only the current scheduled minute is eligible; missed slots are not falsely labelled as executed.
    if(!c.schedule.includes(hm))continue;const slot=`${p.year}-${p.month}-${p.day}T${hm}@${c.timezone}`;
-   await this.db.transaction(async tx=>{const locked=(await tx.query('SELECT * FROM source_connections WHERE id=$1 FOR UPDATE',[c.id])).rows[0];if(!locked.enabled||locked.paused)return;const member=await tx.query('SELECT active FROM memberships WHERE id=$1',[locked.owner_id]);if(!member.rows[0]?.active)return;try{await this.enqueue(tx,locked,locked.owner_id,id(),'scheduled',slot);}catch(e){if(!(e instanceof AppError&&e.code==='SOURCE_RATE_LIMIT'))throw e;}});
+   await this.db.transaction(async tx=>{const locked=(await tx.query('SELECT * FROM source_connections WHERE id=$1 FOR UPDATE',[c.id])).rows[0];if(!locked.enabled||locked.paused)return;const actor=await defaultActor(tx,id());try{await this.enqueue(tx,locked,actor.memberId,actor.requestId,'scheduled',slot);}catch(e){if(!(e instanceof AppError&&e.code==='SOURCE_RATE_LIMIT'))throw e;}});
   }
  }
  readonly handler:JobHandler=async(job,signal)=>{
@@ -82,7 +83,7 @@ export class Collection {
     const failures=current.consecutive_failures+1;const immediate=['AUTH_REQUIRED','ACCESS_DENIED','RATE_LIMITED'].includes(failure);
     const health=failure==='AUTH_REQUIRED'?'auth_required':failure==='RATE_LIMITED'?'rate_limited':failures>=3?'unavailable':'degraded';
     await tx.query('UPDATE source_connections SET health=$1,consecutive_failures=$2,paused=$3,error_code=$4,updated_at=now() WHERE id=$5',[health,failures,immediate||failures>=3,failure,c.id]);
-    if(immediate||failures>=3)await tx.query(`INSERT INTO notifications(workspace_id,recipient_id,event_key,job_id,title,task_ref) VALUES($1,$2,$3,$4,$5,$6) ON CONFLICT DO NOTHING`,[c.workspace_id,current.owner_id,'source-paused:'+run.id,job.id,'来源采集已暂停，请检查并验证恢复','source:'+c.id]);
+    if(immediate||failures>=3)await tx.query(`INSERT INTO notifications(workspace_id,recipient_id,event_key,job_id,title,task_ref) VALUES($1,$2,$3,$4,$5,$6) ON CONFLICT DO NOTHING`,[c.workspace_id,job.created_by,'source-paused:'+run.id,job.id,'来源采集已暂停，请检查并验证恢复','source:'+c.id]);
    }else await tx.query(`UPDATE source_connections SET health=CASE WHEN $3 THEN 'degraded' ELSE 'healthy' END,paused=false,consecutive_failures=0,error_code=NULL,last_success_at=now(),capabilities=COALESCE($1,capabilities),updated_at=now() WHERE id=$2`,[output?.capabilities?JSON.stringify(output.capabilities):null,c.id,Boolean(output?.warnings?.length)]);
   }};
  };

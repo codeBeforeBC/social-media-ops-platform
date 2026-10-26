@@ -1,0 +1,78 @@
+[2m[WebServer] [22m(node:46248) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:46249) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:46259) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:46259) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 16 tests using 1 worker
+
+(node:46281) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:46281) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 tests/browser.spec.ts:4:5 › 免登录打开工作台、清除Cookie后直接回到同一工作区，无用户与成员入口 (1.1s)
+  ✓   2 tests/browser.spec.ts:12:5 › 服务错误可重试，请求凭据失效不返回登录页面 (977ms)
+  ✓   3 tests/browser.spec.ts:20:5 › 来源连接保存、独立待验证状态、启用和同源运行记录 (1.0s)
+  ✓   4 tests/browser.spec.ts:30:5 › 定时关闭仍可手动采集，暂停独立禁用并显示恢复提示 (412ms)
+  ✓   5 tests/browser.spec.ts:39:5 › 来源证据详情保留原始观察、采集时间和缺失发布时间 (1.3s)
+  ✓   6 tests/browser.spec.ts:45:5 › 候选理由/评分/证据、默认本人采纳、拒绝留因与显式变体 (1.7s)
+  ✘   7 tests/browser.spec.ts:56:5 › T26 独立笔记登记与更正、旧深链回退、三导航窄屏无溢出 (185ms)
+(node:46359) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:46359) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   8 tests/browser.spec.ts:64:5 › S7 手工待确认→部分确认→冲突更正→撤销旧批次，来源及计算可核对 (2.0s)
+  ✓   9 tests/browser.spec.ts:73:5 › S7 模板上传、安全解析状态、字段映射和不可入账示例，键盘可关闭抽屉 (16.7s)
+  ✓  10 tests/browser.spec.ts:78:5 › S8 看板历史值、分析窗口/形式/流量与不可比提示，窄屏和键盘可用 (1.2s)
+  ✓  11 tests/browser.spec.ts:90:5 › S8 周报partial/final/stale、事实计算来源和策略人工激活，合成模型不自动操作 (11.7s)
+  ✓  12 tests/browser.spec.ts:98:5 › S8 反馈录入、未知许可分类、明确用途草案和撤回，键盘及窄屏无自动发送 (2.4s)
+  ✓  13 tests/browser.spec.ts:103:5 › S8 工作台最多三项真实待办，批次/来源深链和历史指标可溯源，三种宽度与键盘可用 (844ms)
+  ✓  14 tests/browser.spec.ts:107:5 › S8 设置产能/预算、真实监控、来源配额、失败重试与通知审计入口可用 (1.4s)
+  ✓  15 tests/browser.spec.ts:111:5 › S8 来源AI冻结原文、人工采纳不去重，键盘与移动端引用可溯源 (6.9s)
+  ✓  16 tests/browser.spec.ts:115:5 › S7 OCR 截图上传、键盘区域、近似值更正、确认、预览及手机无横溢出 (7.0s)
+
+
+  1) tests/browser.spec.ts:56:5 › T26 独立笔记登记与更正、旧深链回退、三导航窄屏无溢出 ─────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoContainText[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: getByRole('status')
+    Expected substring: [32m"此模块已移除"[39m
+    Error: strict mode violation: getByRole('status') resolved to 2 elements:
+        1) <p role="status">此模块已移除，已返回工作台。</p> aka getByText('此模块已移除，已返回工作台。')
+        2) <p role="status" class="loading">正在加载…</p> aka getByText('正在加载…')
+
+    Call log:
+    [2m  - Expect "toContainText" with timeout 5000ms[22m
+    [2m  - waiting for getByRole('status')[22m
+
+
+      56 | test('T26 独立笔记登记与更正、旧深链回退、三导航窄屏无溢出',async({page})=>{
+      57 |  await page.goto('/');
+    > 58 |  for(const path of ['assets','contents','calendar','campaigns','contents/old-revision']){await page.evaluate(p=>location.hash=p,path);await expect(page.getByRole('status')).toContainText('此模块已移除');await expect(page).toHaveURL(/#home$/);}
+         |                                                                                                                                                                              ^
+      59 |  await page.getByRole('link',{name:'数据复盘',exact:true}).click();await page.getByRole('button',{name:'登记已发布笔记',exact:true}).click();const dialog=page.getByRole('dialog');await dialog.getByLabel('平台笔记 ID').fill('s11-browser-note');await dialog.getByLabel('原帖 HTTPS 链接').fill('https://www.xiaohongshu.com/explore/s11-browser-note');await dialog.getByLabel('笔记标题').fill('明确合成：独立笔记');await dialog.getByLabel('实际发布时间（本机时区）').fill('2026-10-01T12:00');await dialog.getByRole('button',{name:'保存笔记登记'}).click();await expect(page.getByRole('cell',{name:/明确合成：独立笔记/})).toBeVisible();
+      60 |  await page.getByRole('button',{name:'更正登记'}).click();await expect(dialog.getByLabel('平台笔记 ID')).toHaveCount(0);await dialog.getByLabel('笔记标题').fill('明确合成：更正标题');await dialog.getByLabel('更正原因').fill('人工核对标题');await dialog.getByRole('button',{name:'保存笔记登记'}).click();await expect(page.getByRole('cell',{name:/明确合成：更正标题/})).toBeVisible();
+      61 |  for(const width of [1440,1280,390]){await page.setViewportSize({width,height:1000});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);await page.screenshot({path:`${process.env.EVIDENCE_DIR??'docs/evidence/s11'}/screenshots/publications-${width}.png`,fullPage:true});}
+        at /Users/junlong/projects/social-mdeida-ops-platform/tests/browser.spec.ts:58:174
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser-T26-独立笔记登记与更正、旧深链回退、三导航窄屏无溢出/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/browser-T26-独立笔记登记与更正、旧深链回退、三导航窄屏无溢出/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/browser-T26-独立笔记登记与更正、旧深链回退、三导航窄屏无溢出/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/browser-T26-独立笔记登记与更正、旧深链回退、三导航窄屏无溢出/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/browser.spec.ts:56:5 › T26 独立笔记登记与更正、旧深链回退、三导航窄屏无溢出 ──────────────────────────────────────
+  15 passed (59.9s)

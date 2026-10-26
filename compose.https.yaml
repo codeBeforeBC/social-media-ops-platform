@@ -26,7 +26,7 @@ services:
       YOYO_DOMAIN: ${YOYO_DOMAIN:-localhost}
       YOYO_TLS: ${YOYO_TLS:-internal}
     ports:
-      - '${HTTPS_BIND:-127.0.0.1}:${HTTPS_PORT:-3443}:443'
+      - '127.0.0.1:${HTTPS_PORT:-3443}:443'
     volumes:
       - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
       - proxy-data:/data

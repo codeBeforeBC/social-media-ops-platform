@@ -12,11 +12,7 @@ async function call(path,method='GET',body){const r=await fetch(base+'/api/v1'+p
 async function until(fn){for(let n=0;n<50;n++){const r=await fn();if(r)return r;await new Promise(r=>setTimeout(r,200));}throw new Error('Timed out waiting for runtime state');}
 compose(['up','-d','--wait']);
 const secretHash=()=>createHash('sha256').update(compose(['exec','-T','api','node','-e',"process.stdout.write(require('node:fs').readFileSync('/state/instance.json'))"])).digest('hex');
-const beforeSecret=secretHash();const input={email:'compose@example.test',password:'Compose-test-password-987',display_name:'容器测试管理员',workspace_name:'合成容器工作区'};
-if(!(await call('/setup/status')).initialized){
-  await call('/auth/csrf');await call('/setup','POST',input);
-}
-await call('/auth/csrf');await call('/auth/login','POST',{email:input.email,password:input.password});checkpoints.push('first_setup_and_login');
+const beforeSecret=secretHash();await call('/request/csrf');await call('/instance');checkpoints.push('automatic_local_context_without_login');
 const current=await call('/accounts');let account=current.items[0];if(!account)account=await call('/accounts','POST',{platform:'xiaohongshu',platform_user_id:'compose-platform-id',name:'合成容器账号'});
 const before=scalar('SELECT (SELECT count(*) FROM users)||\':\'||(SELECT count(*) FROM accounts)||\':\'||(SELECT count(*) FROM schema_migrations)');
 for(const pool of ['general']){

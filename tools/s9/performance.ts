@@ -4,14 +4,14 @@ import {cpus,totalmem,platform,arch} from 'node:os';
 import {performance} from 'node:perf_hooks';
 import assert from 'node:assert/strict';
 import {chromium,expect} from '@playwright/test';
-import {server,Client,initialize,adminInput} from '../../tests/helpers';
+import {server,Client,initialize} from '../../tests/helpers';
 import {config} from '../../packages/domain/src/config';
 async function main(){
  const env=await server(),admin=new Client(env.url),users:Client[]=[admin];
  const report:any={checked_at:new Date().toISOString(),classification:'synthetic_scale_actual_runtime_measurements',environment:{api:'native_host_node',db:'Docker Desktop arm64 PostgreSQL on loopback',host_platform:platform(),host_arch:arch(),host_cpus:cpus().length,host_memory_bytes:totalmem(),database:'yoyo_s9_performance_test'},production_environment_acceptance:false,api:[],ui:[]};
  try{
   const me=await initialize(admin),account=(await admin.call('/accounts','POST',{platform:'xiaohongshu',platform_user_id:'synthetic-scale-only',name:'明确合成性能账号'})).data;
-  for(let i=1;i<=4;i++){const email=`performance-${i}@example.test`,m=(await admin.call('/members','POST',{email,roles:['admin']})).data,u=new Client(env.url);await u.init();await u.call('/auth/accept-invite','POST',{invitation_token:m.invitation_token,password:adminInput.password});await u.login(email);users.push(u);}
+  for(let i=1;i<=4;i++){const u=new Client(env.url);await u.init();users.push(u);}
   const source=(await admin.call('/source-connections','POST',{name:'合成规模来源（禁用）',platform:'xiaohongshu',provider:'opencli',source_type:'xhs_topic_signal',enabled:false,config:{keywords:['synthetic']}})).data;
   await env.db.query(`INSERT INTO source_items(workspace_id,connection_id,external_id,canonical_url,actual_source_type,title,captured_at,media_type,cluster_key,content_hash)
    SELECT $1,$2,'synthetic-'||i,'https://www.xiaohongshu.com/explore/synthetic-'||i,'search','合成线索 '||i,now()-i*interval '1 second','unknown','synthetic-'||i,md5(i::text) FROM generate_series(1,10000) i`,[me.workspace.id,source.id]);
@@ -32,7 +32,7 @@ async function main(){
   const accepted:number[]=[];for(let i=0;i<20;i++){const start=performance.now();assert.equal((await admin.call('/diagnostics','POST',{pool:'general'})).status,202);accepted.push(performance.now()-start);}report.async_acceptance={requests:20,p95_ms:percentile(accepted),target_ms:2000,execution_not_measured:true};
   writeFileSync('docs/evidence/s9/performance-api-observed.json',JSON.stringify(report,null,2)+'\n');
   config.origin=env.url;
-  const browser=await chromium.launch();try{const page=await browser.newPage({viewport:{width:1440,height:1000}});await page.goto(env.url);await page.getByLabel('邮箱').fill(adminInput.email);await page.getByLabel('密码',{exact:false}).fill(adminInput.password);await page.getByRole('button',{name:'登录',exact:true}).click();await page.getByRole('heading',{name:'测试管理员，欢迎回来'}).waitFor();
+  const browser=await chromium.launch();try{const page=await browser.newPage({viewport:{width:1440,height:1000}});await page.goto(env.url);await page.getByRole('heading',{name:'测试管理员，欢迎回来'}).waitFor();
    for(const [name,heading] of [['工作台','接下来的工作'],['选题策划','选题策划'],['数据复盘','数据复盘']] as const){const start=performance.now();await page.getByRole('link',{name,exact:true}).click();await page.getByRole('heading',{name:heading,exact:true}).first().waitFor();await expect(page.getByRole('status').filter({hasText:'正在加载'})).toHaveCount(0);await expect(page.getByRole('link',{name,exact:true})).toBeEnabled();if(name==='工作台')await page.getByRole('button',{name:'刷新工作台'}).click();else if(name==='选题策划')await expect(page.getByRole('button',{name:'添加来源',exact:true})).toBeEnabled();else {await expect(page.getByLabel('上传后台截图')).toBeEnabled();await page.getByLabel('分析开始（带时区 ISO8601）').fill('2026-02-01T00:00:00Z');await page.getByLabel('分析结束（带时区 ISO8601）').fill('2026-02-08T00:00:00Z');await page.getByRole('button',{name:'应用分析窗口'}).click();await expect(page.getByRole('heading',{name:'已确认数据概览'})).toBeVisible();await expect(page.getByRole('status').filter({hasText:'正在加载'})).toHaveCount(0);}report.ui.push({page:name,viewport:1440,elapsed_ms:performance.now()-start,target_ms:3000,condition:'loaded navigation and meaningful enabled control; recap analysis explicitly narrowed to 7 days; one sample, not p95'});}
   }finally{await browser.close();}
   report.result=report.api.every((r:any)=>r.p95_ms<=r.target_ms)&&report.async_acceptance.p95_ms<=2000?'passed_api_local_scope':'needs_optimization';

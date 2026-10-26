@@ -1,0 +1,286 @@
+ Image yoyo-local:0.1.0 Building 
+ Image yoyo-local:0.1.0 Building 
+ Image yoyo-media-local:0.1.0 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.53kB done
+#1 DONE 0.0s
+
+#2 [media-executor internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.36kB done
+#2 DONE 0.0s
+
+#3 [migrate internal] load build definition from Dockerfile
+#3 transferring dockerfile: 1.90kB done
+#3 DONE 0.0s
+
+#4 [migrate internal] load metadata for docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#4 DONE 0.0s
+
+#5 [api internal] load .dockerignore
+#5 transferring context: 177B done
+#5 DONE 0.0s
+
+#6 [media-executor build 1/4] FROM docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#6 resolve docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c done
+#6 DONE 0.0s
+
+#7 [media-executor internal] load build context
+#7 transferring context: 235B 0.0s done
+#7 DONE 0.0s
+
+#8 [migrate internal] load build context
+#8 transferring context: 2.07MB 0.0s done
+#8 DONE 0.0s
+
+#9 [media-executor build 4/4] RUN gcc -O2 -Wall /sandbox.c -o /media-sandbox
+#9 CACHED
+
+#10 [media-executor build 2/4] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && apt-get -o Acquire::Retries=3 install -y --no-install-recommends gcc libc6-dev linux-libc-dev
+#10 CACHED
+
+#11 [media-executor stage-1 4/7] COPY tools/media/server.mjs /app/server.mjs
+#11 CACHED
+
+#12 [media-executor build 3/4] COPY tools/media/sandbox.c /sandbox.c
+#12 CACHED
+
+#13 [media-executor stage-1 2/7] RUN --mount=type=cache,target=/var/cache/apt,sharing=locked rm -f /etc/apt/apt.conf.d/docker-clean && apt-get update && (apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil ca-certificates tesseract-ocr tesseract-ocr-chi-sim tesseract-ocr-eng || apt-get -o Acquire::Retries=3 install -y --no-install-recommends python3 python3-pil ca-certificates tesseract-ocr tesseract-ocr-chi-sim tesseract-ocr-eng) && rm -rf /var/lib/apt/lists/* && mkdir /scratch && chown node:node /scratch
+#13 CACHED
+
+#14 [media-executor stage-1 6/7] COPY tools/media/image-ocr.py /usr/local/lib/yoyo/image-ocr.py
+#14 CACHED
+
+#15 [media-executor stage-1 5/7] COPY tools/media/import-validate.py /usr/local/lib/yoyo/import-validate.py
+#15 CACHED
+
+#16 [media-executor stage-1 3/7] COPY --from=build /media-sandbox /usr/local/bin/media-sandbox
+#16 CACHED
+
+#17 [media-executor stage-1 7/7] WORKDIR /app
+#17 CACHED
+
+#18 [api build  3/21] RUN corepack enable && corepack prepare pnpm@10.33.0 --activate
+#18 CACHED
+
+#19 [api build  2/21] RUN apt-get update && apt-get install -y --no-install-recommends openssl ca-certificates && rm -rf /var/lib/apt/lists/*
+#19 CACHED
+
+#20 [api build  4/21] WORKDIR /app
+#20 CACHED
+
+#21 [media-executor] exporting to image
+#21 exporting layers done
+#21 exporting manifest sha256:1ce7b3130cd8a4d1c013e8d63e6bcacc97e44ab8b7273104f02628fb27fd4fe7 done
+#21 exporting config sha256:199b1fc9aaa200027a7ecb01cd400f145834ff4380eae944b9415483103f6e1f done
+#21 exporting attestation manifest sha256:5f0a24c4a0e0b223b29bbcfbd29f4c87daab6ced3dfff2496839b2165d39460f
+#21 exporting attestation manifest sha256:5f0a24c4a0e0b223b29bbcfbd29f4c87daab6ced3dfff2496839b2165d39460f 0.0s done
+#21 exporting manifest list sha256:09ec4b2b772a326db60cbdb2177e862aa518a306c465e315b67e13e4fbc0dae4 0.0s done
+#21 naming to docker.io/library/yoyo-media-local:0.1.0 done
+#21 unpacking to docker.io/library/yoyo-media-local:0.1.0 0.0s done
+#21 DONE 0.1s
+
+#22 [migrate build  5/21] COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+#22 DONE 0.1s
+
+#23 [api build  6/21] COPY apps/api/package.json ./apps/api/package.json
+#23 DONE 0.0s
+
+#24 [migrate build  7/21] COPY apps/web/package.json ./apps/web/package.json
+#24 DONE 0.0s
+
+#25 [api build  8/21] COPY apps/worker/package.json ./apps/worker/package.json
+#25 DONE 0.0s
+
+#26 [migrate build  9/21] COPY apps/scheduler/package.json ./apps/scheduler/package.json
+#26 DONE 0.0s
+
+#27 [media-executor] resolving provenance for metadata file
+#27 DONE 0.0s
+
+#28 [api build 10/21] COPY packages/db/package.json ./packages/db/package.json
+#28 DONE 0.0s
+
+#29 [api build 11/21] COPY packages/domain/package.json ./packages/domain/package.json
+#29 DONE 0.0s
+
+#30 [api build 12/21] COPY packages/contracts/package.json ./packages/contracts/package.json
+#30 DONE 0.0s
+
+#31 [migrate build 13/21] RUN --mount=type=cache,id=yoyo-pnpm,target=/pnpm/store pnpm config set store-dir /pnpm/store && pnpm install --frozen-lockfile
+#31 0.574 Scope: all 8 workspace projects
+#31 0.605 Lockfile is up to date, resolution step is skipped
+#31 0.626 Progress: resolved 1, reused 0, downloaded 0, added 0
+#31 0.686 Packages: +317
+#31 0.686 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#31 1.168 
+#31 1.168    ╭───────────────────────────────────────────────╮
+#31 1.168    │                                               │
+#31 1.168    │     Update available! 10.33.0 → 12.15.0.      │
+#31 1.168    │     Changelog: https://pnpm.io/v/12.15.0      │
+#31 1.168    │   To update, run: corepack use pnpm@12.15.0   │
+#31 1.168    │                                               │
+#31 1.168    ╰───────────────────────────────────────────────╯
+#31 1.168 
+#31 1.628 Progress: resolved 317, reused 0, downloaded 91, added 90
+#31 2.630 Progress: resolved 317, reused 0, downloaded 176, added 175
+#31 3.630 Progress: resolved 317, reused 0, downloaded 192, added 192
+#31 4.629 Progress: resolved 317, reused 0, downloaded 214, added 214
+#31 5.630 Progress: resolved 317, reused 0, downloaded 237, added 237
+#31 6.631 Progress: resolved 317, reused 0, downloaded 278, added 278
+#31 7.630 Progress: resolved 317, reused 0, downloaded 308, added 308
+#31 8.631 Progress: resolved 317, reused 0, downloaded 312, added 312
+#31 9.631 Progress: resolved 317, reused 0, downloaded 316, added 316
+#31 10.21 Progress: resolved 317, reused 0, downloaded 317, added 317, done
+#31 10.32 .../esbuild@0.25.12/node_modules/esbuild postinstall$ node install.js
+#31 10.33 .../node_modules/@prisma/engines postinstall$ node scripts/postinstall.js
+#31 10.35 .../esbuild@0.25.12/node_modules/esbuild postinstall: Done
+#31 11.65 .../node_modules/@prisma/engines postinstall: Done
+#31 11.69 .../node_modules/prisma preinstall$ node scripts/preinstall-entry.js
+#31 11.71 .../node_modules/prisma preinstall: Done
+#31 11.86 
+#31 11.86 dependencies:
+#31 11.86 + @aws-sdk/client-s3 3.1147.0
+#31 11.86 + @aws-sdk/s3-request-presigner 3.1147.0
+#31 11.86 + @nestjs/common 12.1.2
+#31 11.86 + @nestjs/core 12.1.2
+#31 11.86 + @nestjs/platform-express 12.1.2
+#31 11.86 + @prisma/adapter-pg 7.10.0
+#31 11.86 + @prisma/client 7.10.0
+#31 11.86 + cookie-parser 1.4.7
+#31 11.86 + express 5.2.1
+#31 11.86 + helmet 8.1.0
+#31 11.86 + pg 8.16.3
+#31 11.86 + reflect-metadata 0.2.2
+#31 11.86 + rxjs 7.8.2
+#31 11.86 + zod 4.1.12
+#31 11.86 
+#31 11.86 devDependencies:
+#31 11.86 + @playwright/test 1.56.1
+#31 11.86 + @types/cookie-parser 1.4.9
+#31 11.86 + @types/express 5.0.3
+#31 11.86 + @types/node 24.7.2
+#31 11.86 + @types/pg 8.15.5
+#31 11.86 + ajv 8.20.0
+#31 11.86 + ajv-formats 3.0.1
+#31 11.86 + prisma 7.10.0
+#31 11.86 + tsx 4.20.6
+#31 11.86 + typescript 5.9.3
+#31 11.86 
+#31 11.88 Done in 11.4s using pnpm v10.33.0
+#31 DONE 12.2s
+
+#32 [api build 14/21] COPY apps ./apps
+#32 DONE 0.1s
+
+#33 [api build 15/21] COPY packages ./packages
+#33 DONE 0.0s
+
+#34 [api build 16/21] COPY tools ./tools
+#34 DONE 0.0s
+
+#35 [migrate build 17/21] COPY tests ./tests
+#35 DONE 0.0s
+
+#36 [migrate build 18/21] COPY contracts ./contracts
+#36 DONE 0.0s
+
+#37 [api build 19/21] COPY docs/templates ./docs/templates
+#37 DONE 0.4s
+
+#38 [api build 20/21] COPY tsconfig.json prisma.config.ts ./
+#38 DONE 0.0s
+
+#39 [api build 21/21] RUN pnpm build
+#39 0.231 
+#39 0.231 > yoyo-workbench@0.1.0 build /app
+#39 0.231 > pnpm db:generate && tsc -p tsconfig.json && pnpm --filter @yoyo/web build
+#39 0.231 
+#39 0.355 
+#39 0.355 > yoyo-workbench@0.1.0 db:generate /app
+#39 0.355 > prisma generate
+#39 0.355 
+#39 0.714 Loaded Prisma config from prisma.config.ts.
+#39 0.714 
+#39 0.774 Prisma schema loaded from packages/db/prisma/schema.prisma.
+#39 1.171 
+#39 1.171 ✔ Generated Prisma Client (v7.10.0) to ./node_modules/.pnpm/@prisma+client@7.10.0_prisma@7.10.0_@types+react-dom@19.2.2_@types+react@19.2.2__@types_a5f616641512722fa171c0ec0738743a/node_modules/@prisma/client in 267ms
+#39 1.171 
+#39 1.171 Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+#39 1.171 
+#39 1.171 
+#39 3.823 
+#39 3.823 > @yoyo/web@0.1.0 build /app/apps/web
+#39 3.823 > vite build
+#39 3.823 
+#39 3.984 vite v8.3.3 building client environment for production...
+#39 3.990 transforming...
+#39 4.029 ✓ 28 modules transformed.
+#39 4.051 rendering chunks...
+#39 4.074 computing gzip size...
+#39 4.077 dist/index.html                   0.36 kB │ gzip:  0.29 kB
+#39 4.077 dist/assets/index-DXiJBxuL.css    9.12 kB │ gzip:  2.76 kB
+#39 4.077 dist/assets/index-C6Xh99xA.js   326.76 kB │ gzip: 97.08 kB
+#39 4.077 
+#39 4.077 ✓ built in 92ms
+#39 DONE 4.1s
+
+#40 [migrate stage-1  2/10] WORKDIR /app
+#40 CACHED
+
+#41 [migrate stage-1  3/10] COPY --from=build --chown=node:node /app/node_modules ./node_modules
+#41 DONE 1.3s
+
+#42 [api stage-1  4/10] COPY --from=build --chown=node:node /app/dist ./dist
+#42 DONE 0.1s
+
+#43 [api stage-1  5/10] COPY --from=build --chown=node:node /app/apps/web/dist ./apps/web/dist
+#43 DONE 0.0s
+
+#44 [migrate stage-1  6/10] COPY --from=build --chown=node:node /app/packages/db/migrations ./packages/db/migrations
+#44 DONE 0.0s
+
+#45 [api stage-1  7/10] COPY --from=build --chown=node:node /app/docs/templates ./docs/templates
+#45 DONE 0.0s
+
+#46 [api stage-1  8/10] COPY --from=build --chown=node:node /app/tools/s3 ./tools/s3
+#46 DONE 0.0s
+
+#47 [api stage-1  9/10] COPY --from=build --chown=node:node /app/tools/s0 ./tools/s0
+#47 DONE 0.0s
+
+#48 [migrate stage-1 10/10] COPY --from=build --chown=node:node /app/tools/init-state.mjs ./tools/init-state.mjs
+#48 DONE 0.0s
+
+#49 [migrate] exporting to image
+#49 exporting layers
+#49 exporting layers 7.5s done
+#49 exporting manifest sha256:b98107386e78d2f9314aca9fb29588444590de340fd7aa8a1cd74e17c5b5c950 done
+#49 exporting config sha256:154fe43fb47e9d40f5016708f66faa4bbea6f04d4f74b233d36ad1d3709fabab 0.0s done
+#49 exporting attestation manifest sha256:d7d8f4dbc0428a5646282e150248e6227f05a4c9a849be2298a6e0bc9dcd5dd5 0.0s done
+#49 exporting manifest list sha256:ae1b0d2d6e78de61a63365e38dde9491ece318f76d30347c18b9e6e8c732b66a 0.0s done
+#49 naming to docker.io/library/yoyo-local:0.1.0 done
+#49 unpacking to docker.io/library/yoyo-local:0.1.0
+#49 ...
+
+#50 [api] exporting to image
+#50 exporting layers 7.5s done
+#50 exporting manifest sha256:5efa1122f89aaf02c618ed3a699f8d56278ccba4e05731428625c3851c1c1991 0.0s done
+#50 exporting config sha256:3b4a301deae9f2818ddcc8759c05e286b3ae72a847422b851a2f570dde872f0e 0.0s done
+#50 exporting attestation manifest sha256:18017b4390afbf4e501294a3f67c1d238154af250ecc93fbf19fa66d1858db30 0.0s done
+#50 exporting manifest list sha256:5933498d7c8a6aff86368a401d2978b5c4d99fcf3e4be9c5f76539a8336bc28a 0.0s done
+#50 naming to docker.io/library/yoyo-local:0.1.0 done
+#50 unpacking to docker.io/library/yoyo-local:0.1.0 2.5s done
+#50 DONE 10.1s
+
+#49 [migrate] exporting to image
+#49 unpacking to docker.io/library/yoyo-local:0.1.0 2.5s done
+#49 DONE 10.1s
+
+#51 [migrate] resolving provenance for metadata file
+#51 DONE 0.0s
+
+#52 [api] resolving provenance for metadata file
+#52 DONE 0.0s
+ Image yoyo-media-local:0.1.0 Built 
+ Image yoyo-local:0.1.0 Built 
+ Image yoyo-local:0.1.0 Built 

@@ -5,9 +5,9 @@ import {ImportsPanel} from './imports';
 import React,{useEffect,useState} from 'react';
 import {api} from './api';
 import {Field,Drawer,Empty,ErrorState,Loading} from './components';
-import type {SessionData,Publication} from '../../../packages/contracts/src/types';
-export function PublicationsPanel({me}:{me:SessionData}){
- const [accounts,setAccounts]=useState<any[]>([]),[account,setAccount]=useState(''),[items,setItems]=useState<Publication[]>([]),[cursor,setCursor]=useState<string|null>(null),[media,setMedia]=useState(''),[lifecycle,setLifecycle]=useState(''),[loading,setLoading]=useState(true),[error,setError]=useState<Error|null>(null),[editing,setEditing]=useState<Publication|'new'|null>(null),[busy,setBusy]=useState(false),[notice,setNotice]=useState('');const canEdit=me.permissions.includes('operate');
+import type {InstanceData,Publication} from '../../../packages/contracts/src/types';
+export function PublicationsPanel({me}:{me:InstanceData}){
+ const [accounts,setAccounts]=useState<any[]>([]),[account,setAccount]=useState(''),[items,setItems]=useState<Publication[]>([]),[cursor,setCursor]=useState<string|null>(null),[media,setMedia]=useState(''),[lifecycle,setLifecycle]=useState(''),[loading,setLoading]=useState(true),[error,setError]=useState<Error|null>(null),[editing,setEditing]=useState<Publication|'new'|null>(null),[busy,setBusy]=useState(false),[notice,setNotice]=useState('');const canEdit=true;
  async function load(more=false){setLoading(true);setError(null);try{const q=new URLSearchParams();if(account)q.set('account_id',account);if(media)q.set('media_type',media);if(lifecycle)q.set('lifecycle',lifecycle);if(more&&cursor)q.set('cursor',cursor);const r=await api('/publications?'+q);setItems(old=>more?[...old,...r.items]:r.items);setCursor(r.next_cursor);}catch(e){setError(e as Error);}finally{setLoading(false);}}
  useEffect(()=>{void api('/accounts').then(r=>{setAccounts(r.items);const target=new URLSearchParams(location.hash.split('?')[1]).get('account_id');if(target&&!r.items.some((a:any)=>a.id===target)){setError(new Error('深链账号不存在或不可见'));setAccount('');}else setAccount(target??r.items[0]?.id??'');}).catch(e=>setError(e));},[]);useEffect(()=>{void load();},[account,media,lifecycle]);
  const existing=editing&&editing!=='new'?editing:null;

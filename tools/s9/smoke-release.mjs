@@ -25,25 +25,19 @@ function raw(url,method='GET',body,headers={}){return new Promise((resolve,rejec
 async function call(path,method='GET',body,key=randomUUID()){
  const r=await raw(base+'/api/v1'+path,method,body===undefined?undefined:Buffer.from(JSON.stringify(body)),{'Content-Type':'application/json',Cookie:cookie,'X-Forwarded-For':'203.0.113.123',...(method!=='GET'?{Origin:base,'X-CSRF-Token':csrf,'Idempotency-Key':key}:{})});
  const j=JSON.parse(r.body);assert.ok(r.status<300,`HTTP ${r.status} ${j.error?.code}`);
- if(r.headers['set-cookie']){const value=r.headers['set-cookie'][0];assert.match(value,/HttpOnly/i);assert.match(value,/Secure/i);assert.match(value,/SameSite=Lax/i);cookie=value.split(';')[0];}
+ if(r.headers['set-cookie']){const value=r.headers['set-cookie'][0];assert.match(value,/HttpOnly/i);assert.match(value,/Secure/i);assert.match(value,/SameSite=Strict/i);cookie=value.split(';')[0];}
  if(j.data.csrf_token)csrf=j.data.csrf_token;return j.data;
 }
 try{
  compose(['up','-d','--pull','never','--wait']);
  ca=await until(()=>{try{return compose(['exec','-T','proxy','cat','/data/caddy/pki/authorities/local/root.crt']);}catch{return null;}});
  writeFileSync(dir+'/root.crt',ca,{mode:0o600});
- await call('/auth/csrf');
- await call('/setup','POST',{email:'s9-admin@example.test',password:'Synthetic-S9-password-987',display_name:'合成S9管理员',workspace_name:'隔离S9交付验证'});
- await call('/auth/login','POST',{email:'s9-admin@example.test',password:'Synthetic-S9-password-987'});
- assert.equal(scalar("SELECT count(*) FROM login_limits WHERE key='login-ip:"+hash('203.0.113.123')+"'"),'0');checks.push('proxy_replaces_untrusted_forwarded_ip');
+ await call('/request/csrf');await call('/instance');
  const expectedMigrations=readdirSync('packages/db/migrations').filter(f=>f.endsWith('.sql')).length;assert.equal(scalar('SELECT count(*) FROM schema_migrations'),String(expectedMigrations));checks.push('https_trusted_ca_secure_session_first_setup_'+expectedMigrations+'_migrations');
  const me=await call('/me');let account=await call('/accounts','POST',{platform:'xiaohongshu',platform_user_id:'s9-synthetic',name:'合成S9账号'});
  const badOrigin=await raw(base+'/api/v1/accounts','POST',Buffer.from('{}'),{Cookie:cookie,'Content-Type':'application/json',Origin:'https://untrusted.invalid','X-CSRF-Token':csrf});assert.equal(badOrigin.status,403);checks.push('https_origin_guard');
- const invite=await call('/members','POST',{email:'s9-operator@example.test',display_name:'合成S9运营',roles:['admin']});
- await call('/auth/accept-invite','POST',{invitation_token:invite.invitation_token,password:'Synthetic-S9-operator-987'});
- account=await call('/accounts/'+account.id,'PATCH',{owner_id:invite.id,expected_version:account.version});
- await call('/members/'+invite.id,'PATCH',{active:false,successor_id:me.membership.id,expected_version:invite.version});
- account=await call('/accounts/'+account.id);assert.equal(account.owner_id,me.membership.id);checks.push('member_invitation_and_owner_handoff');
+ const retired=await raw(base+'/api/v1/members','POST',Buffer.from('{}'),{Cookie:cookie,'Content-Type':'application/json',Origin:base,'X-CSRF-Token':csrf});assert.equal(retired.status,410);
+ assert.equal(account.owner_id,scalar('SELECT default_member_id FROM instance_state WHERE id=1'));checks.push('default_owner_and_retired_member_endpoints');
  const image=readFileSync('tests/fixtures/transparent.png'),checksum=hash(image);
  const upload=await call('/uploads','POST',{account_id:account.id,name:'明确合成截图.png',size_bytes:image.length,mime_hint:'image/png',purpose:'import_screenshot',sha256:checksum});
  const target=await call('/uploads/'+upload.id+'/parts','POST',{part_number:1,checksum});

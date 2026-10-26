@@ -1,0 +1,57 @@
+[2m[WebServer] [22m(node:44529) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:44530) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:44540) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:44540) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:44556) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:44556) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 tests/browser.spec.ts:4:5 › 免登录打开工作台、清除Cookie后直接回到同一工作区，无用户与成员入口 (5.4s)
+
+
+  1) tests/browser.spec.ts:4:5 › 免登录打开工作台、清除Cookie后直接回到同一工作区，无用户与成员入口 ──────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('heading', { name: '欢迎使用YOYO' })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for getByRole('heading', { name: '欢迎使用YOYO' })[22m
+
+
+      3 | import {mkdirSync} from 'node:fs';
+      4 | test('免登录打开工作台、清除Cookie后直接回到同一工作区，无用户与成员入口',async({page})=>{
+    > 5 |   await page.goto('/');await expect(page.getByRole('heading',{name:'欢迎使用YOYO'})).toBeVisible();
+        |                                                                                  ^
+      6 |   await expect(page.getByLabel('邮箱')).toHaveCount(0);await expect(page.getByLabel('密码')).toHaveCount(0);await expect(page.getByRole('button',{name:'退出登录'})).toHaveCount(0);
+      7 |   await page.getByRole('link',{name:'工作区设置'}).click();await expect(page.getByRole('button',{name:'成员',exact:true})).toHaveCount(0);
+      8 |   await page.getByRole('button',{name:'运营账号',exact:true}).click();await page.getByRole('button',{name:'添加账号',exact:true}).click();await page.getByLabel('平台内部账号 ID').fill('browser-platform-id');await page.getByLabel('名称',{exact:false}).fill('真实标识测试账号');await page.getByRole('button',{name:'保存',exact:true}).click();await expect(page.getByRole('cell',{name:'真实标识测试账号'})).toBeVisible();
+        at /Users/junlong/projects/social-mdeida-ops-platform/tests/browser.spec.ts:5:82
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser-免登录打开工作台、清除Cookie后直接回到同一工作区，无用户与成员入口/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/browser-免登录打开工作台、清除Cookie后直接回到同一工作区，无用户与成员入口/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/browser-免登录打开工作台、清除Cookie后直接回到同一工作区，无用户与成员入口/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/browser-免登录打开工作台、清除Cookie后直接回到同一工作区，无用户与成员入口/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/browser.spec.ts:4:5 › 免登录打开工作台、清除Cookie后直接回到同一工作区，无用户与成员入口 ───────────────────────────────

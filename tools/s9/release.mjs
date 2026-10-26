@@ -23,7 +23,7 @@ const manifest={version,created_at:new Date().toISOString(),commit:execFileSync(
 for(const arch of ['arm64']){
  const platform='linux/'+arch,app=`yoyo-release:${version}-${arch}`,parser=`yoyo-parser-release:${version}-${arch}`;
  for(const [tag,file] of [[app,'Dockerfile'],[parser,'tools/media/Dockerfile']])run(['buildx','build','--platform',platform,'--load','-f',join(source,file),'-t',tag,source]);
- run(['run','--rm','--platform',platform,'--network','none',app,'node','-e',"require('argon2');require('pg');require('@prisma/client');require('node:fs').accessSync('tools/init-state.mjs');require('node:fs').accessSync('docs/templates/yoyo-import-v1.xlsx');console.log('native dependencies and release files ready')"]);
+ run(['run','--rm','--platform',platform,'--network','none',app,'node','-e',"require('pg');require('@prisma/client');require('node:fs').accessSync('dist/packages/domain/src/instance.js');require('node:fs').accessSync('dist/apps/api/src/access.js');require('node:fs').accessSync('tools/init-state.mjs');require('node:fs').accessSync('docs/templates/yoyo-import-v1.xlsx');console.log('runtime dependencies and local instance files ready')"]);
  run(['run','--rm','--platform',platform,'--network','none',parser,'sh','-c','python3 -c "from PIL import Image" && test -x /usr/local/bin/media-sandbox']);
  for(let i=0;i<dependencies.length;i++){
   // Content-addressed local images need no registry contact; missing platforms still require a pull.

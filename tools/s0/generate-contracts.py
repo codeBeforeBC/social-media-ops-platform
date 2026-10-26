@@ -146,7 +146,7 @@ spec={'openapi':'3.1.0','info':{'title':'YOYO 内部运营工作台','version':'
 text=json.dumps({'$schema':'https://json-schema.org/draft/2020-12/schema','$id':'urn:yoyo:domain:v1','$defs':S},ensure_ascii=False,indent=2).replace('#/components/schemas/','#/$defs/')
 (root/'contracts/domain.schema.json').write_text(text+'\n')
 import subprocess
-for extension in ['tools/s3/contracts.py','tools/s3/ai-contracts.py','tools/s3/topic-contracts.py','tools/s11/contracts.py','tools/s7/contracts.py','tools/s8/contracts.py']:
+for extension in ['tools/s3/contracts.py','tools/s3/ai-contracts.py','tools/s3/topic-contracts.py','tools/s11/contracts.py','tools/s7/contracts.py','tools/s8/contracts.py','tools/s1/local-contracts.py']:
  subprocess.run(['python3',extension],check=True)
 spec=json.loads((root/'contracts/openapi.json').read_text())
 (root/'contracts/domain.schema.json').write_text(json.dumps({'$schema':'https://json-schema.org/draft/2020-12/schema','$id':'urn:yoyo:domain:v1.2','$defs':spec['components']['schemas']},ensure_ascii=False,indent=2).replace('#/components/schemas/','#/$defs/')+'\n')

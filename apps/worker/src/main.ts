@@ -1,3 +1,4 @@
+import {ensureInstance} from '../../../packages/domain/src/instance';
 import {SourceOrganizationTasks} from '../../../packages/domain/src/source-organization';
 import {FeedbackTasks} from '../../../packages/domain/src/feedback';
 import {ReportTasks} from '../../../packages/domain/src/reports';
@@ -12,6 +13,7 @@ import {saveSourceItems} from '../../../packages/domain/src/source-evidence';
 import {Storage} from '../../../packages/domain/src/storage';
 import {fileValidationHandler} from '../../../packages/domain/src/media';
 export async function worker(db:Database,pool=config.workerPool){
+  await ensureInstance(db);
   const storage=new Storage();const collection=new Collection(db,sourceAdapters,saveSourceItems);const jobs=new Jobs(db,{'ai.generate':new AITasks(db).handler,'report.generate':new ReportTasks(db).handler,'feedback.organize':new FeedbackTasks(db).handler,'source.organize':new SourceOrganizationTasks(db).handler,'source.collect':collection.handler,'file.validate':fileValidationHandler(db,storage),'import.parse':importParseHandler(db)});let stopping=false;
   const stop=()=>{stopping=true;};process.on('SIGTERM',stop);process.on('SIGINT',stop);
   try{while(!stopping){await jobs.health(`worker:${pool}:${process.pid}`,pool);const j=await jobs.claim(pool);if(j){console.log(JSON.stringify({event:'job.claimed',job_id:j.id,request_id:j.request_id,pool,attempt:j.attempts}));await jobs.process(j);}else await new Promise(r=>setTimeout(r,config.pollMs));}}

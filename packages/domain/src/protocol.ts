@@ -22,7 +22,7 @@ export const roles=z.array(z.enum(['admin','editor','operator','viewer'])).min(1
 export const timezone=text().refine(t=>{try{new Intl.DateTimeFormat('zh-CN',{timeZone:t});return true;}catch{return false;}},'无效IANA时区');
 export const version=z.number().int().positive();
 export type Role=z.infer<typeof roles>[number];
-export type Actor={userId:string;memberId:string;workspaceId:string;roles:Role[];sessionHash:string;requestId:string};
+export type Actor={userId:string;memberId:string;workspaceId:string;roles:Role[];sessionHash?:string;requestId:string};
 export type Permission='read'|'admin'|'account.edit'|'download.original'|'topic.edit'|'import.edit'|'operate'|'job.manage';
 const grants:Record<Permission,Role[]>={read:['admin','editor','operator','viewer'],admin:['admin'],'account.edit':['admin','operator'],'download.original':['admin','operator'],'topic.edit':['admin','editor','operator'],'import.edit':['admin','operator'],operate:['admin','operator'],'job.manage':['admin','editor','operator']};
 export function authorize(actor:Actor,permission:Permission){if(!actor.roles.some(r=>grants[permission].includes(r)))throw new AppError(403,'FORBIDDEN','当前角色没有此操作权限');}

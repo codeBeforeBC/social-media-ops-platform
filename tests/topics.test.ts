@@ -1,7 +1,7 @@
 import {test,before,after} from 'node:test';
 import assert from 'node:assert/strict';
 import {randomUUID} from 'node:crypto';
-import {Client,initialize,server} from './helpers';
+import {Client,initialize,server,legacyMember} from './helpers';
 import {saveTopics} from '../packages/domain/src/topics';
 import {topicCandidateSchema,scoreCriteria} from '../packages/domain/src/ai-workflows';
 import {Topics} from '../apps/api/src/topics';
@@ -27,7 +27,7 @@ test('拒绝原因不可丢失；与采纳竞争只有一条最终决策，过�
 });
 test('显式变体保留父题/理由/证据并独立采纳；越权负责人和空间拒绝',async()=>{
  const t=await seed();await env.db.query("UPDATE topics SET candidate=jsonb_set(candidate,'{estimated_hours}','2') WHERE id=$1",[t.id]);const variants=await Promise.all([client.call('/topics/'+t.id+'/variants','POST',{goal:'明确换一个角度',media_type:'video'}),client.call('/topics/'+t.id+'/variants','POST',{goal:'另一个图文角度',media_type:'graphic'})]);assert.ok(variants.every(v=>v.status===201));assert.notEqual(variants[0]!.data.id,variants[1]!.data.id);assert.equal(variants[0]!.data.parent_topic_id,t.id);assert.ok(variants.every(v=>v.data.candidate.estimated_hours===null));
- assert.equal((await client.call('/topics/'+t.id+'/accept','POST',{owner_id:randomUUID(),expected_version:1})).error.code,'OWNER_INVALID');await assert.rejects(new Topics(env.db).scope(env.db,{...actor,workspaceId:randomUUID()},t.id),(e:any)=>e.code==='NOT_FOUND');
+ assert.equal((await client.call('/topics/'+t.id+'/accept','POST',{owner_id:randomUUID(),expected_version:1})).error.code,'VALIDATION_ERROR');await assert.rejects(new Topics(env.db).scope(env.db,{...actor,workspaceId:randomUUID()},t.id),(e:any)=>e.code==='NOT_FOUND');
 });
 test('事实缺观察/伪造来源使整个候选事务回滚，不用高分掩盖错误',async()=>{
  const t=await seed(),request=(await env.db.query('SELECT * FROM ai_requests WHERE id=$1',[t.generation_request_id])).rows[0];request.id=randomUUID();await env.db.query('INSERT INTO ai_requests(id,workspace_id,account_id,created_by,kind,input_version,snapshot) VALUES($1,$2,$3,$4,$5,$6,$7)',[request.id,actor.workspaceId,account.id,actor.memberId,'topics',request.input_version,JSON.stringify(request.snapshot)]);
@@ -35,7 +35,7 @@ test('事实缺观察/伪造来源使整个候选事务回滚，不用高分掩�
  assert.equal((await env.db.query('SELECT count(*)::int n FROM topics WHERE generation_request_id=$1',[request.id])).rows[0].n,0);
 });
 test('编辑只能采纳本人的任务；缺拒绝理由与陈旧版本不能改变选题',async()=>{
- const t=await seed(),topics=new Topics(env.db),editor={...actor,roles:['editor'] as Actor['roles']};await assert.rejects(env.db.transaction(tx=>topics.accept(tx,editor,t.id,{owner_id:randomUUID(),expected_version:1})),(e:any)=>e.code==='OWNER_FORBIDDEN');assert.equal((await client.call('/topics/'+t.id+'/reject','POST',{reason:'',expected_version:1})).status,422);assert.equal((await client.call('/topics/'+t.id+'/reject','POST',{reason:'不合适',expected_version:99})).error.code,'VERSION_CONFLICT');
+ const t=await seed(),topics=new Topics(env.db),editor={...actor,roles:['editor'] as Actor['roles']};await assert.rejects(env.db.transaction(tx=>topics.accept(tx,editor,t.id,{owner_id:randomUUID(),expected_version:1})),(e:any)=>e.code==='VALIDATION_ERROR');assert.equal((await client.call('/topics/'+t.id+'/reject','POST',{reason:'',expected_version:1})).status,422);assert.equal((await client.call('/topics/'+t.id+'/reject','POST',{reason:'不合适',expected_version:99})).error.code,'VERSION_CONFLICT');
 });
 test('证据显示采纳建议生成时的不可变观察，不随着来源更新改写标题；观察必须匹配来源',async()=>{
  const {saveSourceItems}=await import('../packages/domain/src/source-evidence');const connection=(await client.call('/source-connections','POST',{platform:'weibo',source_type:'weibo_hot',provider:'weibo_web',name:'合成证据连接'})).data;
@@ -49,12 +49,10 @@ test('常青原创不能把来源窗口结束填成到期；明确来源的时�
  const {topicSpec}=await import('../packages/domain/src/ai-workflows');const spec=topicSpec({input:{window:{end:new Date().toISOString()}},inputVersion:'controlled',inputRefs:[],sourceIds:[],});
  const base={schema_version:'ai-v1.2',input_version:'controlled',summary:'',evidence_refs:[],assumptions:[],missing_inputs:[],warnings:[],task_payload:{candidates:[candidate({expires_at:new Date().toISOString()})]}};assert.ok(spec.validate!(base).includes('candidates/0:EVERGREEN_MUST_NOT_EXPIRE'));assert.deepEqual(spec.validate!({...base,task_payload:{candidates:[candidate()]}}),[]);
 });
-test('停用选题负责人必须移交，历史决策不改写，新负责人有授权和待办；编辑不能驳回他人题',async()=>{
- const t=await seed(),c=await client.call('/members','POST',{email:'handoff@example.test',roles:['admin']}),member=c.data.id;
-
- await client.call('/topics/'+t.id+'/accept','POST',{expected_version:1,owner_id:member});
- assert.equal((await client.call('/members/'+member,'PATCH',{active:false,expected_version:1})).error.code,'SUCCESSOR_REQUIRED');
- const transferred=await client.call('/members/'+member,'PATCH',{active:false,expected_version:1,successor_id:actor.memberId});assert.equal(transferred.status,200);
- const detail=(await client.call('/topics/'+t.id)).data;assert.equal(detail.accepted_owner_id,actor.memberId);assert.equal(detail.decisions[0].owner_id,member);assert.equal((await env.db.query("SELECT count(*)::int n FROM notifications WHERE event_key LIKE 'topic.owner:%' AND recipient_id=$1",[actor.memberId])).rows[0].n,1);
- const other=await seed();const editor={...actor,memberId:member,roles:['editor'] as Actor['roles']};await assert.rejects(env.db.transaction(tx=>new Topics(env.db).reject(tx,editor,other.id,{reason:'不允许跨负责人处理',expected_version:1})),(e:any)=>e.code==='OWNER_FORBIDDEN');
+test('新采纳自动归属默认身份，历史负责人和决策不被重复请求覆盖',async()=>{
+ const old=await legacyMember(env.db,'legacy-owner@example.test'),t=await seed();
+ assert.equal((await client.call('/topics/'+t.id+'/accept','POST',{expected_version:1,owner_id:old.id})).status,422);
+ const accepted=await env.db.transaction(tx=>new Topics(env.db).accept(tx,{...actor,userId:old.user_id,memberId:old.id},t.id,{expected_version:1}));
+ const again=await client.call('/topics/'+t.id+'/accept','POST',{expected_version:1});assert.equal(again.status,200);assert.equal(again.data.decision_id,(accepted.data as any).decision_id);
+ const detail=(await client.call('/topics/'+t.id)).data;assert.equal(detail.accepted_owner_id,old.id);assert.equal(detail.decisions[0].owner_id,old.id);assert.equal(detail.owner_options,undefined);
 });

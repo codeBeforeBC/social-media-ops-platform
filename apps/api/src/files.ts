@@ -41,7 +41,7 @@ export class Files {
  async put(a:Actor,uploadId:string,n:number,body:Buffer){
   authorize(a,'import.edit');if(!Buffer.isBuffer(body))throw new AppError(422,'PART_INVALID','需要二进制分片');
   return this.db.transaction(async tx=>{
-   const {reloadActor}=await import('./auth');authorize(await reloadActor(tx,a),'import.edit');
+   const {reloadActor}=await import('../../../packages/domain/src/instance');authorize(await reloadActor(tx,a),'import.edit');
    const u=await this.scope(tx,a,uploadId,true);this.active(u);const p=u.parts[n];
    if(!p)throw new AppError(422,'PART_UNREGISTERED','请先登记分片校验值');
    const expected=Math.min(PART_SIZE,Number(u.size_bytes)-(n-1)*PART_SIZE);
@@ -97,8 +97,8 @@ export class Files {
   try{return {...await this.storage.signed(f.object_key,f.original_name,f.detected_mime,preview),file_id:fileId};}catch(e){storageError(e);}
  }
  async expire(){
-  const rows=await this.db.query("SELECT id,workspace_id FROM upload_sessions WHERE status IN ('created','uploading') AND purpose IN ('import_screenshot','import_table','source_evidence') AND expires_at<=now() LIMIT 20");
-  for(const row of rows.rows)await this.db.transaction(async tx=>{const r=await tx.query("SELECT * FROM upload_sessions WHERE id=$1 AND status IN ('created','uploading') AND expires_at<=now() FOR UPDATE",[row.id]);if(!r.rowCount)return;const u=r.rows[0];await this.storage.abort(u.object_key,u.storage_upload_id);await this.storage.remove(u.object_key);await tx.query("UPDATE upload_sessions SET status='expired',parts='{}',version=version+1 WHERE id=$1",[u.id]);});
+  const rows=await this.db.query("SELECT id,workspace_id FROM upload_sessions WHERE workspace_id=(SELECT default_workspace_id FROM instance_state WHERE id=1) AND status IN ('created','uploading') AND purpose IN ('import_screenshot','import_table','source_evidence') AND expires_at<=now() LIMIT 20");
+  for(const row of rows.rows)await this.db.transaction(async tx=>{const r=await tx.query("SELECT * FROM upload_sessions WHERE id=$1 AND workspace_id=(SELECT default_workspace_id FROM instance_state WHERE id=1) AND status IN ('created','uploading') AND expires_at<=now() FOR UPDATE",[row.id]);if(!r.rowCount)return;const u=r.rows[0];await this.storage.abort(u.object_key,u.storage_upload_id);await this.storage.remove(u.object_key);await tx.query("UPDATE upload_sessions SET status='expired',parts='{}',version=version+1 WHERE id=$1",[u.id]);});
  }
 }
 export function safeFile(f:Record<string,any>):Record<string,any>{const {object_key,...rest}=f;return {...rest,size_bytes:Number(f.size_bytes)};}

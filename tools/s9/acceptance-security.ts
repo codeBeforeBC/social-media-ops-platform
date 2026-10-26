@@ -4,7 +4,7 @@ import {readFileSync,writeFileSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {randomUUID,createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
-import {Client} from '../../tests/helpers';
+import {Client} from './legacy-client';
 import {reportTestConfig,reportTestResponse} from '../../tests/report-fixtures';
 const version=process.argv[2]??'0.1.0-s9rc15';assert.match(version,/^\d+\.\d+\.\d+-[a-z0-9.-]+$/);
 const project='yoyo-s9-clean-clone',dir=resolve('.local/s9-clean-clone/.local/clean-use'),base='https://localhost:3446',files=['compose.yaml','compose.release.yaml','compose.https.yaml','compose.release-https.yaml'];

@@ -16,7 +16,6 @@ export function databaseUrl(test=false):string {
 export const config={
   origin:process.env.APP_ORIGIN??'http://localhost:3000',port:Number(process.env.PORT??3000),
   stateDir,secure:process.env.NODE_ENV==='production',
-  absoluteSeconds:Number(process.env.SESSION_ABSOLUTE_SECONDS??43200),idleSeconds:Number(process.env.SESSION_IDLE_SECONDS??7200),
   leaseSeconds:Number(process.env.JOB_LEASE_SECONDS??30),heartbeatMs:Number(process.env.JOB_HEARTBEAT_MS??5000),
   pollMs:Number(process.env.JOB_POLL_MS??1000),workerPool:process.env.WORKER_POOL??'general'
 };

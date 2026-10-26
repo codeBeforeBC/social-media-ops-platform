@@ -1,0 +1,39 @@
+{"event":"http.request","request_id":"8393f03a-9239-4b10-a458-0edd88e5979b","method":"GET","path":"/api/v1/instance","status":200,"duration_ms":95}
+{"event":"http.request","request_id":"193d5dee-74c1-4943-b7b2-17141fca83ed","method":"GET","path":"/api/v1/instance","status":200,"duration_ms":3}
+✔ 无Cookie打开本地实例即有默认工作区，重开浏览器不会创建新用户或空间 (376.821ms)
+{"event":"http.request","request_id":"1ed4d1b2-f19d-42b2-94d6-5de8ff6208fe","method":"GET","path":"/api/v1/request/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"f0438cbc-b85b-4ffb-a8da-cd422150690c","method":"GET","path":"/api/v1/instance","status":200,"duration_ms":10}
+✖ 旧任务发起者失效时不会调用处理器或外部能力，也不偷偷改写发起者 (107.1375ms)
+{"event":"http.request","request_id":"18f86c2f-0d0a-41f1-a3a8-c4eb8e41ae6a","method":"POST","path":"/api/v1/accounts","status":403,"duration_ms":5}
+{"event":"http.request","request_id":"8cd3e4db-d2ad-48bd-95e9-ced08952098e","method":"GET","path":"/api/v1/request/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"fe57546f-3f57-4f17-bbc1-5ea9f59f62ef","method":"POST","path":"/api/v1/accounts","status":201,"duration_ms":5}
+{"event":"http.request","request_id":"21eb218e-da84-49a1-b7d3-c10a5d6685fb","method":"GET","path":"/api/v1/accounts","status":200,"duration_ms":1}
+✔ 无需登录取得请求令牌后可写业务，另一个浏览器读取同一实例内容 (82.35ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 2
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1207.581792
+
+✖ failing tests:
+
+test at tests/local-instance.test.ts:2:1909
+✖ 旧任务发起者失效时不会调用处理器或外部能力，也不偷偷改写发起者 (107.1375ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/local-instance.test.ts:26:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

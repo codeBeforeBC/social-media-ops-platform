@@ -22,25 +22,25 @@ import {resolve} from 'node:path';
 import {Database} from '../../../packages/db/src/db';
 import {AppError,id,parse,uuid,authorize,Permission} from '../../../packages/domain/src/protocol';
 import {config} from '../../../packages/domain/src/config';
-import {Auth,cookieName,resRequestId} from './auth';
+import {LocalAccess,localHost,validateLocalRuntime,resRequestId} from './access';
 import {Commands,safeJob,Result,audit} from './commands';
+import {ensureInstance,defaultActor} from '../../../packages/domain/src/instance';
 const DB='DATABASE';
 @Controller('api/v1')
 class ApiController {
-  private readonly auth:Auth;private readonly commands:Commands;private readonly files:Files;
-  constructor(@Inject(DB) readonly db:Database){this.auth=new Auth(db);this.commands=new Commands(db);this.files=new Files(db);}
+  private readonly access:LocalAccess;private readonly commands:Commands;private readonly files:Files;
+  constructor(@Inject(DB) readonly db:Database){this.access=new LocalAccess();this.commands=new Commands(db);this.files=new Files(db);}
   @All('{*path}')
   async route(@Req() req:Request,@Res() res:Response){
     const path=req.originalUrl.split('?')[0]!.replace(/^\/api\/v1/,'');const method=req.method;
     const send=(data:unknown,status=200)=>res.status(status).json({data,meta:{request_id:resRequestId(req),server_time:new Date().toISOString()}});
-    if(method==='GET'&&path==='/health'){await this.db.query('SELECT 1');return send({status:'ok'});}
-    if(method==='GET'&&path==='/setup/status'){const r=await this.db.query('SELECT initialized_at FROM instance_state WHERE id=1');return send({initialized:!!r.rows[0]?.initialized_at});}
-    if(method==='GET'&&path==='/auth/csrf')return send(await this.auth.csrf(req,res));
-    if(method==='POST'&&path==='/setup')return send(await this.auth.setup(req),201);
-    if(method==='POST'&&path==='/auth/login')return send(await this.auth.login(req,res));
-    if(method==='POST'&&path==='/auth/accept-invite')return send(await this.auth.acceptInvite(req));
-    const a=await this.auth.actor(req);authorize(a,'read');
-    if(method!=='GET'&&method!=='HEAD')await this.auth.checkCsrf(req);
+    if(method==='GET'&&path==='/instance'){const actor=await defaultActor(this.db,resRequestId(req));return send({mode:'local',workspace:await this.db.prisma.workspace.findUnique({where:{id:actor.workspaceId}})});}
+    if(method==='GET'&&path==='/health'){await defaultActor(this.db,resRequestId(req));return send({status:'ok'});}
+    if(/^\/(?:setup|auth|members)(?:\/|$)/.test(path)||path==='/me')throw new AppError(410,'IDENTITY_API_RETIRED','本地实例已取消登录和成员功能');
+    if(method==='GET'&&path==='/request/csrf')return send(this.access.csrf(req,res));
+    const a=await defaultActor(this.db,resRequestId(req));authorize(a,'read');
+    if(req.query.workspace_id!==undefined&&req.query.workspace_id!==a.workspaceId)throw new AppError(404,'NOT_FOUND','工作区不存在或不可见');
+    if(method!=='GET'&&method!=='HEAD')this.access.checkCsrf(req);
     const c=this.commands;
     const command=async(permission:Permission,fn:Parameters<Commands['command']>[6])=>{const r=await c.command(a,req.headers['idempotency-key'],method,path,req.body??{},permission,fn);return send(r.data,r.status);};
     const organizations=new SourceOrganizations(this.db);
@@ -93,21 +93,12 @@ class ApiController {
     if(path==='/uploads'&&method==='POST')return command('import.edit',(tx,actor)=>files.create(tx,actor,req.body));
     const upload=path.match(/^\/uploads\/([^/]+)(?:\/(parts|complete|abort)(?:\/(\d+))?)?$/);
     if(upload){const uid=upload[1]!;if(method==='GET'&&!upload[2])return send(await files.get(a,uid));if(method==='POST'&&upload[2]==='parts')return command('import.edit',(tx,actor)=>files.register(tx,actor,uid,req.body));if(method==='PUT'&&upload[2]==='parts'&&upload[3])return send(await files.put(a,uid,Number(upload[3]),req.body));if(method==='POST'&&upload[2]==='complete')return command('import.edit',(tx,actor)=>files.finish(tx,actor,uid,req.body));if(method==='POST'&&upload[2]==='abort')return command('import.edit',(tx,actor)=>files.abort(tx,actor,uid,req.body));}
-    if(method==='GET'&&(path==='/me'||path==='/auth/session'))return send(await this.auth.me(a));
-    if(method==='POST'&&path==='/auth/logout'){
-      const r=await c.command(a,req.headers['idempotency-key'],method,path,req.body??{},'read',async(tx,actor)=>{await tx.query('DELETE FROM sessions WHERE token_hash=$1',[a.sessionHash]);await audit(tx,actor,'auth.logout','membership',a.memberId);return {status:200,data:{success:true}};});
-      res.clearCookie(cookieName,{path:'/',httpOnly:true,sameSite:'lax',secure:config.secure});return send(r.data,r.status);
-    }
     if(method==='GET'&&path==='/accounts')return send(await c.accounts(a));
     if(method==='POST'&&path==='/accounts')return command('admin',(tx,actor)=>c.createAccount(tx,actor,req.body));
     const account=path.match(/^\/accounts\/([^/]+)$/);
     if(account){if(method==='GET')return send(await c.accountScope(this.db,a,account[1]!));if(method==='PATCH')return command('account.edit',(tx,actor)=>c.patchAccount(tx,actor,account[1]!,req.body));}
     if(method==='GET'&&path==='/settings')return send(await c.settings(a));
     if(method==='PATCH'&&path==='/settings')return command('admin',(tx,actor)=>c.patchSettings(tx,actor,req.body));
-    if(method==='GET'&&path==='/members')return send(await c.members(a,req.query));
-    if(method==='POST'&&path==='/members')return command('admin',(tx,actor)=>c.createMember(tx,actor,req.body));
-    const member=path.match(/^\/members\/([^/]+)$/);
-    if(member&&method==='PATCH')return command('admin',(tx,actor)=>c.patchMember(tx,actor,member[1]!,req.body));
     if(method==='GET'&&path==='/audit-logs')return send(await c.logs(a,req.query));
     if(method==='GET'&&path==='/notifications')return send(await c.notifications(a,req.query));
     const notification=path.match(/^\/notifications\/([^/]+)\/read$/);
@@ -139,10 +130,13 @@ class ApiErrors implements ExceptionFilter {
   }
 }
 export async function createApp(db=new Database()){
+  validateLocalRuntime();
+  await ensureInstance(db);
   @Module({controllers:[ApiController],providers:[{provide:DB,useValue:db}]})class ApiModule{}
   const app=await NestFactory.create<NestExpressApplication>(ApiModule,{logger:false});
   app.set('trust proxy',process.env.TRUST_PROXY==='1'?1:false);
   app.use((req:Request,res:Response,next:NextFunction)=>{(req as any).requestId=id();res.setHeader('X-Request-Id',resRequestId(req));res.setHeader('Cache-Control','no-store');const start=Date.now();res.on('finish',()=>console.log(JSON.stringify({event:'http.request',request_id:resRequestId(req),method:req.method,path:req.originalUrl.split('?')[0],status:res.statusCode,duration_ms:Date.now()-start})));next();});
+  app.use((req:Request,res:Response,next:NextFunction)=>{if(localHost(req.headers.host??''))return next();res.status(403).json({error:{code:'HOST_REJECTED',message:'仅支持本机访问地址',field_errors:{},retryable:false,request_id:resRequestId(req)}});});
   app.use(helmet({contentSecurityPolicy:{directives:{upgradeInsecureRequests:config.secure?[]:null,imgSrc:["'self'",'data:',new URL(process.env.S3_PUBLIC_ENDPOINT??process.env.S3_ENDPOINT??'http://127.0.0.1:59000').origin]}}}));
   app.use('/api/v1/uploads',raw({type:'application/octet-stream',limit:8388608}));
   app.use(cookieParser());app.useGlobalFilters(new ApiErrors());

@@ -12,7 +12,7 @@ export class Jobs {
   }
   async dispatch(){
     return this.db.transaction(async tx=>{
-      const rows=await tx.query("SELECT * FROM outbox WHERE dispatched_at IS NULL AND retired_at IS NULL AND yoyo_job_supported(event_type,COALESCE(payload->>'pool','general'),COALESCE(payload->'input','{}')) AND available_at<=now() ORDER BY available_at,id FOR UPDATE SKIP LOCKED LIMIT 50");
+      const rows=await tx.query("SELECT * FROM outbox WHERE workspace_id=(SELECT default_workspace_id FROM instance_state WHERE id=1) AND dispatched_at IS NULL AND retired_at IS NULL AND yoyo_job_supported(event_type,COALESCE(payload->>'pool','general'),COALESCE(payload->'input','{}')) AND available_at<=now() ORDER BY available_at,id FOR UPDATE SKIP LOCKED LIMIT 50");
       for(const event of rows.rows){
         const p=event.payload;
         await tx.query(`INSERT INTO jobs(workspace_id,account_id,created_by,outbox_id,type,pool,input,input_version,request_id,timeout_seconds) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,CASE WHEN $6='media' THEN 1800 ELSE 120 END) ON CONFLICT(outbox_id) DO NOTHING`,[event.workspace_id,event.account_id,p.created_by,event.id,event.event_type,p.pool??'general',JSON.stringify(p.input??{}),p.input_version??null,p.request_id]);
@@ -32,13 +32,14 @@ export class Jobs {
   async heartbeat(j:Job){const r=await this.db.query(`UPDATE jobs SET heartbeat_at=now(),lease_until=now()+$1::int*interval '1 second' WHERE yoyo_job_supported(type,pool,input) AND id=$2 AND state='running' AND lease_token=$3 AND lease_until>now() AND cancel_requested=false`,[config.leaseSeconds,j.id,j.lease_token]);return !!r.rowCount;}
   async complete(j:Job,result:unknown,effects?:(tx:Tx)=>Promise<void>,signal?:AbortSignal,state:'succeeded'|'partial'|'failed'='succeeded',guard?:(tx:Tx)=>Promise<string|null>){
     return this.db.transaction(async tx=>{
+      const validScope=await this.scopeValid(tx,j);
       // 锁定输入对象后锁任务，所有结果应用与取消复查在同一事务内。
       const workspace=await tx.query('SELECT version FROM workspaces WHERE id=$1 FOR SHARE',[j.workspace_id]);
       const row=await tx.query("SELECT * FROM jobs WHERE yoyo_job_supported(type,pool,input) AND id=$1 AND state='running' AND lease_token=$2 AND lease_until>now() AND cancel_requested=false FOR UPDATE",[j.id,j.lease_token]);
       if(!row.rowCount)return false;
       if(j.input_version!==null&&workspace.rows[0].version!==j.input_version){await tx.query("UPDATE jobs SET state='failed',error_code='STALE_INPUT',finished_at=now(),lease_token=NULL,lease_until=NULL,version=version+1 WHERE id=$1",[j.id]);await this.event(tx,j,'job.failed',{error_code:'STALE_INPUT'});return false;}
       if(signal?.aborted)throw new Error('JOB_TIMEOUT');
-      const guardError=await guard?.(tx);
+      const guardError=!validScope?'JOB_SCOPE_CHANGED':await guard?.(tx);
       if(guardError){await tx.query("UPDATE jobs SET state='failed',error_code=$2,finished_at=now(),lease_token=NULL,lease_until=NULL,version=version+1 WHERE id=$1",[j.id,guardError]);await this.event(tx,j,'job.failed',{error_code:guardError});return false;}
       if(effects)await effects(tx);
       if(signal?.aborted)throw new Error('JOB_TIMEOUT');
@@ -55,7 +56,13 @@ export class Jobs {
     });
   }
   async event(tx:Tx,j:Job,action:string,details:unknown={}){await tx.query(`INSERT INTO audit_logs(workspace_id,actor_type,action,object_type,object_id,details,request_id) VALUES($1,'service',$2,'job',$3,$4,$5)`,[j.workspace_id,action,j.id,JSON.stringify(details),j.request_id]);}
+  private async scopeValid(q:Pick<Database,'query'>|Tx,j:Job){
+    const allowed=j.type==='ai.generate'?['admin','operator','editor']:['admin','operator'];
+    return !!(await q.query('SELECT 1 FROM memberships m JOIN instance_state s ON s.default_workspace_id=m.workspace_id WHERE s.id=1 AND m.workspace_id=$1 AND m.id=$2 AND m.active AND m.roles && $3::text[] FOR SHARE OF m,s',[j.workspace_id,j.created_by,allowed])).rowCount;
+  }
   async process(j:Job){
+    if(!await this.scopeValid(this.db,j)){await this.complete(j,{error_code:'JOB_SCOPE_CHANGED'},undefined,undefined,'failed',async()=>null);return;}
+
     let lost=false;const controller=new AbortController();
     const timer=setInterval(()=>{void this.heartbeat(j).then(ok=>{if(!ok){lost=true;controller.abort();}}).catch(()=>{lost=true;controller.abort();});},config.heartbeatMs);
     const timeout=setTimeout(()=>controller.abort(),j.timeout_seconds*1000);

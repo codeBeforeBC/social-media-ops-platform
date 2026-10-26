@@ -45,7 +45,18 @@ if [ -n "$proxy" ]; then
   docker run --rm --network none --read-only --user 0:0 --cap-drop ALL --cap-add DAC_OVERRIDE --security-opt no-new-privileges -v "$volume:/snapshot:ro" "$app" tar -C /snapshot -cf - . > "$dest/proxy-data.tar"
 fi
 printf '%s\n' "$project" > "$dest/project.txt"
-compose images --format json > "$dest/images.json"
+# A running container may outlive its image manifest after a floating tag rebuild.
+# Keep actual container/image references without requiring every old image to be inspectable.
+printf '[' > "$dest/images.json"
+separator=''
+containers=$(compose ps -aq)
+[ -n "$containers" ] || { echo 'Backup container inventory is empty' >&2; exit 1; }
+for container in $containers; do
+  printf '%s' "$separator" >> "$dest/images.json"
+  docker inspect --format '{"Container":{{json .Name}},"Image":{{json .Config.Image}},"ImageID":{{json .Image}}}' "$container" >> "$dest/images.json"
+  separator=','
+done
+printf ']\n' >> "$dest/images.json"
 (cd "$dest"; if command -v sha256sum >/dev/null 2>&1; then sha256sum database.dump state.tar objects.tar project.txt images.json > SHA256SUMS; else shasum -a 256 database.dump state.tar objects.tar project.txt images.json > SHA256SUMS; fi)
 if [ -f "$dest/proxy-data.tar" ]; then
   (cd "$dest"; if command -v sha256sum >/dev/null 2>&1; then sha256sum proxy-data.tar; else shasum -a 256 proxy-data.tar; fi) >> "$dest/SHA256SUMS"

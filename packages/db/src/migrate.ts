@@ -2,6 +2,7 @@ import {readdirSync,readFileSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {createHash} from 'node:crypto';
 import {Database} from './db';
+import {ensureInstance,preflightInstance} from '../../domain/src/instance';
 export async function migrate(db:Database){
   const client=await db.pool.connect();
   try{
@@ -11,10 +12,12 @@ export async function migrate(db:Database){
       const sql=readFileSync(resolve('packages/db/migrations',name),'utf8');const hash=createHash('sha256').update(sql).digest('hex');
       const old=await client.query('SELECT checksum FROM schema_migrations WHERE name=$1',[name]);
       if(old.rowCount){if(old.rows[0].checksum!==hash)throw new Error(`Applied migration changed: ${name}`);continue;}
+      if(name==='039-local-instance.sql')await preflightInstance(client);
       await client.query('BEGIN');
       try{await client.query(sql);await client.query('INSERT INTO schema_migrations(name,checksum) VALUES($1,$2)',[name,hash]);await client.query('COMMIT');console.log(`Applied ${name}`);}
       catch(e){await client.query('ROLLBACK');throw e;}
     }
+    await ensureInstance(db);
   }finally{await client.query('SELECT pg_advisory_unlock(731091)');client.release();}
 }
-if(require.main===module){const db=new Database();migrate(db).finally(()=>db.close()).catch(()=>{console.error('Migration failed; inspect migration/schema compatibility.');process.exitCode=1;});}
+if(require.main===module){const db=new Database();migrate(db).finally(()=>db.close()).catch(e=>{console.error('Migration failed; inspect schema or default-context selection.',typeof e.code==='string'?e.code:'MIGRATION_FAILED');process.exitCode=1;});}

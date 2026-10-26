@@ -63,11 +63,11 @@ services:
       S3_PUBLIC_ENDPOINT: ${S3_PUBLIC_ENDPOINT:-http://localhost:59000}
       SOURCE_BRIDGE_URL: ${SOURCE_BRIDGE_URL:-}
       SOURCE_BRIDGE_TOKEN: ${SOURCE_BRIDGE_TOKEN:-}
+      YOYO_DEFAULT_WORKSPACE_ID: ${YOYO_DEFAULT_WORKSPACE_ID:-}
+      YOYO_DEFAULT_MEMBER_ID: ${YOYO_DEFAULT_MEMBER_ID:-}
       API_HOST: 0.0.0.0
       APP_ORIGIN: ${APP_ORIGIN:-http://localhost:3000}
       NODE_ENV: ${NODE_ENV:-development}
-      SESSION_ABSOLUTE_SECONDS: ${SESSION_ABSOLUTE_SECONDS:-43200}
-      SESSION_IDLE_SECONDS: ${SESSION_IDLE_SECONDS:-7200}
     volumes: &volumes
       - state:/state
     command: ['sh', '-c', 'node dist/packages/db/src/migrate.js && node dist/tools/storage-init.js']
