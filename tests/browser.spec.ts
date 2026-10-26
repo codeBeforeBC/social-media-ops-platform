@@ -20,12 +20,27 @@ test('服务错误可重试，请求凭据失效不返回登录页面',async({pa
 test('来源连接保存、独立待验证状态、启用和同源运行记录',async({page})=>{
  await page.goto('/');await page.getByRole('link',{name:'选题策划'}).click();await expect(page.getByRole('heading',{name:'还没有来源连接'})).toBeVisible();
  await page.getByRole('button',{name:'添加来源',exact:true}).click();await page.getByLabel('来源名称').fill('浏览器采集连接');await page.getByRole('button',{name:'保存连接'}).click();const row=page.getByRole('row').filter({hasText:'浏览器采集连接'});await expect(row).toContainText('待验证');await expect(row.getByRole('button',{name:'立即采集'})).toBeEnabled();await expect(row).toContainText('定时已关闭');
- await row.getByRole('button',{name:'立即采集'}).click();await expect(page.getByRole('status')).toContainText('已排队');await row.getByRole('button',{name:'立即采集'}).click();await expect(page.getByRole('status')).toContainText('现有采集任务');
- await row.getByRole('button',{name:'运行记录'}).click();const dialog=page.getByRole('dialog');await expect(dialog).toContainText('等待执行');await expect(dialog.getByText('等待处理',{exact:true})).toBeVisible();await page.keyboard.press('Escape');await expect(dialog).toHaveCount(0);
+ await row.getByRole('button',{name:'立即采集'}).click();await expect(page.getByRole('status')).toContainText('采集请求已提交');await expect(page.getByRole('dialog')).toBeVisible();await page.keyboard.press('Escape');await row.getByRole('button',{name:'立即采集'}).click();await expect(page.getByRole('status')).toContainText('现有采集任务');await page.keyboard.press('Escape');
+ await row.getByRole('button',{name:'运行记录'}).click();const dialog=page.getByRole('dialog');await expect(dialog).toContainText('等待后台进程领取');await expect(dialog.getByText('等待处理',{exact:true})).toBeVisible();await page.keyboard.press('Escape');await expect(dialog).toHaveCount(0);
  await page.getByRole('button',{name:'添加来源',exact:true}).click();await page.getByLabel('来源名称').fill('参考账号配置');await page.getByLabel('来源类型').selectOption('xhs_quality_note');await page.getByLabel('浏览器档案 ID（小红书）').fill('controlled-profile');await page.getByLabel('参考账号 ID（仅优质笔记，最多2个，逗号分隔）').fill('abcdefabcdefabcdefabcdef');await page.getByRole('button',{name:'保存连接'}).click();await expect(page.getByRole('row').filter({hasText:'参考账号配置'})).toContainText('待验证');
  mkdirSync((process.env.EVIDENCE_DIR??'docs/evidence/s11')+'/screenshots',{recursive:true});await page.screenshot({path:(process.env.EVIDENCE_DIR??'docs/evidence/s11')+'/screenshots/collection-runtime.png',fullPage:true});
 });
 
+
+test('采集自动展示排队/采集中/完成，刷新保留摘要，状态读取失败可恢复并显示失败原因',async({page})=>{
+ await page.goto('/');await page.getByRole('link',{name:'选题策划',exact:true}).click();await page.getByRole('button',{name:'添加来源',exact:true}).click();await page.getByLabel('来源名称').fill('进度回归来源');
+ const created=page.waitForResponse(r=>r.url().endsWith('/api/v1/source-connections')&&r.request().method()==='POST');await page.getByRole('button',{name:'保存连接'}).click();const c=(await(await created).json()).data;
+ let run:any=null,failPoll=false,polls=0,feedReads=0,lastSuccess:string|null=null;page.on('request',r=>{if(r.url().includes('/api/v1/source-items?'))feedReads++;});const now=()=>new Date().toISOString();
+ await page.route(`**/api/v1/source-connections/${c.id}/refresh`,route=>{run={id:crypto.randomUUID(),workspace_id:c.workspace_id,connection_id:c.id,connection_version:c.version,state:'queued',trigger:'manual',created_at:now(),started_at:null,finished_at:null,item_count:0,error_code:null,warnings:[],coverage:{},job_id:null};return route.fulfill({status:202,json:{data:{run,reused:false}}});});
+ await page.route(`**/api/v1/source-connections/${c.id}/runs`,route=>{polls++;return failPoll?route.fulfill({status:503,json:{error:{code:'SERVICE_UNAVAILABLE',message:'进度暂不可用'}}}):route.fulfill({json:{data:{items:run?[run]:[]}}});});
+ await page.route('**/api/v1/source-connections',async route=>{if(route.request().method()!=='GET')return route.continue();const response=await route.fetch(),j=await response.json();j.data.items=j.data.items.map((x:any)=>x.id===c.id?{...x,latest_run:run,last_success_at:lastSuccess??x.last_success_at}:x);await route.fulfill({response,json:j});});
+ const row=page.getByRole('row').filter({hasText:'进度回归来源'});await row.getByRole('button',{name:'立即采集',exact:true}).click();const dialog=page.getByRole('dialog',{name:'进度回归来源 · 运行记录'});
+ await expect(dialog).toBeVisible();await expect(dialog).toContainText('等待后台进程领取');await expect(dialog).toContainText('提交时间');await expect(dialog).toContainText('排队用时');
+ run={...run,state:'running',started_at:now()};await expect(dialog).toContainText('正在采集');await expect(dialog).toContainText('开始时间');
+ const beforeFeed=feedReads;run={...run,state:'succeeded',item_count:50,finished_at:now()};lastSuccess=run.finished_at;await expect(dialog).toContainText('采集50条');await expect.poll(()=>feedReads).toBeGreaterThan(beforeFeed);await expect(dialog).toContainText('完成时间');const after=polls;await page.waitForTimeout(2200);expect(polls).toBe(after);
+ await page.keyboard.press('Escape');await page.reload();await expect(row).toContainText('采集50条');
+ failPoll=true;await row.getByRole('button',{name:'立即采集',exact:true}).click();await expect(dialog.getByRole('alert')).toContainText('进度暂不可用');failPoll=false;run={...run,state:'failed',error_code:'AUTH_REQUIRED',started_at:now(),finished_at:now()};await expect(dialog).toContainText('采集失败');await expect(dialog).toContainText('AUTH_REQUIRED');await page.keyboard.press('Escape');
+});
 
 test('定时关闭仍可手动采集，暂停独立禁用并显示恢复提示',async({page})=>{
  let paused=false;await page.route('**/api/v1/source-connections',async route=>{const response=await route.fetch();const json=await response.json();json.data.items=json.data.items.slice(0,1).map((c:any)=>({...c,health:'healthy',enabled:paused,paused,error_code:null}));await route.fulfill({response,json});});

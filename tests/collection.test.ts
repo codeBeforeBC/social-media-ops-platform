@@ -97,3 +97,16 @@ test('参考账号配置只用于优质笔记，严格ID与数量检查，历史
  assert.equal((await client.call('/source-connections','POST',{...common,source_type:'xhs_topic_signal',config:{reference_accounts:[account]}})).status,422);
  const weibo=await create();assert.equal((await client.call(`/source-connections/${weibo.id}`,'PATCH',{expected_version:1,config:{reference_accounts:[account]}})).status,422);
 });
+
+test('来源列表提供最新采集摘要，从排队到运行再到成功/失败，历史大字段不进入列表',async()=>{
+ const c=await create({enabled:false});const latest=async()=>(await client.call('/source-connections')).data.items.find((x:any)=>x.id===c.id).latest_run;
+ assert.equal(await latest(),null);
+ const request=await client.call(`/source-connections/${c.id}/refresh`,'POST');assert.equal(request.status,202);
+ let summary=await latest();assert.equal(summary.id,request.data.run.id);assert.equal(summary.state,'queued');assert.ok(summary.created_at);assert.equal(summary.started_at,null);
+ const collection=new Collection(env.db,{weibo_hot:success}),jobs=new Jobs(env.db,{'source.collect':collection.handler});await jobs.dispatch();const job=(await jobs.claim('general'))!,handled=await collection.handler(job,new AbortController().signal);
+ summary=await latest();assert.equal(summary.state,'running');assert.ok(summary.started_at);
+ await jobs.complete(job,handled.result,handled.effects,undefined,handled.completionState,handled.guard);
+ summary=await latest();assert.equal(summary.state,'succeeded');assert.ok(summary.finished_at);assert.ok(!('coverage' in summary)&&!('warnings' in summary));
+ await env.db.query('UPDATE source_connections SET last_attempt_at=NULL WHERE id=$1',[c.id]);const failed=await client.call(`/source-connections/${c.id}/refresh`,'POST');await process(async()=>{throw new SourceFailure('AUTH_REQUIRED');});
+ summary=await latest();assert.equal(summary.id,failed.data.run.id);assert.equal(summary.state,'failed');assert.equal(summary.error_code,'AUTH_REQUIRED');assert.ok(summary.finished_at);
+});

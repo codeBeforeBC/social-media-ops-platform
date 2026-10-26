@@ -3639,6 +3639,71 @@
       ],
       "additionalProperties": false
     },
+    "CollectionRunSummary": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "state": {
+          "$ref": "#/$defs/JobStatus"
+        },
+        "trigger": {
+          "enum": [
+            "manual",
+            "scheduled",
+            "verify"
+          ]
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "started_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "finished_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "item_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "error_code": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "state",
+        "trigger",
+        "created_at",
+        "started_at",
+        "finished_at",
+        "item_count",
+        "error_code"
+      ],
+      "additionalProperties": false
+    },
     "CollectionConnection": {
       "allOf": [
         {
@@ -3675,6 +3740,16 @@
             },
             "config": {
               "$ref": "#/$defs/CollectionSettings"
+            },
+            "latest_run": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/CollectionRunSummary"
+                },
+                {
+                  "type": "null"
+                }
+              ]
             },
             "platform": {
               "enum": [

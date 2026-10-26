@@ -21,7 +21,7 @@ export class Collection {
   const r=await query.query(`SELECT * FROM source_connections WHERE workspace_id=$1 AND id=$2 ${lock?'FOR UPDATE':''}`,[a.workspaceId,parse(uuid,cid)]);
   if(!r.rowCount)throw new AppError(404,'NOT_FOUND','来源连接不存在或不可见');return r.rows[0];
  }
- async list(a:Actor){return {items:(await this.db.query('SELECT * FROM source_connections WHERE workspace_id=$1 ORDER BY created_at,id',[a.workspaceId])).rows,next_cursor:null};}
+ async list(a:Actor){return {items:(await this.db.query(`SELECT c.*,(SELECT jsonb_build_object('id',r.id,'state',r.state,'trigger',r.trigger,'created_at',r.created_at,'started_at',r.started_at,'finished_at',r.finished_at,'item_count',r.item_count,'error_code',r.error_code) FROM collection_runs r WHERE r.workspace_id=c.workspace_id AND r.connection_id=c.id ORDER BY r.created_at DESC,r.id DESC LIMIT 1) latest_run FROM source_connections c WHERE c.workspace_id=$1 ORDER BY c.created_at,c.id`,[a.workspaceId])).rows,next_cursor:null};}
  async create(tx:Tx,a:Actor,input:unknown){
   const b=parse(z.object({...editable,platform:z.enum(['weibo','xiaohongshu']),source_type:z.enum(['weibo_hot','xhs_topic_signal','xhs_quality_note']),provider:z.enum(['weibo_web','opencli'])}).strict(),input);
   if((b.platform==='weibo')!==(b.source_type==='weibo_hot')||(b.platform==='weibo')!==(b.provider==='weibo_web'))throw new AppError(422,'SOURCE_TYPE_INVALID','来源类型与提供方不匹配');

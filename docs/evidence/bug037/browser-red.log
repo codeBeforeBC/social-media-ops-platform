@@ -1,0 +1,57 @@
+[2m[WebServer] [22m(node:81734) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:81735) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:81741) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:81741) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:81764) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:81764) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 tests/browser.spec.ts:30:5 › 采集自动展示排队/采集中/完成，刷新保留摘要，状态读取失败可恢复并显示失败原因 (5.8s)
+
+
+  1) tests/browser.spec.ts:30:5 › 采集自动展示排队/采集中/完成，刷新保留摘要，状态读取失败可恢复并显示失败原因 ──────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('dialog', { name: '进度回归来源 · 运行记录' })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for getByRole('dialog', { name: '进度回归来源 · 运行记录' })[22m
+
+
+      36 |  await page.route('**/api/v1/source-connections',async route=>{if(route.request().method()!=='GET')return route.continue();const response=await route.fetch(),j=await response.json();j.data.items=j.data.items.map((x:any)=>x.id===c.id?{...x,latest_run:run}:x);await route.fulfill({response,json:j});});
+      37 |  const row=page.getByRole('row').filter({hasText:'进度回归来源'});await row.getByRole('button',{name:'立即采集',exact:true}).click();const dialog=page.getByRole('dialog',{name:'进度回归来源 · 运行记录'});
+    > 38 |  await expect(dialog).toBeVisible();await expect(dialog).toContainText('等待后台进程领取');await expect(dialog).toContainText('提交时间');
+         |                       ^
+      39 |  run={...run,state:'running',started_at:now()};await expect(dialog).toContainText('正在采集');await expect(dialog).toContainText('开始时间');
+      40 |  run={...run,state:'succeeded',item_count:50,finished_at:now()};await expect(dialog).toContainText('采集50条');await expect(dialog).toContainText('完成时间');const after=polls;await page.waitForTimeout(2200);expect(polls).toBe(after);
+      41 |  await page.keyboard.press('Escape');await page.reload();await expect(row).toContainText('采集50条');
+        at /Users/junlong/projects/social-mdeida-ops-platform/tests/browser.spec.ts:38:23
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser-采集自动展示排队-采集中-完成，刷新保留摘要，状态读取失败可恢复并显示失败原因/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/browser-采集自动展示排队-采集中-完成，刷新保留摘要，状态读取失败可恢复并显示失败原因/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/browser-采集自动展示排队-采集中-完成，刷新保留摘要，状态读取失败可恢复并显示失败原因/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/browser-采集自动展示排队-采集中-完成，刷新保留摘要，状态读取失败可恢复并显示失败原因/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/browser.spec.ts:30:5 › 采集自动展示排队/采集中/完成，刷新保留摘要，状态读取失败可恢复并显示失败原因 ───────────────────────────
