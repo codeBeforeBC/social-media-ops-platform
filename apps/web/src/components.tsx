@@ -7,8 +7,8 @@ export function Loading(){return <p role="status" className="loading">正在加�
 export function ErrorState({error,retry}:{error:Error|null;retry?:()=>void}){if(!error)return null;return <div role="alert" className="error"><strong>{error.message}</strong>{'requestId'in error&&<small>请求编号：{String(error.requestId)}</small>}{retry&&<button onClick={retry}>重试</button>}</div>;}
 const labels:Record<string,string>={queued:'等待处理',running:'处理中',succeeded:'已完成',partial:'部分完成',failed:'失败',cancelled:'已取消'};
 export function JobStatus({state}:{state:string}){return <span className={'badge '+state}>{labels[state]??state}</span>;}
-export function Drawer({title,onClose,children}:{title:string;onClose:()=>void;children:React.ReactNode}){
+export function Drawer({title,onClose,children,className='',closeDisabled=false}:{title:string;onClose:()=>void;children:React.ReactNode;className?:string;closeDisabled?:boolean}){
   const ref=useRef<HTMLDialogElement>(null);
   useEffect(()=>{const prior=document.activeElement as HTMLElement|null;ref.current?.showModal();return ()=>{prior?.focus();};},[]);
-  return <dialog ref={ref} aria-label={title} className="drawer" onCancel={e=>{e.preventDefault();onClose();}} onClick={e=>{if(e.target===ref.current)onClose();}}><div className="drawer-heading"><h2>{title}</h2><button aria-label="关闭详情" onClick={onClose}>关闭</button></div>{children}</dialog>;
+  return <dialog ref={ref} aria-label={title} className={'drawer '+className} onCancel={e=>{e.preventDefault();if(!closeDisabled)onClose();}} onClick={e=>{if(e.target===ref.current&&!closeDisabled)onClose();}}><div className="drawer-heading"><h2>{title}</h2><button aria-label="关闭详情" disabled={closeDisabled} onClick={onClose}>关闭</button></div>{children}</dialog>;
 }

@@ -1,4 +1,4 @@
-import {test,expect} from '@playwright/test';
+import {test,expect,type Page} from '@playwright/test';
 import {execFileSync} from 'node:child_process';
 import {mkdirSync} from 'node:fs';
 test('免登录打开工作台、清除Cookie后直接回到同一工作区，无用户与成员入口',async({page})=>{
@@ -30,14 +30,14 @@ test('来源连接保存、独立待验证状态、启用和同源运行记录',
 test('采集自动展示排队/采集中/完成，刷新保留摘要，状态读取失败可恢复并显示失败原因',async({page})=>{
  await page.goto('/');await page.getByRole('link',{name:'选题策划',exact:true}).click();await page.getByRole('button',{name:'添加来源',exact:true}).click();await page.getByLabel('来源名称').fill('进度回归来源');
  const created=page.waitForResponse(r=>r.url().endsWith('/api/v1/source-connections')&&r.request().method()==='POST');await page.getByRole('button',{name:'保存连接'}).click();const c=(await(await created).json()).data;
- let run:any=null,failPoll=false,polls=0,feedReads=0,lastSuccess:string|null=null;page.on('request',r=>{if(r.url().includes('/api/v1/source-items?'))feedReads++;});const now=()=>new Date().toISOString();
+ let run:any=null,older:any[]=[],failPoll=false,polls=0,feedReads=0,lastSuccess:string|null=null;page.on('request',r=>{if(r.url().includes('/api/v1/source-items?'))feedReads++;});const now=()=>new Date().toISOString();
  await page.route(`**/api/v1/source-connections/${c.id}/refresh`,route=>{run={id:crypto.randomUUID(),workspace_id:c.workspace_id,connection_id:c.id,connection_version:c.version,state:'queued',trigger:'manual',created_at:now(),started_at:null,finished_at:null,item_count:0,error_code:null,warnings:[],coverage:{},job_id:null};return route.fulfill({status:202,json:{data:{run,reused:false}}});});
- await page.route(`**/api/v1/source-connections/${c.id}/runs`,route=>{polls++;return failPoll?route.fulfill({status:503,json:{error:{code:'SERVICE_UNAVAILABLE',message:'进度暂不可用'}}}):route.fulfill({json:{data:{items:run?[run]:[]}}});});
+ await page.route(`**/api/v1/source-connections/${c.id}/runs`,route=>{polls++;return failPoll?route.fulfill({status:503,json:{error:{code:'SERVICE_UNAVAILABLE',message:'进度暂不可用'}}}):route.fulfill({json:{data:{items:run?[run,...older]:[]}}});});
  await page.route('**/api/v1/source-connections',async route=>{if(route.request().method()!=='GET')return route.continue();const response=await route.fetch(),j=await response.json();j.data.items=j.data.items.map((x:any)=>x.id===c.id?{...x,latest_run:run,last_success_at:lastSuccess??x.last_success_at}:x);await route.fulfill({response,json:j});});
  const row=page.getByRole('row').filter({hasText:'进度回归来源'});await row.getByRole('button',{name:'立即采集',exact:true}).click();const dialog=page.getByRole('dialog',{name:'进度回归来源 · 运行记录'});
- await expect(dialog).toBeVisible();await expect(dialog).toContainText('等待后台进程领取');await expect(dialog).toContainText('提交时间');await expect(dialog).toContainText('排队用时');
+ await expect(dialog).toBeVisible();const table=dialog.getByRole('table',{name:'来源运行记录'});await expect(table).toBeVisible();await expect(table.getByRole('columnheader')).toHaveText(['状态','触发方式','提交时间','开始时间','完成时间','排队用时','采集耗时','结果与说明']);await expect(dialog).toContainText('等待后台进程领取');await expect(dialog).toContainText('提交时间');await expect(dialog).toContainText('排队用时');
  run={...run,state:'running',started_at:now()};await expect(dialog).toContainText('正在采集');await expect(dialog).toContainText('开始时间');
- const beforeFeed=feedReads;run={...run,state:'succeeded',item_count:50,finished_at:now()};lastSuccess=run.finished_at;await expect(dialog).toContainText('采集50条');await expect.poll(()=>feedReads).toBeGreaterThan(beforeFeed);await expect(dialog).toContainText('完成时间');const after=polls;await page.waitForTimeout(2200);expect(polls).toBe(after);
+ const beforeFeed=feedReads;run={...run,state:'succeeded',item_count:50,finished_at:now()};older=[{...run,id:crypto.randomUUID(),state:'partial',trigger:'scheduled',item_count:3,adapter_version:'controlled-v1',warnings:['合成详情读取失败提示']},{...run,id:crypto.randomUUID(),state:'cancelled',trigger:'verify',started_at:null,error_code:'INPUT_CHANGED'}];lastSuccess=run.finished_at;await expect(dialog).toContainText('采集50条');await expect(table.getByRole('row')).toHaveCount(4);await expect(table).toContainText('部分完成，共采集3条');await expect(table).toContainText('controlled-v1');await expect(table).toContainText('合成详情读取失败提示');await expect(table).toContainText('INPUT_CHANGED');await expect(table.getByRole('cell',{name:'定时',exact:true})).toBeVisible();await expect(table.getByRole('cell',{name:'验证',exact:true})).toBeVisible();await expect.poll(()=>feedReads).toBeGreaterThan(beforeFeed);await expect(dialog).toContainText('完成时间');const after=polls;await page.waitForTimeout(2200);expect(polls).toBe(after);for(const width of [1440,390]){await page.setViewportSize({width,height:1000});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);const scroll=dialog.getByRole('region',{name:'运行记录表格，可横向滚动'});await scroll.focus();if(width===390){expect(await scroll.evaluate(e=>e.scrollWidth>e.clientWidth)).toBe(true);await page.keyboard.press('End');}await page.screenshot({path:`${process.env.EVIDENCE_DIR??'docs/evidence/s8'}/screenshots/collection-runs-${width}.png`,fullPage:true});}await page.setViewportSize({width:1440,height:1000});
  await page.keyboard.press('Escape');await page.reload();await expect(row).toContainText('采集50条');
  failPoll=true;await row.getByRole('button',{name:'立即采集',exact:true}).click();await expect(dialog.getByRole('alert')).toContainText('进度暂不可用');failPoll=false;run={...run,state:'failed',error_code:'AUTH_REQUIRED',started_at:now(),finished_at:now()};await expect(dialog).toContainText('采集失败');await expect(dialog).toContainText('AUTH_REQUIRED');await page.keyboard.press('Escape');
 });
@@ -51,22 +51,110 @@ test('定时关闭仍可手动采集，暂停独立禁用并显示恢复提示',
  paused=true;await page.getByRole('button',{name:'刷新状态',exact:true}).click();await expect(collect).toBeDisabled();await expect(collect).not.toHaveCSS('cursor','wait');await expect(collect).toHaveAccessibleDescription(/已暂停.*验证恢复/);await expect(row.getByRole('button',{name:'验证恢复',exact:true})).toBeEnabled();
 });
 
-test('来源证据详情保留原始观察、采集时间和缺失发布时间',async({page})=>{
+test('来源证据详情保留原始观察与采集时间，微博不显示发布时间',async({page})=>{
  execFileSync('pnpm',['exec','tsx','tools/s3-browser-seed.ts'],{stdio:'pipe',env:process.env});
- await page.goto('/');await page.getByRole('link',{name:'选题策划'}).click();await expect(page.getByRole('heading',{name:'明确合成的浏览器证据线索'})).toBeVisible();await page.getByRole('button',{name:'查看来源与观察记录'}).click();const dialog=page.getByRole('dialog');await expect(dialog).toContainText('未提供，不以采集时间代替');await expect(dialog.getByRole('heading',{name:'观察记录'})).toBeVisible();await expect(dialog).toContainText('heat：123');await expect(dialog.getByRole('link',{name:'打开原始来源'})).toHaveAttribute('href','https://s.weibo.com/weibo?q=controlled');await page.keyboard.press('Escape');
+ await page.goto('/');await page.getByRole('link',{name:'选题策划'}).click();await expect(page.getByRole('heading',{name:'明确合成的浏览器证据线索'})).toBeVisible();await page.getByRole('button',{name:'明确合成的浏览器证据线索',exact:true}).click();const dialog=page.getByRole('dialog');await expect(dialog.getByText('发布时间',{exact:true})).toHaveCount(0);await expect(dialog).toContainText('采集时间');await expect(dialog).toContainText('这是页面验收夹具，不是真实平台采集。');await expect(dialog.getByRole('heading',{name:'观察记录'})).toBeVisible();await expect(dialog).toContainText('heat：123');await expect(dialog.getByRole('link',{name:'打开原始来源'})).toHaveAttribute('href','https://s.weibo.com/weibo?q=controlled');await page.keyboard.press('Escape');
  await page.getByPlaceholder('标题、摘要或采集关键词').fill('无匹配测试');await page.getByRole('button',{name:'筛选',exact:true}).click();await expect(page.getByRole('heading',{name:'暂无匹配线索'})).toBeVisible();
+});
+
+test('微博卡片只显示标题且隐藏发布时间，小红书摘要与日期保留，详情入口可用',async({page})=>{
+ const base={summary:'',captured_at:'2026-10-27T00:00:00Z',published_at:null,connection_name:'合成来源',connection_health:'healthy',cluster_size:1,expired:false,media_type:'unknown',visible_counts:{}};
+ const items=[{...base,id:'controlled-weibo',title:'合成热搜标题',source_type:'weibo_hot',actual_source_type:'official_rank',canonical_url:'https://s.weibo.com/weibo?q=controlled'},{...base,id:'controlled-xhs',title:'合成小红书标题',source_type:'xhs_topic_signal',actual_source_type:'search',canonical_url:'https://www.xiaohongshu.com/explore/controlled'},{...base,id:'controlled-summary',title:'合成已有摘要',source_type:'xhs_quality_note',actual_source_type:'account_feed',published_at:'2026-10-26T00:00:00Z',summary:'这是真实显示分支的合成摘要',canonical_url:'https://www.xiaohongshu.com/explore/summary'}];
+ await page.route('**/api/v1/source-items?*',route=>route.fulfill({json:{data:{items,next_cursor:null}}}));
+ for(const item of items)await page.route(`**/api/v1/source-items/${item.id}`,route=>route.fulfill({json:{data:{...item,observations:[{id:'observation',captured_at:item.captured_at,payload:item}]}}}));
+ await page.goto('/');await page.getByRole('link',{name:'选题策划',exact:true}).click();
+ const messages=['已采集热搜标题与热度，当前来源不提供正文。','已保存来源标题，本次未获取正文或摘要，可打开原始来源查看。','这是真实显示分支的合成摘要'];
+ for(const [i,item] of items.entries()){
+  const card=page.locator('.source-card').filter({hasText:item.title});await expect(card).toContainText('采集：');await expect(card.getByRole('button',{name:item.title,exact:true})).toBeVisible();
+  if(i===0){await expect(card).not.toContainText(messages[i]!);await expect(card).not.toContainText('发布：');await expect(card.locator('p:not(.muted)')).toHaveCount(0);}else{await expect(card).toContainText(messages[i]!);await expect(card).toContainText(i===1?'发布：未提供':'发布：2026/10/26');}
+  await expect(card.getByRole('button')).toHaveCount(1);await expect(card.getByRole('button',{name:'详情',exact:true})).toHaveCount(0);await card.getByRole('button',{name:item.title,exact:true}).focus();await page.keyboard.press('Enter');const dialog=page.getByRole('dialog',{name:'来源证据'});
+  if(i===0){await expect(dialog).not.toContainText(messages[i]!);await expect(dialog.getByText('发布时间',{exact:true})).toHaveCount(0);await expect(dialog.getByText('原始日期标记',{exact:true})).toHaveCount(0);await expect(dialog.locator('.source-summary')).toHaveCount(0);}else{await expect(dialog.getByText(messages[i]!,{exact:true})).toHaveCount(2);await expect(dialog.getByText('发布时间',{exact:true})).toBeVisible();await expect(dialog).toContainText(i===1?'未提供，不以采集时间代替':item.published_at!);}
+  await page.keyboard.press('Escape');
+ }
+ await expect(page.getByRole('button',{name:'查看来源与观察记录',exact:true})).toHaveCount(0);
+ await expect(page.getByText('已保存来源标题，正文尚未读取。',{exact:true})).toHaveCount(0);
 });
 
 test('候选理由/评分/证据、默认本人采纳、拒绝留因与显式变体',async({page})=>{
  execFileSync('pnpm',['exec','tsx','tools/s3-topics-browser-seed.ts'],{stdio:'pipe',env:process.env});
  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('/');await page.getByRole('link',{name:'选题策划'}).click();
- const adopt=page.locator('.topic-card').filter({hasText:'合成候选：采纳操作'});await expect(adopt).toContainText('80.00/100');await adopt.getByRole('button',{name:'查看理由与采纳'}).click();const dialog=page.getByRole('dialog',{name:'选题理由与证据'});await expect(dialog).toContainText('受众需求：4/5');await expect(dialog).toContainText('明确合成的浏览器证据线索');await expect(dialog).toContainText('来源原文（真实性待核验）');await expect(dialog).toContainText('缺受众反馈');await dialog.getByRole('button',{name:'采纳选题',exact:true}).click();await expect(dialog.getByRole('combobox',{name:'负责人'})).toHaveCount(0);await dialog.getByRole('button',{name:'确认采纳',exact:true}).click();await expect(dialog).toContainText('已采纳');await expect(dialog.getByRole('button',{name:'采纳选题',exact:true})).toHaveCount(0);await page.keyboard.press('Escape');
- const reject=page.locator('.topic-card').filter({hasText:'合成候选：拒绝操作'});await reject.getByRole('button',{name:'查看理由与采纳'}).click();await dialog.getByRole('button',{name:'拒绝并留因'}).click();await dialog.getByLabel('拒绝原因',{exact:true}).fill('本周产能不足');await dialog.getByRole('button',{name:'保存拒绝原因'}).click();await expect(dialog).toContainText('本周产能不足');await expect(dialog).toContainText('已拒绝');await dialog.getByRole('button',{name:'明确创建变体'}).click();await dialog.getByLabel('变体目标',{exact:true}).fill('减少页数的新角度');await dialog.getByRole('button',{name:'创建变体',exact:true}).click();await expect(dialog).toContainText('减少页数的新角度');await expect(dialog.getByRole('button',{name:'查看父题'})).toBeVisible();await page.keyboard.press('Escape');
+ const adopt=page.locator('.topic-card').filter({hasText:'合成候选：采纳操作'});await expect(adopt).toContainText('80.00/100');await adopt.getByRole('button',{name:'查看理由与采纳'}).click();const dialog=page.getByRole('dialog',{name:'选题理由与证据'});await expect(dialog.locator('.topic-score-details')).not.toHaveAttribute('open');await dialog.locator('.topic-score-details summary').click();await expect(dialog.getByRole('meter',{name:'受众需求'})).toHaveAttribute('value','4');await expect(dialog).toContainText('明确合成的浏览器证据线索');await expect(dialog).toContainText('来源原文（真实性待核验）');await expect(dialog).toContainText('缺受众反馈');await dialog.getByRole('button',{name:'采纳选题',exact:true}).click();await expect(dialog.getByRole('combobox',{name:'负责人'})).toHaveCount(0);await dialog.getByRole('button',{name:'确认采纳',exact:true}).click();await expect(dialog).toContainText('已采纳');await expect(dialog.getByRole('button',{name:'采纳选题',exact:true})).toHaveCount(0);await page.keyboard.press('Escape');
+ const reject=page.locator('.topic-card').filter({hasText:'合成候选：拒绝操作'});await reject.getByRole('button',{name:'查看理由与采纳'}).click();await dialog.getByRole('button',{name:'拒绝并留因'}).click();await dialog.getByLabel('拒绝原因',{exact:true}).fill('本周产能不足');await dialog.getByRole('button',{name:'保存拒绝原因'}).click();await dialog.locator('.topic-decision-history summary').click();await expect(dialog).toContainText('本周产能不足');await expect(dialog).toContainText('已拒绝');await dialog.getByRole('button',{name:'明确创建变体'}).click();await dialog.getByLabel('变体目标',{exact:true}).fill('减少页数的新角度');await dialog.getByRole('button',{name:'创建变体',exact:true}).click();await expect(dialog).toContainText('减少页数的新角度');await expect(dialog.getByRole('button',{name:'查看父题'})).toBeVisible();await page.keyboard.press('Escape');
  await page.getByRole('combobox',{name:'选题状态',exact:true}).selectOption('accepted');await expect(page.locator('.topic-card')).toHaveCount(1);await expect(page.locator('.topic-card')).toContainText('合成候选：采纳操作');await page.getByRole('combobox',{name:'选题状态',exact:true}).selectOption('');
  await page.setViewportSize({width:390,height:1000});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);mkdirSync((process.env.EVIDENCE_DIR??'docs/evidence/s11')+'/screenshots',{recursive:true});await page.screenshot({path:(process.env.EVIDENCE_DIR??'docs/evidence/s11')+'/screenshots/topic-candidates-mobile.png',fullPage:true});expect(errors).toEqual([]);
 });
 
 
+
+function readingTopic(){
+ return {id:'10000000-0000-4000-8000-000000000001',account_id:'10000000-0000-4000-8000-000000000002',version:1,updated_at:'2026-10-27T12:00:00Z',status:'proposed',effective_status:'proposed',expired:false,parent_topic_id:null,score:'80.00',missing_inputs:['制作工时待估','重复核验事项'],warnings:['重复核验事项','仍需核对真实来源'],decisions:[],candidate:{title:'明确合成的阅读布局选题',audience:'合成目标人群',need:'低成本了解一个选题',scene:'决定是否采纳前',original_angle:'这是用于检查布局的合成角度，不是运营事实。',follow_reason:'合成的持续关注动机',media_type:'graphic',estimated_hours:null,assumptions:['重复核验事项','受众兴趣仍是假设'],score_breakdown:[['audience_need','受众需求'],['yoyo_expression','YOYO表达'],['follow_reason','连续关注理由'],['clarity','内容清楚'],['feasibility','制作可行'],['timing','时机']].map(([criterion,label])=>({criterion,score:4,reason:'合成评分解释：'+label})),evidence_refs:[]},evidence:[{id:'fact-1',source_item_id:'synthetic-source',evidence_kind:'fact',claim:'明确合成的来源原文，不代表真实采集。',title:'合成来源标题',canonical_url:'https://example.com/controlled',captured_at:'2026-10-27T11:00:00Z'},{id:'inference-1',source_item_id:null,evidence_kind:'inference',claim:'合成推测：这可能引起读者兴趣。'},{id:'hypothesis-1',source_item_id:null,evidence_kind:'original_hypothesis',claim:'合成原创假设：尝试另一个观察角度。'}]};
+}
+async function openReadingTopic(page:Page,topic:any){
+ await page.route('**/api/v1/accounts',route=>route.fulfill({json:{data:{items:[{id:topic.account_id,name:'合成阅读账号'}]}}}));
+ await page.route(/\/api\/v1\/topics(?:\?|$)/,route=>route.fulfill({json:{data:{items:[topic],next_cursor:null}}}));
+ await page.route(/\/api\/v1\/topics\/.+/,route=>route.request().method()==='GET'?route.fulfill({json:{data:topic}}):route.abort());
+ await page.goto('/');await page.getByRole('link',{name:'选题策划',exact:true}).click();
+ await page.getByRole('button',{name:'查看理由与采纳',exact:true}).click();
+ return page.getByRole('dialog',{name:'选题理由与证据'});
+}
+
+test('选题详情结构化阅读、证据分组、风险去重、长文本及固定操作在四种宽度可用',async({page})=>{
+ const topic=readingTopic();topic.candidate.title+='长标题检查'.repeat(18);topic.candidate.original_angle+='long-unbroken-text'.repeat(30);
+ const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
+ const dialog=await openReadingTopic(page,topic);
+ await expect(dialog.getByRole('heading',{name:'这个选题，值得做在哪里'})).toBeVisible();
+ await expect(dialog).toContainText('来源引用 1条');await expect(dialog).toContainText('制作工时待估');
+ for(const name of ['来源原文（真实性待核验）','AI 推测（不是已验证事实）','原创假设（待验证）'])await expect(dialog.getByRole('heading',{name,exact:true})).toHaveCount(1);
+ await expect(dialog.locator('.topic-risks').getByText('重复核验事项',{exact:true})).toHaveCount(1);
+ await expect(dialog.getByRole('link',{name:/合成来源标题/})).toHaveAttribute('href','https://example.com/controlled');
+ await expect(dialog).toContainText('观察时间');await expect(dialog).not.toContainText('发布时间');
+ for(const className of ['topic-score-details','topic-decision-history'])await expect(dialog.locator('.'+className)).not.toHaveAttribute('open');
+ await dialog.locator('.topic-score-details summary').focus();await page.keyboard.press('Enter');await expect(dialog.getByRole('meter')).toHaveCount(6);await expect(dialog.getByRole('meter',{name:'受众需求'})).toHaveAttribute('value','4');
+ await dialog.locator('.topic-decision-history summary').click();await expect(dialog.getByText('暂无决策记录。',{exact:true})).toBeVisible();
+ for(const width of [1440,1280,390,320]){
+  await page.setViewportSize({width,height:1000});
+  expect(await dialog.evaluate(e=>e.scrollWidth<=e.clientWidth)).toBe(true);
+  expect((await dialog.boundingBox())!.width).toBe(width>=840?840:width);
+  const body=dialog.locator('.topic-detail-scroll');await body.evaluate(e=>e.scrollTop=e.scrollHeight);
+  await expect(dialog.getByRole('button',{name:'关闭详情'})).toBeInViewport();await expect(dialog.getByRole('button',{name:'采纳选题',exact:true})).toBeInViewport();
+  await body.evaluate(e=>e.scrollTop=0);
+  mkdirSync((process.env.EVIDENCE_DIR??'docs/evidence/change019')+'/screenshots',{recursive:true});
+  await page.screenshot({path:`${process.env.EVIDENCE_DIR??'docs/evidence/change019'}/screenshots/topic-detail-${width}.png`});
+ }
+ await page.keyboard.press('Escape');await expect(dialog).toHaveCount(0);await expect(page.getByRole('button',{name:'查看理由与采纳',exact:true})).toBeFocused();
+ expect(errors).toEqual([]);
+});
+
+test('选题详情版本冲突可读取最新版本，失败保留输入，提交时禁用操作并保留变体形式',async({page})=>{
+ const topic=readingTopic();const dialog=await openReadingTopic(page,topic);
+ let release!:()=>void;const pending=new Promise<void>(resolve=>release=resolve);const bodies:any[]=[];
+ let failure=409;
+ await page.route(`**/api/v1/topics/${topic.id}/reject`,async route=>{
+  bodies.push(route.request().postDataJSON());await pending;
+  topic.version=2;
+  await route.fulfill({status:failure,json:{error:{code:failure===409?'VERSION_CONFLICT':'SERVICE_UNAVAILABLE',message:failure===409?'选题已修改':'测试保存失败，输入应保留'}}});
+ });
+ await dialog.getByRole('button',{name:'拒绝并留因'}).click();await dialog.getByLabel('拒绝原因',{exact:true}).fill('保留这段拒绝原因');
+ await dialog.getByRole('button',{name:'保存拒绝原因'}).click();
+ await expect(dialog.getByRole('button',{name:'关闭详情'})).toBeDisabled();await expect(dialog.getByRole('button',{name:'正在保存…'})).toBeDisabled();await page.keyboard.press('Escape');await expect(dialog).toBeVisible();release();
+ await expect(dialog.getByRole('alert')).toContainText('选题已修改');await expect(dialog.getByRole('alert')).toBeInViewport();await expect(dialog.getByLabel('拒绝原因',{exact:true})).toHaveValue('保留这段拒绝原因');
+ await expect(dialog.getByRole('button',{name:'保存拒绝原因'})).toBeDisabled();await dialog.getByRole('button',{name:'读取最新选题'}).click();await expect(dialog).toContainText('版本 2');
+ failure=503;await dialog.getByRole('button',{name:'保存拒绝原因'}).click();await expect(dialog.getByRole('alert')).toContainText('测试保存失败');await expect(dialog.getByLabel('拒绝原因',{exact:true})).toHaveValue('保留这段拒绝原因');
+ expect(bodies).toEqual([{expected_version:1,reason:'保留这段拒绝原因'},{expected_version:2,reason:'保留这段拒绝原因'}]);
+ await dialog.getByRole('button',{name:'取消',exact:true}).click();await dialog.getByRole('button',{name:'明确创建变体',exact:true}).click();await dialog.getByLabel('变体目标',{exact:true}).fill('新的合成角度');await dialog.getByRole('combobox',{name:'建议形式',exact:true}).selectOption('video');
+ let variantBody:any;
+ await page.route(`**/api/v1/topics/${topic.id}/variants`,route=>{variantBody=route.request().postDataJSON();return route.fulfill({status:503,json:{error:{code:'SERVICE_UNAVAILABLE',message:'合成变体失败'}}});});
+ await dialog.getByRole('button',{name:'创建变体',exact:true}).click();await expect(dialog.getByRole('alert')).toContainText('合成变体失败');expect(variantBody).toEqual({goal:'新的合成角度',media_type:'video'});await expect(dialog.getByRole('combobox',{name:'建议形式',exact:true})).toHaveValue('video');await expect(dialog.getByLabel('变体目标',{exact:true})).toHaveValue('新的合成角度');
+});
+
+test('选题详情无来源/无缺项、已采纳过期和已拒绝状态保留真实操作边界',async({page})=>{
+ const topic=readingTopic();topic.evidence=[];topic.missing_inputs=[];topic.warnings=[];topic.candidate.assumptions=[];
+ const dialog=await openReadingTopic(page,topic);await expect(dialog).toContainText('无来源引用，按原创提案核验。');await expect(dialog).toContainText('当前未列出待补项');await expect(dialog.getByRole('button',{name:'采纳选题',exact:true})).toBeVisible();
+ await page.keyboard.press('Escape');topic.effective_status='accepted';topic.status='accepted';topic.expired=true;
+ await page.getByRole('button',{name:'查看理由与采纳',exact:true}).click();await expect(dialog).toContainText('来源时效需重新核验，已采纳决策保留。');await expect(dialog.getByRole('button',{name:'采纳选题',exact:true})).toHaveCount(0);await expect(dialog.getByRole('button',{name:'拒绝并留因'})).toHaveCount(0);await expect(dialog.getByRole('button',{name:'明确创建变体',exact:true})).toBeVisible();
+ await page.keyboard.press('Escape');topic.effective_status='rejected';topic.status='rejected';topic.expired=false;await page.getByRole('button',{name:'查看理由与采纳',exact:true}).click();await expect(dialog.getByText('已拒绝',{exact:true})).toBeVisible();await expect(dialog.getByRole('button',{name:'采纳选题',exact:true})).toHaveCount(0);
+ await page.keyboard.press('Escape');topic.effective_status='expired';topic.status='proposed';topic.expired=true;await page.getByRole('button',{name:'查看理由与采纳',exact:true}).click();await expect(dialog).toContainText('选题已过期，请重新生成或明确创建变体后核验。');await expect(dialog.getByRole('button',{name:'采纳选题',exact:true})).toHaveCount(0);
+});
 
 test('T26 独立笔记登记与更正、旧深链回退、三导航窄屏无溢出',async({page})=>{
  await page.goto('/');
