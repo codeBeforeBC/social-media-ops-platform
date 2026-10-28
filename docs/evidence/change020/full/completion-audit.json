@@ -1,0 +1,69 @@
+{
+  "objective": "完成CHANGE-020剩余P03–P06（仅小红书）",
+  "checked_at": "2026-10-28T04:14:34.894880+00:00",
+  "requirements": [
+    {
+      "id": "P03",
+      "scope": "040兼容迁移、不可变记录、绑定版本/确认、契约和API",
+      "proof": [
+        "upgrade-copy.json",
+        "contract-validation.json",
+        "integration-final.log"
+      ],
+      "result": "passed"
+    },
+    {
+      "id": "P04",
+      "scope": "固定鉴权桥接、共享档案锁、真实身份/失败/恢复、Job持久化与迟到/取消守卫",
+      "proof": [
+        "real-pipeline.json",
+        "bridge-unit.log",
+        "integration-final.log"
+      ],
+      "result": "passed"
+    },
+    {
+      "id": "P05",
+      "scope": "保存并验证、分层身份/能力、人工确认、历史分页、错误恢复、后台入口和草稿保留",
+      "proof": [
+        "browser.log",
+        "browser-final.log",
+        "local-browser.json"
+      ],
+      "result": "passed"
+    },
+    {
+      "id": "P06",
+      "scope": "全回归、真实受限备份恢复副本、Docker部署、原数据/身份/配置和运行服务",
+      "proof": [
+        "backup.json",
+        "upgrade-copy.json",
+        "local-runtime.json",
+        "service-state.json",
+        "integration-final.log"
+      ],
+      "result": "passed"
+    }
+  ],
+  "extra_defects_fixed": [
+    "BUG-038",
+    "BUG-039"
+  ],
+  "task_counts": {
+    "DONE": 34,
+    "DOING": 1,
+    "VERIFY": 7,
+    "BLOCKED": 1,
+    "TODO": 2,
+    "CANCELLED": 24
+  },
+  "artifact_links_checked": 71,
+  "planning_dependencies": "acyclic",
+  "applied_old_migrations_edited": false,
+  "remaining_in_requested_scope": [],
+  "explicit_limits": [
+    "IN-10原登记身份仍须人工核对，不自动替换或认证",
+    "后台指标unknown，无自动发布/模型请求",
+    "完整首版S9/S10/跨日RPO及暂缓数据门禁不因本交付关闭"
+  ]
+}

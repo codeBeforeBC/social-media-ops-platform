@@ -22,7 +22,7 @@ async function main(){try{
  compose(['stop','worker']);
  execFileSync('docker',['compose','--project-directory',dir,'-p',project,...files.flatMap(f=>['-f',dir+'/'+f]),'exec','-T','api','node','-e',"let value='';process.stdin.on('data',c=>value+=c);process.stdin.on('end',()=>require('node:fs').writeFileSync('/state/ai.json',value,{flag:'wx',mode:0o600}));"],{env,input:JSON.stringify(reportTestConfig),stdio:['pipe','pipe','pipe']});temporaryAIConfigCreated=true;
  await c.login('clean-clone@example.test','Synthetic-clean-clone-password-987');
- const account=await ok('/accounts','POST',{platform:'xiaohongshu',platform_user_id:'synthetic-s9-B-'+randomUUID(),name:'明确合成B演练账号'});
+ const account=await ok('/accounts','POST',{platform:'xiaohongshu',platform_user_id:randomUUID().replaceAll('-','').slice(0,24),name:'明确合成B演练账号'});
  const publicationBody={account_id:account.id,platform_note_id:'synthetic-B-'+randomUUID(),url:'',title:'合成B独立登记，非真实发帖',media_type:'graphic',published_at:'2026-08-01T00:00:00Z',traffic_type:'organic'};publicationBody.url='https://www.xiaohongshu.com/explore/'+publicationBody.platform_note_id;
  const key=randomUUID(),publication=await ok('/publications','POST',publicationBody,{'Idempotency-Key':key});assert.equal((await ok('/publications','POST',publicationBody,{'Idempotency-Key':key})).id,publication.id);assert.equal('content_id' in publication,false);assert.equal('is_campaign' in publication,false);report.checks.push('independent_publication_idempotent_no_content_or_campaign');
  const start='2026-09-01T00:00:00Z',end='2026-09-08T00:00:00Z';

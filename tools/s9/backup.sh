@@ -25,7 +25,12 @@ running=$(compose ps --services --status running)
 db=$(compose ps -q db)
 [ -n "$db" ] || { echo 'Running database required' >&2; exit 1; }
 app=$(compose images -q api | head -n 1)
-[ -n "$app" ] || { echo 'Application image required' >&2; exit 1; }
+# A live container may outlive its image manifest after a floating tag rebuild.
+# Reading volumes needs a local tar-capable image, not the missing old manifest.
+if [ -z "$app" ] || ! docker image inspect "$app" >/dev/null 2>&1; then
+  app=$(compose config --images api | head -n 1)
+fi
+[ -n "$app" ] && docker image inspect "$app" >/dev/null 2>&1 || { echo 'Local snapshot image required' >&2; exit 1; }
 resume() { [ -z "$running" ] || compose start $running >/dev/null; }
 trap resume EXIT
 trap 'exit 1' INT TERM

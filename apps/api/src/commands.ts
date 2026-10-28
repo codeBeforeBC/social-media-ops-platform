@@ -6,6 +6,8 @@ import {storeResponse,readResponse} from '../../../packages/domain/src/response-
 import {loadAIConfig,workspaceBudgetSchema,workspaceAIConfig,AIFailure} from '../../../packages/domain/src/ai-gateway';
 import {sourceOrganizationCurrent} from '../../../packages/domain/src/source-organization';
 import {config} from '../../../packages/domain/src/config';
+import {profileRef} from '../../../packages/domain/src/account-verifications';
+import {xhsAccountIdentity} from '../../../packages/domain/src/xhs-account';
 export type Result={status:number;data:unknown};
 export async function audit(tx:Tx,a:Actor,action:string,objectType:string,objectId:string,details:unknown={}){
   await tx.query(`INSERT INTO audit_logs(workspace_id,actor_id,actor_type,action,object_type,object_id,details,request_id) VALUES($1,$2,'user',$3,$4,$5,$6,$7)`,[a.workspaceId,a.memberId,action,objectType,objectId,JSON.stringify(details),a.requestId]);
@@ -21,6 +23,11 @@ export class Commands {
       await tx.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))',[lock]);
       const r=await tx.query('SELECT request_hash,status,response FROM idempotency_records WHERE workspace_id=$1 AND actor_id=$2 AND method=$3 AND route=$4 AND key=$5',[a.workspaceId,a.memberId,method,route,k]);
       if(r.rowCount){if(r.rows[0].request_hash!==fingerprint)throw new AppError(409,'IDEMPOTENCY_CONFLICT','相同请求键对应不同内容');let cached:any=readResponse(r.rows[0].response);
+        if(route.startsWith('/accounts')&&cached?.verification?.id){
+          await this.accountScope(tx,actor,cached.verification.account_id);
+          const now=(await tx.query('SELECT v.*,j.state,j.started_at,j.finished_at,j.error_code FROM account_verifications v JOIN jobs j ON j.id=v.job_id AND j.workspace_id=v.workspace_id WHERE v.id=$1 AND v.workspace_id=$2',[cached.verification.id,a.workspaceId])).rows[0];
+          if(!now)throw new AppError(404,'NOT_FOUND','验证记录不存在或不可见');cached={verification:now,reused:true};
+        }else if(route.startsWith('/accounts')&&cached?.id){cached=await this.accountScope(tx,actor,cached.id);}
         // Consent and evidence may be revoked after a successful write; replay must reflect current permissions and state.
         const table=cached?.id&&(route.startsWith('/source-organizations/')?'source_organizations':route.startsWith('/feedback')?'feedback':route.startsWith('/strategy-memories/')?'strategy_memories':route.startsWith('/reports/')?'reports':null);
         if(table){const current=(await tx.query(`SELECT * FROM ${table} WHERE workspace_id=$1 AND id=$2`,[a.workspaceId,cached.id])).rows[0];if(!current)throw new AppError(404,'NOT_FOUND','对象不存在或不可见');await this.accountScope(tx,actor,current.account_id);cached=current;if(table==='source_organizations')cached.current=await sourceOrganizationCurrent(tx,cached);if(table==='reports')cached.strategies=(await tx.query('SELECT * FROM strategy_memories WHERE report_id=$1 ORDER BY action_index',[cached.id])).rows;}
@@ -37,15 +44,24 @@ export class Commands {
   }
   async accounts(a:Actor){const r=await this.db.query('SELECT * FROM accounts ac WHERE workspace_id=$1 AND ($2::boolean OR EXISTS(SELECT 1 FROM account_memberships am WHERE am.account_id=ac.id AND am.membership_id=$3)) ORDER BY created_at,id',[a.workspaceId,a.roles.includes('admin'),a.memberId]);return {items:r.rows};}
   async createAccount(tx:Tx,a:Actor,input:unknown){
-    const b=parse(z.object({platform:z.enum(['xiaohongshu','weibo']),platform_user_id:text(),display_handle:text().optional(),name:text(),timezone:timezone.optional()}).strict(),input);
-    const r=await tx.query('INSERT INTO accounts(workspace_id,platform,platform_user_id,display_handle,name,owner_id,timezone) VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING *',[a.workspaceId,b.platform,b.platform_user_id,b.display_handle??'',b.name,a.memberId,b.timezone??'Asia/Shanghai']);
+    const b=parse(z.object({platform:z.literal('xiaohongshu'),platform_user_id:text(2000),display_handle:text().optional(),name:text(),timezone:timezone.optional(),browser_profile_ref:profileRef.nullable().optional()}).strict(),input);
+    const identity=xhsAccountIdentity(b.platform_user_id);
+    if(!identity)throw new AppError(422,'INVALID_ACCOUNT_ID','请输入24位小红书内部账号ID或完整官方主页链接；昵称、小红书号和笔记链接不能代替内部ID');
+    const legacy=(await tx.query('SELECT id,platform_user_id FROM accounts WHERE workspace_id=$1 AND platform=$2 ORDER BY created_at,id',[a.workspaceId,b.platform])).rows.find(row=>xhsAccountIdentity(row.platform_user_id)?.id===identity.id);
+    if(legacy)throw new AppError(409,'ACCOUNT_EXISTS','这个小红书账号已经登记，请查看已有账号',{account_id:legacy.id});
+    const r=await tx.query('INSERT INTO accounts(workspace_id,platform,platform_user_id,display_handle,name,owner_id,timezone,profile_url,browser_profile_ref) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9) ON CONFLICT(workspace_id,platform,platform_user_id) DO NOTHING RETURNING *',[a.workspaceId,b.platform,identity.id,b.display_handle??'',b.name,a.memberId,b.timezone??'Asia/Shanghai',identity.profile_url,b.browser_profile_ref??null]);
+    if(!r.rowCount){const existing=(await tx.query('SELECT id FROM accounts WHERE workspace_id=$1 AND platform=$2 AND platform_user_id=$3',[a.workspaceId,b.platform,identity.id])).rows[0];throw new AppError(409,'ACCOUNT_EXISTS','这个小红书账号已经登记，请查看已有账号',{account_id:existing.id});}
     await tx.query('INSERT INTO account_memberships VALUES($1,$2,$3)',[a.workspaceId,r.rows[0].id,a.memberId]);await audit(tx,a,'account.create','account',r.rows[0].id);return {status:201,data:r.rows[0]};
   }
   async patchAccount(tx:Tx,a:Actor,accountId:string,input:unknown){
-    const b=parse(z.object({name:text().optional(),timezone:timezone.optional(),expected_version:version}).strict(),input);
+    const b=parse(z.object({name:text().optional(),timezone:timezone.optional(),browser_profile_ref:profileRef.nullable().optional(),expected_version:version}).strict(),input);
     const ac=await this.accountScope(tx,a,accountId,true);
     if(ac.version!==b.expected_version)throw new AppError(409,'VERSION_CONFLICT','账号已被修改',{version:ac.version});
-    const r=await tx.query('UPDATE accounts SET name=COALESCE($1,name),timezone=COALESCE($2,timezone),version=version+1,updated_at=now() WHERE id=$3 RETURNING *',[b.name??null,b.timezone??null,accountId]);
+    const changed=b.browser_profile_ref!==undefined&&b.browser_profile_ref!==ac.browser_profile_ref;
+    const r=await tx.query(`UPDATE accounts SET name=COALESCE($1,name),timezone=COALESCE($2,timezone),browser_profile_ref=CASE WHEN $4 THEN $5 ELSE browser_profile_ref END,
+      identity_binding_version=identity_binding_version+CASE WHEN $4 THEN 1 ELSE 0 END,
+      confirmed_verification_id=CASE WHEN $4 THEN NULL ELSE confirmed_verification_id END,confirmed_at=CASE WHEN $4 THEN NULL ELSE confirmed_at END,
+      verification_next_at=CASE WHEN $4 THEN NULL ELSE verification_next_at END,version=version+1,updated_at=now() WHERE id=$3 RETURNING *`,[b.name??null,b.timezone??null,accountId,changed,b.browser_profile_ref??null]);
     await audit(tx,a,'account.update','account',accountId,{fields:Object.keys(b).filter(k=>k!=='expected_version')});return {status:200,data:r.rows[0]};
   }
   async settings(a:Actor){const r=await this.db.query('SELECT id,name,timezone,settings,version FROM workspaces WHERE id=$1',[a.workspaceId]);return r.rows[0];}
@@ -99,6 +115,7 @@ export class Commands {
   async retryJob(tx:Tx,a:Actor,jobId:string,input:unknown){
     parse(z.object({reason:text(1000)}).strict(),input);const j=await this.jobScope(tx,a,jobId,true);
     if(j.state!=='failed')throw new AppError(422,'JOB_NOT_FAILED','仅失败任务允许重试');
+    if(j.type==='account.verify')throw new AppError(422,'ACCOUNT_VERIFICATION_RETRY_REQUIRED','请在运营账号详情重新验证，保留原验证历史');
     const r=await tx.query("UPDATE jobs SET state='queued',attempts=0,cancel_requested=false,error_code=NULL,result=NULL,available_at=now(),started_at=NULL,finished_at=NULL,lease_token=NULL,lease_until=NULL,version=version+1 WHERE id=$1 RETURNING *",[jobId]);
     await audit(tx,a,'job.retry','job',jobId);return {status:202,data:safeJob(r.rows[0])};
   }

@@ -24,7 +24,7 @@ test('本机Host、精确Origin、技术令牌与格式仍保护写请求，Cook
  const old=config.secure;config.secure=true;try{const fresh=new Client(s.url);const csrf=await fresh.init();assert.match(csrf.headers.get('set-cookie')!,/HttpOnly/);assert.match(csrf.headers.get('set-cookie')!,/SameSite=Strict/);assert.match(csrf.headers.get('set-cookie')!,/Secure/);}finally{config.secure=old;}
 });
 test('并发同键创建复用结果，异载荷409，身份与负责人不能由客户端注入',async()=>{
- const body={platform:'xiaohongshu',platform_user_id:'external-01',name:'合成账号'},key=randomUUID();
+ const body={platform:'xiaohongshu',platform_user_id:'c628f9efcabcda187687c4b1',name:'合成账号'},key=randomUUID();
  const r=await Promise.all(Array.from({length:6},()=>c.call('/accounts','POST',body,{'Idempotency-Key':key})));assert.ok(r.every(x=>x.status===201));assert.equal(new Set(r.map(x=>x.data.id)).size,1);account=r[0]!.data;assert.equal(account.owner_id,me.membership.id);
  assert.equal((await c.call('/accounts','POST',{...body,name:'changed'},{'Idempotency-Key':key})).error.code,'IDEMPOTENCY_CONFLICT');
  assert.equal((await c.call('/accounts','POST',{...body,owner_id:randomUUID()})).status,422);

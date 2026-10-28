@@ -1,0 +1,78 @@
+[2m[WebServer] [22m(node:32578) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:32579) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:32586) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:32586) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 5 tests using 1 worker
+
+(node:32681) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:32681) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/browser.spec.ts:4:5 › 免登录打开工作台、清除Cookie后直接回到同一工作区，无用户与成员入口 (985ms)
+  ✓  2 tests/browser.spec.ts:239:5 › 小红书账号保存明确未验证，完整身份和安全主页刷新保留，窄屏可核对 (904ms)
+  ✓  3 tests/browser.spec.ts:251:5 › 账号格式拒绝、保存失败保留输入、保存中不能重复或关闭，重复账号可查看 (3.1s)
+  ✘  4 tests/browser.spec.ts:262:5 › 小红书在线验证持久进度、公开/登录身份、人工确认和换档案失效 (30.1s)
+(node:32978) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:32978) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  5 tests/browser.spec.ts:270:5 › 小红书登录错号分开显示，登录失效可恢复，保存成功与验证提交失败分别提示 (12.6s)
+
+
+  1) tests/browser.spec.ts:262:5 › 小红书在线验证持久进度、公开/登录身份、人工确认和换档案失效 ──────────────────────────────────
+
+    [31mTest timeout of 30000ms exceeded.[39m
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+    [2m  - waiting for getByRole('dialog').getByRole('region', { name: '账号身份核验' }).getByRole('button', { name: '保存浏览器档案' })[22m
+    [2m    - locator resolved to <button type="button">保存浏览器档案</button>[22m
+    [2m  - attempting click action[22m
+    [2m    - waiting for element to be visible, enabled and stable[22m
+    [2m    - element is not stable[22m
+    [2m  - retrying click action[22m
+    [2m    - waiting for element to be visible, enabled and stable[22m
+    [2m    - element is not enabled[22m
+    [2m  - retrying click action[22m
+    [2m    - waiting 20ms[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is not enabled[22m
+    [2m    - retrying click action[22m
+    [2m      - waiting 100ms[22m
+    [2m    51 × waiting for element to be visible, enabled and stable[22m
+    [2m       - element is not enabled[22m
+    [2m     - retrying click action[22m
+    [2m       - waiting 500ms[22m
+
+
+      264 |  await d.getByRole('button',{name:'保存并验证',exact:true}).click();await expect(d).toContainText('账号已保存，验证请求已提交');await page.keyboard.press('Escape');await page.reload();await page.getByRole('row').filter({hasText:name}).getByRole('button',{name:'查看 / 编辑'}).click();d=page.getByRole('dialog');const panel=d.getByRole('region',{name:'账号身份核验'});await expect(panel).toContainText('公开身份已匹配');await expect(panel).toContainText('当前登录身份一致');await expect(panel).toContainText('后台指标：未验证');await expect(panel).toContainText('明确合成平台昵称');
+      265 |  await panel.getByRole('checkbox').check();await panel.getByRole('button',{name:'确认管理此账号',exact:true}).click();await expect(panel).toContainText('已人工确认管理此账号');await d.getByLabel('本地备注名称').fill(name+'改备注');await d.getByRole('button',{name:'保存修改'}).click();await expect(panel).toContainText('已人工确认管理此账号');
+    > 266 |  await panel.getByLabel('浏览器档案（仅配置引用）').selectOption('other-browser-profile');await panel.getByRole('button',{name:'保存浏览器档案'}).click();await expect(panel).toContainText('尚未确认当前核验结果');await expect(panel).toContainText('历史观察，需要重新验证');await panel.getByRole('button',{name:'验证账号',exact:true}).click();await expect(panel).toContainText('当前登录身份一致');await panel.locator('summary').filter({hasText:'验证历史记录'}).click();await expect(panel.locator('ol li')).toHaveCount(2);
+          |                                                                                                                                ^
+      267 |  for(const width of [1440,320]){await page.setViewportSize({width,height:1000});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:`${process.env.EVIDENCE_DIR}/screenshots/account-verified-${width}.png`});}
+      268 | });
+      269 |
+        at /Users/junlong/projects/social-mdeida-ops-platform/tests/browser.spec.ts:266:128
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser-小红书在线验证持久进度、公开-登录身份、人工确认和换档案失效/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/browser-小红书在线验证持久进度、公开-登录身份、人工确认和换档案失效/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/browser-小红书在线验证持久进度、公开-登录身份、人工确认和换档案失效/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/browser-小红书在线验证持久进度、公开-登录身份、人工确认和换档案失效/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/browser.spec.ts:262:5 › 小红书在线验证持久进度、公开/登录身份、人工确认和换档案失效 ───────────────────────────────────
+  4 passed (50.4s)

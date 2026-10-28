@@ -1,0 +1,151 @@
+Applied 040-account-verification.sql
+{"event":"http.request","request_id":"4353180b-200e-493b-a0c5-a205be249342","method":"GET","path":"/api/v1/request/csrf","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"558ad596-6ef3-4a12-a0be-b93e773d8510","method":"GET","path":"/api/v1/instance","status":503,"duration_ms":2}
+✖ 活动验证复用、Outbox恢复不重复、60秒冷却及错误版本有明确结果 (344.987ms)
+{"event":"http.request","request_id":"d68390f6-ff03-4c73-a93a-61a4e8364ca1","method":"GET","path":"/api/v1/request/csrf","status":200,"duration_ms":0}
+{"event":"http.request","request_id":"bb9afabc-0490-4a97-9fe4-31e71d46b9bb","method":"GET","path":"/api/v1/instance","status":503,"duration_ms":1}
+✖ 公开身份与登录身份分别保存，人工确认记录不可伪造，不改本地备注 (35.174ms)
+{"event":"http.request","request_id":"7ac1abe3-0b85-4d16-a1c9-64afbca9b0b7","method":"GET","path":"/api/v1/request/csrf","status":200,"duration_ms":0}
+{"event":"http.request","request_id":"cf33a775-266f-4702-b126-4274c136ab36","method":"GET","path":"/api/v1/instance","status":503,"duration_ms":1}
+✖ 更换档案清除当前确认并增加绑定版本，单改备注不使身份观察失效 (36.306958ms)
+{"event":"http.request","request_id":"c420c674-5dde-4072-86a9-4a48093dce94","method":"GET","path":"/api/v1/request/csrf","status":200,"duration_ms":0}
+{"event":"http.request","request_id":"d271c152-8826-4841-bf7b-314462c45983","method":"GET","path":"/api/v1/instance","status":503,"duration_ms":0}
+✖ 换绑定后迟到结果不能生效，也不能覆盖新绑定 (33.565334ms)
+{"event":"http.request","request_id":"80f17943-bb6c-46ef-a4aa-cc334a76b3db","method":"GET","path":"/api/v1/request/csrf","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"08162c00-eefc-4454-abc7-9693dae4d589","method":"GET","path":"/api/v1/instance","status":503,"duration_ms":1}
+✖ 取消后结果不落库，重新验证创建新记录而非篡改原历史 (35.385416ms)
+{"event":"http.request","request_id":"9b37e293-eda8-4743-84ff-2d56f32b99ab","method":"GET","path":"/api/v1/request/csrf","status":200,"duration_ms":0}
+{"event":"http.request","request_id":"f8e5c407-3a08-49f1-9bd8-9765b9c7a82c","method":"GET","path":"/api/v1/instance","status":503,"duration_ms":0}
+✖ 登录失效/离线/忙等业务失败终态保留，不自动重试；通用重试拒绝改写验证历史 (36.04625ms)
+{"event":"http.request","request_id":"9cb9283a-3305-4b0a-9b8f-0a553c9a6861","method":"GET","path":"/api/v1/request/csrf","status":200,"duration_ms":0}
+{"event":"http.request","request_id":"a58e6c15-83c1-4b41-8282-103ad731aa1f","method":"GET","path":"/api/v1/instance","status":503,"duration_ms":0}
+✖ 不可靠目标/错登录结论/过期观察和任意多余字段不能成为匹配结果 (30.564625ms)
+{"event":"http.request","request_id":"c17a68bb-e34d-4983-8a18-2657d50779bc","method":"GET","path":"/api/v1/request/csrf","status":200,"duration_ms":0}
+{"event":"http.request","request_id":"67a0d502-3558-4685-a174-a5661ea2de30","method":"GET","path":"/api/v1/instance","status":503,"duration_ms":0}
+✖ 缺档案、路径注入、无效旧ID、跨账号验证记录与24小时过期确认均受服务端拒绝 (29.609041ms)
+{"event":"http.request","request_id":"1348961a-a41d-4954-875f-4188c7cc338e","method":"GET","path":"/api/v1/request/csrf","status":200,"duration_ms":0}
+{"event":"http.request","request_id":"c5ed20b3-9e6d-4017-80e7-46d8826f4b47","method":"GET","path":"/api/v1/instance","status":503,"duration_ms":1}
+✖ 最近失败醒目保留、历史成功可查、历史有界分页不跨账号 (29.702416ms)
+{"event":"http.request","request_id":"776ee1b8-8873-48c5-b4e6-8607286a95dd","method":"GET","path":"/api/v1/request/csrf","status":200,"duration_ms":0}
+{"event":"http.request","request_id":"e8cb574a-1826-411c-84ad-a524600994eb","method":"GET","path":"/api/v1/instance","status":503,"duration_ms":0}
+✖ 档案发现只走固定鉴权桥接路径，返回白名单字段，不暴露桥接令牌 (28.602666ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 0
+ℹ fail 10
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1331.130125
+
+✖ failing tests:
+
+test at tests/account-verifications.test.ts:2:3056
+✖ 活动验证复用、Outbox恢复不重复、60秒冷却及错误版本有明确结果 (344.987ms)
+  TypeError: Cannot read properties of undefined (reading 'workspace')
+      at initialize (/Users/junlong/projects/social-mdeida-ops-platform/tests/helpers.ts:39:282)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/account-verifications.test.ts:12:131)
+      at async TestHook.run (node:internal/test_runner/test:1125:7)
+      at async Test.runHook (node:internal/test_runner/test:1036:9)
+      at async Test.run (node:internal/test_runner/test:1093:9)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+
+test at tests/account-verifications.test.ts:2:3877
+✖ 公开身份与登录身份分别保存，人工确认记录不可伪造，不改本地备注 (35.174ms)
+  TypeError: Cannot read properties of undefined (reading 'workspace')
+      at initialize (/Users/junlong/projects/social-mdeida-ops-platform/tests/helpers.ts:39:282)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/account-verifications.test.ts:12:131)
+      at async TestHook.run (node:internal/test_runner/test:1125:7)
+      at async Test.runHook (node:internal/test_runner/test:1036:9)
+      at async Test.run (node:internal/test_runner/test:1093:9)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7)
+
+test at tests/account-verifications.test.ts:2:5153
+✖ 更换档案清除当前确认并增加绑定版本，单改备注不使身份观察失效 (36.306958ms)
+  TypeError: Cannot read properties of undefined (reading 'workspace')
+      at initialize (/Users/junlong/projects/social-mdeida-ops-platform/tests/helpers.ts:39:282)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/account-verifications.test.ts:12:131)
+      at async TestHook.run (node:internal/test_runner/test:1125:7)
+      at async Test.runHook (node:internal/test_runner/test:1036:9)
+      at async Test.run (node:internal/test_runner/test:1093:9)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7)
+
+test at tests/account-verifications.test.ts:2:6492
+✖ 换绑定后迟到结果不能生效，也不能覆盖新绑定 (33.565334ms)
+  TypeError: Cannot read properties of undefined (reading 'workspace')
+      at initialize (/Users/junlong/projects/social-mdeida-ops-platform/tests/helpers.ts:39:282)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/account-verifications.test.ts:12:131)
+      at async TestHook.run (node:internal/test_runner/test:1125:7)
+      at async Test.runHook (node:internal/test_runner/test:1036:9)
+      at async Test.run (node:internal/test_runner/test:1093:9)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7)
+
+test at tests/account-verifications.test.ts:2:7257
+✖ 取消后结果不落库，重新验证创建新记录而非篡改原历史 (35.385416ms)
+  TypeError: Cannot read properties of undefined (reading 'workspace')
+      at initialize (/Users/junlong/projects/social-mdeida-ops-platform/tests/helpers.ts:39:282)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/account-verifications.test.ts:12:131)
+      at async TestHook.run (node:internal/test_runner/test:1125:7)
+      at async Test.runHook (node:internal/test_runner/test:1036:9)
+      at async Test.run (node:internal/test_runner/test:1093:9)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7)
+
+test at tests/account-verifications.test.ts:2:8238
+✖ 登录失效/离线/忙等业务失败终态保留，不自动重试；通用重试拒绝改写验证历史 (36.04625ms)
+  TypeError: Cannot read properties of undefined (reading 'workspace')
+      at initialize (/Users/junlong/projects/social-mdeida-ops-platform/tests/helpers.ts:39:282)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/account-verifications.test.ts:12:131)
+      at async TestHook.run (node:internal/test_runner/test:1125:7)
+      at async Test.runHook (node:internal/test_runner/test:1036:9)
+      at async Test.run (node:internal/test_runner/test:1093:9)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7)
+
+test at tests/account-verifications.test.ts:2:9153
+✖ 不可靠目标/错登录结论/过期观察和任意多余字段不能成为匹配结果 (30.564625ms)
+  TypeError: Cannot read properties of undefined (reading 'workspace')
+      at initialize (/Users/junlong/projects/social-mdeida-ops-platform/tests/helpers.ts:39:282)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/account-verifications.test.ts:12:131)
+      at async TestHook.run (node:internal/test_runner/test:1125:7)
+      at async Test.runHook (node:internal/test_runner/test:1036:9)
+      at async Test.run (node:internal/test_runner/test:1093:9)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7)
+
+test at tests/account-verifications.test.ts:2:9942
+✖ 缺档案、路径注入、无效旧ID、跨账号验证记录与24小时过期确认均受服务端拒绝 (29.609041ms)
+  TypeError: Cannot read properties of undefined (reading 'workspace')
+      at initialize (/Users/junlong/projects/social-mdeida-ops-platform/tests/helpers.ts:39:282)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/account-verifications.test.ts:12:131)
+      at async TestHook.run (node:internal/test_runner/test:1125:7)
+      at async Test.runHook (node:internal/test_runner/test:1036:9)
+      at async Test.run (node:internal/test_runner/test:1093:9)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7)
+
+test at tests/account-verifications.test.ts:2:11532
+✖ 最近失败醒目保留、历史成功可查、历史有界分页不跨账号 (29.702416ms)
+  TypeError: Cannot read properties of undefined (reading 'workspace')
+      at initialize (/Users/junlong/projects/social-mdeida-ops-platform/tests/helpers.ts:39:282)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/account-verifications.test.ts:12:131)
+      at async TestHook.run (node:internal/test_runner/test:1125:7)
+      at async Test.runHook (node:internal/test_runner/test:1036:9)
+      at async Test.run (node:internal/test_runner/test:1093:9)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7)
+
+test at tests/account-verifications.test.ts:2:12700
+✖ 档案发现只走固定鉴权桥接路径，返回白名单字段，不暴露桥接令牌 (28.602666ms)
+  TypeError: Cannot read properties of undefined (reading 'workspace')
+      at initialize (/Users/junlong/projects/social-mdeida-ops-platform/tests/helpers.ts:39:282)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/account-verifications.test.ts:12:131)
+      at async TestHook.run (node:internal/test_runner/test:1125:7)
+      at async Test.runHook (node:internal/test_runner/test:1036:9)
+      at async Test.run (node:internal/test_runner/test:1093:9)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7)

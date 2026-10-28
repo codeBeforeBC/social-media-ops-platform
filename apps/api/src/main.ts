@@ -1,3 +1,4 @@
+import {AccountVerifications,connectedAccountProfiles} from '../../../packages/domain/src/account-verifications';
 import {SourceOrganizations} from './source-organization';
 import {Dashboard} from './dashboard';
 import {Feedback} from './feedback';
@@ -93,10 +94,19 @@ class ApiController {
     if(path==='/uploads'&&method==='POST')return command('import.edit',(tx,actor)=>files.create(tx,actor,req.body));
     const upload=path.match(/^\/uploads\/([^/]+)(?:\/(parts|complete|abort)(?:\/(\d+))?)?$/);
     if(upload){const uid=upload[1]!;if(method==='GET'&&!upload[2])return send(await files.get(a,uid));if(method==='POST'&&upload[2]==='parts')return command('import.edit',(tx,actor)=>files.register(tx,actor,uid,req.body));if(method==='PUT'&&upload[2]==='parts'&&upload[3])return send(await files.put(a,uid,Number(upload[3]),req.body));if(method==='POST'&&upload[2]==='complete')return command('import.edit',(tx,actor)=>files.finish(tx,actor,uid,req.body));if(method==='POST'&&upload[2]==='abort')return command('import.edit',(tx,actor)=>files.abort(tx,actor,uid,req.body));}
-    if(method==='GET'&&path==='/accounts')return send(await c.accounts(a));
+    const accountVerification=new AccountVerifications(this.db);
+    if(method==='GET'&&path==='/account-browser-profiles')return send(await connectedAccountProfiles());
+    const verifyPath=path.match(/^\/accounts\/([^/]+)\/(verifications|identity-confirmation)(?:\/([^/]+))?$/);
+    if(verifyPath){
+      if(verifyPath[2]==='verifications'){
+        if(method==='GET')return send(verifyPath[3]?await accountVerification.get(a,verifyPath[1]!,verifyPath[3]):await accountVerification.history(a,verifyPath[1]!,req.query));
+        if(method==='POST'&&!verifyPath[3])return command('operate',(tx,actor)=>accountVerification.create(tx,actor,verifyPath[1]!,req.body));
+      }else if(method==='POST'&&!verifyPath[3])return command('operate',(tx,actor)=>accountVerification.confirm(tx,actor,verifyPath[1]!,req.body));
+    }
+    if(method==='GET'&&path==='/accounts')return send(await accountVerification.list(a));
     if(method==='POST'&&path==='/accounts')return command('admin',(tx,actor)=>c.createAccount(tx,actor,req.body));
     const account=path.match(/^\/accounts\/([^/]+)$/);
-    if(account){if(method==='GET')return send(await c.accountScope(this.db,a,account[1]!));if(method==='PATCH')return command('account.edit',(tx,actor)=>c.patchAccount(tx,actor,account[1]!,req.body));}
+    if(account){if(method==='GET')return send(await accountVerification.detail(a,account[1]!));if(method==='PATCH')return command('account.edit',(tx,actor)=>c.patchAccount(tx,actor,account[1]!,req.body));}
     if(method==='GET'&&path==='/settings')return send(await c.settings(a));
     if(method==='PATCH'&&path==='/settings')return command('admin',(tx,actor)=>c.patchSettings(tx,actor,req.body));
     if(method==='GET'&&path==='/audit-logs')return send(await c.logs(a,req.query));

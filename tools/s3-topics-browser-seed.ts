@@ -4,7 +4,7 @@ import {saveTopics} from '../packages/domain/src/topics';
 import {scoreCriteria} from '../packages/domain/src/ai-workflows';
 import {canonical,sha} from '../packages/domain/src/protocol';
 async function main(){const db=await database();try{
- const account=(await db.query("SELECT * FROM accounts WHERE platform_user_id='browser-platform-id'")).rows[0],workspace=(await db.query('SELECT version FROM workspaces WHERE id=$1',[account.workspace_id])).rows[0];
+ const account=(await db.query("SELECT * FROM accounts WHERE platform_user_id='abcdefabcdefabcdefabcd01'")).rows[0],workspace=(await db.query('SELECT version FROM workspaces WHERE id=$1',[account.workspace_id])).rows[0];
  const source=(await db.query("SELECT i.*,o.id observation_id FROM source_items i JOIN source_observations o ON o.source_item_id=i.id WHERE i.external_id='browser-source-test' ORDER BY o.captured_at DESC LIMIT 1")).rows[0];
  const snapshot={scope_version:'v1.2',account:{id:account.id,name:account.name,version:account.version},workspace_version:workspace.version,sources:[{id:source.id,title:source.title,summary:source.summary,observation_id:source.observation_id,captured_at:source.captured_at,pipeline_type:'weibo_hot',content_hash:source.content_hash}],capacity_hours:4};const version=sha(canonical(snapshot));
  const request=(await db.query("INSERT INTO ai_requests(workspace_id,account_id,created_by,kind,input_version,snapshot,state) VALUES($1,$2,$3,'topics',$4,$5,'succeeded') RETURNING *",[account.workspace_id,account.id,account.owner_id,version,JSON.stringify(snapshot)])).rows[0];

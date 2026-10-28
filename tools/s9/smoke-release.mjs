@@ -34,7 +34,7 @@ try{
  writeFileSync(dir+'/root.crt',ca,{mode:0o600});
  await call('/request/csrf');await call('/instance');
  const expectedMigrations=readdirSync('packages/db/migrations').filter(f=>f.endsWith('.sql')).length;assert.equal(scalar('SELECT count(*) FROM schema_migrations'),String(expectedMigrations));checks.push('https_trusted_ca_secure_session_first_setup_'+expectedMigrations+'_migrations');
- const me=await call('/me');let account=await call('/accounts','POST',{platform:'xiaohongshu',platform_user_id:'s9-synthetic',name:'合成S9账号'});
+ const me=await call('/me');let account=await call('/accounts','POST',{platform:'xiaohongshu',platform_user_id:'611eb7ae7ea98d66413f0df8',name:'合成S9账号'});
  const badOrigin=await raw(base+'/api/v1/accounts','POST',Buffer.from('{}'),{Cookie:cookie,'Content-Type':'application/json',Origin:'https://untrusted.invalid','X-CSRF-Token':csrf});assert.equal(badOrigin.status,403);checks.push('https_origin_guard');
  const retired=await raw(base+'/api/v1/members','POST',Buffer.from('{}'),{Cookie:cookie,'Content-Type':'application/json',Origin:base,'X-CSRF-Token':csrf});assert.equal(retired.status,410);
  assert.equal(account.owner_id,scalar('SELECT default_member_id FROM instance_state WHERE id=1'));checks.push('default_owner_and_retired_member_endpoints');

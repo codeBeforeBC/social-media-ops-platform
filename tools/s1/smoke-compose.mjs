@@ -13,7 +13,7 @@ async function until(fn){for(let n=0;n<50;n++){const r=await fn();if(r)return r;
 compose(['up','-d','--wait']);
 const secretHash=()=>createHash('sha256').update(compose(['exec','-T','api','node','-e',"process.stdout.write(require('node:fs').readFileSync('/state/instance.json'))"])).digest('hex');
 const beforeSecret=secretHash();await call('/request/csrf');await call('/instance');checkpoints.push('automatic_local_context_without_login');
-const current=await call('/accounts');let account=current.items[0];if(!account)account=await call('/accounts','POST',{platform:'xiaohongshu',platform_user_id:'compose-platform-id',name:'合成容器账号'});
+const current=await call('/accounts');let account=current.items[0];if(!account)account=await call('/accounts','POST',{platform:'xiaohongshu',platform_user_id:'8e6d69524f8759d826cdf896',name:'合成容器账号'});
 const before=scalar('SELECT (SELECT count(*) FROM users)||\':\'||(SELECT count(*) FROM accounts)||\':\'||(SELECT count(*) FROM schema_migrations)');
 for(const pool of ['general']){
   const accepted=await call('/diagnostics','POST',{pool});await until(async()=>{const j=await call('/jobs/'+accepted.job_id);return j.state==='succeeded';});checkpoints.push(pool+'_job_completed');

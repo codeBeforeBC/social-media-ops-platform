@@ -78,7 +78,7 @@ test('无需登录取得请求令牌后可写业务，另一个浏览器读取�
     const c=new Client(env.url);
     assert.equal((await c.call('/accounts','POST',{})).status,403);
     assert.equal((await c.call('/request/csrf')).status,200);
-    const made=await c.call('/accounts','POST',{platform:'weibo',platform_user_id:'local-test',name:'本机合成账号'});
+    const made=await c.call('/accounts','POST',{platform:'xiaohongshu',platform_user_id:'323601c1e2bdb83ea3c76585',name:'本机合成账号'});
     assert.equal(made.status,201);
     const other=new Client(env.url);other.cookie='yoyo_session=obsolete-login';
     assert.equal((await other.call('/accounts')).data.items[0].id,made.data.id);

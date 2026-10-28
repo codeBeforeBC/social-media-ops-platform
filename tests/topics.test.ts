@@ -7,7 +7,7 @@ import {topicCandidateSchema,scoreCriteria} from '../packages/domain/src/ai-work
 import {Topics} from '../apps/api/src/topics';
 import {sha,canonical,Actor} from '../packages/domain/src/protocol';
 let env:Awaited<ReturnType<typeof server>>,client:Client,me:any,account:any,actor:Actor;
-before(async()=>{env=await server();client=new Client(env.url);me=await initialize(client);account=(await client.call('/accounts','POST',{platform:'xiaohongshu',platform_user_id:'controlled',name:'受控测试'})).data;actor={userId:me.user.id,memberId:me.membership.id,workspaceId:me.workspace.id,roles:['admin'],sessionHash:'',requestId:randomUUID()};});after(()=>env.close());
+before(async()=>{env=await server();client=new Client(env.url);me=await initialize(client);account=(await client.call('/accounts','POST',{platform:'xiaohongshu',platform_user_id:'3452f0a19fa652b1ad798b15',name:'受控测试'})).data;actor={userId:me.user.id,memberId:me.membership.id,workspaceId:me.workspace.id,roles:['admin'],sessionHash:'',requestId:randomUUID()};});after(()=>env.close());
 function candidate(extra:any={}){return topicCandidateSchema.parse({title:'明确合成：雨天观察',audience:'年轻人',need:'轻松',scene:'日常',column:'观察',emotion:'好奇',media_type:'graphic',follow_reason:'下次观察',evidence_refs:[],original_angle:'原创小发现',score_breakdown:scoreCriteria.map(criterion=>({criterion,score:4,reason:'合成测试评分'})),estimated_hours:null,expires_at:null,assumptions:['明确合成测试'],...extra});}
 async function seed(c=candidate()){
  const snapshot={scope_version:'v1.2',account:{id:account.id,name:account.name,version:account.version},workspace_version:1,sources:[],warnings:[],columns:['观察'],capacity_hours:4};

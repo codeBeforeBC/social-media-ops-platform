@@ -10,7 +10,7 @@ import {fileValidationHandler} from '../packages/domain/src/media';
 import {importParseHandler} from '../packages/domain/src/imports';
 let env:Awaited<ReturnType<typeof server>>,c:Client,account:any,me:any,file:any,batch:any,store:Storage,jobs:Jobs;
 const metric=(value='1.2 万')=>({target:{account_id:account.id,publication_id:null},metric_key:'followers',definition_version:'1',aggregation_kind:'snapshot',value,unit:'人',observed_at:'2026-10-01T00:00:00+08:00',time_precision:'day',traffic_type:'unknown',is_approximate:false,source_definition:'明确合成后台口径',source_note:'合成边界用例，不是真实后台验收'});
-before(async()=>{env=await server();c=new Client(env.url);me=await initialize(c);account=(await c.call('/accounts','POST',{name:'合成OCR边界账号',platform:'xiaohongshu',platform_user_id:'synthetic-ocr-boundary'})).data;store=new Storage();jobs=new Jobs(env.db,{'file.validate':fileValidationHandler(env.db,store),'import.parse':importParseHandler(env.db)});});
+before(async()=>{env=await server();c=new Client(env.url);me=await initialize(c);account=(await c.call('/accounts','POST',{name:'合成OCR边界账号',platform:'xiaohongshu',platform_user_id:'c5a71221a49ed210214f4bfb'})).data;store=new Storage();jobs=new Jobs(env.db,{'file.validate':fileValidationHandler(env.db,store),'import.parse':importParseHandler(env.db)});});
 after(async()=>{store.destroy();await env.close();});
 async function drain(){await jobs.dispatch();for(const pool of ['media','general'])for(let i=0;i<30;i++){const j=await jobs.claim(pool);if(!j)break;await jobs.process(j);}}
 test('空白原图实际沙箱OCR保留原件和补录入口，所有识别行禁止直接确认',async()=>{
@@ -38,7 +38,7 @@ test('手工补充必须真实引用原图，错用途/跨账号拒绝；同工�
  const made=await c.call('/imports','POST',{account_id:account.id,file_ids:[file.id],source_type:'screenshot',manual_rows:[metric('545')],source_region:region});assert.equal(made.status,202,JSON.stringify(made.error));
  const row=(await c.call('/imports/'+made.data.id+'/rows')).data.items[0];assert.equal(row.raw.ocr.mode,'manual_supplement');assert.equal(row.file_id,file.id);assert.equal(row.status,'valid');
  assert.equal((await c.call('/imports','POST',{account_id:account.id,file_ids:[file.id],source_type:'csv'})).status,422);
- const other=(await c.call('/accounts','POST',{name:'合成另账号',platform:'xiaohongshu',platform_user_id:'synthetic-ocr-other'})).data;assert.equal((await c.call('/imports','POST',{account_id:other.id,file_ids:[file.id],source_type:'screenshot'})).status,422);
+ const other=(await c.call('/accounts','POST',{name:'合成另账号',platform:'xiaohongshu',platform_user_id:'8a84a51e4d40714f301d14ad'})).data;assert.equal((await c.call('/imports','POST',{account_id:other.id,file_ids:[file.id],source_type:'screenshot'})).status,422);
  const v=new Client(env.url);await v.init();
  assert.equal((await v.call('/files/'+file.id+'/preview')).status,200);assert.equal((await v.call('/files/'+file.id+'/download')).status,200);
  assert.equal((await v.call('/import-rows/'+row.id,'PATCH',{metric:metric('546'),reason:'其他管理员更正',expected_version:row.version})).status,200);

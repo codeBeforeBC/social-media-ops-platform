@@ -1,0 +1,158 @@
+[2m[WebServer] [22m(node:33183) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:33186) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:33192) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:33192) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 5 tests using 1 worker
+
+(node:33277) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33277) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/browser.spec.ts:4:5 › 免登录打开工作台、清除Cookie后直接回到同一工作区，无用户与成员入口 (1.0s)
+  ✘  2 tests/browser.spec.ts:239:5 › 小红书账号保存明确未验证，完整身份和安全主页刷新保留，窄屏可核对 (553ms)
+(node:33380) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33380) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 tests/browser.spec.ts:251:5 › 账号格式拒绝、保存失败保留输入、保存中不能重复或关闭，重复账号可查看 (3.2s)
+  ✘  4 tests/browser.spec.ts:262:5 › 小红书在线验证持久进度、公开/登录身份、人工确认和换档案失效 (3.5s)
+(node:33391) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33391) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  5 tests/browser.spec.ts:270:5 › 小红书登录错号分开显示，登录失效可恢复，保存成功与验证提交失败分别提示 (421ms)
+
+
+  1) tests/browser.spec.ts:239:5 › 小红书账号保存明确未验证，完整身份和安全主页刷新保留，窄屏可核对 ────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeDisabled[2m([22m[2m)[22m failed
+
+    Locator: getByRole('dialog').getByRole('button', { name: '验证账号', exact: true })
+    Expected: disabled
+    Error: strict mode violation: getByRole('dialog').getByRole('button', { name: '验证账号', exact: true }) resolved to 4 elements:
+        1) <button disabled type="button" class="primary">验证账号</button> aka getByRole('button', { name: '验证账号' }).first()
+        2) <button disabled type="button" class="primary">验证账号</button> aka getByRole('button', { name: '验证账号' }).nth(1)
+        3) <button disabled type="button" class="primary">验证账号</button> aka getByRole('button', { name: '验证账号' }).nth(2)
+        4) <button disabled type="button" class="primary">验证账号</button> aka getByRole('button', { name: '验证账号' }).nth(3)
+
+    Call log:
+    [2m  - Expect "toBeDisabled" with timeout 5000ms[22m
+    [2m  - waiting for getByRole('dialog').getByRole('button', { name: '验证账号', exact: true })[22m
+
+
+      242 |  await expect(d.getByRole('combobox',{name:'平台',exact:true})).toHaveCount(0);await expect(d).toContainText('平台：小红书');
+      243 |  await d.getByLabel('小红书主页链接或内部账号 ID').fill(`https://www.xiaohongshu.com/user/profile/${id}?xsec_token=synthetic-only`);await d.getByLabel('本地备注名称').fill(name);await d.getByRole('button',{name:'保存账号',exact:true}).click();
+    > 244 |  await expect(d.getByRole('status')).toContainText('账号已保存，尚未验证');await expect(d.locator('dd.account-id')).toHaveText(id);await expect(d.getByRole('link',{name:'打开小红书主页'})).toHaveAttribute('href',`https://www.xiaohongshu.com/user/profile/${id}`);await expect(d.locator('input[name=platform_user_id]')).toHaveCount(0);await page.context().grantPermissions(['clipboard-read','clipboard-write']);await d.getByRole('button',{name:'复制内部账号ID'}).click();await expect(d.getByRole('status')).toContainText('内部账号ID已复制');expect(await page.evaluate(()=>navigator.clipboard.readText())).toBe(id);await expect(d).toContainText('登录身份未验证');await expect(d.getByRole('button',{name:'验证账号',exact:true})).toBeDisabled();
+          |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             ^
+      245 |  await page.getByRole('button',{name:'关闭详情'}).click();await page.reload();const row=page.getByRole('row').filter({hasText:name});await expect(row).toContainText(id);await expect(row).toContainText('身份未验证');
+      246 |  await row.getByRole('button',{name:'查看 / 编辑'}).click();await d.getByLabel('本地备注名称').fill(name+'已编辑');await d.getByRole('button',{name:'保存修改'}).click();await expect(d.getByRole('status')).toContainText('账号已保存');
+      247 |  for(const width of [1440,320]){await page.setViewportSize({width,height:1000});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await expect(d.locator('dd.account-id')).toHaveText(id);mkdirSync((process.env.EVIDENCE_DIR??'docs/evidence/change020')+'/screenshots',{recursive:true});await page.screenshot({path:`${process.env.EVIDENCE_DIR??'docs/evidence/change020'}/screenshots/account-detail-${width}.png`});}
+        at /Users/junlong/projects/social-mdeida-ops-platform/tests/browser.spec.ts:244:685
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser-小红书账号保存明确未验证，完整身份和安全主页刷新保留，窄屏可核对/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/browser-小红书账号保存明确未验证，完整身份和安全主页刷新保留，窄屏可核对/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/browser-小红书账号保存明确未验证，完整身份和安全主页刷新保留，窄屏可核对/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/browser-小红书账号保存明确未验证，完整身份和安全主页刷新保留，窄屏可核对/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) tests/browser.spec.ts:262:5 › 小红书在线验证持久进度、公开/登录身份、人工确认和换档案失效 ──────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoContainText[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: getByRole('dialog').getByRole('region', { name: '账号身份核验' })
+    Expected substring: [32m"公开身份已匹配"[39m
+    Error: strict mode violation: getByRole('dialog').getByRole('region', { name: '账号身份核验' }) resolved to 3 elements:
+        1) <section aria-label="账号身份核验" class="account-verification">…</section> aka getByRole('region', { name: '账号身份核验' }).first()
+        2) <section aria-label="账号身份核验" class="account-verification">…</section> aka getByRole('region', { name: '账号身份核验' }).nth(1)
+        3) <section aria-label="账号身份核验" class="account-verification">…</section> aka getByRole('region', { name: '账号身份核验' }).nth(2)
+
+    Call log:
+    [2m  - Expect "toContainText" with timeout 5000ms[22m
+    [2m  - waiting for getByRole('dialog').getByRole('region', { name: '账号身份核验' })[22m
+    [2m    2 × locator resolved to <section aria-label="账号身份核验" class="account-verification">…</section>[22m
+    [2m      - unexpected value "身份核验与可用范围刷新核验状态浏览器档案（仅配置引用）未选择档案browser-profile（当前未连接）刷新档案选择你已登录小红书的浏览器档案，不在工作台输入密码或Cookie。浏览器关闭或登录切换后需重新验证。保存浏览器档案查看 / 复用当前验证取消验证等待处理 正在等待或执行只读验证，关闭页面不会丢失记录。公开身份尚未验证当前绑定身份登录身份登录身份未确认平台返回昵称 / 展示号未取得可靠资料最近请求 / 开始 / 完成2026/10/28 11:33:25 / 未开始 / 未完成实际观察时间尚无观察结果管理确认：尚未确认当前核验结果验证历史记录刷新验证记录尚无验证记录"[22m
+    [2m    4 × locator resolved to <section aria-label="账号身份核验" class="account-verification">…</section>[22m
+    [2m      - unexpected value "身份核验与可用范围刷新核验状态浏览器档案（仅配置引用）未选择档案browser-profileother-browser-profile刷新档案选择你已登录小红书的浏览器档案，不在工作台输入密码或Cookie。浏览器关闭或登录切换后需重新验证。保存浏览器档案查看 / 复用当前验证取消验证等待处理 正在等待或执行只读验证，关闭页面不会丢失记录。公开身份尚未验证当前绑定身份登录身份登录身份未确认平台返回昵称 / 展示号未取得可靠资料最近请求 / 开始 / 完成2026/10/28 11:33:25 / 未开始 / 未完成实际观察时间尚无观察结果管理确认：尚未确认当前核验结果验证历史记录刷新验证记录尚无验证记录"[22m
+
+
+      262 | test('小红书在线验证持久进度、公开/登录身份、人工确认和换档案失效',async({page})=>{
+      263 |  const id=crypto.randomUUID().replaceAll('-','').slice(0,22)+'ab',name='明确合成验证闭环';await page.goto('/#settings?tab=accounts');await page.getByRole('button',{name:'添加账号',exact:true}).click();let d=page.getByRole('dialog');await d.getByLabel('小红书主页链接或内部账号 ID').fill(id);await d.getByLabel('本地备注名称').fill(name);await expect(d.getByRole('option',{name:'browser-profile',exact:true})).toHaveCount(1);await d.getByLabel('浏览器档案（仅配置引用）').selectOption('browser-profile');
+    > 264 |  await d.getByRole('button',{name:'保存并验证',exact:true}).click();await expect(d).toContainText('账号已保存，验证请求已提交');await page.keyboard.press('Escape');await page.reload();await page.getByRole('row').filter({hasText:name}).getByRole('button',{name:'查看 / 编辑'}).click();d=page.getByRole('dialog');const panel=d.getByRole('region',{name:'账号身份核验'});await expect(panel).toContainText('公开身份已匹配');await expect(panel).toContainText('当前登录身份一致');await expect(panel).toContainText('后台指标：未验证');await expect(panel).toContainText('明确合成平台昵称');
+          |                                                                                                                                                                                                                                                                                                                                                                        ^
+      265 |  await panel.getByRole('checkbox').check();await panel.getByRole('button',{name:'确认管理此账号',exact:true}).click();await expect(panel).toContainText('已人工确认管理此账号');await d.getByLabel('本地备注名称').fill(name+'改备注');await d.getByRole('button',{name:'保存修改'}).click();await expect(panel).toContainText('已人工确认管理此账号');
+      266 |  await panel.getByLabel('浏览器档案（仅配置引用）').selectOption('other-browser-profile');await panel.getByRole('button',{name:'保存浏览器档案'}).click();await expect(panel).toContainText('尚未确认当前核验结果');await expect(panel).toContainText('历史观察，需要重新验证');await panel.getByRole('button',{name:'验证账号',exact:true}).click();await expect(panel).toContainText('当前登录身份一致');await panel.locator('summary').filter({hasText:'验证历史记录'}).click();await expect(panel.locator('ol li')).toHaveCount(2);
+      267 |  for(const width of [1440,320]){await page.setViewportSize({width,height:1000});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:`${process.env.EVIDENCE_DIR}/screenshots/account-verified-${width}.png`});}
+        at /Users/junlong/projects/social-mdeida-ops-platform/tests/browser.spec.ts:264:360
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser-小红书在线验证持久进度、公开-登录身份、人工确认和换档案失效/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/browser-小红书在线验证持久进度、公开-登录身份、人工确认和换档案失效/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/browser-小红书在线验证持久进度、公开-登录身份、人工确认和换档案失效/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/browser-小红书在线验证持久进度、公开-登录身份、人工确认和换档案失效/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) tests/browser.spec.ts:270:5 › 小红书登录错号分开显示，登录失效可恢复，保存成功与验证提交失败分别提示 ─────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoContainText[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: getByRole('dialog').getByRole('region', { name: '账号身份核验' })
+    Expected substring: [32m"当前登录账号不一致"[39m
+    Error: strict mode violation: getByRole('dialog').getByRole('region', { name: '账号身份核验' }) resolved to 4 elements:
+        1) <section aria-label="账号身份核验" class="account-verification">…</section> aka getByRole('region', { name: '账号身份核验' }).first()
+        2) <section aria-label="账号身份核验" class="account-verification">…</section> aka getByRole('region', { name: '账号身份核验' }).nth(1)
+        3) <section aria-label="账号身份核验" class="account-verification">…</section> aka getByRole('region', { name: '账号身份核验' }).nth(2)
+        4) <section aria-label="账号身份核验" class="account-verification">…</section> aka getByRole('region', { name: '账号身份核验' }).nth(3)
+
+    Call log:
+    [2m  - Expect "toContainText" with timeout 5000ms[22m
+    [2m  - waiting for getByRole('dialog').getByRole('region', { name: '账号身份核验' })[22m
+
+
+      270 | test('小红书登录错号分开显示，登录失效可恢复，保存成功与验证提交失败分别提示',async({page})=>{
+      271 |  async function create(suffix:string,name:string){await page.goto('/#settings?tab=accounts');await page.getByRole('button',{name:'添加账号',exact:true}).click();const d=page.getByRole('dialog');await d.getByLabel('小红书主页链接或内部账号 ID').fill(crypto.randomUUID().replaceAll('-','').slice(0,22)+suffix);await d.getByLabel('本地备注名称').fill(name);await expect(d.getByRole('option',{name:'browser-profile',exact:true})).toHaveCount(1);await d.getByLabel('浏览器档案（仅配置引用）').selectOption('browser-profile');return d;}
+    > 272 |  let d=await create('dd','明确合成登录错号');await d.getByRole('button',{name:'保存并验证'}).click();let panel=d.getByRole('region',{name:'账号身份核验'});await expect(panel).toContainText('当前登录账号不一致');await expect(panel).toContainText('公开身份已匹配');await expect(panel).toContainText('系统不会替换登记身份');await expect(panel).toContainText('后台指标：未验证');await page.keyboard.press('Escape');
+          |                                                                                                                                                             ^
+      273 |  d=await create('ee','明确合成失效恢复');await d.getByRole('button',{name:'保存并验证'}).click();panel=d.getByRole('region',{name:'账号身份核验'});await expect(panel).toContainText('需要在指定档案登录');await expect(panel.getByRole('button',{name:'验证账号',exact:true})).toBeDisabled();await panel.getByLabel('浏览器档案（仅配置引用）').selectOption('other-browser-profile');await panel.getByRole('button',{name:'保存浏览器档案'}).click();await panel.getByRole('button',{name:'验证账号',exact:true}).click();await expect(panel).toContainText('当前登录身份一致');await panel.locator('summary').filter({hasText:'验证历史记录'}).click();await expect(panel.locator('ol li')).toHaveCount(2);await expect(panel.locator('ol')).toContainText('AUTH_REQUIRED');await page.keyboard.press('Escape');
+      274 |  d=await create('ac','明确合成验证提交失败');let failed=false;await page.route('**/api/v1/accounts/*/verifications',route=>{if(route.request().method()==='POST'&&!failed){failed=true;return route.fulfill({status:503,json:{error:{code:'SERVICE_UNAVAILABLE',message:'合成提交不可用'}}});}return route.continue();});await d.getByRole('button',{name:'保存并验证'}).click();await expect(d).toContainText('账号已保存，但验证未提交');await expect(d.getByLabel('本地备注名称')).toHaveValue('明确合成验证提交失败');panel=d.getByRole('region',{name:'账号身份核验'});await panel.getByRole('button',{name:'验证账号',exact:true}).click();await expect(panel).toContainText('公开身份已匹配');await page.keyboard.press('Escape');await expect(page.getByRole('row').filter({hasText:'明确合成验证提交失败'})).toHaveCount(1);
+      275 | });
+        at /Users/junlong/projects/social-mdeida-ops-platform/tests/browser.spec.ts:272:157
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser-小红书登录错号分开显示，登录失效可恢复，保存成功与验证提交失败分别提示/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/browser-小红书登录错号分开显示，登录失效可恢复，保存成功与验证提交失败分别提示/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/browser-小红书登录错号分开显示，登录失效可恢复，保存成功与验证提交失败分别提示/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/browser-小红书登录错号分开显示，登录失效可恢复，保存成功与验证提交失败分别提示/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    tests/browser.spec.ts:239:5 › 小红书账号保存明确未验证，完整身份和安全主页刷新保留，窄屏可核对 ─────────────────────────────────
+    tests/browser.spec.ts:262:5 › 小红书在线验证持久进度、公开/登录身份、人工确认和换档案失效 ───────────────────────────────────
+    tests/browser.spec.ts:270:5 › 小红书登录错号分开显示，登录失效可恢复，保存成功与验证提交失败分别提示 ──────────────────────────────
+  2 passed (10.7s)

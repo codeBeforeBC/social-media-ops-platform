@@ -7,7 +7,7 @@ S['MemberCreate']['properties']['roles']=admin_roles
 S['MemberCreate']['required']=['email']
 S['MemberPatch']['properties']['roles']=admin_roles
 S['AcceptInvite']=obj({'invitation_token':title,'password':{'type':'string','minLength':12,'maxLength':128}},['invitation_token','password'])
-S['AccountCreate']=obj({'platform':enum('weibo','xiaohongshu'),'platform_user_id':title,'display_handle':title,'name':title,'timezone':ref('Timezone')},['platform','platform_user_id','name'])
+S['AccountCreate']=obj({'platform':{'const':'xiaohongshu'},'platform_user_id':{'type':'string','minLength':1,'maxLength':2000,'pattern':r'^(?:[a-fA-F0-9]{24}|https://www\.xiaohongshu\.com/user/profile/[a-fA-F0-9]{24}/?(?:[?#][^\s]*)?)$'},'display_handle':title,'name':title,'timezone':ref('Timezone')},['platform','platform_user_id','name'])
 S['DiagnosticInput']=obj({'pool':enum('general'),'account_id':ref('Id')},['pool'])
 S['JobReason']=obj({'reason':{'type':'string','minLength':1,'maxLength':1000}},['reason'])
 S['LoginSession']=obj({'authenticated':{'const':True},'csrf_token':title,'expires_at':timestamp},['authenticated','csrf_token','expires_at'])
@@ -57,3 +57,25 @@ for method,path,response,code,request,public in [
  ('post','/diagnostics',ref('DiagnosticAccepted'),'202','DiagnosticInput',False),('get','/monitor',ref('Monitor'),'200',None,False),('get','/dashboard',ref('S1Dashboard'),'200',None,False)
 ]:s1(method,path,response,code,request,public)
 # 下载/预览保留planned：S1只有角色守卫，S2才返回真实签名地址。
+# CHANGE-020: observed platform identity, current session, and human declaration are independent.
+profile_ref={'type':'string','pattern':'^[A-Za-z0-9_-]{1,100}$'}
+S['AccountCreate']['properties']['browser_profile_ref']=nullable(profile_ref)
+S['AccountPatch']['properties']['browser_profile_ref']=nullable(profile_ref)
+capability=enum('unknown','supported','unsupported')
+S['AccountVerificationResult']=obj({'public_status':enum('matched','inconclusive','not_found'),'session_status':enum('unknown','matched','mismatched','auth_required','unsupported'),
+ 'public_profile':nullable(obj({'id':{'type':'string','pattern':'^[a-f0-9]{24}$'},'nickname':title,'display_handle':nullable(string)},['id','nickname','display_handle'])),
+ 'session_id':nullable({'type':'string','pattern':'^[a-f0-9]{24}$'}),'observed_at':timestamp,'adapter_version':title,
+ 'capabilities':obj({'public_identity':capability,'current_session_identity':capability,'own_account_metrics':capability},['public_identity','current_session_identity','own_account_metrics']),
+ 'error_code':nullable(string)},['public_status','session_status','public_profile','session_id','observed_at','adapter_version','capabilities','error_code'])
+S['AccountVerification']=obj({'id':ref('Id'),'workspace_id':ref('Id'),'account_id':ref('Id'),'binding_version':version,'expected_platform_user_id':title,'browser_profile_ref':profile_ref,'requested_by':ref('Id'),'requested_at':timestamp,'job_id':ref('Id'),'result':nullable(ref('AccountVerificationResult')),'applied_at':nullable(timestamp),'state':enum('queued','running','succeeded','partial','failed','cancelled'),'started_at':nullable(timestamp),'finished_at':nullable(timestamp),'error_code':nullable(string)},['id','workspace_id','account_id','binding_version','expected_platform_user_id','browser_profile_ref','requested_by','requested_at','job_id','result','applied_at','state','started_at','finished_at','error_code'])
+S['AccountVerificationSummary']=obj({'latest':nullable(ref('AccountVerification')),'last_success':nullable(ref('AccountVerification')),'current':boolean,'stale':boolean,'confirmed':boolean,'as_of':timestamp},['latest','last_success','current','stale','confirmed','as_of'])
+S['SocialAccount']['properties'].update({'browser_profile_ref':nullable(profile_ref),'identity_binding_version':version,'confirmed_verification_id':nullable(ref('Id')),'confirmed_at':nullable(timestamp),'verification_next_at':nullable(timestamp),'verification':ref('AccountVerificationSummary')})
+S['AccountVerificationCreate']=obj({'expected_version':version,'binding_version':version},['expected_version','binding_version'])
+S['AccountIdentityConfirm']=obj({'verification_id':ref('Id'),'expected_version':version,'confirmed':{'const':True}},['verification_id','expected_version','confirmed'])
+S['AccountVerificationAccepted']=obj({'verification':ref('AccountVerification'),'reused':boolean},['verification','reused'])
+s1('get','/account-browser-profiles',obj({'items':arr(obj({'id':profile_ref},['id']))},['items']))
+s1('post','/accounts/{id}/verifications',ref('AccountVerificationAccepted'),'202','AccountVerificationCreate')
+s1('get','/accounts/{id}/verifications',obj({'items':arr(ref('AccountVerification')),'next_cursor':nullable(string)},['items','next_cursor']))
+s1('get','/accounts/{id}/verifications/{verification_id}',ref('AccountVerification'))
+s1('post','/accounts/{id}/identity-confirmation',ref('SocialAccount'),'200','AccountIdentityConfirm')
+paths['/accounts/{id}/verifications']['get']['parameters'] += [{'name':name,'in':'query','required':False,'schema':{'type':'string'}} for name in ['cursor','limit']]

@@ -1,0 +1,68 @@
+Applied 001-foundation.sql
+Applied 002-invitations.sql
+Applied 003-outbox-composite-unique.sql
+Applied 004-files.sql
+Applied 005-assets.sql
+Applied 006-media.sql
+Applied 007-s2-contract-fields.sql
+Applied 008-s2-governance.sql
+Applied 009-collection-runtime.sql
+Applied 010-source-evidence.sql
+Applied 011-ai-gateway.sql
+Applied 012-ai-requests.sql
+Applied 013-topics.sql
+Applied 014-topic-observation-binding.sql
+Applied 015-generated-briefs.sql
+Applied 016-frozen-revision-immutability.sql
+Applied 017-graphic-deliverables.sql
+Applied 018-content-production-metadata.sql
+Applied 019-content-reviews.sql
+Applied 020-content-cancellation.sql
+Applied 021-export-packages.sql
+Applied 022-publications.sql
+Applied 023-published-work-items.sql
+Applied 024-publication-changes.sql
+Applied 025-independent-notes-files.sql
+Applied 026-retire-cancelled-workflows.sql
+Applied 027-import-batches.sql
+Applied 028-metric-confirmation.sql
+Applied 029-metric-revert-provenance.sql
+Applied 030-metric-calculations.sql
+Applied 031-import-derived-invalidation.sql
+Applied 032-derived-metric-dictionary.sql
+Applied 033-current-calculation-fingerprint.sql
+Applied 034-reports-and-strategies.sql
+Applied 035-feedback.sql
+Applied 036-source-organization.sql
+Applied 037-screenshot-imports.sql
+Applied 038-all-members-admin.sql
+Applied 039-local-instance.sql
+{"event":"http.request","request_id":"a0c67233-2f0a-4069-8f6e-06fcef9386c6","method":"GET","path":"/api/v1/request/csrf","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"85ab3fd7-53f1-4128-9c68-272f5ae1ac35","method":"GET","path":"/api/v1/instance","status":200,"duration_ms":95}
+✔ 小红书身份只解析明确的内部ID/主页，去除访问参数且不接受笔记/短链/任意地址 (548.059958ms)
+{"event":"http.request","request_id":"3b81572a-2155-4c21-8835-665a9d42eac2","method":"POST","path":"/api/v1/accounts","status":201,"duration_ms":15}
+{"event":"http.request","request_id":"b7fb235e-976c-4c63-b7ec-fa602c913cde","method":"POST","path":"/api/v1/accounts","status":201,"duration_ms":14}
+✔ 保存只登记小红书、规范化ID和主页，幂等重放不重复，不存签名参数 (26.901625ms)
+{"event":"http.request","request_id":"0aecf2a5-ea06-4649-9aeb-307beaef7bfd","method":"GET","path":"/api/v1/accounts","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"0e0e7d8e-651b-44e0-9d16-0730e52cd36e","method":"POST","path":"/api/v1/accounts","status":409,"duration_ms":6}
+{"event":"http.request","request_id":"39a446b7-a3e5-489c-8dd2-fc809573f671","method":"POST","path":"/api/v1/accounts","status":409,"duration_ms":7}
+{"event":"http.request","request_id":"b46f84c8-0874-44eb-85b3-07fcfea2ac38","method":"GET","path":"/api/v1/accounts/4b7e82a2-b95f-431b-9d52-df2ee9eb4ff1","status":200,"duration_ms":1}
+✔ 相同身份并发新增返回已有账号入口，保留原备注与工作区边界 (26.622209ms)
+{"event":"http.request","request_id":"094ae34b-f366-4450-a3f2-b69f6771bcfe","method":"GET","path":"/api/v1/accounts","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"c92dcfdf-7871-4ab4-8fcd-8ee13224a2ad","method":"POST","path":"/api/v1/accounts","status":422,"duration_ms":3}
+{"event":"http.request","request_id":"8cb962d8-6f89-4c19-8630-7c5ebf8c0eee","method":"POST","path":"/api/v1/accounts","status":422,"duration_ms":4}
+{"event":"http.request","request_id":"ef09549d-c464-486f-b569-224092623a28","method":"POST","path":"/api/v1/accounts","status":422,"duration_ms":3}
+{"event":"http.request","request_id":"b0da9c8a-5454-4612-8d45-8818044a6181","method":"GET","path":"/api/v1/accounts","status":200,"duration_ms":1}
+✔ 无效身份/其他平台/伪造已验证状态均拒绝，无远端任务或入库副作用 (17.311292ms)
+{"event":"http.request","request_id":"1d349766-d2fe-4245-8c91-57c4796a4067","method":"GET","path":"/api/v1/instance","status":200,"duration_ms":1}
+{"event":"http.request","request_id":"255c7b8f-328d-4e8f-8cd6-62f383ddb33f","method":"PATCH","path":"/api/v1/accounts/651d8282-65e2-45cc-83cd-8ed2fa91db97","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"3b4ec2a7-74db-4579-9ad5-426b62961aee","method":"PATCH","path":"/api/v1/accounts/651d8282-65e2-45cc-83cd-8ed2fa91db97","status":422,"duration_ms":7}
+✔ 旧账号格式不符仍可读取和编辑备注，不能普通编辑换号或改平台 (18.906542ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1384.528208

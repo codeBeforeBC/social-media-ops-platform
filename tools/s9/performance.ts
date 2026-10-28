@@ -10,7 +10,7 @@ async function main(){
  const env=await server(),admin=new Client(env.url),users:Client[]=[admin];
  const report:any={checked_at:new Date().toISOString(),classification:'synthetic_scale_actual_runtime_measurements',environment:{api:'native_host_node',db:'Docker Desktop arm64 PostgreSQL on loopback',host_platform:platform(),host_arch:arch(),host_cpus:cpus().length,host_memory_bytes:totalmem(),database:'yoyo_s9_performance_test'},production_environment_acceptance:false,api:[],ui:[]};
  try{
-  const me=await initialize(admin),account=(await admin.call('/accounts','POST',{platform:'xiaohongshu',platform_user_id:'synthetic-scale-only',name:'明确合成性能账号'})).data;
+  const me=await initialize(admin),account=(await admin.call('/accounts','POST',{platform:'xiaohongshu',platform_user_id:'087d1ee59a35a93d0bf89ec7',name:'明确合成性能账号'})).data;
   for(let i=1;i<=4;i++){const u=new Client(env.url);await u.init();users.push(u);}
   const source=(await admin.call('/source-connections','POST',{name:'合成规模来源（禁用）',platform:'xiaohongshu',provider:'opencli',source_type:'xhs_topic_signal',enabled:false,config:{keywords:['synthetic']}})).data;
   await env.db.query(`INSERT INTO source_items(workspace_id,connection_id,external_id,canonical_url,actual_source_type,title,captured_at,media_type,cluster_key,content_hash)

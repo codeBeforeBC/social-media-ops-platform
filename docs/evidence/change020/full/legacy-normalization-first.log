@@ -1,0 +1,37 @@
+{"event":"http.request","request_id":"70551052-75ae-49fa-950b-f95f55c3f87e","method":"GET","path":"/api/v1/request/csrf","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"823651bf-0778-4e6e-9f93-1936598ab057","method":"GET","path":"/api/v1/instance","status":200,"duration_ms":87}
+{"event":"http.request","request_id":"e6c1624b-f2e6-4402-8d32-e90e1e679e6a","method":"POST","path":"/api/v1/accounts","status":201,"duration_ms":18}
+{"event":"http.request","request_id":"1d74b763-3c55-471c-84cb-8be0fefafc11","method":"GET","path":"/api/v1/accounts/956e8bdc-2a0d-4f6a-b388-b3eeaa21deeb","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"d6e526d1-447b-4f6a-91af-06f8dbc4148b","method":"POST","path":"/api/v1/accounts/956e8bdc-2a0d-4f6a-b388-b3eeaa21deeb/verifications","status":202,"duration_ms":14}
+{"event":"http.request","request_id":"fd942c5b-0556-4adb-81c0-f48b1ba14f90","method":"GET","path":"/api/v1/accounts/956e8bdc-2a0d-4f6a-b388-b3eeaa21deeb","status":200,"duration_ms":2}
+✖ 旧库大写内部ID按规范身份验证且能确认，新登记不能形成同身份重复 (772.127209ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1562.218625
+
+✖ failing tests:
+
+test at tests/account-verifications.test.ts:2:16927
+✖ 旧库大写内部ID按规范身份验证且能确认，新登记不能形成同身份重复 (772.127209ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+
+  + 'failed'
+  - 'succeeded'
+
+      at TestContext.<anonymous> (/Users/junlong/projects/social-mdeida-ops-platform/tests/account-verifications.test.ts:95:255)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'failed',
+    expected: 'succeeded',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

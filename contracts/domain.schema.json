@@ -906,6 +906,56 @@
         "updated_at": {
           "type": "string",
           "format": "date-time"
+        },
+        "browser_profile_ref": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_-]{1,100}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "identity_binding_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "confirmed_verification_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "confirmed_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "verification_next_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "verification": {
+          "$ref": "#/$defs/AccountVerificationSummary"
         }
       },
       "required": [
@@ -2353,6 +2403,17 @@
         "expected_version": {
           "type": "integer",
           "minimum": 1
+        },
+        "browser_profile_ref": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_-]{1,100}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "required": [
@@ -3281,16 +3342,13 @@
       "type": "object",
       "properties": {
         "platform": {
-          "type": "string",
-          "enum": [
-            "weibo",
-            "xiaohongshu"
-          ]
+          "const": "xiaohongshu"
         },
         "platform_user_id": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 200
+          "maxLength": 2000,
+          "pattern": "^(?:[a-fA-F0-9]{24}|https://www\\.xiaohongshu\\.com/user/profile/[a-fA-F0-9]{24}/?(?:[?#][^\\s]*)?)$"
         },
         "display_handle": {
           "type": "string",
@@ -3304,6 +3362,17 @@
         },
         "timezone": {
           "$ref": "#/$defs/Timezone"
+        },
+        "browser_profile_ref": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_-]{1,100}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "required": [
@@ -3498,6 +3567,366 @@
         "job_id",
         "status_url",
         "state"
+      ],
+      "additionalProperties": false
+    },
+    "AccountVerificationResult": {
+      "type": "object",
+      "properties": {
+        "public_status": {
+          "type": "string",
+          "enum": [
+            "matched",
+            "inconclusive",
+            "not_found"
+          ]
+        },
+        "session_status": {
+          "type": "string",
+          "enum": [
+            "unknown",
+            "matched",
+            "mismatched",
+            "auth_required",
+            "unsupported"
+          ]
+        },
+        "public_profile": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{24}$"
+                },
+                "nickname": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                "display_handle": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 10000
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "nickname",
+                "display_handle"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "session_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "adapter_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "capabilities": {
+          "type": "object",
+          "properties": {
+            "public_identity": {
+              "type": "string",
+              "enum": [
+                "unknown",
+                "supported",
+                "unsupported"
+              ]
+            },
+            "current_session_identity": {
+              "type": "string",
+              "enum": [
+                "unknown",
+                "supported",
+                "unsupported"
+              ]
+            },
+            "own_account_metrics": {
+              "type": "string",
+              "enum": [
+                "unknown",
+                "supported",
+                "unsupported"
+              ]
+            }
+          },
+          "required": [
+            "public_identity",
+            "current_session_identity",
+            "own_account_metrics"
+          ],
+          "additionalProperties": false
+        },
+        "error_code": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 10000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "public_status",
+        "session_status",
+        "public_profile",
+        "session_id",
+        "observed_at",
+        "adapter_version",
+        "capabilities",
+        "error_code"
+      ],
+      "additionalProperties": false
+    },
+    "AccountVerification": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspace_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "account_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "binding_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "expected_platform_user_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "browser_profile_ref": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{1,100}$"
+        },
+        "requested_by": {
+          "$ref": "#/$defs/Id"
+        },
+        "requested_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "job_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "result": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AccountVerificationResult"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "applied_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "queued",
+            "running",
+            "succeeded",
+            "partial",
+            "failed",
+            "cancelled"
+          ]
+        },
+        "started_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "finished_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error_code": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 10000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "workspace_id",
+        "account_id",
+        "binding_version",
+        "expected_platform_user_id",
+        "browser_profile_ref",
+        "requested_by",
+        "requested_at",
+        "job_id",
+        "result",
+        "applied_at",
+        "state",
+        "started_at",
+        "finished_at",
+        "error_code"
+      ],
+      "additionalProperties": false
+    },
+    "AccountVerificationSummary": {
+      "type": "object",
+      "properties": {
+        "latest": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AccountVerification"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "last_success": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AccountVerification"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "current": {
+          "type": "boolean"
+        },
+        "stale": {
+          "type": "boolean"
+        },
+        "confirmed": {
+          "type": "boolean"
+        },
+        "as_of": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "latest",
+        "last_success",
+        "current",
+        "stale",
+        "confirmed",
+        "as_of"
+      ],
+      "additionalProperties": false
+    },
+    "AccountVerificationCreate": {
+      "type": "object",
+      "properties": {
+        "expected_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "binding_version": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "expected_version",
+        "binding_version"
+      ],
+      "additionalProperties": false
+    },
+    "AccountIdentityConfirm": {
+      "type": "object",
+      "properties": {
+        "verification_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "expected_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "confirmed": {
+          "const": true
+        }
+      },
+      "required": [
+        "verification_id",
+        "expected_version",
+        "confirmed"
+      ],
+      "additionalProperties": false
+    },
+    "AccountVerificationAccepted": {
+      "type": "object",
+      "properties": {
+        "verification": {
+          "$ref": "#/$defs/AccountVerification"
+        },
+        "reused": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "verification",
+        "reused"
       ],
       "additionalProperties": false
     },
