@@ -1,0 +1,50 @@
+[2m[WebServer] [22m(node:78018) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:78019) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:78025) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:78025) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:78100) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:78100) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 tests/browser.spec.ts:313:5 › 删除被拒绝时错误出现在确认区且自动进入视野，不能只在抽屉屏幕外提示 (1.0s)
+
+
+  1) tests/browser.spec.ts:313:5 › 删除被拒绝时错误出现在确认区且自动进入视野，不能只在抽屉屏幕外提示 ───────────────────────────────
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32m1[39m
+    Received: [31m0[39m
+
+      315 |  await page.route(`**/api/v1/accounts/${account.id}`,route=>{if(route.request().method()!=='DELETE')return route.continue();deletes++;return route.fulfill({status:409,json:{error:{code:'ACCOUNT_HAS_HISTORY',message,request_id:'explicit-synthetic-error-visibility'}}});});
+      316 |  for(const [width,height] of [[1440,900],[320,568]]){
+    > 317 |   await page.setViewportSize({width:width!,height:height!});await dialog.getByRole('button',{name:'删除账号',exact:true}).click();const confirmation=dialog.getByRole('region',{name:'删除账号确认'});await confirmation.getByRole('button',{name:'确认删除账号',exact:true}).scrollIntoViewIfNeeded();await confirmation.getByRole('button',{name:'确认删除账号',exact:true}).click();await expect(dialog.getByRole('alert')).toContainText('选题');expect(await confirmation.getByRole('alert').count()).toBe(1);
+          |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ^
+      318 |   await expect.poll(async()=>{const box=await confirmation.getByRole('alert').boundingBox();return !!box&&box.y>=0&&box.y+box.height<=height!;}).toBe(true);await expect(confirmation.getByRole('alert')).toContainText('不能删除');await expect(confirmation.getByRole('button',{name:'确认删除账号',exact:true})).toBeEnabled();
+      319 |   mkdirSync((process.env.EVIDENCE_DIR??'docs/evidence/bug040')+'/screenshots',{recursive:true});await page.screenshot({path:`${process.env.EVIDENCE_DIR??'docs/evidence/bug040'}/screenshots/delete-error-${width}.png`});await confirmation.getByRole('button',{name:'取消删除'}).click();
+      320 |  }
+        at /Users/junlong/projects/social-mdeida-ops-platform/tests/browser.spec.ts:317:468
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser-删除被拒绝时错误出现在确认区且自动进入视野，不能只在抽屉屏幕外提示/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/browser-删除被拒绝时错误出现在确认区且自动进入视野，不能只在抽屉屏幕外提示/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/browser-删除被拒绝时错误出现在确认区且自动进入视野，不能只在抽屉屏幕外提示/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/browser-删除被拒绝时错误出现在确认区且自动进入视野，不能只在抽屉屏幕外提示/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/browser.spec.ts:313:5 › 删除被拒绝时错误出现在确认区且自动进入视野，不能只在抽屉屏幕外提示 ────────────────────────────────

@@ -1,0 +1,39 @@
+{
+  "objective": "实现空运营账号删除功能",
+  "checked_at": "2026-10-28T15:42:53.742898+00:00",
+  "requirements": [
+    {
+      "id": "server_delete",
+      "proof": "8项专项和175完整集成：确认/版本/权限/关联/保留审计/幂等/旧请求不复活",
+      "result": "passed"
+    },
+    {
+      "id": "race_and_history",
+      "proof": "实际PG锁等待的两种并发顺序、新增CASCADE外键、笔记/验证/任务保护",
+      "result": "passed"
+    },
+    {
+      "id": "ui",
+      "proof": "3新增场景及旧定位修正后的4最终复验；选择器在实际数据响应后核对",
+      "result": "passed"
+    },
+    {
+      "id": "delivery",
+      "proof": "本地API更新、JS/CSS/后端编译一致、59表hash/默认身份/AI保持、实际界面只读确认取消",
+      "result": "passed"
+    }
+  ],
+  "task_counts": {
+    "DONE": 34,
+    "DOING": 1,
+    "VERIFY": 7,
+    "BLOCKED": 1,
+    "TODO": 2,
+    "CANCELLED": 24
+  },
+  "links_checked": 28,
+  "migration_added": false,
+  "actual_user_account_deleted": false,
+  "remaining_in_requested_scope": [],
+  "limits": "仅空登记可删；有关联则拒绝，不包含归档/连带删除；未提交推送"
+}

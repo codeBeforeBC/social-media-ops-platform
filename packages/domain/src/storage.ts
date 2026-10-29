@@ -1,6 +1,6 @@
 import {readFileSync} from 'node:fs';
 import {resolve} from 'node:path';
-import {S3Client,HeadBucketCommand,CreateBucketCommand,PutBucketCorsCommand,CreateMultipartUploadCommand,UploadPartCommand,CompleteMultipartUploadCommand,AbortMultipartUploadCommand,GetObjectCommand,HeadObjectCommand,DeleteObjectCommand,PutObjectCommand} from '@aws-sdk/client-s3';
+import {S3Client,ListObjectsV2Command,ListMultipartUploadsCommand,HeadBucketCommand,CreateBucketCommand,PutBucketCorsCommand,CreateMultipartUploadCommand,UploadPartCommand,CompleteMultipartUploadCommand,AbortMultipartUploadCommand,GetObjectCommand,HeadObjectCommand,DeleteObjectCommand,PutObjectCommand} from '@aws-sdk/client-s3';
 import {getSignedUrl} from '@aws-sdk/s3-request-presigner';
 import {config} from './config';
 import {AppError} from './protocol';
@@ -32,6 +32,12 @@ export class Storage {
   const uploadId=await this.create(key);let pending=Buffer.alloc(0),size=0;const digest=(await import('node:crypto')).createHash('sha256');const parts:{part_number:number;etag:string}[]=[];
   try{for await(const chunk of stream){size+=chunk.length;if(size>2147483648)throw new Error('PREVIEW_TOO_LARGE');digest.update(chunk);pending=Buffer.concat([pending,chunk]);while(pending.length>=8388608){const part=pending.subarray(0,8388608);pending=pending.subarray(8388608);const n=parts.length+1;parts.push({part_number:n,etag:await this.part(key,uploadId,n,part)});}}if(pending.length){const n=parts.length+1;parts.push({part_number:n,etag:await this.part(key,uploadId,n,pending)});}if(!parts.length)throw new Error('EMPTY_PREVIEW');await this.complete(key,uploadId,parts);return {size_bytes:size,sha256:digest.digest('hex')};}
   catch(e){await this.abort(key,uploadId);throw e;}
+ }
+ async list(prefix:string){
+  const objects:string[]=[],uploads:{key:string;upload_id:string}[]=[];let continuation:string|undefined,keyMarker:string|undefined,uploadMarker:string|undefined;
+  do{const r=await this.client.send(new ListObjectsV2Command({Bucket:this.bucket,Prefix:prefix,ContinuationToken:continuation}));for(const item of r.Contents??[])if(item.Key)objects.push(item.Key);continuation=r.IsTruncated?r.NextContinuationToken:undefined;}while(continuation);
+  do{const r=await this.client.send(new ListMultipartUploadsCommand({Bucket:this.bucket,Prefix:prefix,KeyMarker:keyMarker,UploadIdMarker:uploadMarker}));for(const item of r.Uploads??[])if(item.Key&&item.UploadId)uploads.push({key:item.Key,upload_id:item.UploadId});keyMarker=r.IsTruncated?r.NextKeyMarker:undefined;uploadMarker=r.IsTruncated?r.NextUploadIdMarker:undefined;}while(keyMarker);
+  return {objects,uploads};
  }
  async remove(key:string){await this.client.send(new DeleteObjectCommand({Bucket:this.bucket,Key:key}));}
  async put(key:string,body:Buffer,mime:string){await this.client.send(new PutObjectCommand({Bucket:this.bucket,Key:key,Body:body,ContentType:mime}));}

@@ -1,0 +1,56 @@
+[2m[WebServer] [22m(node:79695) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:79696) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:79702) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:79702) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:79795) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:79795) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 tests/browser.spec.ts:324:5 › 隐藏核验区的后台刷新不能清除删除被拒绝的反馈 (7.9s)
+
+
+  1) tests/browser.spec.ts:324:5 › 隐藏核验区的后台刷新不能清除删除被拒绝的反馈 ──────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoContainText[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: getByRole('dialog').getByRole('region', { name: '删除账号确认' }).getByRole('alert')
+    Expected substring: [32m"在途任务"[39m
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toContainText" with timeout 5000ms[22m
+    [2m  - waiting for getByRole('dialog').getByRole('region', { name: '删除账号确认' }).getByRole('alert')[22m
+
+
+      327 |  await page.route(`**/api/v1/accounts/${account.id}`,route=>{if(route.request().method()==='DELETE')return route.fulfill({status:409,json:{error:{code:'ACCOUNT_HAS_ACTIVE_TASKS',message:'账号存在在途任务，不能删除',request_id:crypto.randomUUID()}}});if(route.request().method()==='GET')return route.fulfill({json:{data:{...account,browser_profile_ref:'browser-profile',verification:{latest:{...run,...(finished?{state:'cancelled',finished_at:new Date().toISOString(),error_code:'CANCELLED'}:{})},last_success:null,current:true,stale:true,confirmed:false,as_of:new Date().toISOString()}}}});return route.continue();});
+      328 |  await dialog.getByRole('region',{name:'账号身份核验'}).getByRole('button',{name:'刷新核验状态'}).click();await expect(dialog.locator('.account-verification .badge')).toHaveText('处理中');await dialog.getByRole('button',{name:'删除账号',exact:true}).click();const confirmation=dialog.getByRole('region',{name:'删除账号确认'});await confirmation.getByRole('button',{name:'确认删除账号',exact:true}).click();await expect(confirmation.getByRole('alert')).toContainText('在途任务');finished=true;
+    > 329 |  await expect(dialog.locator('.account-verification .badge')).toHaveText('已取消');await expect(confirmation.getByRole('alert')).toContainText('在途任务');await confirmation.getByRole('button',{name:'取消删除'}).click();
+          |                                                                                                                               ^
+      330 | });
+      331 |
+        at /Users/junlong/projects/social-mdeida-ops-platform/tests/browser.spec.ts:329:127
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser-隐藏核验区的后台刷新不能清除删除被拒绝的反馈/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/browser-隐藏核验区的后台刷新不能清除删除被拒绝的反馈/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/browser-隐藏核验区的后台刷新不能清除删除被拒绝的反馈/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/browser-隐藏核验区的后台刷新不能清除删除被拒绝的反馈/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/browser.spec.ts:324:5 › 隐藏核验区的后台刷新不能清除删除被拒绝的反馈 ───────────────────────────────────────────

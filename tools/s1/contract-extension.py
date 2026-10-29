@@ -79,3 +79,20 @@ s1('get','/accounts/{id}/verifications',obj({'items':arr(ref('AccountVerificatio
 s1('get','/accounts/{id}/verifications/{verification_id}',ref('AccountVerification'))
 s1('post','/accounts/{id}/identity-confirmation',ref('SocialAccount'),'200','AccountIdentityConfirm')
 paths['/accounts/{id}/verifications']['get']['parameters'] += [{'name':name,'in':'query','required':False,'schema':{'type':'string'}} for name in ['cursor','limit']]
+# CHANGE-023: physical deletion is limited to accounts without referenced history.
+S['AccountDelete']=obj({'expected_version':version,'confirmed':{'const':True}},['expected_version','confirmed'])
+S['AccountDeleted']=obj({'account_id':ref('Id'),'deleted':{'const':True}},['account_id','deleted'])
+s1('delete','/accounts/{id}',ref('AccountDeleted'),'200','AccountDelete')
+# CHANGE-025: durable force-deletion operation survives account and business cleanup.
+S['SocialAccount']['properties']['deletion_operation_id']=nullable(ref('Id'))
+S['Job']['allOf'][1]['properties']['execution_finished_at']=nullable(timestamp)
+S['AccountDeletion']=obj({'id':ref('Id'),'workspace_id':ref('Id'),'account_id':ref('Id'),'account_name':nullable(string),'state':enum('stopping','backing_up','purging','cleaning_files','completed','failed'),'phase':string,'counts':{'type':'object','additionalProperties':integer},'error_code':nullable(string),'created_at':timestamp,'updated_at':timestamp,'finished_at':nullable(timestamp),'backup_available':boolean,'job_state':nullable(enum('queued','running','succeeded','partial','failed','cancelled')),'attempts':nullable(integer)},['id','workspace_id','account_id','account_name','state','phase','counts','error_code','created_at','updated_at','finished_at','backup_available','job_state','attempts'])
+S['AccountDeletionImpact']=obj({'account_id':ref('Id'),'expected_version':version,'operation':ref('AccountDeletion'),'fingerprint':{'type':'string','pattern':'^[a-f0-9]{64}$'},'counts':{'type':'object','additionalProperties':integer},'file_count':integer,'retained_shared_files':integer,'shared_data_preserved':boolean},['account_id','expected_version'])
+S['AccountForceDelete']=obj({'expected_version':version,'confirmed':{'const':True},'force':{'const':True},'fingerprint':{'type':'string','pattern':'^[a-f0-9]{64}$'}},['expected_version','confirmed','force','fingerprint'])
+S['AccountEmptyDelete']=S['AccountDelete'];S['AccountDelete']={'oneOf':[ref('AccountEmptyDelete'),ref('AccountForceDelete')]}
+S['AccountDeletionAccepted']=obj({'operation':ref('AccountDeletion'),'reused':boolean},['operation','reused'])
+paths['/accounts/{id}']['delete']['responses']['202']={'description':'账号及专属数据删除已受理，状态以独立操作为准','content':{'application/json':{'schema':obj({'data':ref('AccountDeletionAccepted'),'meta':ref('Meta')},['data','meta'])}}}
+s1('get','/accounts/{id}/deletion-impact',ref('AccountDeletionImpact'))
+s1('get','/account-deletions',obj({'items':arr(ref('AccountDeletion'))},['items']))
+s1('get','/account-deletions/{id}',ref('AccountDeletion'))
+s1('post','/account-deletions/{id}/retry',ref('AccountDeletion'),'200')

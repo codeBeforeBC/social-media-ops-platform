@@ -956,6 +956,16 @@
         },
         "verification": {
           "$ref": "#/$defs/AccountVerificationSummary"
+        },
+        "deletion_operation_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "required": [
@@ -2192,6 +2202,17 @@
           "properties": {
             "state": {
               "$ref": "#/$defs/JobStatus"
+            },
+            "execution_finished_at": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ]
             },
             "pool": {
               "enum": [
@@ -3926,6 +3947,259 @@
       },
       "required": [
         "verification",
+        "reused"
+      ],
+      "additionalProperties": false
+    },
+    "AccountDelete": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/AccountEmptyDelete"
+        },
+        {
+          "$ref": "#/$defs/AccountForceDelete"
+        }
+      ]
+    },
+    "AccountDeleted": {
+      "type": "object",
+      "properties": {
+        "account_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "deleted": {
+          "const": true
+        }
+      },
+      "required": [
+        "account_id",
+        "deleted"
+      ],
+      "additionalProperties": false
+    },
+    "AccountDeletion": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspace_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "account_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "account_name": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 10000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "stopping",
+            "backing_up",
+            "purging",
+            "cleaning_files",
+            "completed",
+            "failed"
+          ]
+        },
+        "phase": {
+          "type": "string",
+          "maxLength": 10000
+        },
+        "counts": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "error_code": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 10000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "finished_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "backup_available": {
+          "type": "boolean"
+        },
+        "job_state": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "queued",
+                "running",
+                "succeeded",
+                "partial",
+                "failed",
+                "cancelled"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "attempts": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "workspace_id",
+        "account_id",
+        "account_name",
+        "state",
+        "phase",
+        "counts",
+        "error_code",
+        "created_at",
+        "updated_at",
+        "finished_at",
+        "backup_available",
+        "job_state",
+        "attempts"
+      ],
+      "additionalProperties": false
+    },
+    "AccountDeletionImpact": {
+      "type": "object",
+      "properties": {
+        "account_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "expected_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "operation": {
+          "$ref": "#/$defs/AccountDeletion"
+        },
+        "fingerprint": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "counts": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "file_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "retained_shared_files": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "shared_data_preserved": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "account_id",
+        "expected_version"
+      ],
+      "additionalProperties": false
+    },
+    "AccountForceDelete": {
+      "type": "object",
+      "properties": {
+        "expected_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "confirmed": {
+          "const": true
+        },
+        "force": {
+          "const": true
+        },
+        "fingerprint": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "required": [
+        "expected_version",
+        "confirmed",
+        "force",
+        "fingerprint"
+      ],
+      "additionalProperties": false
+    },
+    "AccountEmptyDelete": {
+      "type": "object",
+      "properties": {
+        "expected_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "confirmed": {
+          "const": true
+        }
+      },
+      "required": [
+        "expected_version",
+        "confirmed"
+      ],
+      "additionalProperties": false
+    },
+    "AccountDeletionAccepted": {
+      "type": "object",
+      "properties": {
+        "operation": {
+          "$ref": "#/$defs/AccountDeletion"
+        },
+        "reused": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "operation",
         "reused"
       ],
       "additionalProperties": false

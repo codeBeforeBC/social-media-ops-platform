@@ -4,6 +4,7 @@ import {readFileSync,readdirSync} from 'node:fs';
 import {randomUUID,createHash} from 'node:crypto';
 import {Database} from '../packages/db/src/db';
 import {migrate} from '../packages/db/src/migrate';
+import {AccountDeletionTasks} from '../packages/domain/src/account-deletions';
 import {Jobs} from '../packages/domain/src/jobs';
 import {Client,initialize} from './helpers';
 import {createApp} from '../apps/api/src/main';
@@ -39,5 +40,9 @@ test('T25真实旧库结构升级：按CHANGE-012统一管理员、在途旧Job�
   assert.equal((await db.query('SELECT count(*)::int n FROM notifications WHERE superseded_at IS NOT NULL AND task_ref IS NULL')).rows[0].n,pending.length);
   await assert.rejects(db.query('UPDATE retired.contents SET title=$2 WHERE id=$1',[content,'旧worker迟到写入']),/Immutable/);
   assert.equal(await jobs.dispatch(),1);const general=(await jobs.claim('general'))!;assert.equal(general.type,'system.check');await jobs.process(general);assert.equal((await db.query('SELECT count(*)::int n FROM notifications WHERE job_id=$1',[general.id])).rows[0].n,1);
+
+  const preview=(await c.call('/accounts/'+account.id+'/deletion-impact')).data;
+  const forced=await c.call('/accounts/'+account.id,'DELETE',{force:true,confirmed:true,expected_version:preview.expected_version,fingerprint:preview.fingerprint});assert.equal(forced.status,202,JSON.stringify(forced.error));
+  const deletion=new Jobs(db,{'account.delete':new AccountDeletionTasks(db,()=>({async put(){},async list(){return {objects:[],uploads:[]};},destroy(){}} as any)).handler});await deletion.dispatch();const control=(await deletion.claim('general'))!;assert.equal(control.type,'account.delete');await deletion.process(control);assert.equal((await c.call('/account-deletions/'+forced.data.operation.id)).data.state,'completed');assert.equal((await db.query('SELECT count(*)::int n FROM retired.contents WHERE id=$1',[content])).rows[0].n,0);assert.equal((await db.query('SELECT count(*)::int n FROM retired.relationships WHERE id=$1',[note.id])).rows[0].n,0);assert.equal((await c.call('/accounts/'+account.id)).status,404);
  }finally{await app?.close();await db.close();}
 });

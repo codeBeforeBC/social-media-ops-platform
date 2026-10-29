@@ -31,7 +31,7 @@ export async function connectedAccountProfiles(){
 }
 export async function accountScope(q:Pick<Database,'query'>|Tx,a:Actor,accountId:string,lock=false){
  parse(uuid,accountId);const row=await q.query(`SELECT ac.* FROM accounts ac WHERE ac.id=$1 AND ac.workspace_id=$2 AND ($3::boolean OR EXISTS(SELECT 1 FROM account_memberships am WHERE am.account_id=ac.id AND am.membership_id=$4)) ${lock?'FOR UPDATE OF ac':''}`,[accountId,a.workspaceId,a.roles.includes('admin'),a.memberId]);
- if(!row.rowCount)throw new AppError(404,'NOT_FOUND','账号不存在或不可见');return row.rows[0];
+ if(!row.rowCount)throw new AppError(404,'NOT_FOUND','账号不存在或不可见');if(row.rows[0].deletion_operation_id)throw new AppError(409,'ACCOUNT_DELETING','账号正在删除，不能继续操作',{operation_id:row.rows[0].deletion_operation_id});return row.rows[0];
 }
 const observationSql=`SELECT v.*,j.state,j.started_at,j.finished_at,j.error_code FROM account_verifications v JOIN jobs j ON j.id=v.job_id AND j.workspace_id=v.workspace_id`;
 export class AccountVerifications{
@@ -50,7 +50,7 @@ export class AccountVerifications{
  }
  async detail(a:Actor,accountId:string){const ac=await accountScope(this.db,a,accountId);return {...ac,verification:await this.summary(this.db,ac)};}
  async list(a:Actor){
-  const rows=await this.db.query('SELECT * FROM accounts ac WHERE workspace_id=$1 AND ($2::boolean OR EXISTS(SELECT 1 FROM account_memberships am WHERE am.account_id=ac.id AND am.membership_id=$3)) ORDER BY created_at,id',[a.workspaceId,a.roles.includes('admin'),a.memberId]);
+  const rows=await this.db.query('SELECT * FROM accounts ac WHERE deletion_operation_id IS NULL AND workspace_id=$1 AND ($2::boolean OR EXISTS(SELECT 1 FROM account_memberships am WHERE am.account_id=ac.id AND am.membership_id=$3)) ORDER BY created_at,id',[a.workspaceId,a.roles.includes('admin'),a.memberId]);
   return {items:await Promise.all(rows.rows.map(async ac=>({...ac,verification:await this.summary(this.db,ac)})))};
  }
  async create(tx:Tx,a:Actor,accountId:string,input:unknown){

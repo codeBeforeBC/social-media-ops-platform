@@ -1,6 +1,6 @@
 # 内部契约
 
-当前生成源与设计v1.2一致：[OpenAPI](openapi.json)64条路径/78个操作，[领域Schema](domain.schema.json)109个定义。已实现端点标记implemented；数据导入/指标/报告/反馈等planned端点不代表运行接入。
+当前生成源与设计v1.2一致：[OpenAPI](openapi.json)75条路径/90个操作，[领域Schema](domain.schema.json)132个定义。已实现端点标记implemented；数据导入/指标/报告/反馈等planned端点不代表运行接入。
 
 入口为 `tools/s0/generate-contracts.py`，读取05的保留领域定义，并加载S1、S3来源/选题/AI扩展与 `tools/s11/contracts.py`。生成物不单独手改。复杂CHECK/触发器/外键以SQL迁移为准；Prisma部分唯一索引无法正确表达关系基数，保留一对多关系及SQL约束。
 

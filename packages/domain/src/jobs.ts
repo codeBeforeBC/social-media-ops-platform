@@ -24,9 +24,9 @@ export class Jobs {
     return this.db.transaction(async tx=>{
       const exhausted=await tx.query(`UPDATE jobs SET state='failed',error_code='ATTEMPTS_EXHAUSTED',finished_at=now(),lease_token=NULL,lease_until=NULL,version=version+1 WHERE yoyo_job_supported(type,pool,input) AND pool=$1 AND state='running' AND lease_until<now() AND attempts>=max_attempts RETURNING *`,[pool]);
       for(const j of exhausted.rows)await this.event(tx,j,'job.failed',{error_code:'ATTEMPTS_EXHAUSTED'});
-      const row=await tx.query(`SELECT * FROM jobs WHERE yoyo_job_supported(type,pool,input) AND pool=$1 AND cancel_requested=false AND attempts<max_attempts AND ((state='queued' AND available_at<=now()) OR (state='running' AND lease_until<now())) ORDER BY available_at,id FOR UPDATE SKIP LOCKED LIMIT 1`,[pool]);
+      const row=await tx.query(`SELECT * FROM jobs WHERE yoyo_job_supported(type,pool,input) AND pool=$1 AND cancel_requested=false AND (account_id IS NULL OR EXISTS(SELECT 1 FROM accounts ac WHERE ac.id=jobs.account_id AND ac.workspace_id=jobs.workspace_id AND ac.deletion_operation_id IS NULL)) AND attempts<max_attempts AND ((state='queued' AND available_at<=now()) OR (state='running' AND lease_until<now())) ORDER BY available_at,id FOR UPDATE SKIP LOCKED LIMIT 1`,[pool]);
       if(!row.rowCount)return null;
-      const r=await tx.query(`UPDATE jobs SET state='running',attempts=attempts+1,lease_token=$1,lease_until=now()+$2::int*interval '1 second',heartbeat_at=now(),started_at=now(),finished_at=NULL,version=version+1,updated_at=now() WHERE id=$3 RETURNING *`,[randomUUID(),config.leaseSeconds,row.rows[0].id]);return r.rows[0];
+      const r=await tx.query(`UPDATE jobs SET state='running',attempts=attempts+1,lease_token=$1,lease_until=now()+$2::int*interval '1 second',heartbeat_at=now(),started_at=now(),finished_at=NULL,execution_finished_at=NULL,version=version+1,updated_at=now() WHERE id=$3 RETURNING *`,[randomUUID(),config.leaseSeconds,row.rows[0].id]);return r.rows[0];
     });
   }
   async heartbeat(j:Job){const r=await this.db.query(`UPDATE jobs SET heartbeat_at=now(),lease_until=now()+$1::int*interval '1 second' WHERE yoyo_job_supported(type,pool,input) AND id=$2 AND state='running' AND lease_token=$3 AND lease_until>now() AND cancel_requested=false`,[config.leaseSeconds,j.id,j.lease_token]);return !!r.rowCount;}
@@ -75,7 +75,11 @@ export class Jobs {
         }finally{await output.cleanup?.(applied);}
       };
       const aborted=new Promise<never>((_,reject)=>controller.signal.addEventListener('abort',()=>reject(new Error('JOB_TIMEOUT')),{once:true}));
-      await Promise.race([work(),aborted]);
+      const actual=work();
+      // Cancellation may win the race before a non-cooperative handler settles.
+      // Keep a completion marker for the actual work, including its cleanup callback.
+      void actual.finally(()=>this.db.query('UPDATE jobs SET execution_finished_at=now() WHERE id=$1 AND attempts=$2',[j.id,j.attempts])).catch(()=>{});
+      await Promise.race([actual,aborted]);
     }catch(e){const allowed=['UNSUPPORTED_JOB','LEASE_LOST','JOB_TIMEOUT','MEDIA_INVALID_FILE'];const code=allowed.includes((e as Error).message)?(e as Error).message:'JOB_EXECUTION_FAILED';await this.fail(j,code);}
     finally{clearInterval(timer);clearTimeout(timeout);}
   }

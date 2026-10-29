@@ -1,3 +1,4 @@
+import {deletionSummary} from '../../../packages/domain/src/account-deletions';
 import {z} from 'zod';
 import {Database,Tx} from '../../../packages/db/src/db';
 import {AppError,Actor,Permission,authorize,canonical,sha,parse,text,uuid,version,timezone,pagination,page} from '../../../packages/domain/src/protocol';
@@ -23,7 +24,9 @@ export class Commands {
       await tx.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))',[lock]);
       const r=await tx.query('SELECT request_hash,status,response FROM idempotency_records WHERE workspace_id=$1 AND actor_id=$2 AND method=$3 AND route=$4 AND key=$5',[a.workspaceId,a.memberId,method,route,k]);
       if(r.rowCount){if(r.rows[0].request_hash!==fingerprint)throw new AppError(409,'IDEMPOTENCY_CONFLICT','相同请求键对应不同内容');let cached:any=readResponse(r.rows[0].response);
-        if(route.startsWith('/accounts')&&cached?.verification?.id){
+        if(cached?.deleted_account_operation)throw new AppError(404,'NOT_FOUND','原请求关联的账号及数据已删除');
+        if(cached?.operation?.id&&route.startsWith('/accounts')){cached={operation:await deletionSummary(tx,a.workspaceId,cached.operation.id),reused:true};}
+        else if(route.startsWith('/accounts')&&cached?.verification?.id){
           await this.accountScope(tx,actor,cached.verification.account_id);
           const now=(await tx.query('SELECT v.*,j.state,j.started_at,j.finished_at,j.error_code FROM account_verifications v JOIN jobs j ON j.id=v.job_id AND j.workspace_id=v.workspace_id WHERE v.id=$1 AND v.workspace_id=$2',[cached.verification.id,a.workspaceId])).rows[0];
           if(!now)throw new AppError(404,'NOT_FOUND','验证记录不存在或不可见');cached={verification:now,reused:true};
@@ -40,9 +43,9 @@ export class Commands {
   async accountScope(query:Pick<Database,'query'>|Tx,a:Actor,accountId:string,lock=false){
     parse(uuid,accountId);
     const r=await query.query(`SELECT ac.* FROM accounts ac WHERE ac.id=$1 AND ac.workspace_id=$2 AND ($3::boolean OR EXISTS(SELECT 1 FROM account_memberships am WHERE am.account_id=ac.id AND am.membership_id=$4)) ${lock?'FOR UPDATE OF ac':''}`,[accountId,a.workspaceId,a.roles.includes('admin'),a.memberId]);
-    if(!r.rowCount)throw new AppError(404,'NOT_FOUND','账号不存在或不可见');return r.rows[0];
+    if(!r.rowCount)throw new AppError(404,'NOT_FOUND','账号不存在或不可见');if(r.rows[0].deletion_operation_id)throw new AppError(409,'ACCOUNT_DELETING','账号正在删除，不能继续操作',{operation_id:r.rows[0].deletion_operation_id});return r.rows[0];
   }
-  async accounts(a:Actor){const r=await this.db.query('SELECT * FROM accounts ac WHERE workspace_id=$1 AND ($2::boolean OR EXISTS(SELECT 1 FROM account_memberships am WHERE am.account_id=ac.id AND am.membership_id=$3)) ORDER BY created_at,id',[a.workspaceId,a.roles.includes('admin'),a.memberId]);return {items:r.rows};}
+  async accounts(a:Actor){const r=await this.db.query('SELECT * FROM accounts ac WHERE deletion_operation_id IS NULL AND workspace_id=$1 AND ($2::boolean OR EXISTS(SELECT 1 FROM account_memberships am WHERE am.account_id=ac.id AND am.membership_id=$3)) ORDER BY created_at,id',[a.workspaceId,a.roles.includes('admin'),a.memberId]);return {items:r.rows};}
   async createAccount(tx:Tx,a:Actor,input:unknown){
     const b=parse(z.object({platform:z.literal('xiaohongshu'),platform_user_id:text(2000),display_handle:text().optional(),name:text(),timezone:timezone.optional(),browser_profile_ref:profileRef.nullable().optional()}).strict(),input);
     const identity=xhsAccountIdentity(b.platform_user_id);
@@ -65,6 +68,36 @@ export class Commands {
     await audit(tx,a,'account.update','account',accountId,{fields:Object.keys(b).filter(k=>k!=='expected_version')});return {status:200,data:r.rows[0]};
   }
   async settings(a:Actor){const r=await this.db.query('SELECT id,name,timezone,settings,version FROM workspaces WHERE id=$1',[a.workspaceId]);return r.rows[0];}
+  async deleteAccount(tx:Tx,a:Actor,accountId:string,input:unknown){
+    const b=parse(z.object({expected_version:version,confirmed:z.literal(true)}).strict(),input);
+    // The parent lock also blocks concurrent FK inserts until deletion commits or rolls back.
+    const ac=await this.accountScope(tx,a,accountId,true);
+    if(ac.version!==b.expected_version)throw new AppError(409,'VERSION_CONFLICT','账号已被修改，请读取最新账号后重新确认',{version:ac.version});
+    const active=await tx.query("SELECT 1 FROM jobs WHERE workspace_id=$1 AND account_id=$2 AND state IN ('queued','running') UNION ALL SELECT 1 FROM outbox WHERE workspace_id=$1 AND account_id=$2 AND dispatched_at IS NULL AND retired_at IS NULL LIMIT 1",[a.workspaceId,accountId]);
+    if(active.rowCount)throw new AppError(409,'ACCOUNT_HAS_ACTIVE_TASKS','账号存在在途任务或待处理事件，不能删除；相关历史记录也会保留');
+    const references=await tx.query(`SELECT ns.nspname schema_name,child.relname table_name,
+      array_agg(src.attname::text ORDER BY keys.ord) columns,array_agg(dst.attname::text ORDER BY keys.ord) ref_columns
+      FROM pg_constraint fk JOIN pg_class child ON child.oid=fk.conrelid JOIN pg_namespace ns ON ns.oid=child.relnamespace
+      CROSS JOIN LATERAL unnest(fk.conkey,fk.confkey) WITH ORDINALITY keys(srcnum,dstnum,ord)
+      JOIN pg_attribute src ON src.attrelid=child.oid AND src.attnum=keys.srcnum
+      JOIN pg_attribute dst ON dst.attrelid=fk.confrelid AND dst.attnum=keys.dstnum
+      WHERE fk.contype='f' AND fk.confrelid='public.accounts'::regclass GROUP BY fk.oid,ns.nspname,child.relname`);
+    const quote=(value:string)=>'"'+value.replaceAll('"','""')+'"';
+    const labels:Record<string,string>={publications:'已登记笔记',topics:'选题',ai_requests:'AI生成记录',file_objects:'文件',upload_sessions:'上传记录',import_batches:'导入批次',metric_observations:'指标',calculations:'计算记录',reports:'复盘报告',strategy_memories:'策略记录',feedback:'反馈',source_organizations:'来源整理记录',account_verifications:'账号验证记录',jobs:'后台任务历史',outbox:'后台事件历史'};
+    const blockers=new Set<string>();
+    for(const ref of references.rows){
+      if(ref.schema_name==='public'&&ref.table_name==='account_memberships')continue;
+      const conditions=ref.columns.map((column:string,i:number)=>quote(column)+'=$'+(i+1)).join(' AND ');
+      const values=ref.ref_columns.map((column:string)=>ac[column]);
+      const found=await tx.query(`SELECT 1 FROM ${quote(ref.schema_name)}.${quote(ref.table_name)} WHERE ${conditions} LIMIT 1`,values);
+      if(found.rowCount)blockers.add(ref.schema_name==='retired'?'历史业务数据':labels[ref.table_name]??'关联记录');
+    }
+    if(blockers.size)throw new AppError(409,'ACCOUNT_HAS_HISTORY','账号已有'+[...blockers].join('、')+'，不能删除；请保留该账号及历史数据',{blocking_categories:[...blockers]});
+    await tx.query('DELETE FROM account_memberships WHERE workspace_id=$1 AND account_id=$2',[a.workspaceId,accountId]);
+    await tx.query('DELETE FROM accounts WHERE workspace_id=$1 AND id=$2',[a.workspaceId,accountId]);
+    await audit(tx,a,'account.delete','account',accountId,{rule:'unused_account_only',previous_version:ac.version});
+    return {status:200,data:{account_id:accountId,deleted:true}};
+  }
   async patchSettings(tx:Tx,a:Actor,input:unknown){
     const b=parse(z.object({category:z.enum(['workspace','capacity','ai_budget']),settings:z.record(z.string(),z.unknown()),expected_version:version}).strict(),input);
     const allowed=b.category==='workspace'?z.object({name:text().optional(),timezone:timezone.optional()}).strict():b.category==='capacity'?z.object({hours_per_week:z.number().min(0).max(168)}).strict():workspaceBudgetSchema;
@@ -108,6 +141,7 @@ export class Commands {
   }
   async cancelJob(tx:Tx,a:Actor,jobId:string,input:unknown){
     const b=parse(z.object({reason:text(1000)}).strict(),input);const j=await this.jobScope(tx,a,jobId,true);
+    if(j.type==='account.delete')throw new AppError(422,'DELETION_NOT_CANCELLABLE','已确认的删除需继续完成或从删除进度重试');
     if(['succeeded','partial','failed','cancelled'].includes(j.state))return {status:200,data:safeJob(j)};
     const r=await tx.query("UPDATE jobs SET cancel_requested=true,state='cancelled',finished_at=now(),lease_token=NULL,lease_until=NULL,error_code='CANCELLED',version=version+1 WHERE id=$1 RETURNING *",[jobId]);
     await audit(tx,a,'job.cancel','job',jobId,{reason:b.reason});return {status:200,data:safeJob(r.rows[0])};
@@ -115,6 +149,7 @@ export class Commands {
   async retryJob(tx:Tx,a:Actor,jobId:string,input:unknown){
     parse(z.object({reason:text(1000)}).strict(),input);const j=await this.jobScope(tx,a,jobId,true);
     if(j.state!=='failed')throw new AppError(422,'JOB_NOT_FAILED','仅失败任务允许重试');
+    if(j.type==='account.delete')throw new AppError(422,'DELETION_RETRY_REQUIRED','请从账号删除进度重试');
     if(j.type==='account.verify')throw new AppError(422,'ACCOUNT_VERIFICATION_RETRY_REQUIRED','请在运营账号详情重新验证，保留原验证历史');
     const r=await tx.query("UPDATE jobs SET state='queued',attempts=0,cancel_requested=false,error_code=NULL,result=NULL,available_at=now(),started_at=NULL,finished_at=NULL,lease_token=NULL,lease_until=NULL,version=version+1 WHERE id=$1 RETURNING *",[jobId]);
     await audit(tx,a,'job.retry','job',jobId);return {status:202,data:safeJob(r.rows[0])};
@@ -124,7 +159,7 @@ export class Commands {
     const processes=await this.db.query("SELECT name,pool,last_seen_at,(last_seen_at>now()-interval '15 seconds') healthy FROM process_health WHERE pool<>'reminder' ORDER BY name");
     const outbox=await this.db.query('SELECT count(*)::int pending FROM outbox WHERE workspace_id=$1 AND dispatched_at IS NULL',[a.workspaceId]);
     const workspace=(await this.db.query('SELECT settings FROM workspaces WHERE id=$1',[a.workspaceId])).rows[0];let ai:any;try{const cfg=workspaceAIConfig(loadAIConfig(),workspace.settings);ai={state:cfg.enabled?'enabled':'disabled',provider:cfg.provider,model:cfg.model,budget:cfg.budget,pricing:cfg.pricing??null,authorization_date:cfg.authorization_date};}catch(e){ai={state:'unavailable',error_code:e instanceof AIFailure?e.code:'AI_NOT_CONFIGURED'};}
-    const usage=await this.db.query("SELECT currency,cost_basis,count(*)::int attempts,sum((usage->>'input_tokens')::bigint)::text input_tokens,sum((usage->>'output_tokens')::bigint)::text output_tokens,sum((usage->>'total_tokens')::bigint)::text total_tokens,CASE WHEN count(*) FILTER(WHERE estimated_cost IS NULL)=0 THEN sum(estimated_cost)::text ELSE NULL END estimated_cost,sum(COALESCE(estimated_cost,reserved_cost))::text committed_or_reserved,count(*) FILTER(WHERE usage IS NULL OR usage='null'::jsonb)::int unknown_usage FROM ai_attempts WHERE workspace_id=$1 AND started_at>=(now() AT TIME ZONE 'UTC')::date AT TIME ZONE 'UTC' GROUP BY currency,cost_basis ORDER BY currency,cost_basis",[a.workspaceId]);
+    const usage=await this.db.query("SELECT currency,cost_basis,count(*)::int attempts,sum((usage->>'input_tokens')::bigint)::text input_tokens,sum((usage->>'output_tokens')::bigint)::text output_tokens,sum((usage->>'total_tokens')::bigint)::text total_tokens,CASE WHEN count(*) FILTER(WHERE estimated_cost IS NULL)=0 THEN sum(estimated_cost)::text ELSE NULL END estimated_cost,sum(COALESCE(estimated_cost,reserved_cost))::text committed_or_reserved,count(*) FILTER(WHERE usage IS NULL OR usage='null'::jsonb)::int unknown_usage FROM (SELECT workspace_id,started_at,currency,cost_basis,usage,estimated_cost,reserved_cost FROM ai_attempts UNION ALL SELECT workspace_id,started_at,currency,cost_basis,usage,estimated_cost,reserved_cost FROM account_deleted_ai_usage) usage_rows WHERE workspace_id=$1 AND started_at>=(now() AT TIME ZONE 'UTC')::date AT TIME ZONE 'UTC' GROUP BY currency,cost_basis ORDER BY currency,cost_basis",[a.workspaceId]);
     const sources=await this.db.query('SELECT id,name,health,enabled,paused,error_code,last_success_at,min_interval_seconds,schedule,timezone,version FROM source_connections WHERE workspace_id=$1 ORDER BY created_at,id',[a.workspaceId]);
     return {as_of:new Date().toISOString(),jobs:jobs.rows,processes:processes.rows,outbox_pending:outbox.rows[0].pending,external_capabilities:{ai,ocr:{state:'local_manual_review',runtime_state:'unverified'},sources:sources.rows},ai_usage:{window:'UTC current day',groups:usage.rows},import_limits:{screenshot_bytes:20*1024*1024,table_bytes:50*1024*1024}};
   }

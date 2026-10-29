@@ -1,3 +1,4 @@
+import {AccountDeletions} from '../../../packages/domain/src/account-deletions';
 import {AccountVerifications,connectedAccountProfiles} from '../../../packages/domain/src/account-verifications';
 import {SourceOrganizations} from './source-organization';
 import {Dashboard} from './dashboard';
@@ -94,6 +95,11 @@ class ApiController {
     if(path==='/uploads'&&method==='POST')return command('import.edit',(tx,actor)=>files.create(tx,actor,req.body));
     const upload=path.match(/^\/uploads\/([^/]+)(?:\/(parts|complete|abort)(?:\/(\d+))?)?$/);
     if(upload){const uid=upload[1]!;if(method==='GET'&&!upload[2])return send(await files.get(a,uid));if(method==='POST'&&upload[2]==='parts')return command('import.edit',(tx,actor)=>files.register(tx,actor,uid,req.body));if(method==='PUT'&&upload[2]==='parts'&&upload[3])return send(await files.put(a,uid,Number(upload[3]),req.body));if(method==='POST'&&upload[2]==='complete')return command('import.edit',(tx,actor)=>files.finish(tx,actor,uid,req.body));if(method==='POST'&&upload[2]==='abort')return command('import.edit',(tx,actor)=>files.abort(tx,actor,uid,req.body));}
+    const deletions=new AccountDeletions(this.db);
+    if(method==='GET'&&path==='/account-deletions')return send(await deletions.list(a));
+    const deletion=path.match(/^\/account-deletions\/([^/]+)(?:\/(retry))?$/);
+    if(deletion){if(method==='GET'&&!deletion[2])return send(await deletions.get(a,deletion[1]!));if(method==='POST'&&deletion[2])return command('admin',(tx,actor)=>deletions.retry(tx,actor,deletion[1]!));}
+    const impact=path.match(/^\/accounts\/([^/]+)\/deletion-impact$/);if(impact&&method==='GET')return send(await deletions.impact(a,impact[1]!));
     const accountVerification=new AccountVerifications(this.db);
     if(method==='GET'&&path==='/account-browser-profiles')return send(await connectedAccountProfiles());
     const verifyPath=path.match(/^\/accounts\/([^/]+)\/(verifications|identity-confirmation)(?:\/([^/]+))?$/);
@@ -106,7 +112,7 @@ class ApiController {
     if(method==='GET'&&path==='/accounts')return send(await accountVerification.list(a));
     if(method==='POST'&&path==='/accounts')return command('admin',(tx,actor)=>c.createAccount(tx,actor,req.body));
     const account=path.match(/^\/accounts\/([^/]+)$/);
-    if(account){if(method==='GET')return send(await accountVerification.detail(a,account[1]!));if(method==='PATCH')return command('account.edit',(tx,actor)=>c.patchAccount(tx,actor,account[1]!,req.body));}
+    if(account){if(method==='GET')return send(await accountVerification.detail(a,account[1]!));if(method==='PATCH')return command('account.edit',(tx,actor)=>c.patchAccount(tx,actor,account[1]!,req.body));if(method==='DELETE')return command('admin',(tx,actor)=>req.body?.force===true?deletions.request(tx,actor,account[1]!,req.body):c.deleteAccount(tx,actor,account[1]!,req.body));}
     if(method==='GET'&&path==='/settings')return send(await c.settings(a));
     if(method==='PATCH'&&path==='/settings')return command('admin',(tx,actor)=>c.patchSettings(tx,actor,req.body));
     if(method==='GET'&&path==='/audit-logs')return send(await c.logs(a,req.query));
@@ -132,6 +138,7 @@ class ApiErrors implements ExceptionFilter {
     let err:AppError;
     if(e instanceof AppError)err=e;
     else if(e.code==='23505')err=new AppError(409,'UNIQUE_CONFLICT','对象或标识已存在');
+    else if(e.code==='55000')err=new AppError(409,'ACCOUNT_DELETING','账号正在删除，不能新增或修改数据');
     else if(e.code==='23503'||e.code==='23514')err=new AppError(422,'RELATION_INVALID','对象关系或字段约束无效');
     else if(e.code==='40P01'||e.code==='40001')err=new AppError(409,'CONCURRENT_CONFLICT','并发操作冲突，请重试',{},true);
     else if(e instanceof HttpException)err=new AppError(e.getStatus(),'HTTP_ERROR','请求无法处理');

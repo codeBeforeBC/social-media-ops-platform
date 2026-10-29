@@ -1,0 +1,178 @@
+[2m[WebServer] [22m(node:4375) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:4376) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:4382) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:4382) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:4526) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4526) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 tests/browser.spec.ts:341:53 › 运行状态与审计直接往返切换不复用旧数据结构：monitor (5.6s)
+(node:4958) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4958) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  2 tests/browser.spec.ts:341:53 › 运行状态与审计直接往返切换不复用旧数据结构：audit (5.2s)
+(node:4975) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4975) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  3 tests/browser.spec.ts:348:5 › 运行状态请求失败可见且能重试，错误不会导致整个页面白屏 (5.2s)
+(node:4982) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4982) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  4 tests/browser.spec.ts:354:5 › 审计与运行状态切换时旧请求晚返回不覆盖新页面，空记录仍可浏览 (5.4s)
+
+
+  1) tests/browser.spec.ts:341:53 › 运行状态与审计直接往返切换不复用旧数据结构：monitor ──────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('heading', { name: '审计记录', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for getByRole('heading', { name: '审计记录', exact: true })[22m
+
+
+      343 |  await page.goto('/#settings?tab='+first);await expect(page.getByRole('heading',{name:first==='monitor'?'AI 与实际用量':'审计记录',exact:true})).toBeVisible();if(first==='audit')await expect(page.locator('.panel')).toContainText(/时间|暂无记录/);
+      344 |  const tabs=first==='monitor'?['审计记录','运行状态','审计记录','运行状态']:['运行状态','审计记录','运行状态','审计记录'];
+    > 345 |  for(const tab of tabs){await page.getByRole('button',{name:tab,exact:true}).click();await expect(page.getByRole('heading',{name:tab==='运行状态'?'AI 与实际用量':'审计记录',exact:true})).toBeVisible();if(tab==='审计记录')await expect(page.locator('.panel')).toContainText(/时间|暂无记录/);expect(errors).toEqual([]);await expect(page.getByRole('heading',{name:'工作区设置',exact:true})).toBeVisible();}
+          |                                                                                                                                                                               ^
+      346 | });
+      347 |
+      348 | test('运行状态请求失败可见且能重试，错误不会导致整个页面白屏',async({page})=>{
+        at /Users/junlong/projects/social-mdeida-ops-platform/tests/browser.spec.ts:345:175
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser-运行状态与审计直接往返切换不复用旧数据结构：monitor/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/browser-运行状态与审计直接往返切换不复用旧数据结构：monitor/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/browser-运行状态与审计直接往返切换不复用旧数据结构：monitor/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) tests/browser.spec.ts:341:53 › 运行状态与审计直接往返切换不复用旧数据结构：audit ────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('heading', { name: 'AI 与实际用量', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for getByRole('heading', { name: 'AI 与实际用量', exact: true })[22m
+
+
+      343 |  await page.goto('/#settings?tab='+first);await expect(page.getByRole('heading',{name:first==='monitor'?'AI 与实际用量':'审计记录',exact:true})).toBeVisible();if(first==='audit')await expect(page.locator('.panel')).toContainText(/时间|暂无记录/);
+      344 |  const tabs=first==='monitor'?['审计记录','运行状态','审计记录','运行状态']:['运行状态','审计记录','运行状态','审计记录'];
+    > 345 |  for(const tab of tabs){await page.getByRole('button',{name:tab,exact:true}).click();await expect(page.getByRole('heading',{name:tab==='运行状态'?'AI 与实际用量':'审计记录',exact:true})).toBeVisible();if(tab==='审计记录')await expect(page.locator('.panel')).toContainText(/时间|暂无记录/);expect(errors).toEqual([]);await expect(page.getByRole('heading',{name:'工作区设置',exact:true})).toBeVisible();}
+          |                                                                                                                                                                               ^
+      346 | });
+      347 |
+      348 | test('运行状态请求失败可见且能重试，错误不会导致整个页面白屏',async({page})=>{
+        at /Users/junlong/projects/social-mdeida-ops-platform/tests/browser.spec.ts:345:175
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser-运行状态与审计直接往返切换不复用旧数据结构：audit/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/browser-运行状态与审计直接往返切换不复用旧数据结构：audit/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/browser-运行状态与审计直接往返切换不复用旧数据结构：audit/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) tests/browser.spec.ts:348:5 › 运行状态请求失败可见且能重试，错误不会导致整个页面白屏 ─────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoContainText[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: getByRole('alert')
+    Expected substring: [32m"明确合成监控暂不可用"[39m
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toContainText" with timeout 5000ms[22m
+    [2m  - waiting for getByRole('alert')[22m
+
+
+      349 |  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));let fail=true;
+      350 |  await page.route('**/api/v1/monitor',route=>fail?route.fulfill({status:503,json:{error:{code:'SERVICE_UNAVAILABLE',message:'明确合成监控暂不可用'}}}):route.continue());
+    > 351 |  await page.goto('/#settings?tab=monitor');await expect(page.getByRole('alert')).toContainText('明确合成监控暂不可用');await expect(page.getByRole('heading',{name:'工作区设置',exact:true})).toBeVisible();fail=false;await page.getByRole('button',{name:'重试',exact:true}).click();await expect(page.getByRole('heading',{name:'AI 与实际用量',exact:true})).toBeVisible();expect(errors).toEqual([]);
+          |                                                                                  ^
+      352 | });
+      353 |
+      354 | test('审计与运行状态切换时旧请求晚返回不覆盖新页面，空记录仍可浏览',async({page})=>{
+        at /Users/junlong/projects/social-mdeida-ops-platform/tests/browser.spec.ts:351:82
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser-运行状态请求失败可见且能重试，错误不会导致整个页面白屏/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/browser-运行状态请求失败可见且能重试，错误不会导致整个页面白屏/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/browser-运行状态请求失败可见且能重试，错误不会导致整个页面白屏/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) tests/browser.spec.ts:354:5 › 审计与运行状态切换时旧请求晚返回不覆盖新页面，空记录仍可浏览 ──────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('heading', { name: 'AI 与实际用量', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for getByRole('heading', { name: 'AI 与实际用量', exact: true })[22m
+
+
+      355 |  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));let release!:()=>void,started!:()=>void;const gate=new Promise<void>(r=>release=r),ready=new Promise<void>(r=>started=r);let first=true;
+      356 |  await page.route('**/api/v1/audit-logs',async route=>{if(first){first=false;started();await gate;}await route.fulfill({json:{data:{items:[],next_cursor:null}}});});
+    > 357 |  await page.goto('/#settings?tab=audit');await ready;await page.getByRole('button',{name:'运行状态',exact:true}).click();await expect(page.getByRole('heading',{name:'AI 与实际用量',exact:true})).toBeVisible();release();await page.waitForTimeout(100);await expect(page.getByRole('heading',{name:'AI 与实际用量',exact:true})).toBeVisible();expect(errors).toEqual([]);
+          |                                                                                                                                                                                                                                                                                                                       ^
+      358 |  await page.getByRole('button',{name:'审计记录',exact:true}).click();await expect(page.getByRole('heading',{name:'暂无记录',exact:true})).toBeVisible();await page.getByRole('button',{name:'运行状态',exact:true}).click();await expect(page.getByRole('heading',{name:'AI 与实际用量',exact:true})).toBeVisible();expect(errors).toEqual([]);
+      359 | });
+      360 |
+        at /Users/junlong/projects/social-mdeida-ops-platform/tests/browser.spec.ts:357:311
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser-审计与运行状态切换时旧请求晚返回不覆盖新页面，空记录仍可浏览/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/browser-审计与运行状态切换时旧请求晚返回不覆盖新页面，空记录仍可浏览/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/browser-审计与运行状态切换时旧请求晚返回不覆盖新页面，空记录仍可浏览/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4 failed
+    tests/browser.spec.ts:341:53 › 运行状态与审计直接往返切换不复用旧数据结构：monitor ───────────────────────────────────
+    tests/browser.spec.ts:341:53 › 运行状态与审计直接往返切换不复用旧数据结构：audit ─────────────────────────────────────
+    tests/browser.spec.ts:348:5 › 运行状态请求失败可见且能重试，错误不会导致整个页面白屏 ──────────────────────────────────────
+    tests/browser.spec.ts:354:5 › 审计与运行状态切换时旧请求晚返回不覆盖新页面，空记录仍可浏览 ───────────────────────────────────

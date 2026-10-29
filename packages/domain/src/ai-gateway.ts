@@ -117,7 +117,7 @@ export class AIGateway {
       await tx.query('SELECT pg_advisory_xact_lock(hashtext($1))',[workspaceId+':ai-budget']);
       if(b.mode==='limited'){
         if(!p||ceiling===null||b.daily===null||b.per_task===null)throw new AIFailure('AI_BUDGET_NOT_CONFIGURED');
-        const spent=await tx.query(`SELECT COALESCE(sum(COALESCE(estimated_cost,reserved_cost)) FILTER(WHERE started_at>=(now() AT TIME ZONE 'UTC')::date AT TIME ZONE 'UTC'),0) daily,COALESCE(sum(COALESCE(estimated_cost,reserved_cost)) FILTER(WHERE run_id=$2),0) task,count(*) FILTER(WHERE currency IS DISTINCT FROM $3) currency_conflicts FROM ai_attempts WHERE workspace_id=$1 AND (started_at>=(now() AT TIME ZONE 'UTC')::date AT TIME ZONE 'UTC' OR run_id=$2)`,[workspaceId,runId,p.currency]);
+        const spent=await tx.query(`SELECT COALESCE(sum(COALESCE(estimated_cost,reserved_cost)) FILTER(WHERE started_at>=(now() AT TIME ZONE 'UTC')::date AT TIME ZONE 'UTC'),0) daily,COALESCE(sum(COALESCE(estimated_cost,reserved_cost)) FILTER(WHERE run_id=$2),0) task,count(*) FILTER(WHERE currency IS DISTINCT FROM $3) currency_conflicts FROM (SELECT workspace_id,run_id,started_at,currency,estimated_cost,reserved_cost FROM ai_attempts UNION ALL SELECT workspace_id,NULL::uuid run_id,started_at,currency,estimated_cost,reserved_cost FROM account_deleted_ai_usage) budget_rows WHERE workspace_id=$1 AND (started_at>=(now() AT TIME ZONE 'UTC')::date AT TIME ZONE 'UTC' OR run_id=$2)`,[workspaceId,runId,p.currency]);
         if(Number(spent.rows[0].currency_conflicts))throw new AIFailure('AI_BUDGET_CURRENCY_CHANGED');
         if(Number(spent.rows[0].daily)+ceiling>b.daily||Number(spent.rows[0].task)+ceiling>b.per_task)throw new AIFailure('AI_BUDGET_EXCEEDED');
       }

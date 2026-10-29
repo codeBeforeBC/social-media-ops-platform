@@ -1,0 +1,64 @@
+[2m[WebServer] [22m(node:59256) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:59262) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:59268) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:59268) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:59315) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:59315) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 tests/browser.spec.ts:291:5 › 空账号删除需确认，可取消；失败保留名称并幂等重试，列表及选择器刷新 (5.9s)
+(node:59413) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:59413) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 tests/browser.spec.ts:302:5 › 有关联验证记录时拒绝删除，错误可见且原账号与验证历史保持 (3.6s)
+  ✓  3 tests/browser.spec.ts:307:5 › 删除版本冲突需读取最新账号并重新输入名称，不误删他处刚修改的记录 (727ms)
+
+
+  1) tests/browser.spec.ts:291:5 › 空账号删除需确认，可取消；失败保留名称并幂等重试，列表及选择器刷新 ───────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveValue[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: getByRole('dialog').getByLabel('本地备注名称', { exact: true })
+    Expected: [32m"明确合成空账号删除"[39m
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toHaveValue" with timeout 5000ms[22m
+    [2m  - waiting for getByRole('dialog').getByLabel('本地备注名称', { exact: true })[22m
+
+
+      291 | test('空账号删除需确认，可取消；失败保留名称并幂等重试，列表及选择器刷新',async({page})=>{
+      292 |  const name='明确合成空账号删除',errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));const {dialog,account}=await addDeletableAccount(page,name);
+    > 293 |  await dialog.getByRole('button',{name:'删除账号',exact:true}).click();let confirmation=dialog.getByRole('region',{name:'删除账号确认'});await expect(confirmation.getByRole('button',{name:'确认删除账号',exact:true})).toBeDisabled();await confirmation.getByLabel('输入本地备注名称以确认删除').fill('错误名称');await expect(confirmation.getByRole('button',{name:'确认删除账号',exact:true})).toBeDisabled();await confirmation.getByRole('button',{name:'取消删除',exact:true}).click();await expect(dialog.getByLabel('本地备注名称',{exact:true})).toHaveValue(name);await page.keyboard.press('Escape');
+          |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             ^
+      294 |  const row=page.getByRole('row').filter({hasText:name});await row.getByRole('button',{name:'删除账号：'+name,exact:true}).click();confirmation=dialog.getByRole('region',{name:'删除账号确认'});await confirmation.getByLabel('输入本地备注名称以确认删除').fill(name);
+      295 |  const keys:string[]=[];let fail=true;await page.route(`**/api/v1/accounts/${account.id}`,async route=>{if(route.request().method()!=='DELETE')return route.continue();keys.push(route.request().headers()['idempotency-key']!);await new Promise(r=>setTimeout(r,350));if(fail){fail=false;return route.fulfill({status:503,json:{error:{code:'SERVICE_UNAVAILABLE',message:'明确合成删除失败'}}});}return route.continue();});
+      296 |  await confirmation.getByRole('button',{name:'确认删除账号',exact:true}).click();await expect(dialog.getByRole('button',{name:'关闭详情'})).toBeDisabled();await page.keyboard.press('Escape');await expect(dialog).toBeVisible();await expect(dialog.getByRole('alert')).toContainText('明确合成删除失败');await expect(confirmation.getByLabel('输入本地备注名称以确认删除')).toHaveValue(name);
+        at /Users/junlong/projects/social-mdeida-ops-platform/tests/browser.spec.ts:293:493
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser-空账号删除需确认，可取消；失败保留名称并幂等重试，列表及选择器刷新/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/browser-空账号删除需确认，可取消；失败保留名称并幂等重试，列表及选择器刷新/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/browser-空账号删除需确认，可取消；失败保留名称并幂等重试，列表及选择器刷新/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/browser-空账号删除需确认，可取消；失败保留名称并幂等重试，列表及选择器刷新/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/browser.spec.ts:291:5 › 空账号删除需确认，可取消；失败保留名称并幂等重试，列表及选择器刷新 ────────────────────────────────
+  2 passed (13.1s)

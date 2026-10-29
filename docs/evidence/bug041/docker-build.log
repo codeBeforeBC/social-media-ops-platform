@@ -1,0 +1,155 @@
+ Image yoyo-local:0.1.0 Building
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.00kB done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.90kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 177B done
+#4 DONE 0.0s
+
+#5 [build  1/21] FROM docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c
+#5 resolve docker.io/library/node:24.14.1-bookworm-slim@sha256:b506e7321f176aae77317f99d67a24b272c1f09f1d10f1761f2773447d8da26c done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 153.57kB 0.0s done
+#6 DONE 0.0s
+
+#7 [build 10/21] COPY packages/db/package.json ./packages/db/package.json
+#7 CACHED
+
+#8 [build  5/21] COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+#8 CACHED
+
+#9 [build  3/21] RUN corepack enable && corepack prepare pnpm@10.33.0 --activate
+#9 CACHED
+
+#10 [build  2/21] RUN apt-get update && apt-get install -y --no-install-recommends openssl ca-certificates && rm -rf /var/lib/apt/lists/*
+#10 CACHED
+
+#11 [build 11/21] COPY packages/domain/package.json ./packages/domain/package.json
+#11 CACHED
+
+#12 [build  7/21] COPY apps/web/package.json ./apps/web/package.json
+#12 CACHED
+
+#13 [build  4/21] WORKDIR /app
+#13 CACHED
+
+#14 [build  6/21] COPY apps/api/package.json ./apps/api/package.json
+#14 CACHED
+
+#15 [build  8/21] COPY apps/worker/package.json ./apps/worker/package.json
+#15 CACHED
+
+#16 [build  9/21] COPY apps/scheduler/package.json ./apps/scheduler/package.json
+#16 CACHED
+
+#17 [build 12/21] COPY packages/contracts/package.json ./packages/contracts/package.json
+#17 CACHED
+
+#18 [build 13/21] RUN --mount=type=cache,id=yoyo-pnpm,target=/pnpm/store pnpm config set store-dir /pnpm/store && pnpm install --frozen-lockfile
+#18 CACHED
+
+#19 [build 14/21] COPY apps ./apps
+#19 DONE 0.0s
+
+#20 [build 15/21] COPY packages ./packages
+#20 DONE 0.0s
+
+#21 [build 16/21] COPY tools ./tools
+#21 DONE 0.0s
+
+#22 [build 17/21] COPY tests ./tests
+#22 DONE 0.0s
+
+#23 [build 18/21] COPY contracts ./contracts
+#23 DONE 0.0s
+
+#24 [build 19/21] COPY docs/templates ./docs/templates
+#24 DONE 0.0s
+
+#25 [build 20/21] COPY tsconfig.json prisma.config.ts ./
+#25 DONE 0.0s
+
+#26 [build 21/21] RUN pnpm build
+#26 0.261
+#26 0.261 > yoyo-workbench@0.1.0 build /app
+#26 0.261 > pnpm db:generate && tsc -p tsconfig.json && pnpm --filter @yoyo/web build
+#26 0.261
+#26 0.435
+#26 0.435 > yoyo-workbench@0.1.0 db:generate /app
+#26 0.435 > prisma generate
+#26 0.435
+#26 1.170 Loaded Prisma config from prisma.config.ts.
+#26 1.170
+#26 1.339 Prisma schema loaded from packages/db/prisma/schema.prisma.
+#26 1.873
+#26 1.873 ✔ Generated Prisma Client (v7.10.0) to ./node_modules/.pnpm/@prisma+client@7.10.0_prisma@7.10.0_@types+react-dom@19.2.2_@types+react@19.2.2__@types_a5f616641512722fa171c0ec0738743a/node_modules/@prisma/client in 367ms
+#26 1.873
+#26 1.873 Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+#26 1.873
+#26 1.873
+#26 6.022
+#26 6.022 > @yoyo/web@0.1.0 build /app/apps/web
+#26 6.022 > vite build
+#26 6.022
+#26 6.191 vite v8.3.3 building client environment for production...
+#26 6.204 transforming...
+#26 6.252 ✓ 31 modules transformed.
+#26 6.284 rendering chunks...
+#26 6.308 computing gzip size...
+#26 6.311 dist/index.html                   0.36 kB │ gzip:   0.29 kB
+#26 6.311 dist/assets/index-C86akBZ3.css   15.50 kB │ gzip:   4.05 kB
+#26 6.311 dist/assets/index-B0DbFhRf.js   357.75 kB │ gzip: 106.61 kB
+#26 6.311
+#26 6.312 ✓ built in 118ms
+#26 DONE 6.4s
+
+#27 [stage-1  2/10] WORKDIR /app
+#27 CACHED
+
+#28 [stage-1  3/10] COPY --from=build --chown=node:node /app/node_modules ./node_modules
+#28 CACHED
+
+#29 [stage-1  4/10] COPY --from=build --chown=node:node /app/dist ./dist
+#29 DONE 0.0s
+
+#30 [stage-1  5/10] COPY --from=build --chown=node:node /app/apps/web/dist ./apps/web/dist
+#30 DONE 0.0s
+
+#31 [stage-1  6/10] COPY --from=build --chown=node:node /app/packages/db/migrations ./packages/db/migrations
+#31 DONE 0.0s
+
+#32 [stage-1  7/10] COPY --from=build --chown=node:node /app/docs/templates ./docs/templates
+#32 DONE 0.0s
+
+#33 [stage-1  8/10] COPY --from=build --chown=node:node /app/tools/s3 ./tools/s3
+#33 DONE 0.1s
+
+#34 [stage-1  9/10] COPY --from=build --chown=node:node /app/tools/s0 ./tools/s0
+#34 DONE 0.0s
+
+#35 [stage-1 10/10] COPY --from=build --chown=node:node /app/tools/init-state.mjs ./tools/init-state.mjs
+#35 DONE 0.0s
+
+#36 exporting to image
+#36 exporting layers 0.1s done
+#36 exporting manifest sha256:2e93132f4caecbc8c00f89c5b328e20f4f0194370cc8aeebe7958c503b035511 done
+#36 exporting config sha256:66b20783480d5b916cbe3cdc4a82013f1f9cf51503a851781ab028cdd8404458 done
+#36 exporting attestation manifest sha256:92794c1100d06296a60684295ec91ef6dee57254d448b616dd779fe81fada942 done
+#36 exporting manifest list sha256:539adf654685468934221f513babfe919f43cbd4dbe68569ac11ef3d8b006bef done
+#36 naming to docker.io/library/yoyo-local:0.1.0 done
+#36 unpacking to docker.io/library/yoyo-local:0.1.0 0.0s done
+#36 DONE 0.2s
+
+#37 resolving provenance for metadata file
+#37 DONE 0.0s
+ Image yoyo-local:0.1.0 Built

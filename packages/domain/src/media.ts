@@ -26,7 +26,7 @@ export function fileValidationHandler(db:Database,store:Storage):JobHandler{
     const metadata={...result.metadata,validated_import:true};
     await tx.query("UPDATE file_objects SET file_status='ready',preview_status=$1,preview_file_id=$2,metadata=$3,version=version+1,updated_at=now() WHERE id=$4",[result.status,staged[0]?.id??null,JSON.stringify(metadata),f.id]);
    }};
-  }catch(e){await db.query("UPDATE file_objects SET preview_status='failed',metadata=metadata||'{\"preview_error\":\"MEDIA_PARSE_FAILED\"}'::jsonb,updated_at=now() WHERE id=$1 AND preview_status<>'ready'",[f.id]);for(const p of staged)await store.remove(p.key).catch(()=>{});throw e;}
+  }catch(e){try{await db.query("UPDATE file_objects SET preview_status='failed',metadata=metadata||'{\"preview_error\":\"MEDIA_PARSE_FAILED\"}'::jsonb,updated_at=now() WHERE id=$1 AND preview_status<>'ready'",[f.id]);}finally{for(const p of staged)await store.remove(p.key).catch(()=>{});}throw e;}
   finally{if(outputId)await fetch(endpoint+'/outputs/'+outputId,{method:'DELETE',headers}).catch(()=>{});}
  };
 }
