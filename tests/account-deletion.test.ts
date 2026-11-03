@@ -5,7 +5,7 @@ import {server,Client,initialize,reset} from './helpers';
 import {ensureInstance} from '../packages/domain/src/instance';
 let env:Awaited<ReturnType<typeof server>>,c:Client;
 before(async()=>{env=await server();});after(async()=>env.close());beforeEach(async()=>{await reset(env.db);await ensureInstance(env.db);c=new Client(env.url);await initialize(c);});
-async function make(){const body={platform:'xiaohongshu',platform_user_id:randomUUID().replaceAll('-','').slice(0,24),name:'明确合成删除账号'},key=randomUUID(),r=await c.call('/accounts','POST',body,{'Idempotency-Key':key});assert.equal(r.status,201);return {a:r.data,body,key};}
+async function make(){const body={platform:'xiaohongshu',platform_user_id:randomUUID().replaceAll('-','').slice(0,24),name:'明确合成删除账号'},key=randomUUID(),r=await c.seedAccount(body,{'Idempotency-Key':key});assert.equal(r.status,201);return {a:r.data,body,key};}
 const confirmation=(a:any)=>({expected_version:a.version,confirmed:true});
 async function remove(a:any,key=randomUUID()){return c.call('/accounts/'+a.id,'DELETE',confirmation(a),{'Idempotency-Key':key});}
 async function waitForLock(fragment:string){const deadline=Date.now()+3000;while(Date.now()<deadline){const r=await env.db.query("SELECT 1 FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND position($1 in query)>0 LIMIT 1",[fragment]);if(r.rowCount)return;await new Promise(r=>setTimeout(r,10));}throw new Error('Expected database lock was not observed');}
@@ -16,7 +16,7 @@ test('空账号删除清理权限关联并保留审计；重复删除幂等，�
  assert.equal((await env.db.query('SELECT count(*)::int n FROM account_memberships WHERE account_id=$1',[a.id])).rows[0].n,0);
  assert.equal((await env.db.query("SELECT count(*)::int n FROM audit_logs WHERE action='account.delete' AND object_id=$1",[a.id])).rows[0].n,1);
  assert.equal((await c.call('/accounts','POST',body,{'Idempotency-Key':key})).status,404);assert.equal((await remove(a)).status,404);
- const next=await c.call('/accounts','POST',body);assert.equal(next.status,201);assert.notEqual(next.data.id,a.id);assert.equal((await remove(a,deletionKey)).status,200);assert.equal((await c.call('/accounts/'+next.data.id)).status,200);
+ const next=await c.seedAccount(body);assert.equal(next.status,201);assert.notEqual(next.data.id,a.id);assert.equal((await remove(a,deletionKey)).status,200);assert.equal((await c.call('/accounts/'+next.data.id)).status,200);
 });
 test('删除无需名称，仍需版本/明确确认及管理员权限；不正确的请求不改变账号',async()=>{
  const {a}=await make(),path='/accounts/'+a.id;

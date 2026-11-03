@@ -7,7 +7,7 @@ import {topicCandidateSchema,scoreCriteria} from '../packages/domain/src/ai-work
 import {Topics} from '../apps/api/src/topics';
 import {sha,canonical,Actor} from '../packages/domain/src/protocol';
 let env:Awaited<ReturnType<typeof server>>,client:Client,me:any,account:any,actor:Actor;
-before(async()=>{env=await server();client=new Client(env.url);me=await initialize(client);account=(await client.call('/accounts','POST',{platform:'xiaohongshu',platform_user_id:'3452f0a19fa652b1ad798b15',name:'受控测试'})).data;actor={userId:me.user.id,memberId:me.membership.id,workspaceId:me.workspace.id,roles:['admin'],sessionHash:'',requestId:randomUUID()};});after(()=>env.close());
+before(async()=>{env=await server();client=new Client(env.url);me=await initialize(client);account=(await client.seedAccount({platform:'xiaohongshu',platform_user_id:'3452f0a19fa652b1ad798b15',name:'受控测试'})).data;actor={userId:me.user.id,memberId:me.membership.id,workspaceId:me.workspace.id,roles:['admin'],sessionHash:'',requestId:randomUUID()};});after(()=>env.close());
 function candidate(extra:any={}){return topicCandidateSchema.parse({title:'明确合成：雨天观察',audience:'年轻人',need:'轻松',scene:'日常',column:'观察',emotion:'好奇',media_type:'graphic',follow_reason:'下次观察',evidence_refs:[],original_angle:'原创小发现',score_breakdown:scoreCriteria.map(criterion=>({criterion,score:4,reason:'合成测试评分'})),estimated_hours:null,expires_at:null,assumptions:['明确合成测试'],...extra});}
 async function seed(c=candidate()){
  const snapshot={scope_version:'v1.2',account:{id:account.id,name:account.name,version:account.version},workspace_version:1,sources:[],warnings:[],columns:['观察'],capacity_hours:4};
@@ -55,4 +55,25 @@ test('新采纳自动归属默认身份，历史负责人和决策不被重复�
  const accepted=await env.db.transaction(tx=>new Topics(env.db).accept(tx,{...actor,userId:old.user_id,memberId:old.id},t.id,{expected_version:1}));
  const again=await client.call('/topics/'+t.id+'/accept','POST',{expected_version:1});assert.equal(again.status,200);assert.equal(again.data.decision_id,(accepted.data as any).decision_id);
  const detail=(await client.call('/topics/'+t.id)).data;assert.equal(detail.accepted_owner_id,old.id);assert.equal(detail.decisions[0].owner_id,old.id);assert.equal(detail.owner_options,undefined);
+});
+
+test('展示摘要按真实批次分页归属，保留未知核验、变体批次时间及旧数据兜底',async()=>{
+ const first=await seed(),second=await seed();
+ for(const [i,t] of [first,second].entries()){
+  const row=(await env.db.query('SELECT * FROM ai_requests WHERE id=$1',[t.generation_request_id])).rows[0];row.snapshot.columns=['合成栏目'+i];row.snapshot.strategies=[];
+  await env.db.query('UPDATE ai_requests SET snapshot=$2,result=$3 WHERE id=$1',[row.id,JSON.stringify(row.snapshot),JSON.stringify({missing_inputs:['制作工时待估'],warnings:[]})]);
+ }
+ const p1=(await client.call('/topics?account_id='+account.id+'&limit=1')).data;assert.equal(p1.items.length,1);assert.equal(p1.generations.length,1);assert.equal(p1.generations[0].id,p1.items[0].generation_request_id);assert.equal(p1.generations[0].complete,true);assert.equal(p1.items[0].presentation.reference_source_count,0);assert.ok(!p1.items[0].presentation.checks.includes('制作工时待估'));
+ const p2=(await client.call('/topics?account_id='+account.id+'&limit=1&cursor='+encodeURIComponent(p1.next_cursor))).data;assert.notEqual(p1.generations[0].id,p2.generations[0].id);assert.equal(p2.generations[0].id,p2.items[0].generation_request_id);
+ const changed=(await client.call('/topics/'+second.id+'/variants','POST',{goal:'合成新目标',media_type:'video'})).data;
+ const variant=(await client.call('/topics/'+changed.id)).data;const parent=(await client.call('/topics/'+second.id)).data;
+ assert.deepEqual(variant.generation,parent.generation);assert.ok(variant.presentation.assumptions.some((s:string)=>s.includes('合成新目标')));assert.ok(variant.presentation.checks.some((s:string)=>s.includes('变体需要重新核验')));
+ const legacy=await seed();const old=(await client.call('/topics/'+legacy.id)).data;assert.equal(old.generation.complete,false);assert.ok(old.generation.limitations.some((s:string)=>s.includes('历史生成说明不完整')));assert.ok(old.presentation.checks.includes('受控夹具'));
+ const hidden=await new Topics(env.db).list({...actor,workspaceId:randomUUID()},{});assert.deepEqual(hidden.items,[]);assert.deepEqual(hidden.generations,[]);
+});
+test('列表展示上下文集中读取，不随每条候选额外请求批次或详情',async()=>{
+ const original=env.db.query.bind(env.db);let reads=0;
+ env.db.query=((...args:any[])=>{reads++;return (original as any)(...args);}) as typeof env.db.query;
+ try{const result=await new Topics(env.db).list(actor,{limit:100});assert.ok(result.items.length>1);assert.equal(reads,3);assert.equal(result.generations.length,new Set(result.items.map((t:any)=>t.generation_request_id)).size);}
+ finally{env.db.query=original;}
 });

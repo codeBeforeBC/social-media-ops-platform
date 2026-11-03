@@ -2448,7 +2448,6 @@
         "category": {
           "enum": [
             "workspace",
-            "capacity",
             "ai_budget"
           ]
         },
@@ -2600,17 +2599,6 @@
             "minLength": 1,
             "maxLength": 200
           }
-        },
-        "capacity_hours": {
-          "anyOf": [
-            {
-              "type": "number",
-              "minimum": 0
-            },
-            {
-              "type": "null"
-            }
-          ]
         }
       },
       "required": [
@@ -3385,21 +3373,15 @@
           "$ref": "#/$defs/Timezone"
         },
         "browser_profile_ref": {
-          "anyOf": [
-            {
-              "type": "string",
-              "pattern": "^[A-Za-z0-9_-]{1,100}$"
-            },
-            {
-              "type": "null"
-            }
-          ]
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{1,100}$"
         }
       },
       "required": [
         "platform",
         "platform_user_id",
-        "name"
+        "name",
+        "browser_profile_ref"
       ],
       "additionalProperties": false
     },
@@ -4203,6 +4185,19 @@
         "reused"
       ],
       "additionalProperties": false
+    },
+    "AccountRegistered": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/SocialAccount"
+        },
+        {
+          "type": "object",
+          "required": [
+            "verification"
+          ]
+        }
+      ]
     },
     "CollectionSettings": {
       "type": "object",
@@ -5137,6 +5132,129 @@
         "parent_topic_id"
       ],
       "additionalProperties": true
+    },
+    "TopicGenerationSummary": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "created_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "complete": {
+          "type": "boolean"
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "created_at",
+        "complete",
+        "inputs",
+        "limitations"
+      ],
+      "additionalProperties": false
+    },
+    "TopicPresentation": {
+      "type": "object",
+      "properties": {
+        "reference_source_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "source_review": {
+          "enum": [
+            "title_only",
+            "unavailable",
+            null
+          ]
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "assumptions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "reference_source_count",
+        "source_review",
+        "checks",
+        "assumptions"
+      ],
+      "additionalProperties": false
+    },
+    "TopicListItem": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/PersistedTopic"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "presentation": {
+              "$ref": "#/$defs/TopicPresentation"
+            }
+          },
+          "required": [
+            "presentation"
+          ]
+        }
+      ]
+    },
+    "TopicReadDetail": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/TopicListItem"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "generation": {
+              "$ref": "#/$defs/TopicGenerationSummary"
+            },
+            "evidence": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "decisions": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            }
+          },
+          "required": [
+            "generation",
+            "evidence",
+            "decisions"
+          ]
+        }
+      ]
     },
     "AcceptPersistedTopic": {
       "type": "object",

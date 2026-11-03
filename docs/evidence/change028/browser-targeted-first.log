@@ -1,0 +1,71 @@
+[2m[WebServer] [22m(node:14004) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:14005) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:14011) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:14011) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 9 tests using 1 worker
+
+(node:14052) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:14052) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/browser.spec.ts:5:5 › 免登录打开工作台、清除Cookie后直接回到同一工作区，无用户与成员入口 (1.1s)
+  ✘  2 tests/browser.spec.ts:252:5 › 账号格式拒绝、保存失败保留输入、保存中不能重复或关闭，重复账号可查看 (3.3s)
+(node:14189) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:14189) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 tests/browser.spec.ts:263:5 › 小红书在线验证持久进度、公开/登录身份、人工确认和换档案失效 (6.9s)
+  ✓  4 tests/browser.spec.ts:271:5 › 小红书登录错号分开显示，验证失败保留可重试，添加请求失败保留表单 (12.5s)
+  ✓  5 tests/browser.spec.ts:278:5 › 账号验证后台失败只提供账号重验入口，不允许通用重试覆盖历史 (3.3s)
+  ✓  6 tests/browser.spec.ts:283:5 › 账号档案版本冲突刷新保留未保存选择，重新确认后保存 (630ms)
+  ✓  7 tests/browser.spec.ts:292:5 › 空账号点击确认即可删除，无需名称输入；可取消及幂等重试，列表及选择器刷新 (3.1s)
+  ✓  8 tests/browser.spec.ts:309:5 › 删除版本冲突需读取最新账号后点击确认，不误删他处刚修改的记录 (2.5s)
+  ✓  9 tests/browser.spec.ts:387:5 › 账号添加自动使用浏览器时区，档案必填且只通过原子添加请求提交验证 (3.2s)
+
+
+  1) tests/browser.spec.ts:252:5 › 账号格式拒绝、保存失败保留输入、保存中不能重复或关闭，重复账号可查看 ──────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveText[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: getByRole('dialog').locator('dd.account-id')
+    Expected: [32m"ffc20ed06af845b4a637c3a9"[39m
+    Error: strict mode violation: getByRole('dialog').locator('dd.account-id') resolved to 2 elements:
+        1) <dd class="account-id">ffc20ed06af845b4a637c3a9</dd> aka getByText('ffc20ed06af845b4a637c3a9').nth(1)
+        2) <dd class="account-id">ffc20ed06af845b4a637c3a9</dd> aka getByLabel('账号身份核验').getByText('ffc20ed06af845b4a637c3a9')
+
+    Call log:
+    [2m  - Expect "toHaveText" with timeout 5000ms[22m
+    [2m  - waiting for getByRole('dialog').locator('dd.account-id')[22m
+
+
+      258 |  await chooseRegistrationProfile(page);await d.getByRole('button',{name:'添加并验证',exact:true}).click();await expect(d.getByRole('button',{name:'关闭详情'})).toBeDisabled();await page.keyboard.press('Escape');await expect(d).toBeVisible();await expect(d.getByRole('alert')).toContainText('合成保存故障');await expect(identity).toHaveValue(id);await expect(remark).toHaveValue(name);await expect(d.getByText('验证请求已提交',{exact:false})).toHaveCount(0);
+      259 |  await chooseRegistrationProfile(page);await d.getByRole('button',{name:'添加并验证',exact:true}).click();await expect(d.getByRole('status')).toContainText('账号已');await d.getByRole('button',{name:'关闭详情'}).click();
+    > 260 |  await page.getByRole('button',{name:'添加账号',exact:true}).click();await identity.fill(id);await remark.fill('不覆盖旧备注');await chooseRegistrationProfile(page);await d.getByRole('button',{name:'添加并验证',exact:true}).click();await expect(d.getByRole('alert')).toContainText('已经登记');await d.getByRole('button',{name:'查看已有账号'}).click();await expect(d.getByLabel('本地备注名称')).toHaveValue(name);await expect(d.locator('dd.account-id')).toHaveText(id);
+          |                                                                                                                                                                                                                                                                                                                                                                                                                                       ^
+      261 | });
+      262 |
+      263 | test('小红书在线验证持久进度、公开/登录身份、人工确认和换档案失效',async({page})=>{
+        at /Users/junlong/projects/social-mdeida-ops-platform/tests/browser.spec.ts:260:423
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser-账号格式拒绝、保存失败保留输入、保存中不能重复或关闭，重复账号可查看/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/browser-账号格式拒绝、保存失败保留输入、保存中不能重复或关闭，重复账号可查看/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/browser-账号格式拒绝、保存失败保留输入、保存中不能重复或关闭，重复账号可查看/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/browser-账号格式拒绝、保存失败保留输入、保存中不能重复或关闭，重复账号可查看/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/browser.spec.ts:252:5 › 账号格式拒绝、保存失败保留输入、保存中不能重复或关闭，重复账号可查看 ───────────────────────────────
+  8 passed (39.7s)

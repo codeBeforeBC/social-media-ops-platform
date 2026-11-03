@@ -1,0 +1,184 @@
+[2m[WebServer] [22m(node:57518) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:57519) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:57525) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:57525) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 6 tests using 1 worker
+
+(node:57667) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:57667) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 tests/browser.spec.ts:82:5 › 候选理由/评分/证据、默认本人采纳、拒绝留因与显式变体 (986ms)
+(node:57955) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:57955) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 tests/browser.spec.ts:105:5 › 选题详情结构化阅读、证据分组、风险去重、长文本及固定操作在四种宽度可用 (970ms)
+  ✓  3 tests/browser.spec.ts:132:5 › 选题详情版本冲突可读取最新版本，失败保留输入，提交时禁用操作并保留变体形式 (1.0s)
+  ✘  4 tests/browser.spec.ts:154:5 › 选题详情无来源/无缺项、已采纳过期和已拒绝状态保留真实操作边界 (5.5s)
+(node:58113) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:58113) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  5 tests/browser.spec.ts:455:5 › 候选紧凑列表：单列去重来源、跨页批次合并、核验不隐藏和评分按需阅读 (5.2s)
+(node:58121) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:58121) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  6 tests/browser.spec.ts:468:5 › 候选筛选：读取失败保留已有项，迟到响应不覆盖新筛选，恢复及明确深链优先 (30.1s)
+
+
+  1) tests/browser.spec.ts:82:5 › 候选理由/评分/证据、默认本人采纳、拒绝留因与显式变体 ──────────────────────────────────────
+
+    Error: Command failed: pnpm exec tsx tools/s3-topics-browser-seed.ts
+    (node:57815) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+    (Use `node --trace-warnings ...` to show where the warning was created)
+    (node:57816) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+    (Use `node --trace-warnings ...` to show where the warning was created)
+    (node:57822) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+    (Use `node --trace-warnings ...` to show where the warning was created)
+    (node:57822) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+    (Use `node --trace-warnings ...` to show where the warning was created)
+    TOPIC_BROWSER_FIXTURE_FAILED
+
+
+      81 |
+      82 | test('候选理由/评分/证据、默认本人采纳、拒绝留因与显式变体',async({page})=>{
+    > 83 |  execFileSync('pnpm',['exec','tsx','tools/s3-topics-browser-seed.ts'],{stdio:'pipe',env:process.env});
+         |              ^
+      84 |  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('/');await page.getByRole('link',{name:'选题策划'}).click();
+      85 |  const adopt=page.locator('.topic-card').filter({hasText:'合成候选：采纳操作'});await expect(adopt).not.toContainText('/100');await adopt.getByRole('button',{name:'查看选题'}).click();const dialog=page.getByRole('dialog',{name:'选题理由与证据'});await expect(dialog.locator('.topic-score-details')).not.toHaveAttribute('open');await dialog.locator('.topic-score-details summary').click();await expect(dialog.getByRole('meter',{name:'受众需求'})).toHaveAttribute('value','4');await expect(dialog).toContainText('明确合成的浏览器证据线索');await expect(dialog).toContainText('来源原文（真实性待核验）');await expect(dialog).toContainText('缺受众反馈');await dialog.getByRole('button',{name:'采纳选题',exact:true}).click();await expect(dialog.getByRole('combobox',{name:'负责人'})).toHaveCount(0);await dialog.getByRole('button',{name:'确认采纳',exact:true}).click();await expect(dialog).toContainText('已采纳');await expect(dialog.getByRole('button',{name:'采纳选题',exact:true})).toHaveCount(0);await page.keyboard.press('Escape');
+      86 |  const reject=page.locator('.topic-card').filter({hasText:'合成候选：拒绝操作'});await reject.getByRole('button',{name:'查看选题'}).click();await dialog.getByRole('button',{name:'拒绝并留因'}).click();await dialog.getByLabel('拒绝原因',{exact:true}).fill('本周产能不足');await dialog.getByRole('button',{name:'保存拒绝原因'}).click();await dialog.locator('.topic-decision-history summary').click();await expect(dialog).toContainText('本周产能不足');await expect(dialog).toContainText('已拒绝');await dialog.getByRole('button',{name:'明确创建变体'}).click();await dialog.getByLabel('变体目标',{exact:true}).fill('减少页数的新角度');await dialog.getByRole('button',{name:'创建变体',exact:true}).click();await expect(dialog).toContainText('减少页数的新角度');await expect(dialog.getByRole('button',{name:'查看父题'})).toBeVisible();await page.keyboard.press('Escape');
+        at /Users/junlong/projects/social-mdeida-ops-platform/tests/browser.spec.ts:83:14
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser-候选理由-评分-证据、默认本人采纳、拒绝留因与显式变体/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/browser-候选理由-评分-证据、默认本人采纳、拒绝留因与显式变体/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/browser-候选理由-评分-证据、默认本人采纳、拒绝留因与显式变体/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) tests/browser.spec.ts:154:5 › 选题详情无来源/无缺项、已采纳过期和已拒绝状态保留真实操作边界 ─────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoContainText[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: getByRole('dialog', { name: '选题理由与证据' })
+    Expected substring: [32m"当前未列出待补项"[39m
+    Received string:    [31m"选题理由与证据关闭待采纳图文明确合成的阅读布局选题原创提案版本 1 · 更新于 2026/10/27 20:00:00这个选题，值得做在哪里原创角度这是用于检查布局的合成角度，不是运营事实。写给谁 · 解决什么需求合成目标人群需求：低成本了解一个选题在什么场景下读决定是否采纳前读者为什么愿意继续关注合成的持续关注动机选题依据来源原文与 AI 判断分开阅读；原文存在不代表内容已核实。未引用外部来源，按原创提案核验。使用前核对当前未列出额外核验事项，仍需人工核验选题依据。本次生成参考了什么展开说明历史生成记录建议的适用范围历史生成说明不完整；本题保留已有核验事项。本次未提供可靠的制作时间估算。AI评分依据 · 80/100评分仅用于比较建议，不代表爆款概率。受众需求 权重 25%4/5合成评分解释：受众需求YOYO表达 权重 25%4/5合成评分解释：YOYO表达连续关注理由 权重 20%4/5合成评分解释：连续关注理由内容清楚 权重 15%4/5合成评分解释：内容清楚制作可行 权重 10%4/5合成评分解释：制作可行时机 权重 5%4/5合成评分解释：时机决策记录 · 0条暂无决策记录。采纳后保存决策内容制作与发布在系统外完成创建变体拒绝并留因采纳选题"[39m
+    Timeout: 5000ms
+
+    Call log:
+    [2m  - Expect "toContainText" with timeout 5000ms[22m
+    [2m  - waiting for getByRole('dialog', { name: '选题理由与证据' })[22m
+    [2m    9 × locator resolved to <dialog open="" aria-label="选题理由与证据" class="drawer topic-detail-drawer">…</dialog>[22m
+    [2m      - unexpected value "选题理由与证据关闭待采纳图文明确合成的阅读布局选题原创提案版本 1 · 更新于 2026/10/27 20:00:00这个选题，值得做在哪里原创角度这是用于检查布局的合成角度，不是运营事实。写给谁 · 解决什么需求合成目标人群需求：低成本了解一个选题在什么场景下读决定是否采纳前读者为什么愿意继续关注合成的持续关注动机选题依据来源原文与 AI 判断分开阅读；原文存在不代表内容已核实。未引用外部来源，按原创提案核验。使用前核对当前未列出额外核验事项，仍需人工核验选题依据。本次生成参考了什么展开说明历史生成记录建议的适用范围历史生成说明不完整；本题保留已有核验事项。本次未提供可靠的制作时间估算。AI评分依据 · 80/100评分仅用于比较建议，不代表爆款概率。受众需求 权重 25%4/5合成评分解释：受众需求YOYO表达 权重 25%4/5合成评分解释：YOYO表达连续关注理由 权重 20%4/5合成评分解释：连续关注理由内容清楚 权重 15%4/5合成评分解释：内容清楚制作可行 权重 10%4/5合成评分解释：制作可行时机 权重 5%4/5合成评分解释：时机决策记录 · 0条暂无决策记录。采纳后保存决策内容制作与发布在系统外完成创建变体拒绝并留因采纳选题"[22m
+
+
+      154 | test('选题详情无来源/无缺项、已采纳过期和已拒绝状态保留真实操作边界',async({page})=>{
+      155 |  const topic=readingTopic();topic.evidence=[];topic.missing_inputs=[];topic.warnings=[];topic.candidate.assumptions=[];
+    > 156 |  const dialog=await openReadingTopic(page,topic);await expect(dialog).toContainText('未引用外部来源，按原创提案核验。');await expect(dialog).toContainText('当前未列出待补项');await expect(dialog.getByRole('button',{name:'采纳选题',exact:true})).toBeVisible();
+          |                                                                                                                              ^
+      157 |  await page.keyboard.press('Escape');topic.effective_status='accepted';topic.status='accepted';topic.expired=true;
+      158 |  await page.getByRole('button',{name:'查看选题',exact:true}).click();await expect(dialog).toContainText('来源时效需重新核验，已采纳决策保留。');await expect(dialog.getByRole('button',{name:'采纳选题',exact:true})).toHaveCount(0);await expect(dialog.getByRole('button',{name:'拒绝并留因'})).toHaveCount(0);await expect(dialog.getByRole('button',{name:'明确创建变体',exact:true})).toBeVisible();
+      159 |  await page.keyboard.press('Escape');topic.effective_status='rejected';topic.status='rejected';topic.expired=false;await page.getByRole('button',{name:'查看选题',exact:true}).click();await expect(dialog.getByText('已拒绝',{exact:true})).toBeVisible();await expect(dialog.getByRole('button',{name:'采纳选题',exact:true})).toHaveCount(0);
+        at /Users/junlong/projects/social-mdeida-ops-platform/tests/browser.spec.ts:156:126
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser-选题详情无来源-无缺项、已采纳过期和已拒绝状态保留真实操作边界/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/browser-选题详情无来源-无缺项、已采纳过期和已拒绝状态保留真实操作边界/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/browser-选题详情无来源-无缺项、已采纳过期和已拒绝状态保留真实操作边界/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/browser-选题详情无来源-无缺项、已采纳过期和已拒绝状态保留真实操作边界/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) tests/browser.spec.ts:455:5 › 候选紧凑列表：单列去重来源、跨页批次合并、核验不隐藏和评分按需阅读 ───────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveValue[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: locator('.topics-panel').getByLabel('选题状态', { exact: true })
+    Expected: [32m"proposed"[39m
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toHaveValue" with timeout 5000ms[22m
+    [2m  - waiting for locator('.topics-panel').getByLabel('选题状态', { exact: true })[22m
+
+
+      458 |  await page.route(/\/api\/v1\/topics\?/,r=>{const q=new URL(r.request().url()).searchParams;if(q.get('cursor')==='next'){if(failMore)return r.fulfill({status:503,json:{error:{code:'SERVICE_UNAVAILABLE',message:'合成追加读取失败'}}});return r.fulfill({json:{data:{items:[third],next_cursor:null,generations:[third.generation]}}});}return r.fulfill({json:{data:{items:[first,second],next_cursor:'next',generations:[first.generation]}}});});
+      459 |  await page.route(/\/api\/v1\/topics\/[^/?]+$/,r=>{detailReads++;const t=all.find(t=>r.request().url().endsWith('/'+t.id));return r.fulfill({json:{data:t}});});
+    > 460 |  await page.goto('/#topics');const panel=page.locator('.topics-panel'),cards=panel.locator('.topic-list-item');await expect(panel.getByLabel('选题状态',{exact:true})).toHaveValue('proposed');await expect(cards).toHaveCount(2);expect(detailReads).toBe(0);
+          |                                                                                                                                                                    ^
+      461 |  await expect(cards.first()).toContainText('参考来源 1 个');await expect(cards.first()).not.toContainText(/待补|工时待估|关注理由|\/100|3条引用/);await expect(cards.first()).toContainText('需核对原文');await expect(cards.nth(1)).not.toContainText('需核对原文');await expect(panel.locator('.topic-generation-notes')).toHaveCount(1);await expect(panel.locator('.topic-generation-notes')).not.toHaveAttribute('open');
+      462 |  await panel.getByRole('button',{name:'更多候选',exact:true}).click();await expect(panel.getByRole('alert')).toContainText('合成追加读取失败');await expect(cards).toHaveCount(2);failMore=false;await panel.getByRole('button',{name:'重试',exact:true}).click();await expect(cards).toHaveCount(3);await expect(panel.getByRole('button',{name:'更多候选',exact:true})).toHaveCount(0);await panel.locator('.topic-generation-notes>summary').focus();await page.keyboard.press('Enter');await expect(panel.locator('.topic-generation-body>section')).toHaveCount(2);await expect(panel).not.toContainText(/actual_work_hours|strategies/);
+      463 |  mkdirSync('docs/evidence/change031/screenshots',{recursive:true});for(const width of [1440,1280,768,390,320]){await page.setViewportSize({width,height:1000});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);const boxes=await cards.evaluateAll(nodes=>nodes.map(e=>({x:e.getBoundingClientRect().x,width:e.getBoundingClientRect().width})));expect(new Set(boxes.map(b=>b.x)).size).toBe(1);await panel.screenshot({path:`docs/evidence/change031/screenshots/compact-list-${width}.png`});}
+        at /Users/junlong/projects/social-mdeida-ops-platform/tests/browser.spec.ts:460:164
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser-候选紧凑列表：单列去重来源、跨页批次合并、核验不隐藏和评分按需阅读/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/browser-候选紧凑列表：单列去重来源、跨页批次合并、核验不隐藏和评分按需阅读/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/browser-候选紧凑列表：单列去重来源、跨页批次合并、核验不隐藏和评分按需阅读/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/browser-候选紧凑列表：单列去重来源、跨页批次合并、核验不隐藏和评分按需阅读/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) tests/browser.spec.ts:468:5 › 候选筛选：读取失败保留已有项，迟到响应不覆盖新筛选，恢复及明确深链优先 ─────────────────────────────
+
+    [31mTest timeout of 30000ms exceeded.[39m
+
+    Error: locator.selectOption: Test timeout of 30000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('.topics-panel').getByLabel('选题状态', { exact: true })[22m
+
+
+      470 |  await page.route(/\/api\/v1\/topics\?/,async r=>{const q=new URL(r.request().url()).searchParams,status=q.get('status');if(status==='accepted'){acceptedStarted();await hold;return r.fulfill({json:{data:{items:[{...t,status:'accepted',effective_status:'accepted',candidate:{...t.candidate,title:'不得覆盖新筛选的旧结果'}}],next_cursor:null,generations:[t.generation]}}});}if(broken)return r.fulfill({status:503,json:{error:{code:'SERVICE_UNAVAILABLE',message:'合成刷新读取失败'}}});const items=status==='rejected'||empty?[]:status==='expired'?[{...t,status:'proposed',effective_status:'expired',expired:true,candidate:{...t.candidate,media_type:'video'}}]:[t];return r.fulfill({json:{data:{items,next_cursor:null,generations:items.length?[t.generation]:[]}}});});
+      471 |  await page.goto('/#topics');const panel=page.locator('.topics-panel');await expect(panel.locator('.topic-card')).toHaveCount(1);broken=true;await panel.getByRole('button',{name:'刷新候选',exact:true}).click();await expect(panel.getByRole('alert')).toContainText('合成刷新读取失败');await expect(panel.locator('.topic-card')).toHaveCount(1);await expect(panel.getByRole('heading',{name:'暂无待采纳选题',exact:true})).toHaveCount(0);broken=false;await panel.getByRole('button',{name:'重试',exact:true}).click();await expect(panel.getByRole('alert')).toHaveCount(0);
+    > 472 |  await panel.getByLabel('选题状态',{exact:true}).selectOption('accepted');await waiting;await panel.getByLabel('选题状态',{exact:true}).selectOption('rejected');await expect(panel.getByRole('heading',{name:'暂无匹配选题',exact:true})).toBeVisible();const late=page.waitForResponse(r=>r.url().includes('/topics?')&&new URL(r.url()).searchParams.get('status')==='accepted');release();await late;await page.waitForTimeout(100);await expect(panel).not.toContainText('不得覆盖新筛选的旧结果');await expect(panel.getByLabel('选题状态',{exact:true})).toHaveValue('rejected');await page.reload();await expect(panel.getByLabel('选题状态',{exact:true})).toHaveValue('rejected');await expect(panel.locator('.topic-card')).toHaveCount(0);
+          |                                              ^
+      473 |  await page.goto('/#topics?status=expired&media_type=video');await expect(panel.getByLabel('选题状态',{exact:true})).toHaveValue('expired');await expect(panel.getByLabel('选题形式',{exact:true})).toHaveValue('video');await expect(panel.locator('.topic-card')).toContainText('已过期');await panel.locator('.topic-card').getByRole('button',{name:'查看选题'}).isVisible();
+      474 |  empty=true;await panel.getByLabel('选题状态',{exact:true}).selectOption('proposed');await expect(panel.getByRole('heading',{name:'暂无待采纳选题',exact:true})).toBeVisible();await expect(panel.getByRole('button',{name:'开始生成选题',exact:true})).toBeVisible();empty=false;await panel.getByRole('button',{name:'查看历史选题',exact:true}).click();await expect(panel.getByLabel('选题状态',{exact:true})).toHaveValue('');await expect(panel.getByLabel('选题形式',{exact:true})).toHaveValue('video');expect(writes).toBe(0);
+      475 | });
+        at /Users/junlong/projects/social-mdeida-ops-platform/tests/browser.spec.ts:472:46
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser-候选筛选：读取失败保留已有项，迟到响应不覆盖新筛选，恢复及明确深链优先/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/browser-候选筛选：读取失败保留已有项，迟到响应不覆盖新筛选，恢复及明确深链优先/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/browser-候选筛选：读取失败保留已有项，迟到响应不覆盖新筛选，恢复及明确深链优先/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/browser-候选筛选：读取失败保留已有项，迟到响应不覆盖新筛选，恢复及明确深链优先/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4 failed
+    tests/browser.spec.ts:82:5 › 候选理由/评分/证据、默认本人采纳、拒绝留因与显式变体 ───────────────────────────────────────
+    tests/browser.spec.ts:154:5 › 选题详情无来源/无缺项、已采纳过期和已拒绝状态保留真实操作边界 ──────────────────────────────────
+    tests/browser.spec.ts:455:5 › 候选紧凑列表：单列去重来源、跨页批次合并、核验不隐藏和评分按需阅读 ────────────────────────────────
+    tests/browser.spec.ts:468:5 › 候选筛选：读取失败保留已有项，迟到响应不覆盖新筛选，恢复及明确深链优先 ──────────────────────────────
+  2 passed (47.6s)

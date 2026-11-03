@@ -1,0 +1,59 @@
+[2m[WebServer] [22m(node:10398) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:10407) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:10418) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:10418) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:10596) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10596) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/browser.spec.ts:365:5 › 运行状态层级：正常概览、任务数字和折叠明细，关闭定时不误报异常 (1.0s)
+  ✘  2 tests/browser.spec.ts:371:5 › 运行状态层级：异常与下一步置顶，历史失败和在途任务分开，多宽度可读 (30.1s)
+(node:11023) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:11023) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 tests/browser.spec.ts:379:5 › 运行状态层级：空心跳提示未知，费用保留币种和小数，未知用量不能当零 (444ms)
+
+
+  1) tests/browser.spec.ts:371:5 › 运行状态层级：异常与下一步置顶，历史失败和在途任务分开，多宽度可读 ───────────────────────────────
+
+    [31mTest timeout of 30000ms exceeded.[39m
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+    [2m  - waiting for getByRole('region', { name: '待处理事项', exact: true }).getByRole('button', { name: '查看进程 ↓', exact: true })[22m
+
+
+      372 |  const data:any=monitorViewFixture(),errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));data.processes[1].healthy=false;data.jobs=[{pool:'general',state:'failed',count:7,oldest:data.as_of},{pool:'media',state:'partial',count:2,oldest:data.as_of},{pool:'general',state:'running',count:2,oldest:data.as_of},{pool:'media',state:'queued',count:3,oldest:data.as_of}];data.outbox_pending=4;data.external_capabilities.ai={state:'unavailable',error_code:'AI_NOT_CONFIGURED'};Object.assign(data.external_capabilities.sources[0],{health:'auth_required',paused:true,name:'明确合成需要重新登录的长名称来源连接用于窄屏验证',error_code:'AUTH_REQUIRED'});await page.route('**/api/v1/monitor',route=>route.fulfill({json:{data}}));
+      373 |  await page.goto('/#settings?tab=monitor');const overview=page.getByRole('region',{name:'待处理事项',exact:true}),tasks=page.getByRole('region',{name:'当前任务',exact:true});await expect(overview.getByRole('heading')).toHaveText('有 4 类事项需要关注');await expect(overview).toContainText('7 项历史失败，2 项部分完成');await expect(overview).toContainText('历史记录不代表当前任务仍在运行');await expect(tasks.getByText('运行中',{exact:true}).locator('..').locator('dd')).toHaveText('2');await expect(tasks.getByText('等待处理',{exact:true}).locator('..').locator('dd')).toHaveText('3');await expect(tasks.getByText('待分发事件',{exact:true}).locator('..').locator('dd')).toHaveText('4');
+    > 374 |  await overview.getByRole('button',{name:'查看进程 ↓',exact:true}).click();await expect(page.getByRole('region',{name:'进程健康',exact:true})).toBeFocused();expect(new URL(page.url()).hash).toContain('settings?tab=monitor');await expect(overview.getByRole('link',{name:'检查来源 →',exact:true})).toHaveAttribute('href','#topics');await expect(overview.getByRole('link',{name:'查看 AI 设置 →',exact:true})).toHaveAttribute('href','#settings?tab=budget');
+          |                                                                ^
+      375 |  mkdirSync('docs/evidence/change027/screenshots',{recursive:true});for(const width of [1440,768,390,320]){await page.setViewportSize({width,height:1000});await page.evaluate(()=>scrollTo(0,0));expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:`docs/evidence/change027/screenshots/attention-${width}.png`,fullPage:true});}
+      376 |  expect(errors).toEqual([]);
+      377 | });
+        at /Users/junlong/projects/social-mdeida-ops-platform/tests/browser.spec.ts:374:64
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser-运行状态层级：异常与下一步置顶，历史失败和在途任务分开，多宽度可读/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/browser-运行状态层级：异常与下一步置顶，历史失败和在途任务分开，多宽度可读/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/browser-运行状态层级：异常与下一步置顶，历史失败和在途任务分开，多宽度可读/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/browser-运行状态层级：异常与下一步置顶，历史失败和在途任务分开，多宽度可读/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/browser.spec.ts:371:5 › 运行状态层级：异常与下一步置顶，历史失败和在途任务分开，多宽度可读 ────────────────────────────────
+  2 passed (35.5s)

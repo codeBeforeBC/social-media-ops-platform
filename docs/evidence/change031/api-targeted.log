@@ -1,0 +1,84 @@
+✔ exact shared explanations move once, unknown warnings remain and raw data is unchanged (2.436ms)
+✔ source warning is based only on this topic frozen fact references; inference is not a fact (0.145ms)
+✔ missing or cross-account generation keeps unknown checks without leaking context or inventing completeness (0.0965ms)
+✔ inconsistent or longer notes are not swallowed by matching a known keyword (0.100167ms)
+Applied 001-foundation.sql
+Applied 002-invitations.sql
+Applied 003-outbox-composite-unique.sql
+Applied 004-files.sql
+Applied 005-assets.sql
+Applied 006-media.sql
+Applied 007-s2-contract-fields.sql
+Applied 008-s2-governance.sql
+Applied 009-collection-runtime.sql
+Applied 010-source-evidence.sql
+Applied 011-ai-gateway.sql
+Applied 012-ai-requests.sql
+Applied 013-topics.sql
+Applied 014-topic-observation-binding.sql
+Applied 015-generated-briefs.sql
+Applied 016-frozen-revision-immutability.sql
+Applied 017-graphic-deliverables.sql
+Applied 018-content-production-metadata.sql
+Applied 019-content-reviews.sql
+Applied 020-content-cancellation.sql
+Applied 021-export-packages.sql
+Applied 022-publications.sql
+Applied 023-published-work-items.sql
+Applied 024-publication-changes.sql
+Applied 025-independent-notes-files.sql
+Applied 026-retire-cancelled-workflows.sql
+Applied 027-import-batches.sql
+Applied 028-metric-confirmation.sql
+Applied 029-metric-revert-provenance.sql
+Applied 030-metric-calculations.sql
+Applied 031-import-derived-invalidation.sql
+Applied 032-derived-metric-dictionary.sql
+Applied 033-current-calculation-fingerprint.sql
+Applied 034-reports-and-strategies.sql
+Applied 035-feedback.sql
+Applied 036-source-organization.sql
+Applied 037-screenshot-imports.sql
+Applied 038-all-members-admin.sql
+Applied 039-local-instance.sql
+Applied 040-account-verification.sql
+Applied 041-account-force-deletion.sql
+{"event":"http.request","request_id":"6d391eb8-de51-4ae8-b079-4bf8c48903e0","method":"GET","path":"/api/v1/request/csrf","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"425dc8d0-18c1-4221-9128-3f7475111ccb","method":"GET","path":"/api/v1/instance","status":200,"duration_ms":96}
+{"event":"http.request","request_id":"6e3d137a-d1a7-42ba-83c7-23756aaf29ba","method":"GET","path":"/api/v1/topics","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"595bcb85-8aea-4579-bc13-efdbac0f8ed1","method":"GET","path":"/api/v1/topics/55d07fb4-3b22-4740-ba73-78c2e4f95b6d","status":200,"duration_ms":6}
+✔ 六项权重由服务端计分，保留缺项与生成批次，重复保存不新增 (781.758083ms)
+{"event":"http.request","request_id":"0c4bd676-eace-4e5a-9c29-036a0bc6f4ca","method":"POST","path":"/api/v1/topics/9b42dff9-6551-4acf-aefc-1edfc7118dfc/accept","status":200,"duration_ms":19}
+{"event":"http.request","request_id":"05c91ad9-0634-401a-9d03-d1f50640e3dc","method":"POST","path":"/api/v1/topics/9b42dff9-6551-4acf-aefc-1edfc7118dfc/accept","status":200,"duration_ms":18}
+{"event":"http.request","request_id":"6b134b62-76b8-4862-8c8a-9a5178e7bc98","method":"POST","path":"/api/v1/topics/9b42dff9-6551-4acf-aefc-1edfc7118dfc/accept","status":422,"duration_ms":4}
+✔ 不同请求键并发采纳只保存一个决策，重复采纳返回原结果且没有Job/生产关系 (40.6525ms)
+{"event":"http.request","request_id":"731ddd53-bbd7-4531-957a-a87b619bd402","method":"POST","path":"/api/v1/topics/52f89ef4-8107-465f-9946-c2dcc6c08532/accept","status":200,"duration_ms":10}
+{"event":"http.request","request_id":"1841b1b7-27be-4ca8-889a-5bc4dfee5470","method":"POST","path":"/api/v1/topics/52f89ef4-8107-465f-9946-c2dcc6c08532/reject","status":409,"duration_ms":12}
+{"event":"http.request","request_id":"75e034a8-b666-4ef6-8dc1-9563b5b1d7bd","method":"GET","path":"/api/v1/topics/52f89ef4-8107-465f-9946-c2dcc6c08532","status":200,"duration_ms":8}
+{"event":"http.request","request_id":"b8523702-482e-468c-83bc-6a5bc5e7a669","method":"POST","path":"/api/v1/topics/f5b7f18d-8616-4273-96e6-08adf87befc4/accept","status":409,"duration_ms":7}
+{"event":"http.request","request_id":"2dc1805e-0924-432d-8fd7-cd0c1ff7165d","method":"GET","path":"/api/v1/topics","status":200,"duration_ms":5}
+✔ 拒绝原因不可丢失；与采纳竞争只有一条最终决策，过期不得采纳 (70.505041ms)
+{"event":"http.request","request_id":"67bde7ea-2946-4eae-bba3-e8a53737ed2b","method":"POST","path":"/api/v1/topics/9741f61c-ec94-4e27-9dee-f215ce40bae1/variants","status":201,"duration_ms":14}
+{"event":"http.request","request_id":"32f68692-600b-40e8-b299-54dbeeed5d93","method":"POST","path":"/api/v1/topics/9741f61c-ec94-4e27-9dee-f215ce40bae1/variants","status":201,"duration_ms":27}
+{"event":"http.request","request_id":"5ccb1148-7728-44ed-a027-a1f4fa697815","method":"POST","path":"/api/v1/topics/9741f61c-ec94-4e27-9dee-f215ce40bae1/accept","status":422,"duration_ms":3}
+✔ 显式变体保留父题/理由/证据并独立采纳；越权负责人和空间拒绝 (38.766041ms)
+✔ 事实缺观察/伪造来源使整个候选事务回滚，不用高分掩盖错误 (8.772375ms)
+{"event":"http.request","request_id":"2fb54171-f15f-4a76-89dc-dd0187667b88","method":"POST","path":"/api/v1/topics/1e1975cd-9d09-4cd3-8576-bb12a015a95c/reject","status":422,"duration_ms":4}
+{"event":"http.request","request_id":"c8371bc0-3e96-4039-ab31-3d2687eb1937","method":"POST","path":"/api/v1/topics/1e1975cd-9d09-4cd3-8576-bb12a015a95c/reject","status":409,"duration_ms":10}
+✔ 编辑只能采纳本人的任务；缺拒绝理由与陈旧版本不能改变选题 (21.11825ms)
+{"event":"http.request","request_id":"5abe53b2-6be5-4ba3-808f-fe5aae78e802","method":"POST","path":"/api/v1/source-connections","status":201,"duration_ms":13}
+{"event":"http.request","request_id":"bae37e71-a798-4f88-904b-421d5c90fd13","method":"GET","path":"/api/v1/topics/bed52a65-4f69-4fcb-8dbc-0b45e64c5bbd","status":200,"duration_ms":7}
+✔ 证据显示采纳建议生成时的不可变观察，不随着来源更新改写标题；观察必须匹配来源 (71.781958ms)
+✔ 常青原创不能把来源窗口结束填成到期；明确来源的时效由服务端保留 (5.340958ms)
+{"event":"http.request","request_id":"03b63cc0-f10f-4cbd-8d35-16c1473f2e86","method":"POST","path":"/api/v1/topics/46c08ff1-4d1f-4b58-8ee9-576f2a91e6f4/accept","status":422,"duration_ms":5}
+{"event":"http.request","request_id":"fe7a7c9b-7f9e-4e5f-a2ad-28124052a887","method":"POST","path":"/api/v1/topics/46c08ff1-4d1f-4b58-8ee9-576f2a91e6f4/accept","status":200,"duration_ms":7}
+{"event":"http.request","request_id":"8e7687e0-c3f5-4d16-b0ad-05f59920ebdc","method":"GET","path":"/api/v1/topics/46c08ff1-4d1f-4b58-8ee9-576f2a91e6f4","status":200,"duration_ms":4}
+✔ 新采纳自动归属默认身份，历史负责人和决策不被重复请求覆盖 (46.405417ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2127.723292

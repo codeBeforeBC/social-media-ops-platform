@@ -1,0 +1,76 @@
+[2m[WebServer] [22m(node:41351) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:41352) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:41358) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:41358) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:41551) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:41551) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 tests/browser.spec.ts:431:5 › 登录核对指引区分未识别、未登录、错号与不支持；匹配/在途/旧结果不误导 (30.1s)
+
+
+  1) tests/browser.spec.ts:431:5 › 登录核对指引区分未识别、未登录、错号与不支持；匹配/在途/旧结果不误导 ─────────────────────────────
+
+    [31mTest timeout of 30000ms exceeded.[39m
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+    [2m  - waiting for getByRole('row').filter({ hasText: '明确合成验证布局' }).getByRole('button', { name: '查看 / 编辑', exact: true })[22m
+    [2m    - locator resolved to <button>查看 / 编辑</button>[22m
+    [2m  - attempting click action[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <li>在下方“验证浏览器”中检查当前选择；选错时点击“更换浏览器”。</li> from <dialog open="" aria-label="账号详情" class="drawer account-detail">…</dialog> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m    - waiting 20ms[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <li>在下方“验证浏览器”中检查当前选择；选错时点击“更换浏览器”。</li> from <dialog open="" aria-label="账号详情" class="drawer account-detail">…</dialog> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m      - waiting 100ms[22m
+    [2m    56 × waiting for element to be visible, enabled and stable[22m
+    [2m       - element is visible, enabled and stable[22m
+    [2m       - scrolling into view if needed[22m
+    [2m       - done scrolling[22m
+    [2m       - <li>在下方“验证浏览器”中检查当前选择；选错时点击“更换浏览器”。</li> from <dialog open="" aria-label="账号详情" class="drawer account-detail">…</dialog> subtree intercepts pointer events[22m
+    [2m     - retrying click action[22m
+    [2m       - waiting 500ms[22m
+
+
+      398 | }
+      399 | async function mockVerificationView(page:Page,account:any,history:any[]){
+    > 400 |  await page.route('**/api/v1/accounts',r=>r.fulfill({json:{data:{items:[account]}}}));await page.route('**/api/v1/accounts/'+account.id,r=>r.fulfill({json:{data:account}}));await page.route('**/api/v1/accounts/'+account.id+'/verifications?*',r=>r.fulfill({json:{data:{items:history,next_cursor:null}}}));await page.goto('/#settings?tab=accounts');await page.getByRole('row').filter({hasText:account.name}).getByRole('button',{name:'查看 / 编辑',exact:true}).click();return page.getByRole('region',{name:'账号身份核验'});
+          |                                                                                                                                                                                                                                                                                                                                                                                                                                                                       ^
+      401 | }
+      402 | test('验证区层级：关键结果先展示，浏览器设置按需打开，历史时间线隐藏技术字段',async({page})=>{
+      403 |  const a=verificationViewFixture(),older=structuredClone(a.verification.latest);older.id='d2000000-0000-4000-8000-000000000002';older.binding_version=0;older.browser_profile_ref='other-browser-profile';older.state='failed';older.result.public_status='inconclusive';older.result.public_profile=null;older.result.session_status='auth_required';older.result.error_code='AUTH_REQUIRED';const panel=await mockVerificationView(page,a,[a.verification.latest,older]);
+        at mockVerificationView (/Users/junlong/projects/social-mdeida-ops-platform/tests/browser.spec.ts:400:455)
+        at /Users/junlong/projects/social-mdeida-ops-platform/tests/browser.spec.ts:435:15
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser-登录核对指引区分未识别、未登录、错号与不支持；匹配-在途-旧结果不误导/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/browser-登录核对指引区分未识别、未登录、错号与不支持；匹配-在途-旧结果不误导/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/browser-登录核对指引区分未识别、未登录、错号与不支持；匹配-在途-旧结果不误导/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/browser-登录核对指引区分未识别、未登录、错号与不支持；匹配-在途-旧结果不误导/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/browser.spec.ts:431:5 › 登录核对指引区分未识别、未登录、错号与不支持；匹配/在途/旧结果不误导 ──────────────────────────────

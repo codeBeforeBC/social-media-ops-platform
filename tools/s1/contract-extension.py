@@ -59,7 +59,8 @@ for method,path,response,code,request,public in [
 # 下载/预览保留planned：S1只有角色守卫，S2才返回真实签名地址。
 # CHANGE-020: observed platform identity, current session, and human declaration are independent.
 profile_ref={'type':'string','pattern':'^[A-Za-z0-9_-]{1,100}$'}
-S['AccountCreate']['properties']['browser_profile_ref']=nullable(profile_ref)
+S['AccountCreate']['properties']['browser_profile_ref']=profile_ref
+S['AccountCreate']['required'].append('browser_profile_ref')
 S['AccountPatch']['properties']['browser_profile_ref']=nullable(profile_ref)
 capability=enum('unknown','supported','unsupported')
 S['AccountVerificationResult']=obj({'public_status':enum('matched','inconclusive','not_found'),'session_status':enum('unknown','matched','mismatched','auth_required','unsupported'),
@@ -96,3 +97,7 @@ s1('get','/accounts/{id}/deletion-impact',ref('AccountDeletionImpact'))
 s1('get','/account-deletions',obj({'items':arr(ref('AccountDeletion'))},['items']))
 s1('get','/account-deletions/{id}',ref('AccountDeletion'))
 s1('post','/account-deletions/{id}/retry',ref('AccountDeletion'),'200')
+
+# CHANGE-028: registration and verification enqueue commit atomically.
+S['AccountRegistered']={'allOf':[ref('SocialAccount'),{'type':'object','required':['verification']}]}
+paths['/accounts']['post']['responses']['201']['content']['application/json']['schema']['properties']['data']=ref('AccountRegistered')

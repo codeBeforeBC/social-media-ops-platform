@@ -234,7 +234,7 @@
                   "type": "object",
                   "properties": {
                     "data": {
-                      "$ref": "#/components/schemas/SocialAccount"
+                      "$ref": "#/components/schemas/AccountRegistered"
                     },
                     "meta": {
                       "$ref": "#/components/schemas/Meta"
@@ -1394,7 +1394,7 @@
                         "items": {
                           "type": "array",
                           "items": {
-                            "$ref": "#/components/schemas/PersistedTopic"
+                            "$ref": "#/components/schemas/TopicListItem"
                           }
                         },
                         "next_cursor": {
@@ -1402,11 +1402,18 @@
                             "string",
                             "null"
                           ]
+                        },
+                        "generations": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/TopicGenerationSummary"
+                          }
                         }
                       },
                       "required": [
                         "items",
-                        "next_cursor"
+                        "next_cursor",
+                        "generations"
                       ],
                       "additionalProperties": false
                     },
@@ -1522,7 +1529,7 @@
                   "type": "object",
                   "properties": {
                     "data": {
-                      "$ref": "#/components/schemas/PersistedTopic"
+                      "$ref": "#/components/schemas/TopicReadDetail"
                     },
                     "meta": {
                       "$ref": "#/components/schemas/Meta"
@@ -17091,7 +17098,6 @@
           "category": {
             "enum": [
               "workspace",
-              "capacity",
               "ai_budget"
             ]
           },
@@ -17243,17 +17249,6 @@
               "minLength": 1,
               "maxLength": 200
             }
-          },
-          "capacity_hours": {
-            "anyOf": [
-              {
-                "type": "number",
-                "minimum": 0
-              },
-              {
-                "type": "null"
-              }
-            ]
           }
         },
         "required": [
@@ -18028,21 +18023,15 @@
             "$ref": "#/components/schemas/Timezone"
           },
           "browser_profile_ref": {
-            "anyOf": [
-              {
-                "type": "string",
-                "pattern": "^[A-Za-z0-9_-]{1,100}$"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]{1,100}$"
           }
         },
         "required": [
           "platform",
           "platform_user_id",
-          "name"
+          "name",
+          "browser_profile_ref"
         ],
         "additionalProperties": false
       },
@@ -18846,6 +18835,19 @@
           "reused"
         ],
         "additionalProperties": false
+      },
+      "AccountRegistered": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SocialAccount"
+          },
+          {
+            "type": "object",
+            "required": [
+              "verification"
+            ]
+          }
+        ]
       },
       "CollectionSettings": {
         "type": "object",
@@ -19780,6 +19782,129 @@
           "parent_topic_id"
         ],
         "additionalProperties": true
+      },
+      "TopicGenerationSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "created_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "complete": {
+            "type": "boolean"
+          },
+          "inputs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "limitations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "created_at",
+          "complete",
+          "inputs",
+          "limitations"
+        ],
+        "additionalProperties": false
+      },
+      "TopicPresentation": {
+        "type": "object",
+        "properties": {
+          "reference_source_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "source_review": {
+            "enum": [
+              "title_only",
+              "unavailable",
+              null
+            ]
+          },
+          "checks": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "assumptions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "reference_source_count",
+          "source_review",
+          "checks",
+          "assumptions"
+        ],
+        "additionalProperties": false
+      },
+      "TopicListItem": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PersistedTopic"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "presentation": {
+                "$ref": "#/components/schemas/TopicPresentation"
+              }
+            },
+            "required": [
+              "presentation"
+            ]
+          }
+        ]
+      },
+      "TopicReadDetail": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TopicListItem"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "generation": {
+                "$ref": "#/components/schemas/TopicGenerationSummary"
+              },
+              "evidence": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              },
+              "decisions": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              }
+            },
+            "required": [
+              "generation",
+              "evidence",
+              "decisions"
+            ]
+          }
+        ]
       },
       "AcceptPersistedTopic": {
         "type": "object",

@@ -1,0 +1,52 @@
+✔ exact shared explanations move once, unknown warnings remain and raw data is unchanged (2.265584ms)
+✔ source warning is based only on this topic frozen fact references; inference is not a fact (0.3145ms)
+✔ missing or cross-account generation keeps unknown checks without leaking context or inventing completeness (0.108584ms)
+✔ inconsistent or longer notes are not swallowed by matching a known keyword (0.112292ms)
+✔ retired requirements do not return, while actual content/rights risks remain visible (0.073542ms)
+{"event":"http.request","request_id":"05e55def-9330-479c-b731-da22d43f041c","method":"GET","path":"/api/v1/request/csrf","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"e614969c-d1e1-44ee-abf4-d13ab31a09d6","method":"GET","path":"/api/v1/instance","status":200,"duration_ms":155}
+{"event":"http.request","request_id":"bcb0310b-74c9-475d-952a-c9e04dce48a8","method":"GET","path":"/api/v1/topics","status":200,"duration_ms":5}
+{"event":"http.request","request_id":"de0d2f5b-3e7c-4e89-98dd-1c7813995ec9","method":"GET","path":"/api/v1/topics/6b485ed1-2d13-4619-85c8-4a2c69171f24","status":200,"duration_ms":6}
+✔ 六项权重由服务端计分，保留缺项与生成批次，重复保存不新增 (663.7495ms)
+{"event":"http.request","request_id":"6e831187-5461-4fe5-8058-6c7bd26a8c6e","method":"POST","path":"/api/v1/topics/bf5ffc17-70b8-4df9-bd0d-aba7dfcb8bb9/accept","status":200,"duration_ms":23}
+{"event":"http.request","request_id":"27563810-fa31-4bea-a700-d94a97611ade","method":"POST","path":"/api/v1/topics/bf5ffc17-70b8-4df9-bd0d-aba7dfcb8bb9/accept","status":200,"duration_ms":26}
+{"event":"http.request","request_id":"6ba8e23e-f1e6-4d05-81ef-739fd48b87ab","method":"POST","path":"/api/v1/topics/bf5ffc17-70b8-4df9-bd0d-aba7dfcb8bb9/accept","status":422,"duration_ms":5}
+✔ 不同请求键并发采纳只保存一个决策，重复采纳返回原结果且没有Job/生产关系 (45.888041ms)
+{"event":"http.request","request_id":"c22c8227-9efd-427a-ace8-6f15fa19d242","method":"POST","path":"/api/v1/topics/ff548a86-feee-4614-b36c-35bd30ff4350/accept","status":200,"duration_ms":14}
+{"event":"http.request","request_id":"a19933c7-c446-4dac-b57e-caff2b55efd0","method":"POST","path":"/api/v1/topics/ff548a86-feee-4614-b36c-35bd30ff4350/reject","status":409,"duration_ms":14}
+{"event":"http.request","request_id":"11675cb1-7880-4334-97f3-e79d92d63a60","method":"GET","path":"/api/v1/topics/ff548a86-feee-4614-b36c-35bd30ff4350","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"2988a63e-1508-4bd2-91f2-a579d26e7928","method":"POST","path":"/api/v1/topics/28b12c45-e844-413d-9d8a-c43278750b05/accept","status":409,"duration_ms":3}
+{"event":"http.request","request_id":"eeb4a9b2-0543-486e-a5d7-5aebff618d6a","method":"GET","path":"/api/v1/topics","status":200,"duration_ms":2}
+✔ 拒绝原因不可丢失；与采纳竞争只有一条最终决策，过期不得采纳 (40.7925ms)
+{"event":"http.request","request_id":"e3914e69-b344-44ab-9b6e-aa4b1ac0db25","method":"POST","path":"/api/v1/topics/e74a7090-48de-40c3-b6e5-b4d4729d2f40/variants","status":201,"duration_ms":10}
+{"event":"http.request","request_id":"bbd75279-222c-47db-ab62-38a8d6788c89","method":"POST","path":"/api/v1/topics/e74a7090-48de-40c3-b6e5-b4d4729d2f40/variants","status":201,"duration_ms":25}
+{"event":"http.request","request_id":"d87d5747-27ee-4bb3-8c0b-f9e9ac8ab455","method":"POST","path":"/api/v1/topics/e74a7090-48de-40c3-b6e5-b4d4729d2f40/accept","status":422,"duration_ms":4}
+✔ 显式变体保留父题/理由/证据并独立采纳；越权负责人和空间拒绝 (33.672542ms)
+✔ 事实缺观察/伪造来源使整个候选事务回滚，不用高分掩盖错误 (4.435459ms)
+{"event":"http.request","request_id":"151c9973-b533-4c3b-adeb-7cc704ddf7a8","method":"POST","path":"/api/v1/topics/4dff9c84-bf88-4bf3-aab2-e590584a8241/reject","status":422,"duration_ms":4}
+{"event":"http.request","request_id":"bf8befd3-0990-4fed-a227-15e122c3ed29","method":"POST","path":"/api/v1/topics/4dff9c84-bf88-4bf3-aab2-e590584a8241/reject","status":409,"duration_ms":3}
+✔ 编辑只能采纳本人的任务；缺拒绝理由与陈旧版本不能改变选题 (12.488083ms)
+{"event":"http.request","request_id":"ed2f46a3-89aa-43ed-95d2-30ea82a9fccf","method":"POST","path":"/api/v1/source-connections","status":201,"duration_ms":5}
+{"event":"http.request","request_id":"5a416196-5783-4995-8fd1-d976a0e7db9a","method":"GET","path":"/api/v1/topics/12a24e30-31ad-4483-ab78-58ca53e13a56","status":200,"duration_ms":3}
+✔ 证据显示采纳建议生成时的不可变观察，不随着来源更新改写标题；观察必须匹配来源 (42.767125ms)
+✔ 常青原创不能把来源窗口结束填成到期；明确来源的时效由服务端保留 (1.081959ms)
+{"event":"http.request","request_id":"a7a843e6-75b3-4b7b-8b19-357f6953429f","method":"POST","path":"/api/v1/topics/8d46e021-9c2b-4cd0-ba8e-3d61ee0ff5b0/accept","status":422,"duration_ms":2}
+{"event":"http.request","request_id":"04a7d1a3-fe82-4aed-98f1-94700bfbe754","method":"POST","path":"/api/v1/topics/8d46e021-9c2b-4cd0-ba8e-3d61ee0ff5b0/accept","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"e9d1c4b8-20b3-4891-b386-cc9447a46fdb","method":"GET","path":"/api/v1/topics/8d46e021-9c2b-4cd0-ba8e-3d61ee0ff5b0","status":200,"duration_ms":3}
+✔ 新采纳自动归属默认身份，历史负责人和决策不被重复请求覆盖 (16.6185ms)
+{"event":"http.request","request_id":"e480ddd1-8992-47bf-8b7a-b3cc026e6c2e","method":"GET","path":"/api/v1/topics","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"642605d1-5cd9-43d1-b143-9c7df93237a0","method":"GET","path":"/api/v1/topics","status":200,"duration_ms":2}
+{"event":"http.request","request_id":"3a065826-3ed8-4aca-b980-b209cdb9cca1","method":"POST","path":"/api/v1/topics/ca440219-2924-4ad9-ae70-5f534d2dcfb1/variants","status":201,"duration_ms":9}
+{"event":"http.request","request_id":"fb224eb9-cba7-47e2-b78d-4e13a3d58ffb","method":"GET","path":"/api/v1/topics/b7c6d0d8-8c32-4258-b24e-d1516c33f2ea","status":200,"duration_ms":4}
+{"event":"http.request","request_id":"5b2e104e-fa09-49b1-99e1-386c4495bf07","method":"GET","path":"/api/v1/topics/ca440219-2924-4ad9-ae70-5f534d2dcfb1","status":200,"duration_ms":3}
+{"event":"http.request","request_id":"4b09f6c2-f8ac-484a-bb93-60092feff180","method":"GET","path":"/api/v1/topics/28bc673c-5e24-43e1-b1f4-e20a8633e7d3","status":200,"duration_ms":2}
+✔ 展示摘要按真实批次分页归属，保留未知核验、变体批次时间及旧数据兜底 (36.681708ms)
+✔ 列表展示上下文集中读取，不随每条候选额外请求批次或详情 (1.566459ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1560.782875

@@ -3,6 +3,8 @@ import {AddressInfo} from 'node:net';
 import {Database} from '../packages/db/src/db';
 import {databaseUrl} from '../packages/domain/src/config';
 import {migrate} from '../packages/db/src/migrate';
+import {Commands} from '../apps/api/src/commands';
+import {defaultActor} from '../packages/domain/src/instance';
 import {createApp} from '../apps/api/src/main';
 import Ajv2020 from 'ajv/dist/2020';
 import addFormats from 'ajv-formats';
@@ -29,6 +31,11 @@ export class Client {
     const r=await fetch(this.base+'/api/v1'+path,{method,headers:{'Content-Type':'application/json',Cookie:this.cookie,...(method!=='GET'?{Origin:'http://localhost:3000','X-CSRF-Token':this.csrf,'Idempotency-Key':randomUUID()}:{}),...headers},...(method!=='GET'?{body:JSON.stringify(body??{})}:{})});
     const set=r.headers.get('set-cookie');if(set)this.cookie=set.split(';')[0]!;
     const json=await r.json();checkContract(path,method,r.status,json);if(json.data?.csrf_token)this.csrf=json.data.csrf_token;return {status:r.status,data:json.data,error:json.error,headers:r.headers,meta:json.meta};
+  }
+  // Legacy account fixtures must not enqueue the new registration workflow.
+  async seedAccount(body:unknown,headers:Record<string,string>={}):Promise<any>{
+    const url=databaseUrl(true),name=new URL(url).pathname.slice(1);if(name==='yoyo_test'||process.env.ALLOW_TEST_RESET!==name)throw Error('Legacy fixtures require an explicitly disposable database');
+    const db=new Database(url);try{const actor=await defaultActor(db,randomUUID()),commands=new Commands(db);return await commands.command(actor,headers['Idempotency-Key']??randomUUID(),'POST','/accounts',body,'admin',(tx,a)=>commands.createAccount(tx,a,body));}finally{await db.close();}
   }
   async init(){return this.call('/request/csrf');}
 

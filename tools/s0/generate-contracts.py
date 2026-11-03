@@ -71,7 +71,7 @@ req('MemberPatch',{'roles':arr(ref('Role')),'active':boolean,'successor_id':ref(
 req('SourceCreate',{'platform':enum('weibo','xiaohongshu'),'provider':title,'source_type':ref('SourceType'),'capabilities':ref('Capabilities'),'credential_ref':nullable(title),'schedule':title},['platform','provider','source_type','capabilities','schedule'])
 req('SourcePatch',{'allowed_config':{'type':'object'},'enabled':boolean,'expected_version':version},['expected_version'])
 req('RefreshSource',{'bounded_scope':obj({'keywords':arr(title),'account_ids':arr(title),'limit':{'type':'integer','minimum':1,'maximum':50}},(),True)})
-req('TopicGeneration',{'account_id':ref('Id'),'window':obj({'start':timestamp,'end':timestamp},['start','end']),'columns':arr(title),'capacity_hours':nullable({'type':'number','minimum':0})},['account_id','window','columns'])
+req('TopicGeneration',{'account_id':ref('Id'),'window':obj({'start':timestamp,'end':timestamp},['start','end']),'columns':arr(title)},['account_id','window','columns'])
 req('AcceptTopic',{'owner_id':ref('Id'),'expected_version':version},['expected_version'])
 req('TopicVariant',{'goal':string,'media_type':ref('MediaType')},['goal','media_type'])
 req('PublicationCreate',{'account_id':ref('Id'),'platform_note_id':title,'url':ref('Url'),'title':title,'media_type':ref('MediaType'),'published_at':timestamp,'traffic_type':ref('TrafficType')},['account_id','platform_note_id','url','title','media_type','published_at','traffic_type'])

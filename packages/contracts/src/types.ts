@@ -20,3 +20,11 @@ export interface MetricInput {target:{account_id:string;publication_id?:string|n
 export interface ImportBatch {id:string;workspace_id:string;account_id:string;source_type:'csv'|'xlsx'|'manual';status:'uploaded'|'parsing'|'needs_confirmation'|'committing'|'confirmed'|'partially_confirmed'|'failed'|'reverted';input_file_ids:string[];parser_version:string;version:number;mapping:Record<string,string>}
 export interface ImportRow {id:string;batch_id:string;row_number:number;file_id:string|null;raw:Record<string,unknown>;metric:MetricInput|null;status:'valid'|'conflict'|'unmatched'|'excluded'|'confirmed';is_example:boolean;error:string|null;corrections:unknown[];version:number;existing_observation_id?:string;existing_metric?:MetricInput}
 export interface Calculation {id:string;metric_key:string;calculation_version:string;input_observation_ids:string[];window_start:string;window_end:string;rounding_rule:string;value:string|null;missing_reason:string|null;is_approximate:boolean;validity:'current'|'stale'}
+
+export interface TopicGenerationSummary {
+  id:string;created_at:string|null;complete:boolean;inputs:string[];limitations:string[];
+}
+export interface TopicPresentation {
+  reference_source_count:number;source_review:'title_only'|'unavailable'|null;
+  checks:string[];assumptions:string[];
+}

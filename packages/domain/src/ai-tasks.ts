@@ -15,7 +15,7 @@ export class AITasks {
   if(r.state==='succeeded')return {result:{ai_request_id:r.id,ai_run_id:r.ai_run_id,reused:true}};
   if(r.state==='cancelled')return {result:{error_code:'AI_REQUEST_CANCELLED'},completionState:'failed'};
   await this.db.query("UPDATE ai_requests SET state='running',job_id=$2 WHERE id=$1",[r.id,job.id]);
-  const snapshot=r.snapshot;
+  const snapshot={...r.snapshot};delete snapshot.capacity_hours;
   const workflowInput:WorkflowInput={input:snapshot,inputVersion:r.input_version,inputRefs:{account:snapshot.account,sources:snapshot.sources.map((s:any)=>({id:s.id,observation_id:s.observation_id,content_hash:s.content_hash}))},sourceIds:snapshot.sources.map((s:any)=>s.id)};
   try{
    const spec=topicSpec(workflowInput);

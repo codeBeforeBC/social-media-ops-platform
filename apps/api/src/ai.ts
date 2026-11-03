@@ -7,14 +7,14 @@ import {loadAIConfig,AIFailure} from '../../../packages/domain/src/ai-gateway';
 export class AIRequests {
  constructor(readonly db:Database){}
  async generateTopics(tx:Tx,a:Actor,input:unknown){
-  const b=parse(z.object({account_id:uuid,window:z.object({start:z.iso.datetime({offset:true}),end:z.iso.datetime({offset:true})}).strict(),columns:z.array(text(200)).min(1).max(10),capacity_hours:z.number().min(0).max(168).nullable().optional()}).strict(),input);
+  const b=parse(z.object({account_id:uuid,window:z.object({start:z.iso.datetime({offset:true}),end:z.iso.datetime({offset:true})}).strict(),columns:z.array(text(200)).min(1).max(10)}).strict(),input);
   const start=Date.parse(b.window.start),end=Date.parse(b.window.end);if(end<=start||end-start>31*86400000||end>Date.now()+60000)throw new AppError(422,'WINDOW_INVALID','来源窗口应为过去31天内的有效时段');
   try{if(!loadAIConfig().enabled)throw new AIFailure('AI_DISABLED');}catch(e){throw new AppError(503,e instanceof AIFailure?e.code:'AI_NOT_CONFIGURED','AI配置不可用；仍可查看来源与已有选题');}
   const account=await new Commands(this.db).accountScope(tx,a,b.account_id,true);
-  const workspace=(await tx.query('SELECT version,settings FROM workspaces WHERE id=$1',[a.workspaceId])).rows[0];
+  const workspace=(await tx.query('SELECT version FROM workspaces WHERE id=$1',[a.workspaceId])).rows[0];
   const sources=(await tx.query(`SELECT i.id,i.title,i.summary,i.published_at,i.captured_at,i.actual_source_type,i.reference_only,c.source_type pipeline_type,o.id observation_id,i.content_hash FROM source_items i JOIN source_connections c ON c.id=i.connection_id JOIN LATERAL(SELECT id FROM source_observations WHERE source_item_id=i.id AND content_hash=i.content_hash AND captured_at=i.captured_at ORDER BY captured_at DESC,id DESC LIMIT 1)o ON true WHERE i.workspace_id=$1 AND i.availability='observed' AND i.captured_at>=$2 AND i.captured_at<$3 ORDER BY i.captured_at DESC,i.id LIMIT 50`,[a.workspaceId,b.window.start,b.window.end])).rows;
   const strategies=await activeStrategies(tx,a.workspaceId,account.id);
-  const snapshot={strategies,scope_version:'v1.2',account:{id:account.id,name:account.name,version:account.version},workspace_version:workspace.version,sources,columns:b.columns,capacity_hours:b.capacity_hours??workspace.settings?.capacity?.hours_per_week??null,window:b.window,language:'zh-CN',warnings:[]};
+  const snapshot={strategies,scope_version:'v1.2',account:{id:account.id,name:account.name,version:account.version},workspace_version:workspace.version,sources,columns:b.columns,window:b.window,language:'zh-CN',warnings:[]};
   const inputVersion=sha(canonical(snapshot)),requestId=id();
   await tx.query('INSERT INTO ai_requests(id,workspace_id,account_id,created_by,kind,input_version,snapshot) VALUES($1,$2,$3,$4,$5,$6,$7)',[requestId,a.workspaceId,account.id,a.memberId,'topics',inputVersion,JSON.stringify(snapshot)]);
   await tx.query("INSERT INTO outbox(workspace_id,account_id,event_key,event_type,payload) VALUES($1,$2,$3,'ai.generate',$4)",[a.workspaceId,account.id,'ai.request:'+requestId,JSON.stringify({created_by:a.memberId,pool:'general',request_id:a.requestId,input:{ai_request_id:requestId}})]);

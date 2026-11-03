@@ -94,5 +94,5 @@ test('新任务白名单保留旧退出范围并拒绝错误执行池和缺少�
 test('旧库大写内部ID按规范身份验证且能确认，新登记不能形成同身份重复',async()=>{
  const a=await account();await env.db.query('UPDATE accounts SET platform_user_id=upper(platform_user_id) WHERE id=$1',[a.id]);const legacy=await get(a);await start(legacy);await run(async()=>result(a.platform_user_id));const current=await get(a);assert.equal(current.verification.latest.state,'succeeded');
  const confirmed=await c.call(`/accounts/${a.id}/identity-confirmation`,'POST',{verification_id:current.verification.latest.id,expected_version:current.version,confirmed:true});assert.equal(confirmed.status,200);assert.equal((await get(a)).platform_user_id,legacy.platform_user_id);
- const duplicate=await c.call('/accounts','POST',{platform:'xiaohongshu',platform_user_id:a.platform_user_id,name:'不应重复登记旧身份'});assert.equal(duplicate.status,409);assert.equal(duplicate.error.field_errors.account_id,a.id);
+ const duplicate=await c.call('/accounts','POST',{platform:'xiaohongshu',platform_user_id:a.platform_user_id,name:'不应重复登记旧身份',browser_profile_ref:'controlled-profile'});assert.equal(duplicate.status,409);assert.equal(duplicate.error.field_errors.account_id,a.id);
 });

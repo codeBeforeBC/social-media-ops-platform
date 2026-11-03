@@ -72,7 +72,7 @@ spec['paths']['/dashboard']['get']['parameters'][0]['required']=False
 p.write_text(json.dumps(spec,ensure_ascii=False,indent=2)+'\n')
 S['Monitor']=obj({'as_of':time,'jobs':{'type':'array','items':{'type':'object'}},'processes':{'type':'array','items':{'type':'object'}},'outbox_pending':{'type':'integer','minimum':0},'external_capabilities':{'type':'object'},'ai_usage':obj({'window':string,'groups':{'type':'array','items':{'type':'object'}}},['window','groups']),'import_limits':obj({'screenshot_bytes':{'type':'integer'},'table_bytes':{'type':'integer'}},['screenshot_bytes','table_bytes'])},['as_of','jobs','processes','outbox_pending','external_capabilities','ai_usage','import_limits'])
 operation('/monitor','get',ref('Monitor'))
-S['SettingsPatch']['properties']['category']={'enum':['workspace','capacity','ai_budget']}
+S['SettingsPatch']['properties']['category']={'enum':['workspace','ai_budget']}
 p.write_text(json.dumps(spec,ensure_ascii=False,indent=2)+'\n')
 S['SourceOrganizationAIOutput']=json.loads(subprocess.check_output(['pnpm','exec','tsx','tools/s8/export-schema.ts','sources'],text=True));S['SourceOrganizationAIOutput'].pop('$schema',None)
 sorg={'id':ref('Id'),'account_id':ref('Id'),'state':{'enum':['queued','running','succeeded','failed','cancelled']},'error_code':nullable(string),'version':{'type':'integer','minimum':1},'reviewed_at':nullable(time),'created_at':time,'updated_at':time,'snapshot':{'type':'object'},'result':nullable(ref('SourceOrganizationAIOutput')),'current':{'type':'boolean'},'accepted_group_indexes':{'type':'array','items':{'type':'integer','minimum':0}}}

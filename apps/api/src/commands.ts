@@ -7,7 +7,7 @@ import {storeResponse,readResponse} from '../../../packages/domain/src/response-
 import {loadAIConfig,workspaceBudgetSchema,workspaceAIConfig,AIFailure} from '../../../packages/domain/src/ai-gateway';
 import {sourceOrganizationCurrent} from '../../../packages/domain/src/source-organization';
 import {config} from '../../../packages/domain/src/config';
-import {profileRef} from '../../../packages/domain/src/account-verifications';
+import {profileRef,AccountVerifications} from '../../../packages/domain/src/account-verifications';
 import {xhsAccountIdentity} from '../../../packages/domain/src/xhs-account';
 export type Result={status:number;data:unknown};
 export async function audit(tx:Tx,a:Actor,action:string,objectType:string,objectId:string,details:unknown={}){
@@ -30,7 +30,7 @@ export class Commands {
           await this.accountScope(tx,actor,cached.verification.account_id);
           const now=(await tx.query('SELECT v.*,j.state,j.started_at,j.finished_at,j.error_code FROM account_verifications v JOIN jobs j ON j.id=v.job_id AND j.workspace_id=v.workspace_id WHERE v.id=$1 AND v.workspace_id=$2',[cached.verification.id,a.workspaceId])).rows[0];
           if(!now)throw new AppError(404,'NOT_FOUND','验证记录不存在或不可见');cached={verification:now,reused:true};
-        }else if(route.startsWith('/accounts')&&cached?.id){cached=await this.accountScope(tx,actor,cached.id);}
+        }else if(route.startsWith('/accounts')&&cached?.id){cached=await this.accountScope(tx,actor,cached.id);cached.verification=await new AccountVerifications(this.db).summary(tx,cached);}
         // Consent and evidence may be revoked after a successful write; replay must reflect current permissions and state.
         const table=cached?.id&&(route.startsWith('/source-organizations/')?'source_organizations':route.startsWith('/feedback')?'feedback':route.startsWith('/strategy-memories/')?'strategy_memories':route.startsWith('/reports/')?'reports':null);
         if(table){const current=(await tx.query(`SELECT * FROM ${table} WHERE workspace_id=$1 AND id=$2`,[a.workspaceId,cached.id])).rows[0];if(!current)throw new AppError(404,'NOT_FOUND','对象不存在或不可见');await this.accountScope(tx,actor,current.account_id);cached=current;if(table==='source_organizations')cached.current=await sourceOrganizationCurrent(tx,cached);if(table==='reports')cached.strategies=(await tx.query('SELECT * FROM strategy_memories WHERE report_id=$1 ORDER BY action_index',[cached.id])).rows;}
@@ -99,8 +99,8 @@ export class Commands {
     return {status:200,data:{account_id:accountId,deleted:true}};
   }
   async patchSettings(tx:Tx,a:Actor,input:unknown){
-    const b=parse(z.object({category:z.enum(['workspace','capacity','ai_budget']),settings:z.record(z.string(),z.unknown()),expected_version:version}).strict(),input);
-    const allowed=b.category==='workspace'?z.object({name:text().optional(),timezone:timezone.optional()}).strict():b.category==='capacity'?z.object({hours_per_week:z.number().min(0).max(168)}).strict():workspaceBudgetSchema;
+    const b=parse(z.object({category:z.enum(['workspace','ai_budget']),settings:z.record(z.string(),z.unknown()),expected_version:version}).strict(),input);
+    const allowed=b.category==='workspace'?z.object({name:text().optional(),timezone:timezone.optional()}).strict():workspaceBudgetSchema;
     const values=parse(allowed as z.ZodType<Record<string,unknown>>,b.settings);
     if(b.category==='ai_budget')try{workspaceAIConfig(loadAIConfig(),{ai_budget:values});}catch(e){throw new AppError(422,e instanceof AIFailure?e.code:'AI_CONFIG_INVALID','预算需完整配置，有限预算需可核对单价及币种');}
     const old=await tx.query('SELECT version FROM workspaces WHERE id=$1 FOR UPDATE',[a.workspaceId]);

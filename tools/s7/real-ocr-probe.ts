@@ -21,7 +21,7 @@ async function drain(){await jobs.dispatch();for(const pool of ['media','general
 const report:any={checked_at:new Date().toISOString(),input_classification:'real_authorized_screenshots_verified_platform_identity_in_disposable_workbench',account_identity_namespace:identity.identity_namespace,account_identity_sha256:identity.account_identity_sha256,verified_platform_identity:true,complete_real_account_integration:false,video_sample:'missing',checks:[]};
 try{
  await initialize(c);
- const account=(await c.call('/accounts','POST',{platform:'xiaohongshu',platform_user_id:feed.id,name:'已核验授权账号（隔离验收）'})).data;
+ const account=(await c.seedAccount({platform:'xiaohongshu',platform_user_id:feed.id,name:'已核验授权账号（隔离验收）'})).data;
  const ids=JSON.parse(readFileSync(root+'note-ids.json','utf8'));
  assert.ok(feed.notes.some((n:any)=>n.id===ids[0].noteId));
  const publication=(await c.call('/publications','POST',{account_id:account.id,platform_note_id:ids[0].noteId,url:'https://www.xiaohongshu.com/explore/'+ids[0].noteId,title:'授权图文原图技术验证',media_type:'graphic',published_at:source.manual_mapping.graphic.published_at,traffic_type:'unknown'})).data;

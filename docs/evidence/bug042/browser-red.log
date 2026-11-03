@@ -1,0 +1,57 @@
+[2m[WebServer] [22m(node:40224) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:40225) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:40231) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+[2m[WebServer] [22m(node:40231) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[2m[WebServer] [22m(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:40327) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:40327) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 tests/browser.spec.ts:431:5 › 登录核对指引区分未识别、未登录、错号与不支持；匹配/在途/旧结果不误导 (5.7s)
+
+
+  1) tests/browser.spec.ts:431:5 › 登录核对指引区分未识别、未登录、错号与不支持；匹配/在途/旧结果不误导 ─────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('region', { name: '账号身份核验' }).getByRole('note', { name: '登录验证指引' })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for getByRole('region', { name: '账号身份核验' }).getByRole('note', { name: '登录验证指引' })[22m
+
+
+      435 |   const panel=await mockVerificationView(page,a,[v]),help=panel.getByRole('note',{name:'登录验证指引'});
+      436 |   if(['matched','running','stale'].includes(status)){await expect(help).toHaveCount(0);continue;}
+    > 437 |   await expect(help).toBeVisible();await expect(help).toContainText('人工“确认用于运营”不会改变登录验证结果');await expect(help).toContainText('后台数据读取能力');
+          |                      ^
+      438 |   if(status==='unknown'){
+      439 |    await expect(panel).toContainText('这不代表未登录');await expect(panel).toContainText('未能识别当前登录账号');await expect(help).toContainText('验证浏览器');await expect(help).toContainText('自己的个人主页');await expect(help).toContainText('重新验证');await expect(help).toContainText('已登录仍无法识别');
+      440 |    for(const width of [1440,390,320]){await page.setViewportSize({width,height:1000});expect(await panel.evaluate(e=>e.scrollWidth<=e.clientWidth)).toBe(true);await help.scrollIntoViewIfNeeded();await page.getByRole('dialog').screenshot({path:`docs/evidence/bug042/screenshots/login-guidance-${width}.png`});}
+        at /Users/junlong/projects/social-mdeida-ops-platform/tests/browser.spec.ts:437:22
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser-登录核对指引区分未识别、未登录、错号与不支持；匹配-在途-旧结果不误导/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/browser-登录核对指引区分未识别、未登录、错号与不支持；匹配-在途-旧结果不误导/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/browser-登录核对指引区分未识别、未登录、错号与不支持；匹配-在途-旧结果不误导/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/browser-登录核对指引区分未识别、未登录、错号与不支持；匹配-在途-旧结果不误导/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/browser.spec.ts:431:5 › 登录核对指引区分未识别、未登录、错号与不支持；匹配/在途/旧结果不误导 ──────────────────────────────

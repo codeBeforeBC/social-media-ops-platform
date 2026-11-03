@@ -1,5 +1,5 @@
 import {AccountDeletions} from '../../../packages/domain/src/account-deletions';
-import {AccountVerifications,connectedAccountProfiles} from '../../../packages/domain/src/account-verifications';
+import {AccountVerifications,connectedAccountProfiles,profileRef} from '../../../packages/domain/src/account-verifications';
 import {SourceOrganizations} from './source-organization';
 import {Dashboard} from './dashboard';
 import {Feedback} from './feedback';
@@ -110,7 +110,13 @@ class ApiController {
       }else if(method==='POST'&&!verifyPath[3])return command('operate',(tx,actor)=>accountVerification.confirm(tx,actor,verifyPath[1]!,req.body));
     }
     if(method==='GET'&&path==='/accounts')return send(await accountVerification.list(a));
-    if(method==='POST'&&path==='/accounts')return command('admin',(tx,actor)=>c.createAccount(tx,actor,req.body));
+    if(method==='POST'&&path==='/accounts')return command('admin',async(tx,actor)=>{
+      parse(profileRef,req.body?.browser_profile_ref);
+      const created=await c.createAccount(tx,actor,req.body),account=created.data as Record<string,any>;
+      await accountVerification.create(tx,actor,account.id,{expected_version:account.version,binding_version:account.identity_binding_version});
+      const current=await c.accountScope(tx,actor,account.id);
+      return {status:201,data:{...current,verification:await accountVerification.summary(tx,current)}};
+    });
     const account=path.match(/^\/accounts\/([^/]+)$/);
     if(account){if(method==='GET')return send(await accountVerification.detail(a,account[1]!));if(method==='PATCH')return command('account.edit',(tx,actor)=>c.patchAccount(tx,actor,account[1]!,req.body));if(method==='DELETE')return command('admin',(tx,actor)=>req.body?.force===true?deletions.request(tx,actor,account[1]!,req.body):c.deleteAccount(tx,actor,account[1]!,req.body));}
     if(method==='GET'&&path==='/settings')return send(await c.settings(a));
